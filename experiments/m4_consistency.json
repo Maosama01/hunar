@@ -1,0 +1,7 @@
+{
+  "experiment": "m4_consistency",
+  "status": "RESULT PENDING",
+  "reason": "no real rater scores collected yet (sample items are excluded)",
+  "command": "python -m hunar.study.analyse",
+  "created": "2026-10-28T01:01:34"
+}
