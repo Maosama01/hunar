@@ -55,3 +55,46 @@ class QualificationPack(BaseModel):
 
     def criteria(self) -> list[tuple[NOS, PerformanceCriterion]]:
         return [(n, pc) for n in self.nos for pc in n.performance_criteria]
+
+
+# ---- M1 mapper output -------------------------------------------------------------------------
+
+
+class Evidence(BaseModel):
+    sentence: str
+    similarity: float
+
+
+class CriterionMatch(BaseModel):
+    pc_id: str
+    nos_code: str | None
+    text: str
+    score: float = Field(description="Best similarity of any declaration sentence to this criterion")
+    evidence: list[Evidence] = Field(default_factory=list)
+
+
+class NOSCoverage(BaseModel):
+    code: str | None
+    title: str
+    core: bool | None
+    score: float = Field(description="Mean of the top-3 criterion scores in this NOS")
+    matched: int
+    total: int
+
+
+class PackScore(BaseModel):
+    nqr_id: int
+    title: str
+    nsqf_level: float | None
+    rank: int
+    score: float
+    nos: list[NOSCoverage]
+    matched: list[CriterionMatch] = Field(default_factory=list, description="Criteria with evidence")
+    gaps: list[CriterionMatch] = Field(default_factory=list, description="Core criteria with no evidence")
+
+
+class MappingResult(BaseModel):
+    method: str
+    sentences: list[str]
+    ranking: list[PackScore]
+    note: str = "Suggestion only. An assessor confirms the qualification pack."
