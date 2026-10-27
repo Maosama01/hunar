@@ -1,0 +1,325 @@
+{
+  "nqr_id": 9588,
+  "nqr_code": "QG-03-PW-00868-2023-V1-PSSC",
+  "title": "Jr. Technician (Smart Energy Meter)",
+  "sector": "Power",
+  "nsqf_level": 3.0,
+  "awarding_body": "Power Sector Skill Council (PSSC)",
+  "role": "distractor",
+  "is_stub": false,
+  "parse_method": "pdf_auto",
+  "verification_note": "Parsed automatically from the official PDF. Spot-checked against the PDF by the AI assistant; HUMAN CHECK PENDING.",
+  "source": {
+    "pdf_url": "https://www.nqr.gov.in/qualification/file/Qualification%20File%20New%20Template%20Jr.%20Technician%20%28Smart%20Energy%20Meter%29.pdf",
+    "page_url": "https://www.nqr.gov.in/qualifications/9588",
+    "downloaded_on": "2026-10-28",
+    "sha256": "69c6f3b9f11d8e8eb68893ef19fc721529b3157b135481c4225fb13f119ef2c5"
+  },
+  "nos": [
+    {
+      "code": "PSS/N2509",
+      "title": "Manually remove, change and install low voltage, single and three phase energy meters",
+      "core": true,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N2509.PC1",
+          "code": "PC1",
+          "text": "obtain job specification or work order from responsible authority"
+        },
+        {
+          "id": "PSS/N2509.PC2",
+          "code": "PC2",
+          "text": "select and use appropriate personal protective equipment (PPE) as per occupational health and safety guidelines Personal protective equipment: hard working caps, protective glasses, rubber gloves, fall arrest and restraint, safety footwear, fire-resistant clothing, etc."
+        },
+        {
+          "id": "PSS/N2509.PC3",
+          "code": "PC3",
+          "text": "use and maintain appropriate tools and equipment in accordance with the tasks \\Tools and equipment: e.g. insulated hand tools; drills; hacksaw; hand tools; testing equipment; insulation testers; crimping tools; wires and cables of various colours and sizes; heat shrink sleeving and flexible conduit; terminals and connectors; electrical tape; etc. Prepare work area for installation To be competent, the user/ individual on the job must be able to:"
+        },
+        {
+          "id": "PSS/N2509.PC4",
+          "code": "PC4",
+          "text": "verify the distance between the poles or cables is as per standards"
+        },
+        {
+          "id": "PSS/N2509.PC5",
+          "code": "PC5",
+          "text": "check the underground and/or overhead cables are laid correctly as per work order"
+        },
+        {
+          "id": "PSS/N2509.PC6",
+          "code": "PC6",
+          "text": "plan and locate the area inside or outside the customer’s premise after assessing possible risks"
+        },
+        {
+          "id": "PSS/N2509.PC7",
+          "code": "PC7",
+          "text": "check that the identified area is accessible to carry out installation, meter testing, commissioning, reading, recording and maintenance"
+        },
+        {
+          "id": "PSS/N2509.PC8",
+          "code": "PC8",
+          "text": "ensure the energy meter has passed quality assessments set by the Bureau of Indian Standards (BIS) and is ready for installation Consumer meters: Low Voltage(LV) meters; single phase meter (two wires system) and three phase meters (four wires system)"
+        },
+        {
+          "id": "PSS/N2509.PC9",
+          "code": "PC9",
+          "text": "inspect the facility’s wiring system and recognize any possible risks to be isolated or common phase or looping of phase of two or more consumers"
+        },
+        {
+          "id": "PSS/N2509.PC10",
+          "code": "PC10",
+          "text": "inform all affected parties of the intended work plan in advance prior to disconnecting power supply line Install single or three phase meters To be competent, the user/individual on the job must be able to:"
+        },
+        {
+          "id": "PSS/N2509.PC11",
+          "code": "PC11",
+          "text": "install the energy meter and supportive equipment using insulated tools and devices as per organizational procedures Supportive equipment: e.g. meter box, junction box, distribution bus bar, etc."
+        },
+        {
+          "id": "PSS/N2509.PC12",
+          "code": "PC12",
+          "text": "equip the energy meter with various anti- tampering features as per regulations and organizational procedures"
+        },
+        {
+          "id": "PSS/N2509.PC13",
+          "code": "PC13",
+          "text": "establish immunity against various types of external factors in accordance with relevant regulations External factors: magnetic induction, vibration, electrostatic discharge, switching transients, surge voltages, oblique suspension and harmonics"
+        },
+        {
+          "id": "PSS/N2509.PC14",
+          "code": "PC14",
+          "text": "ensure the energy meter displays one or more of the following parameters depending upon the tariff requirement for different categories of consumers Measuring parameters: cumulative reactive energy, average power factor, time of energy use, apparent power, maximum demand, phase voltage and line currents"
+        },
+        {
+          "id": "PSS/N2509.PC15",
+          "code": "PC15",
+          "text": "check the energy meter for earth leakage indication as per relevant regulations Regulations: Central Electricity Authority (installation and operation of meters) Regulations, 2006"
+        },
+        {
+          "id": "PSS/N2509.PC16",
+          "code": "PC16",
+          "text": "test and calibrate the energy meter using appropriate testing devices in line with organizational quality standards and regulations"
+        },
+        {
+          "id": "PSS/N2509.PC17",
+          "code": "PC17",
+          "text": "identify and escalate unresolved problems to appropriate authority for rectifications Remove and replacing a single or a three phase meter To be competent, the user/individual on the job must be able to:"
+        },
+        {
+          "id": "PSS/N2509.PC18",
+          "code": "PC18",
+          "text": "establish the reason for changing the energy meter from responsible source in order to plan out the work Reasons: discrepancies (stoppage of meter, erratic consumption output, broken seal, burning or damage of meter), service disconnection"
+        },
+        {
+          "id": "PSS/N2509.PC19",
+          "code": "PC19",
+          "text": "replace the same with a duly tested energy meter as per instructions given in organizational guidelines and regulations"
+        },
+        {
+          "id": "PSS/N2509.PC20",
+          "code": "PC20",
+          "text": "test to confirm that the replaced energy meter conforms to required work specifications"
+        },
+        {
+          "id": "PSS/N2509.PC21",
+          "code": "PC21",
+          "text": "check that any replaced or repaired equipment is working properly, and customer’s problems are resolved efficiently NOSTotal Prepare for installation of smart meter To be competent, the user/ individual on the job must be able to:"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N2508",
+      "title": "Install and commission smart meter",
+      "core": true,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N2508.PC1",
+          "code": "PC1",
+          "text": "identify the Advanced Metering Infrastructure (AMI) to be installed; such as smart meters (single-phase and 3-phase), communication infrastructure, Head-End System (HES), Meter Data Management System (MDMS)"
+        },
+        {
+          "id": "PSS/N2508.PC2",
+          "code": "PC2",
+          "text": "determine the communication network/technology to be used; such as Broadband over PowerLine (BPL), Power Line Communications (PLCs), Fiber Optic Communication, Zigbee, 6LoWPAN, Bluetooth, Fixed Radio Frequency or public networks (e.g., landline, cellular, paging)"
+        },
+        {
+          "id": "PSS/N2508.PC3",
+          "code": "PC3",
+          "text": "evaluate key factors for selecting an appropriate installation site such as network reliability, availability of existing network; convenient location for the user/customer; required signal strength etc."
+        },
+        {
+          "id": "PSS/N2508.PC4",
+          "code": "PC4",
+          "text": "confirm the availability of required tools, equipment, materials, hardware and software for installing smart meter Install smart meter To be competent, the user/ individual on the job must be able to:"
+        },
+        {
+          "id": "PSS/N2508.PC5",
+          "code": "PC5",
+          "text": "install smart meter box and smart metering hardware"
+        },
+        {
+          "id": "PSS/N2508.PC6",
+          "code": "PC6",
+          "text": "perform wiring and cable connections"
+        },
+        {
+          "id": "PSS/N2508.PC7",
+          "code": "PC7",
+          "text": "install the In-Home Display (IHD)"
+        },
+        {
+          "id": "PSS/N2508.PC8",
+          "code": "PC8",
+          "text": "configure smart meter to establish required connectivity with the Head-End System (HES)"
+        },
+        {
+          "id": "PSS/N2508.PC9",
+          "code": "PC9",
+          "text": "enter the IP address as provided through the HES for enabling networking capabilities of the smart meter Commission smart meter To be competent, the user/individual on the job must be able to:"
+        },
+        {
+          "id": "PSS/N2508.PC10",
+          "code": "PC10",
+          "text": "test the smart meter for potential hardware issues; such as orientation of meter; improper connections; using a different port instead of recommended etc."
+        },
+        {
+          "id": "PSS/N2508.PC11",
+          "code": "PC11",
+          "text": "check the connections, features, switches within the smart metering network for required functioning"
+        },
+        {
+          "id": "PSS/N2508.PC12",
+          "code": "PC12",
+          "text": "test the In-Home Display (IHD) for required connectivity and functioning"
+        },
+        {
+          "id": "PSS/N2508.PC13",
+          "code": "PC13",
+          "text": "check the communication network (Wireless Area Network (WAN), Home Area Network (HAN) etc.) to evaluate two-way communication capability between smart meter and HES"
+        },
+        {
+          "id": "PSS/N2508.PC14",
+          "code": "PC14",
+          "text": "verify that the smart meter cover is securely fitted to ensure adequate protection against extreme environmental conditions"
+        },
+        {
+          "id": "PSS/N2508.PC15",
+          "code": "PC15",
+          "text": "record data such as customer identification number, meter ID, its hardware and software configuration, name plate details, make, type i.e. 1 Phase or 3 Phase, etc. (as per requirement of utility)"
+        },
+        {
+          "id": "PSS/N2508.PC16",
+          "code": "PC16",
+          "text": "prepare work reports for the tasks performed"
+        },
+        {
+          "id": "PSS/N2508.PC17",
+          "code": "PC17",
+          "text": "instruct the user/customer the various procedures through which they can avail of customer services offered Customer services: viewing meter readings and reports; updating personal information such as mobile number, email; generating service requests; viewing recharge history, present balance etc."
+        },
+        {
+          "id": "PSS/N2508.PC18",
+          "code": "PC18",
+          "text": "clear the worksite to ensure no hazardous and waste materials are present NOSTotal Follow workplace health and safety practices To be competent, the user/individual on the job must be able to:"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N1331",
+      "title": "Apply basic health and safety practices for power related work",
+      "core": false,
+      "nsqf_level": 2.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N1331.PC1",
+          "code": "PC1",
+          "text": "use protective clothing/equipment for specific tasks and work conditions Protective clothing: leather or asbestos gloves, flame proof aprons, flame proof overalls buttoned to neck, cuff less (without folds) trousers, reinforced footwear, helmets/hard hats, cap and shoulder covers, ear defenders/plugs, safety boots, knee pads, particle masks, glasses/goggles/visors Equipment: hand and face shields, machine guards, residual current devices, shields, dust sheets, respirator"
+        },
+        {
+          "id": "PSS/N1331.PC2",
+          "code": "PC2",
+          "text": "identify job-site hazards and possible causes of risks/accident at the workplace Hazards: electrical hazards; sharp edged and heavy tools; heated metals; oxyfuel and gas cylinders; welding radiation; hazardous surfaces; hazardous substances; physical hazards possible causes of risk and accident: physical actions; not following instructions; inattention; sickness and incapacity; health; not taking safety precautions"
+        },
+        {
+          "id": "PSS/N1331.PC3",
+          "code": "PC3",
+          "text": "use standard safe working practices when working at heights, confined areas, trenches and with electrical equipment"
+        },
+        {
+          "id": "PSS/N1331.PC4",
+          "code": "PC4",
+          "text": "follow warning signs and symbols while working with electrical systems Warning signs: Danger plate, high voltage area, out of service, etc."
+        },
+        {
+          "id": "PSS/N1331.PC5",
+          "code": "PC5",
+          "text": "ensure positive isolation of electrical equipment and system as per the given standards"
+        },
+        {
+          "id": "PSS/N1331.PC6",
+          "code": "PC6",
+          "text": "identify any abnormalities in electrical equipment or system viz temperature, pressure, flow of current etc."
+        },
+        {
+          "id": "PSS/N1331.PC7",
+          "code": "PC7",
+          "text": "use various methods of accident prevention in the work environment"
+        },
+        {
+          "id": "PSS/N1331.PC8",
+          "code": "PC8",
+          "text": "use proper scaffolds, elevated platforms and ladders for working at height"
+        },
+        {
+          "id": "PSS/N1331.PC9",
+          "code": "PC9",
+          "text": "inspect various tools and plants (T & P) routinely for any signs of oil, water leakages"
+        },
+        {
+          "id": "PSS/N1331.PC10",
+          "code": "PC10",
+          "text": "store flammable materials and machine lubricating oil safely and correctly"
+        },
+        {
+          "id": "PSS/N1331.PC11",
+          "code": "PC11",
+          "text": "check that the emission and pollution control devices are working properly in line with environmental policy standards"
+        },
+        {
+          "id": "PSS/N1331.PC12",
+          "code": "PC12",
+          "text": "inform the relevant authorities about any abnormal situation/behavior of any equipment/system without delay Follow fire safety practices To be competent, the user/ individual on the job must be able to:"
+        },
+        {
+          "id": "PSS/N1331.PC13",
+          "code": "PC13",
+          "text": "use various appropriate fire extinguishers for different types of fires correctly Types of fires: Class A, B, C, D and E"
+        },
+        {
+          "id": "PSS/N1331.PC14",
+          "code": "PC14",
+          "text": "use appropriate rescue techniques during fire hazard"
+        },
+        {
+          "id": "PSS/N1331.PC15",
+          "code": "PC15",
+          "text": "use good housekeeping practices at all times to avoid accidental fire Follow emergencies, rescue and first-aid procedures To be competent, the user/ individual on the job must be able to:"
+        },
+        {
+          "id": "PSS/N1331.PC16",
+          "code": "PC16",
+          "text": "administer appropriate first aid to the victims for the relevant injuries Injuries: Bleeding, burns, choking, electric shock, poisoning etc."
+        }
+      ],
+      "knowledge_items": []
+    }
+  ]
+}

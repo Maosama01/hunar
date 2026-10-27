@@ -1,0 +1,300 @@
+{
+  "nqr_id": 14896,
+  "nqr_code": "QG-03-EH-04474-2025-V2-ESSCI",
+  "title": "Wireman Control Panel Electronics",
+  "sector": "Electronics & HW",
+  "nsqf_level": 3.0,
+  "awarding_body": "Electronics Sector Skills Council of India (ESSCI)",
+  "role": "distractor",
+  "is_stub": false,
+  "parse_method": "pdf_auto",
+  "verification_note": "Parsed automatically from the official PDF. Spot-checked against the PDF by the AI assistant; HUMAN CHECK PENDING.",
+  "source": {
+    "pdf_url": "https://www.nqr.gov.in/qualification/file/QFile_Wireman%20Control%20Panel%20Electronics.....pdf",
+    "page_url": "https://www.nqr.gov.in/qualifications/14896",
+    "downloaded_on": "2026-10-28",
+    "sha256": "cc0e9c8138ee75eb4307db7db523a17eaa4497f949a36bb7cc58ef6a0df689c5"
+  },
+  "nos": [
+    {
+      "code": "ELE/N6321",
+      "title": "Planning and Preparation for Control Panel Wiring",
+      "core": true,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "ELE/N6321.PC1",
+          "code": "PC1",
+          "text": "Describe the role and responsibilities of a Wireman – Control Panel (Electronics); explain the scope of the control panel wiring industry, basic components used (such as relays, contactors, MCBs, terminal blocks, PLC interfaces), and potential employment opportunities in industrial automation and electrical assembly sectors."
+        },
+        {
+          "id": "ELE/N6321.PC2",
+          "code": "PC2",
+          "text": "Review and prepare materials and tools using digital BOMs and use smart inventory systems the production schedule and job specifications as per the supervisor’s instructions and Interpret wiring diagrams, schematics, job instructions, and work manuals to understand the task requirements."
+        },
+        {
+          "id": "ELE/N6321.PC3",
+          "code": "PC3",
+          "text": "Identify the required tools, equipment, and consumables needed for the day's wiring activities."
+        },
+        {
+          "id": "ELE/N6321.PC4",
+          "code": "PC4",
+          "text": "Verify the availability of wires, cables, connectors, screws, and other necessary materials."
+        },
+        {
+          "id": "ELE/N6321.PC5",
+          "code": "PC5",
+          "text": "Organize and arrange the work area to ensure efficient workflow and safety compliance."
+        },
+        {
+          "id": "ELE/N6321.PC6",
+          "code": "PC6",
+          "text": "Conduct a preliminary check of the control panel enclosure for any damages or defects."
+        },
+        {
+          "id": "ELE/N6321.PC7",
+          "code": "PC7",
+          "text": "Ensure proper grounding and insulation checks before starting the wiring process."
+        },
+        {
+          "id": "ELE/N6321.PC8",
+          "code": "PC8",
+          "text": "Coordinate with the quality team or supervisor to clarify any uncertainties in the work instructions."
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "ELE/N6322",
+      "title": "Execution and Completion of Control Panel Wiring",
+      "core": true,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "ELE/N6322.PC1",
+          "code": "PC1",
+          "text": "Select and cut the appropriate length of wires or cables as per the wiring diagram."
+        },
+        {
+          "id": "ELE/N6322.PC2",
+          "code": "PC2",
+          "text": "Route and position the feeder pipes securely before pulling feeder wires into the panel."
+        },
+        {
+          "id": "ELE/N6322.PC3",
+          "code": "PC3",
+          "text": "Strip the outer insulation of cables carefully to expose conductors without damaging them."
+        },
+        {
+          "id": "ELE/N6322.PC4",
+          "code": "PC4",
+          "text": "Connect the neutral wires to the designated neutral bus bar as per the circuit layout."
+        },
+        {
+          "id": "ELE/N6322.PC5",
+          "code": "PC5",
+          "text": "Follow standard wiring practices to install branch circuit wires in an organized manner."
+        },
+        {
+          "id": "ELE/N6322.PC6",
+          "code": "PC6",
+          "text": "Securely fasten wires using cable ties, clamps, or conduits to maintain a neat and structured layout."
+        },
+        {
+          "id": "ELE/N6322.PC7",
+          "code": "PC7",
+          "text": "Properly crimp and terminate wires to ensure reliable electrical connections."
+        },
+        {
+          "id": "ELE/N6322.PC8",
+          "code": "PC8",
+          "text": "Ensure proper segregation of power and control wiring to prevent electrical interference."
+        },
+        {
+          "id": "ELE/N6322.PC9",
+          "code": "PC9",
+          "text": "Label all wires and terminals appropriately for easy identification and future maintenance."
+        },
+        {
+          "id": "ELE/N6322.PC10",
+          "code": "PC10",
+          "text": "Conduct basic continuity and insulation resistance tests to verify proper connections."
+        },
+        {
+          "id": "ELE/N6322.PC12",
+          "code": "PC12",
+          "text": "Dispose of wire scraps, insulation cuttings, and unused materials in designated waste bins."
+        },
+        {
+          "id": "ELE/N6322.PC13",
+          "code": "PC13",
+          "text": "Return all tools, equipment, and unused consumables to the storage area at the end of the work shift. Reporting and Troubleshooting"
+        },
+        {
+          "id": "ELE/N6322.PC14",
+          "code": "PC14",
+          "text": "Identify and rectify errors or miswiring in the previous assembly steps."
+        },
+        {
+          "id": "ELE/N6322.PC15",
+          "code": "PC15",
+          "text": "Report any discrepancies in materials, such as shortages of connectors, screws, or fasteners."
+        },
+        {
+          "id": "ELE/N6322.PC16",
+          "code": "PC16",
+          "text": "Notify the supervisor about any equipment malfunctions or panel defects observed during wiring."
+        },
+        {
+          "id": "ELE/N6322.PC17",
+          "code": "PC17",
+          "text": "Document any challenges faced during installation and suggest process improvements for efficiency."
+        },
+        {
+          "id": "ELE/N6322.PC18",
+          "code": "PC18",
+          "text": "Seek feedback from the quality inspection team and implement corrective actions as required. Workplace Ethics, Safety, and Environmental Responsibility"
+        },
+        {
+          "id": "ELE/N6322.PC19",
+          "code": "PC19",
+          "text": "Follow workplace discipline, punctuality, and ethical behavior while maintaining a cooperative attitude with team members and customers."
+        },
+        {
+          "id": "ELE/N6322.PC20",
+          "code": "PC20",
+          "text": "Use appropriate personal protective equipment (PPE), insulated tools, and follow electrical safety procedures to prevent hazards and injuries."
+        },
+        {
+          "id": "ELE/N6322.PC21",
+          "code": "PC21",
+          "text": "Identify and report unsafe conditions, electrical faults, or violations of safety norms responsibly and as per company guidelines."
+        },
+        {
+          "id": "ELE/N6322.PC22",
+          "code": "PC22",
+          "text": "Practice sustainable work methods such as minimizing wire wastage, segregating scrap materials, and ensuring safe disposal of e-waste."
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "DGT/VSQ/N0101",
+      "title": "Employability Skills (30 hours)",
+      "core": false,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "DGT/VSQ/N0101.PC1",
+          "code": "PC1",
+          "text": "understand the significance of employability skills in meeting the job requirements Constitutional values – Citizenship"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC2",
+          "code": "PC2",
+          "text": "identify constitutional values, civic rights, duties, personal values and ethics and environmentally sustainable practices Becoming a Professional in the 21st Century"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC3",
+          "code": "PC3",
+          "text": "explain 21st Century Skills such as Self Awareness, Behavior Skills, Positive attitude, self- motivation, problem-solving, creative thinking, time management, social and cultural awareness, emotional awareness, continuous learning mindset etc. Basic English Skills"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC4",
+          "code": "PC4",
+          "text": "speak with others using some basic English phrases or sentences"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC5",
+          "code": "PC5",
+          "text": "follow good manners while communicating with others"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC6",
+          "code": "PC6",
+          "text": "work with others in a team Diversity & Inclusion"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC7",
+          "code": "PC7",
+          "text": "communicate and behave appropriately with all genders and PwD"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC8",
+          "code": "PC8",
+          "text": "report any issues related to sexual harassment Financial & Legal Literacy"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC9",
+          "code": "PC9",
+          "text": "use various financial products and services safely and securely"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC10",
+          "code": "PC10",
+          "text": "calculate income, expenses, savings etc."
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC11",
+          "code": "PC11",
+          "text": "approach the concerned authorities for any exploitation as per legal rights and laws Essential Digital Skills"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC12",
+          "code": "PC12",
+          "text": "operate digital devices and use its features and applications securely and safely"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC13",
+          "code": "PC13",
+          "text": "use internet and social media platforms securely and safely Entrepreneurship"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC14",
+          "code": "PC14",
+          "text": "identify and assess opportunities for potential business"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC15",
+          "code": "PC15",
+          "text": "identify sources for arranging money and associated financial and legal challenges Customer Service"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC16",
+          "code": "PC16",
+          "text": "identify different types of customers"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC17",
+          "code": "PC17",
+          "text": "identify customer needs and address them appropriately"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC18",
+          "code": "PC18",
+          "text": "follow appropriate hygiene and grooming standards Getting ready for apprenticeship & jobs"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC19",
+          "code": "PC19",
+          "text": "create a basic biodata"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC20",
+          "code": "PC20",
+          "text": "search for suitable jobs and apply"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC21",
+          "code": "PC21",
+          "text": "identify and register apprenticeship opportunities as per requirement"
+        }
+      ],
+      "knowledge_items": []
+    }
+  ]
+}

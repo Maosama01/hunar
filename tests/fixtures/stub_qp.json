@@ -1,0 +1,24 @@
+{
+  "nqr_id": 0,
+  "nqr_code": "STUB-NOT-OFFICIAL",
+  "title": "STUB, NOT OFFICIAL: Test Electrician",
+  "sector": "STUB",
+  "nsqf_level": 3,
+  "awarding_body": "STUB, NOT OFFICIAL",
+  "role": "target",
+  "is_stub": true,
+  "parse_method": "stub",
+  "verification_note": "STUB, NOT OFFICIAL. Hand written test fixture; not taken from any NQR document.",
+  "nos": [
+    {"code": "STUB/N0001", "title": "STUB: Wire a light circuit", "core": true, "nsqf_level": 3,
+     "performance_criteria": [
+       {"id": "STUB/N0001.PC1", "code": "PC1", "text": "connect a switch and a lamp holder to a single phase supply"},
+       {"id": "STUB/N0001.PC2", "code": "PC2", "text": "test the circuit for continuity with a multimeter"}
+     ]},
+    {"code": "STUB/N0002", "title": "STUB: Work safely", "core": true, "nsqf_level": 3,
+     "performance_criteria": [
+       {"id": "STUB/N0002.PC1", "code": "PC1", "text": "wear insulated gloves and safety shoes before electrical work"},
+       {"id": "STUB/N0002.PC2", "code": "PC2", "text": "switch off the main supply and check that the line is dead"}
+     ]}
+  ]
+}

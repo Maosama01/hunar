@@ -1,0 +1,160 @@
+{
+  "nqr_id": 11371,
+  "nqr_code": "NG-03-PW-02710-2024-V1-DGT",
+  "title": "Rooftop Solar PV (Installation & Maintenance)",
+  "sector": "Power",
+  "nsqf_level": 3.0,
+  "awarding_body": "Power Sector Skill Council (PSSC)",
+  "role": "distractor",
+  "is_stub": false,
+  "parse_method": "pdf_auto",
+  "verification_note": "Parsed automatically from the official PDF. Spot-checked against the PDF by the AI assistant; HUMAN CHECK PENDING.",
+  "source": {
+    "pdf_url": "https://www.nqr.gov.in/qualification/file/QF_Rooftop%20Solar%20PV%20%28Installation%20%26%20Maintenance%29%20_STC1.0_NSQF-3.0%20_E.pdf",
+    "page_url": "https://www.nqr.gov.in/qualifications/11371",
+    "downloaded_on": "2026-10-28",
+    "sha256": "a7a30a5c4ce3d605bfaabbe0fa5846aa37271884f94a8d8ff67f9ff5e0f934ad"
+  },
+  "nos": [
+    {
+      "code": "PSS/N9477",
+      "title": "Verify natural sunlight’s path and measure irradiance of different sources of light.",
+      "core": true,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N9477.PC1",
+          "code": "PC1",
+          "text": "Plot sun chart and locate the sun at your location for a given time of the day."
+        },
+        {
+          "id": "PSS/N9477.PC2",
+          "code": "PC2",
+          "text": "Measure intensity of solar radiation using Pyranometer and radiometers."
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N9478",
+      "title": "Determine characteristics of Photovoltaic cells, solar modules, Batteries and Charge controllers.",
+      "core": true,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N9478.PC1",
+          "code": "PC1",
+          "text": "Plot I-V curve for photovoltaic cell based on temperature at constant illumination."
+        },
+        {
+          "id": "PSS/N9478.PC2",
+          "code": "PC2",
+          "text": "Test photovoltaic cell in sunlight at various angles of inclination and direction."
+        },
+        {
+          "id": "PSS/N9478.PC3",
+          "code": "PC3",
+          "text": "Record specification of different solar panels and compare specifications to select a panel)"
+        },
+        {
+          "id": "PSS/N9478.PC4",
+          "code": "PC4",
+          "text": "Connect suitably rated wires in the terminal box of a solar panel and connect end terminals using MC 4 connectors."
+        },
+        {
+          "id": "PSS/N9478.PC5",
+          "code": "PC5",
+          "text": "Connect solar panels in series and measure voltage and current. Repeat with different rated panels."
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N9480",
+      "title": "Prepare bill of materials for roof top solar projects.",
+      "core": true,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N9480.PC1",
+          "code": "PC1",
+          "text": "Perform site survey for installation of rooftop solar plant."
+        },
+        {
+          "id": "PSS/N9480.PC2",
+          "code": "PC2",
+          "text": "Prepare bill of material for a 1 KW rooftop solar system as per customer’s need."
+        },
+        {
+          "id": "PSS/N9480.PC3",
+          "code": "PC3",
+          "text": "Prepare a Bill of materials for a 5 KW rooftop solar system as per customer’s need."
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N9479",
+      "title": "Install, connect, test and commission roof top solar panel, Charge controller, Battery bank and Inverter following safety guidelines.",
+      "core": true,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N9479.PC1",
+          "code": "PC1",
+          "text": "Install a rooftop (RCC/Tin) Solar panel mounting structure for 1 KW installation following safety precautions."
+        },
+        {
+          "id": "PSS/N9479.PC2",
+          "code": "PC2",
+          "text": "Mount Solar panels on the Mounting structure."
+        },
+        {
+          "id": "PSS/N9479.PC3",
+          "code": "PC3",
+          "text": "Wire up rooftop Solar panels."
+        },
+        {
+          "id": "PSS/N9479.PC4",
+          "code": "PC4",
+          "text": "Connect the array junction box to the given installation and draw wires."
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N9481",
+      "title": "Troubleshoot and Maintain solar roof top projects with best practices.",
+      "core": true,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N9481.PC1",
+          "code": "PC1",
+          "text": "Carry out of Solar Panel Maintenance: - Cleaning, DC Array Inspection."
+        },
+        {
+          "id": "PSS/N9481.PC2",
+          "code": "PC2",
+          "text": "Verify the capacity of the solar PV power plant as per the relevant regulation"
+        },
+        {
+          "id": "PSS/N9481.PC3",
+          "code": "PC3",
+          "text": "Verify that the inverters, panels, protection devices conforming to IEC standards or relevant Indian standards"
+        },
+        {
+          "id": "PSS/N9481.PC4",
+          "code": "PC4",
+          "text": "Verify and assess the safety of earthing and lightning protection of the solar PV power plant"
+        }
+      ],
+      "knowledge_items": []
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "_note": "Official qualification files from the National Qualification Register (nqr.gov.in). PDFs are downloaded by `make data` into data/raw/qp/ (gitignored). Download date and SHA-256 are recorded in data/processed/qp_manifest.json.",
+  "packs": [
+    {
+      "nqr_id": 13772,
+      "role": "target",
+      "title": "Assistant Electrician",
+      "nqr_code": "QG-03-CO-03951-2025-V2-CSDCI",
+      "sector": "Construction",
+      "nsqf_level": 3,
+      "awarding_body": "Construction Skill Development Council of India (CSDCI)",
+      "page_url": "https://www.nqr.gov.in/qualifications/13772",
+      "pdf_url": "https://www.nqr.gov.in/qualification/file/QF_Assistant%20Electrician_v%204.0_L3_English%20.pdf",
+      "valid_till_on_nqr_page": "30/04/2028"
+    },
+    {
+      "nqr_id": 9530,
+      "role": "distractor",
+      "title": "Industrial Electrician",
+      "nqr_code": "QG-04-PW-00870-2023-V1-PSSC",
+      "sector": "Power",
+      "nsqf_level": 4,
+      "awarding_body": "Power Sector Skill Council (PSSC)",
+      "page_url": "https://www.nqr.gov.in/qualifications/9530",
+      "pdf_url": "https://www.nqr.gov.in/qualification/file/Qualification%20File%20New%20Template_Industrial%20Electrician.pdf",
+      "valid_till_on_nqr_page": "31/08/2026"
+    },
+    {
+      "nqr_id": 11371,
+      "role": "distractor",
+      "title": "Rooftop Solar PV (Installation & Maintenance)",
+      "nqr_code": "NG-03-PW-02710-2024-V1-DGT",
+      "sector": "Power",
+      "nsqf_level": 3,
+      "awarding_body": "Power Sector Skill Council (PSSC)",
+      "page_url": "https://www.nqr.gov.in/qualifications/11371",
+      "pdf_url": "https://www.nqr.gov.in/qualification/file/QF_Rooftop%20Solar%20PV%20%28Installation%20%26%20Maintenance%29%20_STC1.0_NSQF-3.0%20_E.pdf",
+      "valid_till_on_nqr_page": "24/06/2027"
+    },
+    {
+      "nqr_id": 14896,
+      "role": "distractor",
+      "title": "Wireman Control Panel Electronics",
+      "nqr_code": "QG-03-EH-04474-2025-V2-ESSCI",
+      "sector": "Electronics & HW",
+      "nsqf_level": 3,
+      "awarding_body": "Electronics Sector Skills Council of India (ESSCI)",
+      "page_url": "https://www.nqr.gov.in/qualifications/14896",
+      "pdf_url": "https://www.nqr.gov.in/qualification/file/QFile_Wireman%20Control%20Panel%20Electronics.....pdf",
+      "valid_till_on_nqr_page": "07/10/2028"
+    },
+    {
+      "nqr_id": 9588,
+      "role": "distractor",
+      "title": "Jr. Technician (Smart Energy Meter)",
+      "nqr_code": "QG-03-PW-00868-2023-V1-PSSC",
+      "sector": "Power",
+      "nsqf_level": 3,
+      "awarding_body": "Power Sector Skill Council (PSSC)",
+      "page_url": "https://www.nqr.gov.in/qualifications/9588",
+      "pdf_url": "https://www.nqr.gov.in/qualification/file/Qualification%20File%20New%20Template%20Jr.%20Technician%20%28Smart%20Energy%20Meter%29.pdf",
+      "valid_till_on_nqr_page": "31/08/2026"
+    }
+  ]
+}

@@ -1,0 +1,645 @@
+{
+  "nqr_id": 9530,
+  "nqr_code": "QG-04-PW-00870-2023-V1-PSSC",
+  "title": "Industrial Electrician",
+  "sector": "Power",
+  "nsqf_level": 4.0,
+  "awarding_body": "Power Sector Skill Council (PSSC)",
+  "role": "distractor",
+  "is_stub": false,
+  "parse_method": "pdf_auto",
+  "verification_note": "Parsed automatically from the official PDF. Spot-checked against the PDF by the AI assistant; HUMAN CHECK PENDING.",
+  "source": {
+    "pdf_url": "https://www.nqr.gov.in/qualification/file/Qualification%20File%20New%20Template_Industrial%20Electrician.pdf",
+    "page_url": "https://www.nqr.gov.in/qualifications/9530",
+    "downloaded_on": "2026-10-28",
+    "sha256": "792719b8a5a305a6ac23ae30aae6b2df35afedc322c350b0f54016abcb41e303"
+  },
+  "nos": [
+    {
+      "code": "PSS/N1706",
+      "title": "Perform pipe and plate earthing",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N1706.PC1",
+          "code": "PC1",
+          "text": "identify and obtain specific tools, materials and equipment required for earthing"
+        },
+        {
+          "id": "PSS/N1706.PC2",
+          "code": "PC2",
+          "text": "ensure that the earth pit excavation is done as per specifications"
+        },
+        {
+          "id": "PSS/N1706.PC3",
+          "code": "PC3",
+          "text": "carry out testing and maintenance of Earth Resistance"
+        },
+        {
+          "id": "PSS/N1706.PC4",
+          "code": "PC4",
+          "text": "insert the galvanized iron plate electrode in case of plate earthing"
+        },
+        {
+          "id": "PSS/N1706.PC5",
+          "code": "PC5",
+          "text": "fix the pipe electrode as per specifications in case of pipe earthing"
+        },
+        {
+          "id": "PSS/N1706.PC6",
+          "code": "PC6",
+          "text": "check that the connections done are not loose and fixed as per specifications"
+        },
+        {
+          "id": "PSS/N1706.PC7",
+          "code": "PC7",
+          "text": "install water connection pipeline as per requirement in case of plate earthing"
+        },
+        {
+          "id": "PSS/N1706.PC8",
+          "code": "PC8",
+          "text": "fill the annular space between the electrode and borehole walls with alternating layers of coke or charcoal and common salt in case of pipe earthing"
+        },
+        {
+          "id": "PSS/N1706.PC9",
+          "code": "PC9",
+          "text": "follow the approved design and drawing for fixing and laying of earth wires or copper strips between the earth electrode and the electrical room"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N1707",
+      "title": "Perform industrial wiring as per planned specifications",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N1707.PC1",
+          "code": "PC1",
+          "text": "measure current, voltage and resistance of Single Phase and Three phase load"
+        },
+        {
+          "id": "PSS/N1707.PC2",
+          "code": "PC2",
+          "text": "make simple single phase and three phase electrical connections using resistance, voltmeter, ammeter and multimeter etc."
+        },
+        {
+          "id": "PSS/N1707.PC3",
+          "code": "PC3",
+          "text": "verify the characteristics of series, parallel and its combination circuits"
+        },
+        {
+          "id": "PSS/N1707.PC4",
+          "code": "PC4",
+          "text": "identify the phase, neutral and earth connections in single and three phase supply"
+        },
+        {
+          "id": "PSS/N1707.PC5",
+          "code": "PC5",
+          "text": "read and interpret drawings and documentation including 1Ø System through RLC circuits with phase diagram, 3Ø System- generation of 3Ø system, 3Ø type (Star, Delta)"
+        },
+        {
+          "id": "PSS/N1707.PC6",
+          "code": "PC6",
+          "text": "identify, use and maintain various hand tools and measuring instruments"
+        },
+        {
+          "id": "PSS/N1707.PC7",
+          "code": "PC7",
+          "text": "plan ducting and wiring systems for industrial use and when and where to use a specific ducting and/or wiring system"
+        },
+        {
+          "id": "PSS/N1707.PC8",
+          "code": "PC8",
+          "text": "plan staircase wiring and master control wiring using drawings and documentation provided"
+        },
+        {
+          "id": "PSS/N1707.PC9",
+          "code": "PC9",
+          "text": "demonstrate the usage of direct on-line starter and star-delta starter"
+        },
+        {
+          "id": "PSS/N1707.PC10",
+          "code": "PC10",
+          "text": "install various electrical power supplies, such as single phase, three-phase, direct current and low voltage"
+        },
+        {
+          "id": "PSS/N1707.PC11",
+          "code": "PC11",
+          "text": "install structured cabling systems such as computer network cabling, fire/burglar alarm), control and monitoring, access control closed circuit television"
+        },
+        {
+          "id": "PSS/N1707.PC12",
+          "code": "PC12",
+          "text": "assemble different termination adaptors, including glands onto duct and attach ducts, of different types, securely onto a surface"
+        },
+        {
+          "id": "PSS/N1707.PC13",
+          "code": "PC13",
+          "text": "install different types of installations for illumination"
+        },
+        {
+          "id": "PSS/N1707.PC14",
+          "code": "PC14",
+          "text": "test the industrial illumination wiring installations for insulation resistance using megger"
+        },
+        {
+          "id": "PSS/N1707.PC15",
+          "code": "PC15",
+          "text": "perform troubleshooting of faults present in the industrial wiring"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N1708",
+      "title": "Perform installation and testing of switchgears and cables",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N1708.PC1",
+          "code": "PC1",
+          "text": "assemble switchboard apparatus as per layout drawings"
+        },
+        {
+          "id": "PSS/N1708.PC2",
+          "code": "PC2",
+          "text": "install electrical switchboards onto a surface as per drawings and documentation provided"
+        },
+        {
+          "id": "PSS/N1708.PC3",
+          "code": "PC3",
+          "text": "test installations before energizing and check for proper connection"
+        },
+        {
+          "id": "PSS/N1708.PC4",
+          "code": "PC4",
+          "text": "test installations when energized by checking complete function on all equipment and installed to ensure correct operation of new installation as per instructions"
+        },
+        {
+          "id": "PSS/N1708.PC5",
+          "code": "PC5",
+          "text": "perform preventive maintenance of various switchboard apparatus"
+        },
+        {
+          "id": "PSS/N1708.PC6",
+          "code": "PC6",
+          "text": "identify sub-circuits and determine cables for connection of security control panel"
+        },
+        {
+          "id": "PSS/N1708.PC7",
+          "code": "PC7",
+          "text": "install and terminate cables to connect the security control panel to existing sub-circuit"
+        },
+        {
+          "id": "PSS/N1708.PC8",
+          "code": "PC8",
+          "text": "perform different types of cable jointing"
+        },
+        {
+          "id": "PSS/N1708.PC9",
+          "code": "PC9",
+          "text": "perform different types of cable trays bending in the range of 45 to 90"
+        },
+        {
+          "id": "PSS/N1708.PC10",
+          "code": "PC10",
+          "text": "inspect, test, rectify abnormal conditions, and commission connection of the circuit"
+        },
+        {
+          "id": "PSS/N1708.PC11",
+          "code": "PC11",
+          "text": "troubleshoot electrical installations and identify faults in the cable"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N1709",
+      "title": "Perform control panel wiring of industrial AC",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N1709.PC1",
+          "code": "PC1",
+          "text": "perform various Wire bending operations such as Bending eyelets, stripping, crimping, straight twist, married and T (Tee) joint and connecting sockets in stranded conductors"
+        },
+        {
+          "id": "PSS/N1709.PC2",
+          "code": "PC2",
+          "text": "perform stripping and glanding of wires and cables"
+        },
+        {
+          "id": "PSS/N1709.PC3",
+          "code": "PC3",
+          "text": "perform crimping on thimbles, lugs"
+        },
+        {
+          "id": "PSS/N1709.PC4",
+          "code": "PC4",
+          "text": "build Contactor control circuits -Push button operation, Logic building using NC /NO (Normally open/Normally closed) controls"
+        },
+        {
+          "id": "PSS/N1709.PC5",
+          "code": "PC5",
+          "text": "assemble various wiring accessories"
+        },
+        {
+          "id": "PSS/N1709.PC6",
+          "code": "PC6",
+          "text": "select, operate and maintain the tools and equipment required for installing and operating an AC motor"
+        },
+        {
+          "id": "PSS/N1709.PC7",
+          "code": "PC7",
+          "text": "connect AC Motor as per instructions provided including structured cabling systems as per manufacturer’s instructions"
+        },
+        {
+          "id": "PSS/N1709.PC8",
+          "code": "PC8",
+          "text": "assemble and replace bearings with proper equipment as per standards"
+        },
+        {
+          "id": "PSS/N1709.PC9",
+          "code": "PC9",
+          "text": "set-up equipment to control speed and torque of an AC motor"
+        },
+        {
+          "id": "PSS/N1709.PC10",
+          "code": "PC10",
+          "text": "control Three phase Induction motor using Drive"
+        },
+        {
+          "id": "PSS/N1709.PC11",
+          "code": "PC11",
+          "text": "troubleshoot and take general care maintenance of AC motor"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N1710",
+      "title": "Perform testing and maintenance of transformer",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N1710.PC1",
+          "code": "PC1",
+          "text": "identify the terminals of transformer and find out polarity"
+        },
+        {
+          "id": "PSS/N1710.PC2",
+          "code": "PC2",
+          "text": "trace the primary and secondary winding of transformer"
+        },
+        {
+          "id": "PSS/N1710.PC3",
+          "code": "PC3",
+          "text": "select, operate and maintain the tools and equipment required for installing and operating a transformer"
+        },
+        {
+          "id": "PSS/N1710.PC4",
+          "code": "PC4",
+          "text": "select and install the transformer as per drawings and documentation provided"
+        },
+        {
+          "id": "PSS/N1710.PC5",
+          "code": "PC5",
+          "text": "connect and test three phase transformer in a given load"
+        },
+        {
+          "id": "PSS/N1710.PC6",
+          "code": "PC6",
+          "text": "check the transformer for installation resistance (HV- LV, LV-E, HV-E)"
+        },
+        {
+          "id": "PSS/N1710.PC7",
+          "code": "PC7",
+          "text": "check the earth resistance"
+        },
+        {
+          "id": "PSS/N1710.PC8",
+          "code": "PC8",
+          "text": "operate multiple transformers by connecting in parallel"
+        },
+        {
+          "id": "PSS/N1710.PC9",
+          "code": "PC9",
+          "text": "perform polarity test on the transformer"
+        },
+        {
+          "id": "PSS/N1710.PC10",
+          "code": "PC10",
+          "text": "test dielectric strength of transformer oil, and its insulation"
+        },
+        {
+          "id": "PSS/N1710.PC11",
+          "code": "PC11",
+          "text": "inspect silica gel, breather, conservator, temperature of the transformer"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N1711",
+      "title": "Perform operation of DG (Diesel Generator) sets and its controls",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N1711.PC1",
+          "code": "PC1",
+          "text": "check the conditions for starting the DG (Diesel Generator) set"
+        },
+        {
+          "id": "PSS/N1711.PC2",
+          "code": "PC2",
+          "text": "change lubricant, coolant etc., if required"
+        },
+        {
+          "id": "PSS/N1711.PC3",
+          "code": "PC3",
+          "text": "select, operate and maintain the tools and equipment required for installing and operating a DG set"
+        },
+        {
+          "id": "PSS/N1711.PC4",
+          "code": "PC4",
+          "text": "install the required DG set as per drawings and documentation provided"
+        },
+        {
+          "id": "PSS/N1711.PC5",
+          "code": "PC5",
+          "text": "start, run and load the DG set"
+        },
+        {
+          "id": "PSS/N1711.PC6",
+          "code": "PC6",
+          "text": "conduct a test process to ensure the performance of installed electrical equipment is as per the defined specifications"
+        },
+        {
+          "id": "PSS/N1711.PC7",
+          "code": "PC7",
+          "text": "identify the parts of Lead acid battery and test for its condition"
+        },
+        {
+          "id": "PSS/N1711.PC8",
+          "code": "PC8",
+          "text": "check the quantity of electrolyte"
+        },
+        {
+          "id": "PSS/N1711.PC9",
+          "code": "PC9",
+          "text": "perform charging of lead acid battery and test it"
+        },
+        {
+          "id": "PSS/N1711.PC10",
+          "code": "PC10",
+          "text": "perform troubleshooting and general care and maintenance of the DG set"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N1331",
+      "title": "Apply basic health and safety practices for power related work",
+      "core": false,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N1331.PC1",
+          "code": "PC1",
+          "text": "use protective clothing/equipment for specific tasks and work conditions"
+        },
+        {
+          "id": "PSS/N1331.PC2",
+          "code": "PC2",
+          "text": "identify job-site hazards and possible causes of risks/accident at the workplace"
+        },
+        {
+          "id": "PSS/N1331.PC3",
+          "code": "PC3",
+          "text": "follow procedures for safe working with electrical equipment"
+        },
+        {
+          "id": "PSS/N1331.PC4",
+          "code": "PC4",
+          "text": "follow warning signs while working with electrical systems"
+        },
+        {
+          "id": "PSS/N1331.PC5",
+          "code": "PC5",
+          "text": "use standard safe working practices when working at heights, confined areas and trenches"
+        },
+        {
+          "id": "PSS/N1331.PC6",
+          "code": "PC6",
+          "text": "test any electrical equipment and system using insulated testing devices before touching them"
+        },
+        {
+          "id": "PSS/N1331.PC7",
+          "code": "PC7",
+          "text": "ensure positive isolation of electrical equipment & system as per the given standards"
+        },
+        {
+          "id": "PSS/N1331.PC8",
+          "code": "PC8",
+          "text": "identify any abnormalities in electrical equipment or system installed alarm and/or noticing parameters from gauge/ indicator installed"
+        },
+        {
+          "id": "PSS/N1331.PC9",
+          "code": "PC9",
+          "text": "follow safe working practices while working in hazardous conditions to ensure the safety of self and others"
+        },
+        {
+          "id": "PSS/N1331.PC10",
+          "code": "PC10",
+          "text": "use various methods of accident prevention in the work environment"
+        },
+        {
+          "id": "PSS/N1331.PC11",
+          "code": "PC11",
+          "text": "identify and retrieve general health and safety equipment in the workplace"
+        },
+        {
+          "id": "PSS/N1331.PC12",
+          "code": "PC12",
+          "text": "set up and use scaffolds, elevated platforms and ladders safely"
+        },
+        {
+          "id": "PSS/N1331.PC13",
+          "code": "PC13",
+          "text": "inspect scaffolds, elevated platforms and ladders for faults and rectify them"
+        },
+        {
+          "id": "PSS/N1331.PC14",
+          "code": "PC14",
+          "text": "lift, carry and transport heavy objects & tools safely using correct procedures from storage to the workplace and vice versa"
+        },
+        {
+          "id": "PSS/N1331.PC15",
+          "code": "PC15",
+          "text": "inspect power plant and its equipment routinely for any signs of oil, water and steam leakage"
+        },
+        {
+          "id": "PSS/N1331.PC16",
+          "code": "PC16",
+          "text": "store flammable materials and machine lubricating oil safely and correctly"
+        },
+        {
+          "id": "PSS/N1331.PC17",
+          "code": "PC17",
+          "text": "check that the emission and pollution control devices are working properly in line with environmental policy standards"
+        },
+        {
+          "id": "PSS/N1331.PC18",
+          "code": "PC18",
+          "text": "use good housekeeping practices at all times"
+        },
+        {
+          "id": "PSS/N1331.PC19",
+          "code": "PC19",
+          "text": "identify common hazard signs displayed in various areas"
+        },
+        {
+          "id": "PSS/N1331.PC20",
+          "code": "PC20",
+          "text": "inform the relevant authorities about any abnormal situation/behavior of any equipment/system without delay"
+        },
+        {
+          "id": "PSS/N1331.PC21",
+          "code": "PC21",
+          "text": "use various appropriate fire extinguishers for different types of fires correctly"
+        },
+        {
+          "id": "PSS/N1331.PC22",
+          "code": "PC22",
+          "text": "use appropriate rescue techniques during fire hazard"
+        },
+        {
+          "id": "PSS/N1331.PC23",
+          "code": "PC23",
+          "text": "maintain good housekeeping in order to prevent fire hazards"
+        },
+        {
+          "id": "PSS/N1331.PC24",
+          "code": "PC24",
+          "text": "use a fire extinguisher correctly in case of fire"
+        },
+        {
+          "id": "PSS/N1331.PC25",
+          "code": "PC25",
+          "text": "administer appropriate first aid to the victims for the relevant injuries"
+        },
+        {
+          "id": "PSS/N1331.PC26",
+          "code": "PC26",
+          "text": "act promptly and appropriately to an accident situation or medical emergency in real or simulated environments"
+        },
+        {
+          "id": "PSS/N1331.PC27",
+          "code": "PC27",
+          "text": "perform and organise loss minimization or rescue activity during an accident in real or simulated environments"
+        },
+        {
+          "id": "PSS/N1331.PC28",
+          "code": "PC28",
+          "text": "administer basic first aid including CPR to the victims of heart or cardiac arrest due to electric shock, before the arrival of emergency services"
+        },
+        {
+          "id": "PSS/N1331.PC29",
+          "code": "PC29",
+          "text": "demonstrate basic emergency procedures during emergency mock drills for better understanding of procedures applied in emergencies"
+        },
+        {
+          "id": "PSS/N1331.PC30",
+          "code": "PC30",
+          "text": "free an affected person from electrocution safely as per the recommended procedure"
+        },
+        {
+          "id": "PSS/N1331.PC31",
+          "code": "PC31",
+          "text": "move injured people and others to a safe place during emergencies"
+        },
+        {
+          "id": "PSS/N1331.PC32",
+          "code": "PC32",
+          "text": "write an incident report or dictate a report to another person, and send report to the authorized person"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSS/N1336",
+      "title": "Work effectively with others",
+      "core": false,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSS/N1336.PC1",
+          "code": "PC1",
+          "text": "accept information and instructions from the supervisor and fellow workers and seek clarification when required"
+        },
+        {
+          "id": "PSS/N1336.PC2",
+          "code": "PC2",
+          "text": "pass the information to the persons authorized to receive it within agreed timescales and confirm its receipt"
+        },
+        {
+          "id": "PSS/N1336.PC3",
+          "code": "PC3",
+          "text": "pass information to others clearly, at a pace and in a manner that helps them understand it"
+        },
+        {
+          "id": "PSS/N1336.PC4",
+          "code": "PC4",
+          "text": "assist others in performing tasks in a positive manner with a helpful attitude"
+        },
+        {
+          "id": "PSS/N1336.PC5",
+          "code": "PC5",
+          "text": "consult and assist fellow workers to maximize effectiveness and efficiency in carrying out tasks"
+        },
+        {
+          "id": "PSS/N1336.PC6",
+          "code": "PC6",
+          "text": "use appropriate communication etiquette while working"
+        },
+        {
+          "id": "PSS/N1336.PC7",
+          "code": "PC7",
+          "text": "listen attentively and respond appropriately while interacting with others at work"
+        },
+        {
+          "id": "PSS/N1336.PC8",
+          "code": "PC8",
+          "text": "use appropriate tone, pitch and language to convey politeness, assertiveness, care and professionalism"
+        },
+        {
+          "id": "PSS/N1336.PC9",
+          "code": "PC9",
+          "text": "act responsibly and demonstrate disciplined behaviours at the workplace"
+        },
+        {
+          "id": "PSS/N1336.PC10",
+          "code": "PC10",
+          "text": "escalate grievances and problems to the appropriate authority as per the organisational procedure to resolve them and avoid conflict Introduction to Employability Skills Constitutional values - Citizenship Becoming a Professional in the 21st Century Basic English Skills Career Development & Goal Setting Communication Skills Diversity & Inclusion Financial and Legal Literacy Essential Digital Skills Entrepreneurship Customer Service Getting ready for Apprenticeship & Jobs"
+        }
+      ],
+      "knowledge_items": []
+    }
+  ]
+}

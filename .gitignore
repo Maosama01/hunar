@@ -1,0 +1,32 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Data that must never be committed
+data/raw/
+data/uploads/
+data/models/
+*.db
+*.sqlite
+*.sqlite3
+.env
+
+# Model weights and caches
+*.pt
+*.onnx
+runs/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dev-dist/
+
+# OS
+.DS_Store

@@ -1,0 +1,49 @@
+{
+  "files": [
+    {
+      "nqr_id": 13772,
+      "title": "Assistant Electrician",
+      "source_url": "https://www.nqr.gov.in/qualification/file/QF_Assistant%20Electrician_v%204.0_L3_English%20.pdf",
+      "page_url": "https://www.nqr.gov.in/qualifications/13772",
+      "downloaded_on": "2026-10-28",
+      "sha256": "13084cdd85b89be04a7a4db76861547f91ea2086b322d8e69b35f06964732fcf",
+      "bytes": 1294793
+    },
+    {
+      "nqr_id": 9530,
+      "title": "Industrial Electrician",
+      "source_url": "https://www.nqr.gov.in/qualification/file/Qualification%20File%20New%20Template_Industrial%20Electrician.pdf",
+      "page_url": "https://www.nqr.gov.in/qualifications/9530",
+      "downloaded_on": "2026-10-28",
+      "sha256": "792719b8a5a305a6ac23ae30aae6b2df35afedc322c350b0f54016abcb41e303",
+      "bytes": 1517714
+    },
+    {
+      "nqr_id": 11371,
+      "title": "Rooftop Solar PV (Installation & Maintenance)",
+      "source_url": "https://www.nqr.gov.in/qualification/file/QF_Rooftop%20Solar%20PV%20%28Installation%20%26%20Maintenance%29%20_STC1.0_NSQF-3.0%20_E.pdf",
+      "page_url": "https://www.nqr.gov.in/qualifications/11371",
+      "downloaded_on": "2026-10-28",
+      "sha256": "a7a30a5c4ce3d605bfaabbe0fa5846aa37271884f94a8d8ff67f9ff5e0f934ad",
+      "bytes": 1255960
+    },
+    {
+      "nqr_id": 14896,
+      "title": "Wireman Control Panel Electronics",
+      "source_url": "https://www.nqr.gov.in/qualification/file/QFile_Wireman%20Control%20Panel%20Electronics.....pdf",
+      "page_url": "https://www.nqr.gov.in/qualifications/14896",
+      "downloaded_on": "2026-10-28",
+      "sha256": "cc0e9c8138ee75eb4307db7db523a17eaa4497f949a36bb7cc58ef6a0df689c5",
+      "bytes": 1370048
+    },
+    {
+      "nqr_id": 9588,
+      "title": "Jr. Technician (Smart Energy Meter)",
+      "source_url": "https://www.nqr.gov.in/qualification/file/Qualification%20File%20New%20Template%20Jr.%20Technician%20%28Smart%20Energy%20Meter%29.pdf",
+      "page_url": "https://www.nqr.gov.in/qualifications/9588",
+      "downloaded_on": "2026-10-28",
+      "sha256": "69c6f3b9f11d8e8eb68893ef19fc721529b3157b135481c4225fb13f119ef2c5",
+      "bytes": 1293415
+    }
+  ]
+}

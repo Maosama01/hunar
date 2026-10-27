@@ -1,0 +1,64 @@
+[project]
+name = "hunar"
+version = "0.1.0"
+description = "AI assisted Recognition of Prior Learning (RPL) tool for domestic electricians (SIH26242 minor project)"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+authors = [{ name = "Tanishq Khandelwal" }]
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "sqlmodel>=0.0.22",
+    "pydantic>=2.7",
+    "pyyaml>=6.0",
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "scikit-learn>=1.5",
+    "pdfplumber>=0.11",
+    "python-multipart>=0.0.9",
+    "pillow>=10.4",
+    "imagehash>=4.3",
+    "opencv-python-headless>=4.10",
+    "sentence-transformers>=3.0",
+    "statsmodels>=0.14",
+    "krippendorff>=0.7",
+    "matplotlib>=3.9",
+    "scipy>=1.13",
+]
+
+[project.optional-dependencies]
+# YOLOv8 inference. Training happens in notebooks/m2_train_yolo_colab.ipynb on Colab.
+vision = ["ultralytics>=8.3"]
+# Optional speech to text for spoken declarations.
+voice = ["faster-whisper>=1.0"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2",
+    "httpx>=0.27",
+    "ruff>=0.6",
+    "nbformat>=5.10",
+    "nbclient>=0.10",
+    "ipykernel>=6.29",
+    "python-docx>=1.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend/hunar"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = ["slow: needs downloaded models (deselect with -m 'not slow')"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]
