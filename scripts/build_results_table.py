@@ -123,9 +123,9 @@ def m2_tables() -> str:
             out.append(f"| {h} | {v['chosen_threshold']} | {t['precision']:.3f} | {t['recall']:.3f} | "
                        f"{t['false_flag_rate_fresh']:.3f} |")
         ph = d["hashes"]["phash"]
-        out.append(f"\n**pHash recall by kind of reuse** (threshold {ph['chosen_threshold']}):\n")
-        out.append("| " + " | ".join(ph["test_recall_by_transform"]) + " |\n|" + "---|" * len(ph["test_recall_by_transform"]))
-        out.append("| " + " | ".join(f"{v:.2f}" for v in ph["test_recall_by_transform"].values()) + " |")
+        out.append(f"\n**pHash recall by kind of reuse** (threshold {ph['chosen_threshold']}, held-out half):\n")
+        out.append("| Reuse transformation | Recall |\n|---|---|")
+        out += [f"| {k.replace('_', ' ')} | {v:.2f} |" for k, v in ph["test_recall_by_transform"].items()]
         f1 = ph["test_at_max_f1_threshold"]
         out.append(f"\nFor comparison, the max-F1 threshold ({ph['max_f1_threshold_dev']}) would catch more edited "
                    f"copies (recall {f1['recall']:.2f}) but would also flag {f1['false_flag_rate_fresh']:.0%} of "

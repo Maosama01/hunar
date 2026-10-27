@@ -39,11 +39,19 @@ Real photos from the public PPE dataset (CC BY 4.0, test split); reuse is simula
 | ahash | 0 | 0.984 | 0.344 | 0.033 |
 | whash | 0 | 0.974 | 0.365 | 0.024 |
 
-**pHash recall by kind of reuse** (threshold 4):
+**pHash recall by kind of reuse** (threshold 4, held-out half):
 
-| jpeg_q50 | jpeg_q20 | resize_50pct | crop_90pct | crop_75pct | brightness_+30pct | rotate_5deg | border_whatsapp_style | mirror_flip |
-|---|---|---|---|---|---|---|---|---|
-| 1.00 | 1.00 | 1.00 | 0.00 | 0.00 | 0.65 | 0.01 | 0.00 | 0.00 |
+| Reuse transformation | Recall |
+|---|---|
+| jpeg q50 | 1.00 |
+| jpeg q20 | 1.00 |
+| resize 50pct | 1.00 |
+| crop 90pct | 0.00 |
+| crop 75pct | 0.00 |
+| brightness +30pct | 0.65 |
+| rotate 5deg | 0.01 |
+| border whatsapp style | 0.00 |
+| mirror flip | 0.00 |
 
 For comparison, the max-F1 threshold (16) would catch more edited copies (recall 0.70) but would also flag 46% of fresh, unrelated photos, because many site photos look alike.
 
