@@ -14,8 +14,8 @@ import imagehash
 import numpy as np
 from PIL import Image
 
-# Chosen on the hashing evaluation set (see experiments/m2_hashing.json, "chosen_threshold").
-DEFAULT_PHASH_THRESHOLD = 10
+# Chosen by `make eval-m2` (experiments/m2_hashing.json, hashes.phash.chosen_threshold).
+DEFAULT_PHASH_THRESHOLD = 4  # max recall with <= 5% false flags on fresh photos (dev half)
 
 
 @dataclass(frozen=True)

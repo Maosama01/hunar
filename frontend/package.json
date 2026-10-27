@@ -1,0 +1,32 @@
+{
+  "name": "hunar-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Hunar PWA: AI assisted RPL for domestic electricians. AI suggests, the assessor decides.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit -p tsconfig.json && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json"
+  },
+  "dependencies": {
+    "dexie": "4.0.8",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.26.2"
+  },
+  "devDependencies": {
+    "@types/node": "20.17.6",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-react": "4.3.4",
+    "typescript": "5.5.4",
+    "vite": "5.4.11",
+    "vite-plugin-pwa": "0.20.5"
+  },
+  "overrides": {
+    "workbox-build": "7.3.0",
+    "workbox-window": "7.3.0"
+  }
+}

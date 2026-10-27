@@ -1,0 +1,1764 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "Hunar API",
+  "description": "AI assisted RPL for domestic electricians. AI suggests; the assessor decides.",
+  "version": "0.1.0"
+ },
+ "paths": {
+  "/api/health": {
+   "get": {
+    "summary": "Health",
+    "operationId": "health_api_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/packs": {
+   "get": {
+    "summary": "Packs",
+    "operationId": "packs_api_packs_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/packs/{nqr_id}": {
+   "get": {
+    "summary": "Pack",
+    "operationId": "pack_api_packs__nqr_id__get",
+    "parameters": [
+     {
+      "name": "nqr_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Nqr Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/map": {
+   "post": {
+    "summary": "Map Declaration",
+    "operationId": "map_declaration_api_map_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MapIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MappingResult"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/rubrics": {
+   "get": {
+    "summary": "Rubrics",
+    "operationId": "rubrics_api_rubrics_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/workers": {
+   "get": {
+    "summary": "List Workers",
+    "operationId": "list_workers_api_workers_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/Worker"
+         },
+         "type": "array",
+         "title": "Response List Workers Api Workers Get"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "summary": "Create Worker",
+    "operationId": "create_worker_api_workers_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/WorkerIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Worker"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/assessments": {
+   "get": {
+    "summary": "List Assessments",
+    "operationId": "list_assessments_api_assessments_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "summary": "Create Assessment",
+    "operationId": "create_assessment_api_assessments_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AssessmentIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/assessments/{aid}": {
+   "get": {
+    "summary": "Get Assessment",
+    "operationId": "get_assessment_api_assessments__aid__get",
+    "parameters": [
+     {
+      "name": "aid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Aid"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/assessments/{aid}/confirm-pack": {
+   "post": {
+    "summary": "Confirm Pack",
+    "operationId": "confirm_pack_api_assessments__aid__confirm_pack_post",
+    "parameters": [
+     {
+      "name": "aid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Aid"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ConfirmPackIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/assessments/{aid}/checklist": {
+   "put": {
+    "summary": "Set Checklist",
+    "operationId": "set_checklist_api_assessments__aid__checklist_put",
+    "parameters": [
+     {
+      "name": "aid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Aid"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ChecklistIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/assessments/{aid}/evidence": {
+   "post": {
+    "summary": "Add Evidence",
+    "operationId": "add_evidence_api_assessments__aid__evidence_post",
+    "parameters": [
+     {
+      "name": "aid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Aid"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_add_evidence_api_assessments__aid__evidence_post"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/evidence/{eid}/image": {
+   "get": {
+    "summary": "Evidence Image",
+    "operationId": "evidence_image_api_evidence__eid__image_get",
+    "parameters": [
+     {
+      "name": "eid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Eid"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/assessments/{aid}/prescores": {
+   "get": {
+    "summary": "Prescores",
+    "operationId": "prescores_api_assessments__aid__prescores_get",
+    "parameters": [
+     {
+      "name": "aid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Aid"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/PreScore"
+         },
+         "title": "Response Prescores Api Assessments  Aid  Prescores Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/assessments/{aid}/decisions": {
+   "post": {
+    "summary": "Decide",
+    "operationId": "decide_api_assessments__aid__decisions_post",
+    "parameters": [
+     {
+      "name": "aid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Aid"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DecisionIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/assessments/{aid}/profile": {
+   "get": {
+    "summary": "Profile",
+    "operationId": "profile_api_assessments__aid__profile_get",
+    "parameters": [
+     {
+      "name": "aid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Aid"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Profile"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/assessments/{aid}/signoff": {
+   "post": {
+    "summary": "Signoff",
+    "operationId": "signoff_api_assessments__aid__signoff_post",
+    "parameters": [
+     {
+      "name": "aid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Aid"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SignoffIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/audit": {
+   "get": {
+    "summary": "Audit Log",
+    "operationId": "audit_log_api_audit_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 200,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "subject",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Subject"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/audit/verify": {
+   "get": {
+    "summary": "Audit Verify",
+    "operationId": "audit_verify_api_audit_verify_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/sync": {
+   "post": {
+    "summary": "Sync",
+    "description": "Apply queued offline operations in order. Replaying an op_id returns the stored result.",
+    "operationId": "sync_api_sync_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SyncIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/study/items": {
+   "get": {
+    "summary": "Study Items",
+    "operationId": "study_items_api_study_items_get",
+    "parameters": [
+     {
+      "name": "rater_id",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Rater Id"
+      }
+     },
+     {
+      "name": "condition",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "enum": [
+        "unassisted",
+        "assisted"
+       ],
+       "type": "string",
+       "title": "Condition"
+      }
+     },
+     {
+      "name": "include_sample",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "title": "Include Sample"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/study/items/{item_id}/image": {
+   "get": {
+    "summary": "Study Image",
+    "operationId": "study_image_api_study_items__item_id__image_get",
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/study/ratings": {
+   "post": {
+    "summary": "Add Rating",
+    "operationId": "add_rating_api_study_ratings_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RatingIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/study/export": {
+   "get": {
+    "summary": "Study Export",
+    "operationId": "study_export_api_study_export_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "text/plain": {
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "AssessmentIn": {
+    "properties": {
+     "id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Id"
+     },
+     "worker_id": {
+      "type": "string",
+      "title": "Worker Id"
+     },
+     "declaration_text": {
+      "type": "string",
+      "title": "Declaration Text",
+      "default": ""
+     },
+     "actor": {
+      "type": "string",
+      "title": "Actor",
+      "default": "facilitator"
+     }
+    },
+    "type": "object",
+    "required": [
+     "worker_id"
+    ],
+    "title": "AssessmentIn"
+   },
+   "Body_add_evidence_api_assessments__aid__evidence_post": {
+    "properties": {
+     "task_id": {
+      "type": "string",
+      "title": "Task Id"
+     },
+     "photo_id": {
+      "type": "string",
+      "title": "Photo Id"
+     },
+     "consent_confirmed": {
+      "type": "boolean",
+      "title": "Consent Confirmed",
+      "default": false
+     },
+     "actor": {
+      "type": "string",
+      "title": "Actor",
+      "default": "facilitator"
+     },
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File"
+     }
+    },
+    "type": "object",
+    "required": [
+     "task_id",
+     "photo_id",
+     "file"
+    ],
+    "title": "Body_add_evidence_api_assessments__aid__evidence_post"
+   },
+   "ChecklistIn": {
+    "properties": {
+     "task_id": {
+      "type": "string",
+      "title": "Task Id"
+     },
+     "ticks": {
+      "additionalProperties": {
+       "type": "boolean"
+      },
+      "type": "object",
+      "title": "Ticks"
+     },
+     "actor": {
+      "type": "string",
+      "title": "Actor"
+     }
+    },
+    "type": "object",
+    "required": [
+     "task_id",
+     "ticks",
+     "actor"
+    ],
+    "title": "ChecklistIn"
+   },
+   "ConfirmPackIn": {
+    "properties": {
+     "nqr_id": {
+      "type": "integer",
+      "title": "Nqr Id"
+     },
+     "actor": {
+      "type": "string",
+      "title": "Actor"
+     },
+     "reason": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reason"
+     }
+    },
+    "type": "object",
+    "required": [
+     "nqr_id",
+     "actor"
+    ],
+    "title": "ConfirmPackIn"
+   },
+   "CriterionMatch": {
+    "properties": {
+     "pc_id": {
+      "type": "string",
+      "title": "Pc Id"
+     },
+     "nos_code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Nos Code"
+     },
+     "text": {
+      "type": "string",
+      "title": "Text"
+     },
+     "score": {
+      "type": "number",
+      "title": "Score",
+      "description": "Best similarity of any declaration sentence to this criterion"
+     },
+     "evidence": {
+      "items": {
+       "$ref": "#/components/schemas/Evidence"
+      },
+      "type": "array",
+      "title": "Evidence"
+     }
+    },
+    "type": "object",
+    "required": [
+     "pc_id",
+     "nos_code",
+     "text",
+     "score"
+    ],
+    "title": "CriterionMatch"
+   },
+   "DecisionIn": {
+    "properties": {
+     "task_id": {
+      "type": "string",
+      "title": "Task Id"
+     },
+     "criterion_id": {
+      "type": "string",
+      "title": "Criterion Id"
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "accept",
+       "override"
+      ],
+      "title": "Action"
+     },
+     "level": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Level"
+     },
+     "reason": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reason"
+     },
+     "assessor": {
+      "type": "string",
+      "title": "Assessor"
+     }
+    },
+    "type": "object",
+    "required": [
+     "task_id",
+     "criterion_id",
+     "action",
+     "assessor"
+    ],
+    "title": "DecisionIn"
+   },
+   "Evidence": {
+    "properties": {
+     "sentence": {
+      "type": "string",
+      "title": "Sentence"
+     },
+     "similarity": {
+      "type": "number",
+      "title": "Similarity"
+     }
+    },
+    "type": "object",
+    "required": [
+     "sentence",
+     "similarity"
+    ],
+    "title": "Evidence"
+   },
+   "Gap": {
+    "properties": {
+     "task_id": {
+      "type": "string",
+      "title": "Task Id"
+     },
+     "criterion_id": {
+      "type": "string",
+      "title": "Criterion Id"
+     },
+     "nos": {
+      "type": "string",
+      "title": "Nos"
+     },
+     "level": {
+      "type": "integer",
+      "title": "Level"
+     },
+     "critical": {
+      "type": "boolean",
+      "title": "Critical"
+     },
+     "text": {
+      "type": "string",
+      "title": "Text"
+     }
+    },
+    "type": "object",
+    "required": [
+     "task_id",
+     "criterion_id",
+     "nos",
+     "level",
+     "critical",
+     "text"
+    ],
+    "title": "Gap"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "MapIn": {
+    "properties": {
+     "text": {
+      "type": "string",
+      "minLength": 3,
+      "title": "Text"
+     }
+    },
+    "type": "object",
+    "required": [
+     "text"
+    ],
+    "title": "MapIn"
+   },
+   "MappingResult": {
+    "properties": {
+     "method": {
+      "type": "string",
+      "title": "Method"
+     },
+     "sentences": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Sentences"
+     },
+     "ranking": {
+      "items": {
+       "$ref": "#/components/schemas/PackScore"
+      },
+      "type": "array",
+      "title": "Ranking"
+     },
+     "note": {
+      "type": "string",
+      "title": "Note",
+      "default": "Suggestion only. An assessor confirms the qualification pack."
+     }
+    },
+    "type": "object",
+    "required": [
+     "method",
+     "sentences",
+     "ranking"
+    ],
+    "title": "MappingResult"
+   },
+   "NOSCoverage": {
+    "properties": {
+     "code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Code"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "core": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Core"
+     },
+     "score": {
+      "type": "number",
+      "title": "Score",
+      "description": "Mean of the top-3 criterion scores in this NOS"
+     },
+     "matched": {
+      "type": "integer",
+      "title": "Matched"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     }
+    },
+    "type": "object",
+    "required": [
+     "code",
+     "title",
+     "core",
+     "score",
+     "matched",
+     "total"
+    ],
+    "title": "NOSCoverage"
+   },
+   "NOSResult": {
+    "properties": {
+     "nos": {
+      "type": "string",
+      "title": "Nos"
+     },
+     "score": {
+      "type": "number",
+      "title": "Score"
+     },
+     "criteria": {
+      "type": "integer",
+      "title": "Criteria"
+     },
+     "below_competent": {
+      "type": "integer",
+      "title": "Below Competent"
+     }
+    },
+    "type": "object",
+    "required": [
+     "nos",
+     "score",
+     "criteria",
+     "below_competent"
+    ],
+    "title": "NOSResult"
+   },
+   "PackScore": {
+    "properties": {
+     "nqr_id": {
+      "type": "integer",
+      "title": "Nqr Id"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "nsqf_level": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Nsqf Level"
+     },
+     "rank": {
+      "type": "integer",
+      "title": "Rank"
+     },
+     "score": {
+      "type": "number",
+      "title": "Score"
+     },
+     "nos": {
+      "items": {
+       "$ref": "#/components/schemas/NOSCoverage"
+      },
+      "type": "array",
+      "title": "Nos"
+     },
+     "matched": {
+      "items": {
+       "$ref": "#/components/schemas/CriterionMatch"
+      },
+      "type": "array",
+      "title": "Matched",
+      "description": "Criteria with evidence"
+     },
+     "gaps": {
+      "items": {
+       "$ref": "#/components/schemas/CriterionMatch"
+      },
+      "type": "array",
+      "title": "Gaps",
+      "description": "Core criteria with no evidence"
+     }
+    },
+    "type": "object",
+    "required": [
+     "nqr_id",
+     "title",
+     "nsqf_level",
+     "rank",
+     "score",
+     "nos"
+    ],
+    "title": "PackScore"
+   },
+   "PreScore": {
+    "properties": {
+     "task_id": {
+      "type": "string",
+      "title": "Task Id"
+     },
+     "criterion_id": {
+      "type": "string",
+      "title": "Criterion Id"
+     },
+     "suggested_level": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Suggested Level"
+     },
+     "confidence": {
+      "type": "string",
+      "enum": [
+       "none",
+       "low",
+       "medium",
+       "high"
+      ],
+      "title": "Confidence"
+     },
+     "reasons": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Reasons"
+     },
+     "conflict": {
+      "type": "boolean",
+      "title": "Conflict",
+      "default": false
+     }
+    },
+    "type": "object",
+    "required": [
+     "task_id",
+     "criterion_id",
+     "suggested_level",
+     "confidence",
+     "reasons"
+    ],
+    "title": "PreScore"
+   },
+   "Profile": {
+    "properties": {
+     "overall": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Overall"
+     },
+     "pass_mark": {
+      "type": "number",
+      "title": "Pass Mark"
+     },
+     "nos": {
+      "items": {
+       "$ref": "#/components/schemas/NOSResult"
+      },
+      "type": "array",
+      "title": "Nos"
+     },
+     "gaps": {
+      "items": {
+       "$ref": "#/components/schemas/Gap"
+      },
+      "type": "array",
+      "title": "Gaps"
+     },
+     "critical_failures": {
+      "items": {
+       "$ref": "#/components/schemas/Gap"
+      },
+      "type": "array",
+      "title": "Critical Failures"
+     },
+     "unscored": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Unscored"
+     },
+     "recommendation": {
+      "type": "string",
+      "enum": [
+       "incomplete",
+       "not_yet_competent",
+       "recommend_for_certification"
+      ],
+      "title": "Recommendation"
+     },
+     "explanation": {
+      "type": "string",
+      "title": "Explanation"
+     },
+     "requires_assessor_signoff": {
+      "type": "boolean",
+      "title": "Requires Assessor Signoff",
+      "default": true
+     }
+    },
+    "type": "object",
+    "required": [
+     "overall",
+     "pass_mark",
+     "nos",
+     "gaps",
+     "critical_failures",
+     "unscored",
+     "recommendation",
+     "explanation"
+    ],
+    "title": "Profile"
+   },
+   "RatingIn": {
+    "properties": {
+     "rater_id": {
+      "type": "string",
+      "minLength": 1,
+      "title": "Rater Id"
+     },
+     "item_id": {
+      "type": "string",
+      "title": "Item Id"
+     },
+     "condition": {
+      "type": "string",
+      "enum": [
+       "unassisted",
+       "assisted"
+      ],
+      "title": "Condition"
+     },
+     "session": {
+      "type": "integer",
+      "minimum": 1.0,
+      "title": "Session"
+     },
+     "position": {
+      "type": "integer",
+      "minimum": 0.0,
+      "title": "Position"
+     },
+     "level": {
+      "type": "integer",
+      "maximum": 3.0,
+      "minimum": 0.0,
+      "title": "Level"
+     },
+     "seconds": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Seconds"
+     }
+    },
+    "type": "object",
+    "required": [
+     "rater_id",
+     "item_id",
+     "condition",
+     "session",
+     "position",
+     "level"
+    ],
+    "title": "RatingIn"
+   },
+   "SignoffIn": {
+    "properties": {
+     "assessor": {
+      "type": "string",
+      "title": "Assessor"
+     },
+     "agrees": {
+      "type": "boolean",
+      "title": "Agrees"
+     },
+     "outcome": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "not_yet_competent",
+         "recommend_for_certification"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Outcome"
+     },
+     "comment": {
+      "type": "string",
+      "title": "Comment",
+      "default": ""
+     }
+    },
+    "type": "object",
+    "required": [
+     "assessor",
+     "agrees"
+    ],
+    "title": "SignoffIn"
+   },
+   "SyncIn": {
+    "properties": {
+     "ops": {
+      "items": {
+       "$ref": "#/components/schemas/SyncOp"
+      },
+      "type": "array",
+      "title": "Ops"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ops"
+    ],
+    "title": "SyncIn"
+   },
+   "SyncOp": {
+    "properties": {
+     "op_id": {
+      "type": "string",
+      "title": "Op Id"
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "worker.create",
+       "assessment.create",
+       "pack.confirm",
+       "checklist.set",
+       "evidence.add",
+       "decision.add"
+      ],
+      "title": "Kind"
+     },
+     "payload": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Payload"
+     }
+    },
+    "type": "object",
+    "required": [
+     "op_id",
+     "kind",
+     "payload"
+    ],
+    "title": "SyncOp"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   },
+   "Worker": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "title": "Id"
+     },
+     "code": {
+      "type": "string",
+      "title": "Code",
+      "description": "Pseudonymous code such as W001; never a real name"
+     },
+     "preferred_language": {
+      "type": "string",
+      "title": "Preferred Language",
+      "default": "hi"
+     },
+     "is_sample": {
+      "type": "boolean",
+      "title": "Is Sample",
+      "default": false
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "code"
+    ],
+    "title": "Worker"
+   },
+   "WorkerIn": {
+    "properties": {
+     "id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Id"
+     },
+     "code": {
+      "type": "string",
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Code"
+     },
+     "preferred_language": {
+      "type": "string",
+      "enum": [
+       "en",
+       "hi"
+      ],
+      "title": "Preferred Language",
+      "default": "hi"
+     },
+     "actor": {
+      "type": "string",
+      "title": "Actor",
+      "default": "facilitator"
+     }
+    },
+    "type": "object",
+    "required": [
+     "code"
+    ],
+    "title": "WorkerIn"
+   }
+  }
+ }
+}
