@@ -94,6 +94,7 @@ def evaluate(kind: str, items: list[dict], methods: list[str]) -> dict:
         "git_commit": git_commit(),
         "created": dt.datetime.now().isoformat(timespec="seconds"),
         "methods": {},
+        "exploratory_methods": {"hybrid": "designed after seeing the first synthetic results; not a confirmed result"},
     }
     if kind == "synthetic":
         result["warning"] = ("SYNTHETIC DATA: declarations written by an AI model, not by workers. "
@@ -134,7 +135,7 @@ def evaluate(kind: str, items: list[dict], methods: list[str]) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--methods", nargs="+", default=["keyword", "tfidf", "minilm", "labse"])
+    ap.add_argument("--methods", nargs="+", default=["keyword", "tfidf", "minilm", "labse", "hybrid"])
     args = ap.parse_args(argv)
     ran = False
     for kind, path in DATASETS.items():

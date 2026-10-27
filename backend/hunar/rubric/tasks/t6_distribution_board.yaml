@@ -1,0 +1,79 @@
+task_id: t6_distribution_board
+qualification_nqr_id: 13772
+title:
+  en: "Assemble a small distribution board with MCBs"
+  hi: "MCB के साथ छोटा डिस्ट्रीब्यूशन बोर्ड बनाना"
+instructions:
+  en: "From the given single line diagram, mount a 4-way DB with an isolator/RCCB and MCBs for a lighting and a power circuit, earth it and test it before energising."
+  hi: "दिए गए सिंगल लाइन डायग्राम से आइसोलेटर/RCCB और लाइट व पावर सर्किट के MCB के साथ 4-वे DB लगाएँ, अर्थ करें और चालू करने से पहले जाँचें।"
+photos:
+  - {id: p1, en: "Assembled DB with cover off", hi: "कवर हटाकर तैयार DB"}
+  - {id: p2, en: "Labelled DB with cover on", hi: "लेबल लगा DB, कवर के साथ"}
+checklist:
+  - {id: sld_read, en: "SLD and ratings checked before assembly", hi: "जोड़ने से पहले SLD और रेटिंग देखी"}
+  - {id: mcb_rating, en: "MCB ratings match circuit loads", hi: "MCB रेटिंग सर्किट लोड के अनुसार"}
+  - {id: db_terminations, en: "Busbar and MCB terminations tight", hi: "बसबार और MCB टर्मिनेशन कसे हुए"}
+  - {id: db_earthed, en: "DB body and earth bar connected to earth", hi: "DB बॉडी और अर्थ बार अर्थ से जुड़े"}
+  - {id: pre_energise_tests, en: "Insulation and polarity tested before energising", hi: "चालू करने से पहले इंसुलेशन और पोलैरिटी जाँची"}
+  - {id: circuits_labelled, en: "Circuits labelled and warning tag present", hi: "सर्किट पर लेबल और चेतावनी टैग"}
+criteria:
+  - id: c1_ratings
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC1, CON/N0605.PC2, CON/N0602.PC9]
+    weight: 1
+    critical: false
+    text: {en: "Reads the SLD and selects MCB ratings to load", hi: "SLD पढ़कर लोड के अनुसार MCB रेटिंग चुनना"}
+    checklist: [sld_read, mcb_rating]
+    levels:
+      0: "Wrong ratings."
+      1: "One rating wrong."
+      2: "All ratings correct."
+      3: "All correct and can justify them from the load."
+  - id: c2_assembly
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC3, CON/N0605.PC6]
+    weight: 1
+    critical: false
+    text: {en: "Mounts and terminates the DB components firmly", hi: "DB के पुर्ज़े मज़बूती से लगाना और टर्मिनेट करना"}
+    checklist: [db_terminations]
+    levels:
+      0: "Loose components."
+      1: "Some loose terminations."
+      2: "All tight."
+      3: "All tight, neatly routed and torque-checked."
+  - id: c3_earthing
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC7]
+    weight: 2
+    critical: true
+    text: {en: "Earths the distribution board", hi: "डिस्ट्रीब्यूशन बोर्ड को अर्थ करना"}
+    checklist: [db_earthed]
+    levels:
+      0: "Not earthed."
+      1: "Earthed but loose."
+      2: "Body and earth bar firmly earthed."
+      3: "As 2, and earth continuity verified."
+  - id: c4_pre_energise
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC4]
+    weight: 2
+    critical: true
+    text: {en: "Tests before energising", hi: "चालू करने से पहले जाँच"}
+    checklist: [pre_energise_tests]
+    levels:
+      0: "Energises without testing."
+      1: "Partial tests."
+      2: "Insulation and polarity tested."
+      3: "Full test sequence, results recorded."
+  - id: c5_labelling
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC8]
+    weight: 1
+    critical: false
+    text: {en: "Labels circuits and tags the live board", hi: "सर्किट पर लेबल और चालू बोर्ड पर टैग"}
+    checklist: [circuits_labelled]
+    levels:
+      0: "No labels."
+      1: "Some labels."
+      2: "All circuits labelled, tag present."
+      3: "Labelled, tagged and area barricaded."

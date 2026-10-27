@@ -1,0 +1,68 @@
+task_id: t4_joint_termination
+qualification_nqr_id: 13772
+title:
+  en: "Make a straight-through joint and insulate it"
+  hi: "स्ट्रेट-थ्रू जोड़ बनाना और इंसुलेट करना"
+instructions:
+  en: "Join two lengths of 1.5 sq mm wire with a straight-through (twist) joint and insulate it."
+  hi: "1.5 वर्ग mm तार के दो टुकड़ों को स्ट्रेट-थ्रू (ट्विस्ट) जोड़ से जोड़ें और इंसुलेट करें।"
+photos:
+  - {id: p1, en: "Tools laid out before starting", hi: "शुरू करने से पहले औज़ार"}
+  - {id: p2, en: "Finished, insulated joint", hi: "तैयार, इंसुलेट किया हुआ जोड़"}
+checklist:
+  - {id: strip_length, en: "Insulation stripped to correct length", hi: "सही लंबाई तक इंसुलेशन छीला"}
+  - {id: no_nicks, en: "Conductor not nicked or cut", hi: "तार कटा या खरोंचा नहीं"}
+  - {id: tight_twist, en: "Joint mechanically firm (passes pull test)", hi: "जोड़ मज़बूत (खींचने पर नहीं खुलता)"}
+  - {id: fully_insulated, en: "Joint fully covered by tape or sleeve, no bare copper", hi: "जोड़ पूरी तरह टेप/स्लीव से ढका"}
+  - {id: right_tools, en: "Wire stripper and insulated pliers used", hi: "वायर स्ट्रिपर और इंसुलेटेड प्लायर का उपयोग"}
+criteria:
+  - id: c1_strip
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC6]
+    weight: 1
+    critical: false
+    text: {en: "Strips insulation without damaging the conductor", hi: "तार को नुकसान पहुँचाए बिना इंसुलेशन छीलना"}
+    checklist: [strip_length, no_nicks]
+    cv_classes_any: [wire_stripper]
+    levels:
+      0: "Conductor damaged."
+      1: "Wrong length or minor nicks."
+      2: "Correct length, no nicks."
+      3: "Correct length, no nicks, first attempt."
+  - id: c2_joint
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC5]
+    weight: 1
+    critical: false
+    text: {en: "Makes a mechanically firm joint", hi: "मज़बूत जोड़ बनाना"}
+    checklist: [tight_twist]
+    levels:
+      0: "Joint falls apart."
+      1: "Joint loose."
+      2: "Joint firm under a pull test."
+      3: "Firm, even turns, neatly finished ends."
+  - id: c3_insulate
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC5, CON/N0603.PC6]
+    weight: 2
+    critical: true
+    text: {en: "Insulates the joint completely", hi: "जोड़ को पूरी तरह इंसुलेट करना"}
+    checklist: [fully_insulated]
+    levels:
+      0: "Joint left bare."
+      1: "Partly covered."
+      2: "Fully covered, no bare copper."
+      3: "Fully covered with correct overlap, neat finish."
+  - id: c4_tools
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC2]
+    weight: 1
+    critical: false
+    text: {en: "Uses the right hand tools", hi: "सही हस्त औज़ारों का उपयोग"}
+    checklist: [right_tools]
+    cv_classes_any: [wire_stripper, insulated_pliers]
+    levels:
+      0: "Uses teeth, knife or unsafe tools."
+      1: "Right tools used incorrectly."
+      2: "Right tools used correctly."
+      3: "Right tools used correctly and put away after use."

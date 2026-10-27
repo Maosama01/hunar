@@ -1,0 +1,83 @@
+task_id: t2_switchboard_wiring
+qualification_nqr_id: 13772
+title:
+  en: "Wire a single-phase switch board (one lamp with switch, one socket)"
+  hi: "एक-फेज़ स्विच बोर्ड की वायरिंग (स्विच से एक बल्ब, एक सॉकेट)"
+instructions:
+  en: "Following the given diagram, wire one lamp controlled by a one-way switch and one 6 A socket on the practice board."
+  hi: "दिए गए डायग्राम के अनुसार अभ्यास बोर्ड पर वन-वे स्विच से चलने वाला एक बल्ब और एक 6 A सॉकेट लगाएँ।"
+photos:
+  - {id: p1, en: "Finished board with cover open", hi: "तैयार बोर्ड, कवर खुला"}
+  - {id: p2, en: "Close-up of the socket terminals", hi: "सॉकेट टर्मिनल का क्लोज़-अप"}
+checklist:
+  - {id: diagram_followed, en: "Wiring matches the diagram", hi: "वायरिंग डायग्राम के अनुसार"}
+  - {id: no_bare_copper, en: "No bare copper outside terminals", hi: "टर्मिनल के बाहर नंगा तांबा नहीं"}
+  - {id: terminals_tight, en: "All terminal screws tight", hi: "सभी टर्मिनल पेंच कसे हुए"}
+  - {id: switch_in_phase, en: "Switch breaks the phase (live) conductor", hi: "स्विच फेज़ तार को तोड़ता है"}
+  - {id: socket_polarity, en: "Socket polarity correct (phase right, neutral left, viewed from front)", hi: "सॉकेट पोलैरिटी सही"}
+  - {id: earth_connected, en: "Earth wire connected to socket earth pin", hi: "अर्थ तार सॉकेट के अर्थ पिन से जुड़ा"}
+  - {id: colour_code, en: "Correct colour code used (red/brown phase, black/blue neutral, green earth)", hi: "सही रंग कोड का उपयोग"}
+  - {id: neat_dressing, en: "Wires neatly dressed, no strain on terminals", hi: "तार साफ़-सुथरे ढंग से, टर्मिनल पर खिंचाव नहीं"}
+  - {id: works_on_test, en: "Lamp and socket work on supervised power-up", hi: "निगरानी में चालू करने पर बल्ब और सॉकेट काम करते हैं"}
+criteria:
+  - id: c1_diagram
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC2]
+    weight: 1
+    critical: false
+    text: {en: "Reads and follows the single-phase wiring diagram", hi: "एक-फेज़ वायरिंग डायग्राम पढ़कर पालन करना"}
+    checklist: [diagram_followed, works_on_test]
+    levels:
+      0: "Cannot follow the diagram."
+      1: "Follows the diagram with major help or errors."
+      2: "Wires as per diagram; circuit works."
+      3: "Wires as per diagram first time and can explain each connection."
+  - id: c2_termination
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC9, CON/N0602.PC6]
+    weight: 1
+    critical: false
+    text: {en: "Strips and terminates conductors correctly", hi: "तार छीलकर सही तरीके से टर्मिनेट करना"}
+    checklist: [no_bare_copper, terminals_tight]
+    cv_classes_any: [wire_stripper, insulated_pliers]
+    levels:
+      0: "Loose or unsafe terminations."
+      1: "Some terminations loose or with bare copper."
+      2: "All terminations tight with no bare copper."
+      3: "As 2, with correct strip length and no nicked strands."
+  - id: c3_polarity
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC2, CON/N0604.PC9]
+    weight: 2
+    critical: true
+    text: {en: "Switch in the phase conductor and correct socket polarity", hi: "फेज़ में स्विच और सॉकेट की सही पोलैरिटी"}
+    checklist: [switch_in_phase, socket_polarity, colour_code]
+    levels:
+      0: "Switch in neutral and/or reversed polarity."
+      1: "One polarity error."
+      2: "Switch in phase, socket polarity and colour code correct."
+      3: "As 2, and verifies polarity with a tester before handing over."
+  - id: c4_earth
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC11]
+    weight: 2
+    critical: true
+    text: {en: "Connects the protective earth", hi: "सुरक्षा अर्थ जोड़ना"}
+    checklist: [earth_connected]
+    levels:
+      0: "No earth connection."
+      1: "Earth connected but loose or wrong terminal."
+      2: "Earth connected firmly to the socket earth pin."
+      3: "As 2, and checks earth continuity."
+  - id: c5_workmanship
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC8]
+    weight: 1
+    critical: false
+    text: {en: "Neat, strain-free dressing of wires (assessor judgement only)", hi: "तारों की साफ़-सुथरी फिटिंग (केवल मूल्यांकनकर्ता का निर्णय)"}
+    checklist: [neat_dressing]
+    levels:
+      0: "Wires tangled or strained."
+      1: "Untidy but no strain on terminals."
+      2: "Neat and strain-free."
+      3: "Neat, strain-free and labelled."

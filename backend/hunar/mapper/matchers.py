@@ -6,7 +6,9 @@ matchers (see `mapper.py`), so the comparison isolates the similarity function.
 """
 from __future__ import annotations
 
+import os
 from functools import lru_cache
+from pathlib import Path
 
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -67,8 +69,21 @@ class TfidfMatcher(Matcher):
         return (self._vec.transform(sentences) @ self._crit.T).toarray()
 
 
+def _usable_hf_home() -> None:
+    """Fall back to ~/.cache/huggingface when HF_HOME points at a drive that is not mounted."""
+    home = os.environ.get("HF_HOME")
+    if not home:
+        return
+    p = Path(home)
+    while not p.exists():
+        p = p.parent
+    if not os.access(p, os.W_OK):
+        os.environ["HF_HOME"] = str(Path.home() / ".cache" / "huggingface")
+
+
 @lru_cache(maxsize=4)
 def _load_model(model_name: str):
+    _usable_hf_home()
     from sentence_transformers import SentenceTransformer
 
     return SentenceTransformer(model_name, device="cpu")
@@ -96,6 +111,30 @@ class EmbeddingMatcher(Matcher):
         return np.clip(self._encode(sentences) @ self._crit.T, 0.0, 1.0)
 
 
+class HybridMatcher(Matcher):
+    """Mean of TF-IDF and MiniLM similarities.
+
+    EXPLORATORY: added after seeing the first synthetic results (TF-IDF best on English and
+    Hinglish, MiniLM best on Devanagari). It must be confirmed on the team-written set before it
+    is called better.
+    """
+
+    name = "hybrid_tfidf_minilm"
+    evidence_threshold = 0.4
+
+    def __init__(self) -> None:
+        self.parts = [TfidfMatcher(), EmbeddingMatcher(MINILM, "minilm")]
+
+    def fit(self, criteria: list[str]) -> HybridMatcher:
+        super().fit(criteria)
+        for m in self.parts:
+            m.fit(criteria)
+        return self
+
+    def similarity(self, sentences: list[str]) -> np.ndarray:
+        return np.mean([m.similarity(sentences) for m in self.parts], axis=0)
+
+
 MINILM = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 LABSE = "sentence-transformers/LaBSE"
 
@@ -109,4 +148,6 @@ def build(name: str) -> Matcher:
         return EmbeddingMatcher(MINILM, "minilm", evidence_threshold=0.5)
     if name == "labse":
         return EmbeddingMatcher(LABSE, "labse", evidence_threshold=0.5)
+    if name == "hybrid":
+        return HybridMatcher()
     raise ValueError(f"unknown matcher {name!r}")

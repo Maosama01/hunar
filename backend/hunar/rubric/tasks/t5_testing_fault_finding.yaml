@@ -1,0 +1,81 @@
+task_id: t5_testing_fault_finding
+qualification_nqr_id: 13772
+title:
+  en: "Test a circuit and find a planted fault"
+  hi: "सर्किट की जाँच करना और लगाया गया दोष ढूँढना"
+instructions:
+  en: "The assessor plants one fault (open circuit or short) in the practice board. With the supply off, test continuity and insulation, find the fault, repair it and record the readings."
+  hi: "मूल्यांकनकर्ता अभ्यास बोर्ड में एक दोष (ओपन या शॉर्ट) लगाते हैं। सप्लाई बंद रखकर कंटिन्युटी और इंसुलेशन जाँचें, दोष ढूँढें, ठीक करें और रीडिंग लिखें।"
+photos:
+  - {id: p1, en: "Instrument connected for the continuity test", hi: "कंटिन्युटी जाँच के लिए जुड़ा उपकरण"}
+  - {id: p2, en: "Record sheet with readings", hi: "रीडिंग के साथ रिकॉर्ड शीट"}
+checklist:
+  - {id: right_instrument, en: "Correct instrument and range selected", hi: "सही उपकरण और रेंज चुनी"}
+  - {id: supply_off_test, en: "Supply off during continuity/insulation tests", hi: "जाँच के दौरान सप्लाई बंद"}
+  - {id: continuity_ok, en: "Continuity test done on phase, neutral and earth", hi: "फेज़, न्यूट्रल और अर्थ पर कंटिन्युटी जाँच"}
+  - {id: insulation_test, en: "Insulation resistance test done and reading interpreted", hi: "इंसुलेशन रेज़िस्टेंस जाँच कर रीडिंग समझाई"}
+  - {id: fault_found, en: "Planted fault located", hi: "लगाया गया दोष ढूँढा"}
+  - {id: fault_explained, en: "Cause of the fault explained", hi: "दोष का कारण समझाया"}
+  - {id: readings_recorded, en: "Readings and repair recorded", hi: "रीडिंग और मरम्मत दर्ज की"}
+criteria:
+  - id: c1_instrument
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC8, CON/N0602.PC10]
+    weight: 1
+    critical: false
+    text: {en: "Selects the right instrument and range", hi: "सही उपकरण और रेंज चुनना"}
+    checklist: [right_instrument]
+    cv_classes_any: [multimeter]
+    levels:
+      0: "Wrong instrument."
+      1: "Right instrument, wrong range or setting."
+      2: "Right instrument and range."
+      3: "Right instrument and range, checks the instrument (leads, battery) first."
+  - id: c2_continuity
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC13, CON/N0604.PC10]
+    weight: 2
+    critical: true
+    text: {en: "Tests continuity with the supply off", hi: "सप्लाई बंद रखकर कंटिन्युटी जाँचना"}
+    checklist: [supply_off_test, continuity_ok]
+    levels:
+      0: "Tests on a live circuit or does not test."
+      1: "Supply off but incomplete testing."
+      2: "Supply off; phase, neutral and earth tested."
+      3: "As 2, systematic order and correct interpretation of every reading."
+  - id: c3_insulation
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC8]
+    weight: 1
+    critical: false
+    text: {en: "Measures and interprets insulation resistance", hi: "इंसुलेशन रेज़िस्टेंस मापना और समझना"}
+    checklist: [insulation_test]
+    levels:
+      0: "Not done."
+      1: "Done but reading misread."
+      2: "Done and reading interpreted correctly."
+      3: "Done between all conductor pairs with correct interpretation."
+  - id: c4_fault_finding
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC3, CON/N0605.PC12]
+    weight: 2
+    critical: false
+    text: {en: "Locates and explains the planted fault", hi: "लगाया गया दोष ढूँढना और समझाना"}
+    checklist: [fault_found, fault_explained]
+    levels:
+      0: "Fault not found."
+      1: "Found with heavy help."
+      2: "Found and repaired."
+      3: "Found quickly by a logical method and explained."
+  - id: c5_records
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC15]
+    weight: 1
+    critical: false
+    text: {en: "Records readings and the repair", hi: "रीडिंग और मरम्मत दर्ज करना"}
+    checklist: [readings_recorded]
+    levels:
+      0: "No record."
+      1: "Incomplete record."
+      2: "Readings and repair recorded."
+      3: "Clear record a colleague could follow."

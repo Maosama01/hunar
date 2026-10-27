@@ -1,0 +1,81 @@
+task_id: t3_conduit_laying
+qualification_nqr_id: 13772
+title:
+  en: "Lay PVC conduit on a wall surface and pull wires"
+  hi: "दीवार पर PVC कंड्यूट लगाना और तार खींचना"
+instructions:
+  en: "Lay 2 m of 20 mm PVC conduit with one bend between two boxes, fix it with saddles and draw the wires through."
+  hi: "दो बॉक्स के बीच एक मोड़ के साथ 2 मीटर 20 mm PVC कंड्यूट लगाएँ, सैडल से कसें और तार खींचें।"
+photos:
+  - {id: p1, en: "Conduit run fixed on the wall", hi: "दीवार पर लगी कंड्यूट"}
+  - {id: p2, en: "Worker drilling or fixing saddles (face blurred)", hi: "ड्रिल या सैडल लगाते हुए (चेहरा धुंधला)"}
+checklist:
+  - {id: right_materials, en: "Correct conduit size, wire size and accessories chosen", hi: "सही कंड्यूट, तार और सामान चुना"}
+  - {id: measured, en: "Run measured and marked before cutting", hi: "काटने से पहले नाप कर निशान लगाया"}
+  - {id: clean_cut_bend, en: "Clean cuts and a smooth bend without kinks", hi: "साफ़ कट और बिना सिकुड़न के मोड़"}
+  - {id: saddle_spacing, en: "Saddles at even spacing, conduit firm", hi: "बराबर दूरी पर सैडल, कंड्यूट मज़बूत"}
+  - {id: wires_drawn, en: "Wires drawn without damaging insulation", hi: "इंसुलेशन खराब किए बिना तार खींचे"}
+  - {id: eye_protection, en: "Eye protection worn while drilling", hi: "ड्रिल करते समय आँखों की सुरक्षा पहनी"}
+  - {id: drill_safe, en: "Drill used safely (checked for hidden cables, firm grip)", hi: "ड्रिल का सुरक्षित उपयोग (छुपे तारों की जाँच)"}
+criteria:
+  - id: c1_materials
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC1, CON/N0602.PC4]
+    weight: 1
+    critical: false
+    text: {en: "Selects conduit, wire and accessories to specification", hi: "विनिर्देश के अनुसार कंड्यूट, तार और सामान चुनना"}
+    checklist: [right_materials]
+    levels:
+      0: "Wrong materials."
+      1: "Some wrong sizes."
+      2: "All materials correct for the job."
+      3: "Correct, and can explain why the sizes were chosen."
+  - id: c2_measure_cut_bend
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC3, CON/N0602.PC5]
+    weight: 1
+    critical: false
+    text: {en: "Measures, cuts and bends conduit", hi: "कंड्यूट को नापना, काटना और मोड़ना"}
+    checklist: [measured, clean_cut_bend]
+    levels:
+      0: "Not done."
+      1: "Done with kinks or wrong lengths."
+      2: "Correct lengths, clean cuts, smooth bend."
+      3: "As 2, first time, with minimal waste."
+  - id: c3_fixing
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC5, CON/N0602.PC7]
+    weight: 1
+    critical: false
+    text: {en: "Fixes conduit firmly with saddles", hi: "सैडल से कंड्यूट मज़बूती से लगाना"}
+    checklist: [saddle_spacing]
+    levels:
+      0: "Conduit loose."
+      1: "Uneven spacing or some loose saddles."
+      2: "Even spacing, conduit firm."
+      3: "Even spacing, firm, level and plumb."
+  - id: c4_wire_pulling
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC6]
+    weight: 1
+    critical: false
+    text: {en: "Draws wires through the conduit without damage", hi: "बिना नुकसान के कंड्यूट में तार खींचना"}
+    checklist: [wires_drawn]
+    levels:
+      0: "Not done."
+      1: "Wires drawn but insulation scraped."
+      2: "Wires drawn intact to both boxes."
+      3: "As 2, using a draw wire and leaving correct slack."
+  - id: c5_drilling_safety
+    nos: CON/N9001
+    pc_refs: [CON/N0604.PC7, CON/N9001.PC7]
+    weight: 2
+    critical: true
+    text: {en: "Drills safely with eye protection", hi: "आँखों की सुरक्षा के साथ सुरक्षित ड्रिलिंग"}
+    checklist: [eye_protection, drill_safe]
+    cv_classes: [goggles]
+    levels:
+      0: "Unsafe drilling, no eye protection."
+      1: "Eye protection missing or drill handled unsafely."
+      2: "Eye protection worn and drill used safely."
+      3: "As 2, and checks the wall for hidden cables first."

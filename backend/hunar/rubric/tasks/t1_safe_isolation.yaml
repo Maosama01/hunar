@@ -1,0 +1,70 @@
+task_id: t1_safe_isolation
+qualification_nqr_id: 13772
+title:
+  en: "Prepare safely: PPE, isolation and test before touch"
+  hi: "सुरक्षित तैयारी: PPE, सप्लाई बंद करना और छूने से पहले जाँच"
+instructions:
+  en: "Before working on the practice board, put on PPE, switch off and tag the supply, and prove the circuit is dead."
+  hi: "अभ्यास बोर्ड पर काम से पहले PPE पहनें, सप्लाई बंद करके टैग लगाएँ और जाँच कर साबित करें कि सर्किट में करंट नहीं है।"
+photos:
+  - {id: p1, en: "Worker at the board wearing PPE (face is blurred automatically)", hi: "PPE पहने कार्यकर्ता बोर्ड के पास (चेहरा अपने आप धुंधला होगा)"}
+  - {id: p2, en: "Tester or multimeter on the isolated circuit", hi: "बंद सर्किट पर टेस्टर या मल्टीमीटर"}
+checklist:
+  - {id: ppe_gloves, en: "Insulated gloves worn", hi: "इंसुलेटेड दस्ताने पहने"}
+  - {id: ppe_shoes, en: "Safety shoes worn", hi: "सेफ्टी जूते पहने"}
+  - {id: main_off, en: "Main switch / MCB switched off", hi: "मेन स्विच / MCB बंद किया"}
+  - {id: tag_lockout, en: "Lock or 'do not switch on' tag placed", hi: "लॉक या 'चालू न करें' टैग लगाया"}
+  - {id: tester_checked, en: "Tester checked on a known live source first", hi: "पहले चालू सप्लाई पर टेस्टर की जाँच की"}
+  - {id: tested_dead, en: "Circuit proved dead before touching", hi: "छूने से पहले सर्किट बंद साबित किया"}
+  - {id: tools_inspected, en: "Tools inspected (handles, insulation) before use", hi: "उपयोग से पहले औज़ारों की जाँच की"}
+criteria:
+  - id: c1_ppe
+    nos: CON/N9001
+    pc_refs: [CON/N9001.PC7]
+    weight: 2
+    critical: true
+    text: {en: "Uses the PPE the task needs", hi: "काम के अनुसार PPE का उपयोग"}
+    checklist: [ppe_gloves, ppe_shoes]
+    cv_classes: [gloves, safety_shoes]
+    levels:
+      0: "No PPE worn."
+      1: "Some PPE worn, but gloves or shoes missing."
+      2: "Insulated gloves and safety shoes worn throughout the live-risk steps."
+      3: "All PPE worn correctly and checked for damage before use, without prompting."
+  - id: c2_isolation
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC7, CON/N0605.PC13]
+    weight: 2
+    critical: true
+    text: {en: "Isolates the supply and prevents accidental switch-on", hi: "सप्लाई बंद कर अनजाने में चालू होने से रोकना"}
+    checklist: [main_off, tag_lockout]
+    levels:
+      0: "Works without switching off the supply."
+      1: "Switches off but leaves no lock or tag."
+      2: "Switches off the correct MCB/main and places a lock or tag."
+      3: "As 2, and informs others nearby / supervisor before isolating."
+  - id: c3_test_dead
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC10, CON/N0603.PC13]
+    weight: 2
+    critical: true
+    text: {en: "Proves the circuit is dead with a tested instrument", hi: "जाँचे गए उपकरण से सर्किट बंद होना साबित करना"}
+    checklist: [tester_checked, tested_dead]
+    cv_classes_any: [multimeter, tester_screwdriver]
+    levels:
+      0: "Does not test before touching."
+      1: "Tests, but with an unchecked instrument or only one conductor."
+      2: "Checks the tester on a live source, then tests phase-neutral and phase-earth."
+      3: "As 2, and re-checks the tester afterwards (prove-test-prove)."
+  - id: c4_tool_check
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC1, CON/N9001.PC8]
+    weight: 1
+    critical: false
+    text: {en: "Inspects tools before use", hi: "उपयोग से पहले औज़ारों की जाँच"}
+    checklist: [tools_inspected]
+    levels:
+      0: "Uses damaged tools."
+      1: "Looks at tools only when prompted."
+      2: "Checks handles and insulation of tools before use."
+      3: "Checks tools and sets aside or reports damaged ones."
