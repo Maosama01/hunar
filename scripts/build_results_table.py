@@ -158,7 +158,7 @@ def m4_table() -> str:
         if r.get("status"):
             out.append(f"| {c} | 0 | RESULT PENDING | | | |")
             continue
-        f = lambda k: "n/a" if r.get(k) is None else f"{r[k]:.3f} {ci(r['ci95'][k]) if k in r['ci95'] else ''}"  # noqa: E731
+        f = lambda k, r=r: "n/a" if r.get(k) is None else f"{r[k]:.3f} {ci(r['ci95'][k]) if k in r['ci95'] else ''}"  # noqa: E731
         out.append(f"| {c} | {r['n_items']} | {f('fleiss_kappa')} | {f('krippendorff_alpha_ordinal')} | "
                    f"{f('pairwise_exact')} | {f('pairwise_within_one')} |")
     if d.get("difference"):

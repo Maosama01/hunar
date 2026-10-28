@@ -365,8 +365,10 @@ was rare in its training data. LaBSE did not help. The exploratory hybrid combin
 both (overall top-1 {{m1_mapper_synthetic:methods.hybrid.overall.top1_acc|.2f}}, top-3
 {{m1_mapper_synthetic:methods.hybrid.overall.top3_acc|.2f}}), but it was designed after seeing these results
 and must be confirmed on the real team-written set. The confusion matrix shows the most common error:
-declarations are pulled towards *Industrial Electrician*, a large qualification whose criteria cover
-broad wiring and testing vocabulary. The confidence intervals are wide (n = 50 per language), and the
+declarations are pulled towards *Industrial Electrician*. Pack size alone does not explain this (the
+target qualification has more core criteria); a likely cause is that its criteria use broad, generic
+wiring, testing and safety vocabulary. The error-analysis notebook (`notebooks/m1_error_analysis.ipynb`)
+also shows that TF-IDF gives every pack a score of zero for most Devanagari declarations. The confidence intervals are wide (n = 50 per language), and the
 synthetic declarations were written by a model rather than by workers, so these numbers say that the
 pipeline works and where it is weak, not how it will perform in the field.
 

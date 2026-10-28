@@ -7,7 +7,7 @@ NPM := npm --prefix frontend
 
 help:
 	@echo "setup    install Python 3.11 env (uv) and frontend packages"
-	@echo "data     download official QP PDFs from nqr.gov.in and parse them to JSON"
+	@echo "data     download official QP PDFs (nqr.gov.in) + PPE test images; parse QPs"
 	@echo "test     run the test suite"
 	@echo "eval     run M1 mapper and M2 hashing evaluations -> experiments/*.json"
 	@echo "study    analyse M4 rater data -> experiments/m4_*.json and figures"
@@ -24,6 +24,7 @@ setup:
 data:
 	$(PY) scripts/fetch_qps.py
 	$(PY) -m hunar.mapper.qp_parser
+	$(PY) scripts/fetch_ppe_test.py
 
 parse:
 	$(PY) -m hunar.mapper.qp_parser
