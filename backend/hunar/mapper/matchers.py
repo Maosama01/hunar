@@ -145,7 +145,10 @@ def build(name: str) -> Matcher:
     if name == "tfidf":
         return TfidfMatcher()
     if name == "minilm":
-        return EmbeddingMatcher(MINILM, "minilm", evidence_threshold=0.5)
+        # Display threshold for explanations only (ranking and metrics do not use it). 0.5 hid most
+        # evidence: on the synthetic set the median best similarity of a sentence to its correct pack
+        # is about 0.47, so 0.4 was chosen for readable explanations.
+        return EmbeddingMatcher(MINILM, "minilm", evidence_threshold=0.4)
     if name == "labse":
         return EmbeddingMatcher(LABSE, "labse", evidence_threshold=0.5)
     if name == "hybrid":

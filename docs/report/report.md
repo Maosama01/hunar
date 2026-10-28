@@ -208,8 +208,9 @@ function gives a matrix between declaration units and all 344 performance criter
 was fixed **before** any evaluation: the score of a pack is the mean, over declaration units, of the
 best similarity to any *core* PC of that pack. A declaration is partial, so we measure how well a pack
 explains what the worker said, not how much of the pack they mentioned. For explanations, each PC
-gets the best similarity of any unit; a PC is "matched" above a threshold, and unmatched core PCs are
-reported as gaps.
+gets the best similarity of any unit; a PC is "matched" above a display threshold (0.4 for MiniLM,
+set so that explanations are not empty; it does not affect ranking or any metric), and unmatched
+core PCs are reported as gaps.
 
 Similarity functions: **keyword** (binary bag-of-words cosine after stop-word removal and light
 stemming), **TF-IDF** (unigrams and bigrams, IDF fitted on all PCs) [23], **MiniLM**
@@ -326,10 +327,24 @@ needs the server, so a declaration typed offline is matched after sync.
 breaks the chain, which `/api/audit/verify` detects, and SQLite triggers refuse UPDATE and DELETE on
 the table. A test shows that even an attacker who drops the trigger and edits an entry is detected.
 
-**Interfaces.** Screens: worker/facilitator declaration with explained mapping; practical tasks with
-checklist and photo capture; assessor scoring with anchors, pre scores, reasons and
-accept/override; competency profile and sign-off; admin audit view with chain verification; rater
-mode for the study. Sample data is badged "SAMPLE DATA" everywhere.
+**Interfaces.** The React PWA (TypeScript, Vite, Dexie) has these screens: worker/facilitator
+declaration with explained mapping; practical tasks with checklist and consented photo capture;
+assessor scoring with anchors, pre scores, reasons and accept/override; competency profile and
+sign-off; admin audit view with chain verification; rater mode for the study; and a sync-queue view.
+The interface is in English and Hindi, and sample data is badged "SAMPLE DATA" everywhere. The full
+flow was exercised in a browser at phone width (360 and 375 px), including creating a worker,
+declaration, checklist ticks and a photo with the network off and replaying them in order after
+reconnecting.
+
+![Declaration screen with explained mapping (sample data)](../figures/app_mapping.png)
+
+*Figure 2. Declaration screen for the SAMPLE worker. The top suggestion is wrong (Industrial
+Electrician); the assessor sees the matched sentences and confirms the correct qualification.*
+
+![Scoring screen: explainable pre score](../figures/app_scoring.png)
+
+*Figure 3. One criterion on the assessor's scoring screen: safety flag, suggested level with
+confidence and the reasons behind it, level descriptors, and the accept/override controls.*
 
 # 6. Experiments and results
 
@@ -339,16 +354,16 @@ All tables in this section are generated from `experiments/*.json` by `scripts/b
 
 ![M1 top-1 accuracy by language on the synthetic set](../figures/m1_top1_by_language.png)
 
-*Figure 2. M1 top-1 accuracy by language, synthetic declarations (95 % bootstrap CIs; dashed line:
+*Figure 4. M1 top-1 accuracy by language, synthetic declarations (95 % bootstrap CIs; dashed line:
 chance).*
 
 ![M1 confusion matrix, MiniLM](../figures/m1_confusion_minilm.png)
 
-*Figure 3. M1 confusion matrix for MiniLM on the synthetic set.*
+*Figure 5. M1 confusion matrix for MiniLM on the synthetic set.*
 
 ![Reuse detection precision-recall](../figures/m2_hashing_pr.png)
 
-*Figure 4. Evidence reuse detection on the held-out half; dots mark the chosen thresholds.*
+*Figure 6. Evidence reuse detection on the held-out half; dots mark the chosen thresholds.*
 
 ## 6.1 Discussion
 
@@ -424,7 +439,7 @@ leakage could inflate detector scores if not controlled.
 | 1 | M1 mapper, baselines, evaluation | Done on synthetic data; real labelled set pending |
 | 2 | M3 rubric engine, backend API, audit log | Done |
 | 3 | M2 evidence checker | Hashing and blurring done; detector training on Colab pending |
-| 4 | Frontend and offline sync | See repository `frontend/README.md` |
+| 4 | Frontend and offline sync | Done; full flow and offline replay exercised in a browser at phone width |
 | 5 | M4 study | Rater mode and analysis done; data collection pending |
 | 6 | Report and viva preparation | This draft |
 

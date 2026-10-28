@@ -80,7 +80,7 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | M2 YOLOv8n detector | Training notebook ready | **RESULT PENDING**: needs a Colab run; app reports "unavailable" until then |
 | M3 rubric engine | Done, 6 tasks, unit tests | Rubric descriptors drafted by the team with AI help; need review by a certified assessor |
 | Backend API + audit log + sync | Done, tested | Real |
-| PWA frontend + offline queue | See `frontend/README.md` | Real |
+| PWA frontend + offline queue | Done: all screens, EN/HI, offline outbox; exercised in a browser at phone width incl. offline replay | Real; not yet tried on a physical phone |
 | M4 rater mode + analysis | Built and tested on simulated data inside tests only | **RESULT PENDING**: no real raters yet |
 | Voice input | Not started | Planned later phase (faster-whisper) |
 
