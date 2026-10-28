@@ -57,7 +57,7 @@ For comparison, the max-F1 threshold (16) would catch more edited copies (recall
 
 ### M2 PPE / tool presence detector (YOLOv8n)
 
-RESULT PENDING: train with `notebooks/m2_train_yolo_colab.ipynb` on Colab and copy `m2_detector.json` into `experiments/`.
+RESULT PENDING: train with `notebooks/m2_train_yolo_colab.ipynb` on Colab, then bring the results back with `scripts/import_detector_results.py` (see `docs/m2_colab_walkthrough.md`).
 
 
 ### M4 inter-assessor consistency study

@@ -133,15 +133,24 @@ def m2_tables() -> str:
     out.append("### M2 PPE / tool presence detector (YOLOv8n)\n")
     det = load("m2_detector.json")
     if det is None:
-        out.append("RESULT PENDING: train with `notebooks/m2_train_yolo_colab.ipynb` on Colab and copy "
-                   "`m2_detector.json` into `experiments/`.\n")
+        out.append("RESULT PENDING: train with `notebooks/m2_train_yolo_colab.ipynb` on Colab, then bring the "
+                   "results back with `scripts/import_detector_results.py` (see `docs/m2_colab_walkthrough.md`).\n")
     else:
         out.append(f"Dataset: {det['dataset']}. Leakage: {det['leakage']['near_duplicate_in_train']} of "
                    f"{det['leakage']['test_images']} test images have a near-duplicate in train.\n")
-        out.append("| Test set | mAP50 | mAP50-95 | Precision | Recall |\n|---|---|---|---|---|")
+        out.append(f"YOLOv8n, {det['epochs']} epochs, image size {det['imgsz']}, ultralytics "
+                   f"{det.get('ultralytics_version', '?')}. Source: `experiments/m2_detector.json`. "
+                   "**Presence only: the model does not judge workmanship.**\n")
+        out.append("| Test set | Images | mAP50 | mAP50-95 | Precision | Recall |\n|---|---|---|---|---|---|")
+        names = {"test": "full test split", "test_clean": "clean test (no near-duplicate in train)"}
         for k in ["test", "test_clean"]:
             r = det[k]
-            out.append(f"| {k} | {r['mAP50']:.3f} | {r['mAP50_95']:.3f} | {r['precision']:.3f} | {r['recall']:.3f} |")
+            out.append(f"| {names[k]} | {r.get('n_images', '?')} | {r['mAP50']:.3f} | {r['mAP50_95']:.3f} | "
+                       f"{r['precision']:.3f} | {r['recall']:.3f} |")
+        out.append("\n**Per class, clean test set**\n")
+        out.append("| Class | Precision | Recall | mAP50 | mAP50-95 |\n|---|---|---|---|---|")
+        for c, v in det["test_clean"]["per_class"].items():
+            out.append(f"| {c} | {v['precision']:.3f} | {v['recall']:.3f} | {v['mAP50']:.3f} | {v['mAP50_95']:.3f} |")
     return "\n".join(out) + "\n"
 
 

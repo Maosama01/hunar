@@ -28,7 +28,9 @@ dependencies = [
 
 [project.optional-dependencies]
 # YOLOv8 inference. Training happens in notebooks/m2_train_yolo_colab.ipynb on Colab.
-vision = ["ultralytics>=8.3"]
+# Same version as the Colab notebook; opencv-python<5 so it cannot replace the cv2 build that has
+# the Haar face cascades (opencv-python-headless<5).
+vision = ["ultralytics==8.3.228", "opencv-python>=4.10,<5"]
 # Optional speech to text for spoken declarations.
 voice = ["faster-whisper>=1.0"]
 

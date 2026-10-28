@@ -3,7 +3,10 @@ UV := $(shell command -v uv 2>/dev/null || echo $(HOME)/Library/Python/3.13/bin/
 PY := $(UV) run python
 NPM := npm --prefix frontend
 
-.PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean
+DL ?= $(HOME)/Downloads
+
+.PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean \
+        vision import-detector
 
 help:
 	@echo "setup    install Python 3.11 env (uv) and frontend packages"
@@ -15,6 +18,8 @@ help:
 	@echo "seed     load the clearly labelled sample worker into the local database"
 	@echo "demo     seed, then start the API (:8000) and the web app (:5173)"
 	@echo "report   build docs/report/Hunar_Report.docx from the Markdown draft"
+	@echo "vision   install YOLO (ultralytics) for detector inference on the laptop"
+	@echo "import-detector  bring Colab results back: DL=folder with m2_detector.json, best.pt"
 
 setup:
 	$(UV) python install 3.11
@@ -67,6 +72,13 @@ demo: seed
 
 report:
 	$(PY) scripts/build_report.py
+
+vision:
+	$(UV) sync --extra vision
+
+import-detector:
+	$(PY) scripts/import_detector_results.py --json "$(DL)/m2_detector.json" --weights "$(DL)/best.pt" \
+		$(if $(wildcard $(DL)/confusion_matrix.png),--confusion "$(DL)/confusion_matrix.png",)
 
 clean:
 	rm -rf .pytest_cache .ruff_cache frontend/dist data/hunar.db
