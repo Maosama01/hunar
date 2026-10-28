@@ -41,7 +41,7 @@ const REF_TTL_MS = 5 * 60 * 1000;
 
 async function refreshOnce(key: string, fn: () => Promise<void>, force = false): Promise<void> {
   if (!force && Date.now() - (lastRefresh[key] ?? 0) < REF_TTL_MS) return;
-  if (!isConnected() && !force) return;
+  if (!isConnected()) return; // offline: keep using the cached copy
   lastRefresh[key] = Date.now();
   try {
     await fn();
@@ -111,6 +111,13 @@ export async function refreshAssessment(
 /** Refresh quietly: offline or not-yet-synced assessments simply keep their local copy. */
 export async function tryRefreshAssessment(id: string, opts: { prescores?: boolean; profile?: boolean } = {}) {
   if (!isConnected()) return;
+  // Not on the server until its create op syncs (the sync engine refreshes it right after).
+  const creating = await db.outbox
+    .where("assessment_id")
+    .equals(id)
+    .filter((o) => o.kind === "assessment.create")
+    .count();
+  if (creating > 0) return;
   try {
     await refreshAssessment(id, opts);
   } catch (e) {

@@ -6,7 +6,7 @@
 // marked rejected, and the queue stops so later ops (which may depend on it) are not applied out of
 // order. The user sees the error and can retry or discard that op.
 import { api, ApiError, apiUrl, detailText, errorText, NetworkError, type EvidenceOut, type OpKind } from "./api";
-import { refreshAssessment, refreshAssessmentList } from "./data";
+import { refreshAssessment, refreshAssessmentList, refreshReference } from "./data";
 import { db, type OutboxOp } from "./db";
 import { thumbFromUrl } from "./photo";
 import { getStatus, setStatus } from "./status";
@@ -317,7 +317,7 @@ async function tick(): Promise<void> {
 export function startSyncLoop(): () => void {
   const onOnline = () => {
     setStatus({ online: true });
-    void tick();
+    void tick().then(() => refreshReference());
   };
   const onOffline = () => setStatus({ online: false });
   const onVisible = () => {

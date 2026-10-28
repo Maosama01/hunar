@@ -186,3 +186,45 @@ def test_study_order_is_random_but_reproducible(client):
                                                  "session": 1, "position": 0, "level": 2})
     assert ok.status_code == 200
     assert "R1,I0,unassisted,1,0,2" in client.get("/api/study/export").text
+
+
+def test_fixes_from_frontend_integration(client):
+    """Regression tests for the gaps the frontend integration found."""
+    a1, a2 = new_assessment(client, "W001"), new_assessment(client, "W002")
+    form = {"task_id": "t2_switchboard_wiring", "photo_id": "p1", "consent_confirmed": "true"}
+    client.post(f"/api/assessments/{a1}/evidence", data=form, files={"file": ("p.jpg", jpeg(1), "image/jpeg")})
+    r = client.post(f"/api/assessments/{a2}/evidence", data=form, files={"file": ("p.jpg", jpeg(1), "image/jpeg")}).json()
+    assert isinstance(r["duplicate_distance"], int)
+
+    # An unknown task or a missing field is a per-op rejection, not a 500 for the batch.
+    ops = [{"op_id": "x1", "kind": "checklist.set",
+            "payload": {"assessment_id": a1, "task_id": "no_such_task", "ticks": {}, "actor": "F"}}]
+    assert client.post("/api/sync", json={"ops": ops}).json()["results"][0]["status"] == "rejected"
+    ops = [{"op_id": "x2", "kind": "decision.add", "payload": {"assessment_id": a1}}]
+    assert client.post("/api/sync", json={"ops": ops}).json()["results"][0]["status"] == "rejected"
+
+    # Accept is refused if the suggestion changed since the assessor saw it.
+    client.put(f"/api/assessments/{a1}/checklist",
+               json={"task_id": "t4_joint_termination", "ticks": {"fully_insulated": True}, "actor": "A"})
+    body = {"task_id": "t4_joint_termination", "criterion_id": "c3_insulate", "action": "accept", "assessor": "A"}
+    assert client.post(f"/api/assessments/{a1}/decisions", json=body | {"expected_level": 1}).status_code == 409
+    assert client.post(f"/api/assessments/{a1}/decisions", json=body | {"expected_level": 2}).status_code == 200
+
+    # Audit paging.
+    page1 = client.get("/api/audit", params={"limit": 3}).json()
+    page2 = client.get("/api/audit", params={"limit": 3, "before_seq": page1[-1]["seq"]}).json()
+    assert [e["seq"] for e in page2] == [page1[-1]["seq"] - k for k in (1, 2, 3)]
+
+
+def test_rating_retry_is_idempotent(client):
+    from hunar.api.models import StudyItem
+
+    with Session(db.engine()) as s:
+        s.add(StudyItem(id="I0", image_path="x.jpg", task_id="t2_switchboard_wiring", criterion_id="c2_termination"))
+        s.commit()
+    body = {"rater_id": "R1", "item_id": "I0", "condition": "assisted", "session": 1, "position": 0, "level": 2,
+            "client_id": "c-123"}
+    first = client.post("/api/study/ratings", json=body).json()
+    again = client.post("/api/study/ratings", json=body).json()
+    assert first["id"] == again["id"]
+    assert client.get("/api/study/export").text.count("R1,I0") == 1

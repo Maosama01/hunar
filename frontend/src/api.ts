@@ -100,7 +100,9 @@ export interface EvidenceOut {
   detector_status: string; // ok | unavailable
   detections: Detection[] | null;
   duplicate_of: number | null;
-  duplicate_distance: number | null;
+  /** Should be an int; the current backend can return it as an 8-byte little-endian blob string
+   * (numpy int64 stored in SQLite). Read it with intFromApi(). */
+  duplicate_distance: number | string | null;
   consent_confirmed: boolean;
   created_at: string;
   image_url: string;
@@ -264,6 +266,7 @@ export interface RatingIn {
   position: number;
   level: number;
   seconds: number | null;
+  client_id?: string;
 }
 
 export type OpKind =
@@ -336,6 +339,20 @@ export function detailText(detail: unknown): string {
   } catch {
     return String(detail);
   }
+}
+
+/** An integer from the API that may arrive as a number, a numeric string, or a little-endian byte
+ * string (see EvidenceOut.duplicate_distance). Returns null when it cannot be read. */
+export function intFromApi(v: unknown): number | null {
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  if (typeof v !== "string" || v.length === 0) return null;
+  if (/^-?\d+$/.test(v.trim())) return Number(v.trim());
+  if (v.length <= 8 && [...v].every((c) => c.charCodeAt(0) < 256)) {
+    let n = 0;
+    for (let i = v.length - 1; i >= 0; i--) n = n * 256 + v.charCodeAt(i);
+    return Number.isSafeInteger(n) ? n : null;
+  }
+  return null;
 }
 
 export function errorText(e: unknown): string {

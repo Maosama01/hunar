@@ -111,6 +111,7 @@ class StudyItem(SQLModel, table=True):
 
 class StudyRating(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    client_id: str | None = Field(default=None, unique=True, description="Client-generated idempotency key")
     rater_id: str = Field(index=True)
     item_id: str = Field(foreign_key="studyitem.id")
     condition: str  # unassisted | assisted

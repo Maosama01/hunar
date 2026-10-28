@@ -294,6 +294,7 @@ export const en = {
   "rater.criterion": "Criterion",
   "rater.chooseLevel": "Choose a level",
   "rater.toolPrescore": "Tool's pre score",
+  "rater.noSuggestion": "The tool has no suggested level for this item.",
   "rater.imageAlt": "Study photo for the criterion",
   "rater.thanks": "Thank you!",
   "rater.thanksBody": "{n} ratings recorded in this session.",

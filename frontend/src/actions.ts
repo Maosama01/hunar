@@ -1,9 +1,8 @@
 // Write side: every user action is stored locally and queued in the outbox (see sync.ts).
-import { api, NetworkError, type RatingIn } from "./api";
+import { api, errorText, NetworkError, type RatingIn } from "./api";
 import { db } from "./db";
 import { addOp, enqueue, enqueueTick, requestSync } from "./sync";
 import { isConnected } from "./status";
-import { errorText } from "./api";
 import { nowIso, uuid } from "./util";
 
 /** New worker + assessment with the declaration. Ids are generated here so later ops (checklist,
@@ -112,12 +111,16 @@ export function decide(input: {
     assessor: input.assessor,
   };
   if (input.action === "override") payload.level = input.level;
-  // shown_level is the suggestion the assessor saw; the server recomputes it when applying.
+  // The server recomputes the suggestion when it applies an accept; expected_level makes it refuse
+  // the accept if that suggestion is no longer the one the assessor saw.
+  if (input.action === "accept") payload.expected_level = input.shownLevel;
   return enqueue("decision.add", payload, { meta: { shown_level: input.shownLevel } });
 }
 
 /** Post a rating directly when online; otherwise keep it on the device and upload later. */
-export async function submitRating(payload: RatingIn): Promise<"sent" | "stored"> {
+export async function submitRating(input: RatingIn): Promise<"sent" | "stored"> {
+  // A stable client_id makes a retried upload idempotent on the server.
+  const payload: RatingIn = { ...input, client_id: input.client_id ?? uuid() };
   if (isConnected()) {
     try {
       await api.addRating(payload);

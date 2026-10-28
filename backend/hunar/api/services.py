@@ -7,6 +7,7 @@ import json
 import os
 import uuid
 from functools import lru_cache
+from pathlib import Path
 
 from fastapi import HTTPException
 from sqlmodel import Session, select
@@ -19,7 +20,7 @@ from hunar.paths import DATA
 from hunar.rubric import engine
 from hunar.schemas import MappingResult
 
-UPLOADS = DATA / "uploads"
+UPLOADS = Path(os.environ.get("HUNAR_UPLOADS", DATA / "uploads"))
 
 
 @lru_cache(maxsize=1)
@@ -34,6 +35,13 @@ def get_or_404(session: Session, model, key):
     if obj is None:
         raise HTTPException(404, f"{model.__name__} {key} not found")
     return obj
+
+
+def task_or_422(task_id: str) -> engine.Task:
+    try:
+        return engine.get_task(task_id)
+    except KeyError:
+        raise HTTPException(422, f"unknown task {task_id}") from None
 
 
 def require_open(a: Assessment) -> None:
@@ -98,7 +106,7 @@ def confirm_pack(s: Session, a: Assessment, nqr_id: int, actor: str, reason: str
 
 def set_checklist(s: Session, a: Assessment, task_id: str, ticks: dict[str, bool], actor: str) -> dict[str, bool]:
     require_open(a)
-    task = engine.get_task(task_id)
+    task = task_or_422(task_id)
     valid = {c.id for c in task.checklist}
     if bad := set(ticks) - valid:
         raise HTTPException(422, f"unknown checklist items for {task_id}: {sorted(bad)}")
@@ -128,7 +136,7 @@ def add_evidence(s: Session, a: Assessment, task_id: str, photo_id: str, data: b
     require_open(a)
     if not consent_confirmed:
         raise HTTPException(422, "written consent must be confirmed before a photo is stored")
-    task = engine.get_task(task_id)
+    task = task_or_422(task_id)
     if photo_id not in {p.id for p in task.photos}:
         raise HTTPException(422, f"unknown photo slot {photo_id} for {task_id}")
     try:
@@ -159,7 +167,7 @@ def add_evidence(s: Session, a: Assessment, task_id: str, photo_id: str, data: b
                  commit=False)
     if dup:
         audit.append(s, "system:hashing", "evidence.possible_reuse", a.id,
-                     {"evidence_id": ev.id, "matches": dup[0], "phash_distance": dup[1]}, commit=False)
+                     {"evidence_id": ev.id, "matches": int(dup[0]), "phash_distance": int(dup[1])}, commit=False)
     s.commit()
     s.refresh(ev)
     return ev
@@ -218,15 +226,18 @@ def latest_decisions(s: Session, assessment_id: str) -> dict[tuple[str, str], De
 
 
 def decide(s: Session, a: Assessment, task_id: str, criterion_id: str, action: str, level: int | None,
-           reason: str | None, assessor: str) -> Decision:
+           reason: str | None, assessor: str, expected_level: int | None = None) -> Decision:
     require_open(a)
-    task = engine.get_task(task_id)
+    task = task_or_422(task_id)
     if criterion_id not in {c.id for c in task.criteria}:
         raise HTTPException(422, f"unknown criterion {criterion_id} in {task_id}")
     pre = next(p for p in prescores(s, a) if p.task_id == task_id and p.criterion_id == criterion_id)
     if action == "accept":
         if pre.suggested_level is None:
             raise HTTPException(422, "there is no suggestion to accept; score this criterion yourself (override)")
+        if expected_level is not None and expected_level != pre.suggested_level:
+            raise HTTPException(409, f"the suggestion changed from {expected_level} to {pre.suggested_level} "
+                                     "after new evidence arrived; review it again")
         final = pre.suggested_level
     elif action == "override":
         if level not in (0, 1, 2, 3):

@@ -77,6 +77,7 @@ class DecisionIn(BaseModel):
     level: int | None = None
     reason: str | None = None
     assessor: str
+    expected_level: int | None = Field(default=None, description="For accept: the suggestion the assessor saw")
 
 
 class SignoffIn(BaseModel):
@@ -105,6 +106,7 @@ class RatingIn(BaseModel):
     position: int = Field(ge=0)
     level: int = Field(ge=0, le=3)
     seconds: float | None = None
+    client_id: str | None = Field(default=None, max_length=64, description="Idempotency key for retries")
 
 
 # ---- Reference data -----------------------------------------------------------------------------
@@ -226,7 +228,8 @@ def prescores(aid: str, s: Session = DB):
 @app.post("/api/assessments/{aid}/decisions")
 def decide(aid: str, body: DecisionIn, s: Session = DB):
     a = svc.get_or_404(s, Assessment, aid)
-    return svc.decide(s, a, body.task_id, body.criterion_id, body.action, body.level, body.reason, body.assessor)
+    return svc.decide(s, a, body.task_id, body.criterion_id, body.action, body.level, body.reason, body.assessor,
+                      body.expected_level)
 
 
 @app.get("/api/assessments/{aid}/profile", response_model=engine.Profile)
@@ -244,10 +247,13 @@ def signoff(aid: str, body: SignoffIn, s: Session = DB):
 
 
 @app.get("/api/audit")
-def audit_log(limit: int = 200, subject: str | None = None, s: Session = DB):
-    q = select(AuditEntry).order_by(AuditEntry.seq.desc()).limit(limit)
+def audit_log(limit: int = 200, subject: str | None = None, before_seq: int | None = None, s: Session = DB):
+    """Newest first. Page backwards with before_seq = the smallest seq of the previous page."""
+    q = select(AuditEntry).order_by(AuditEntry.seq.desc()).limit(min(limit, 1000))
     if subject:
         q = q.where(AuditEntry.subject == subject)
+    if before_seq is not None:
+        q = q.where(AuditEntry.seq < before_seq)
     return list(s.exec(q))
 
 
@@ -290,11 +296,13 @@ def sync(body: SyncIn, s: Session = DB):
                 r = _evidence_out(ev)
             else:  # decision.add
                 d = svc.decide(s, svc.get_or_404(s, Assessment, p["assessment_id"]), p["task_id"], p["criterion_id"],
-                               p["action"], p.get("level"), p.get("reason"), p["assessor"])
+                               p["action"], p.get("level"), p.get("reason"), p["assessor"], p.get("expected_level"))
                 r = d.model_dump(mode="json")
-        except HTTPException as e:
+        except (HTTPException, KeyError, ValueError, TypeError) as e:
             s.rollback()
-            results.append({"op_id": op.op_id, "status": "rejected", "error": e.detail})
+            detail = e.detail if isinstance(e, HTTPException) else (
+                f"missing field {e}" if isinstance(e, KeyError) else str(e))
+            results.append({"op_id": op.op_id, "status": "rejected", "error": detail})
             # Later ops may depend on this one, so stop and let the client surface the problem.
             break
         s.add(AppliedOp(op_id=op.op_id, kind=op.kind, result_json=json.dumps(r, default=str)))
@@ -339,6 +347,8 @@ def study_image(item_id: str, s: Session = DB):
 @app.post("/api/study/ratings")
 def add_rating(body: RatingIn, s: Session = DB):
     svc.get_or_404(s, StudyItem, body.item_id)
+    if body.client_id and (old := s.exec(select(StudyRating).where(StudyRating.client_id == body.client_id)).first()):
+        return old
     r = StudyRating(**body.model_dump())
     s.add(r)
     s.commit()

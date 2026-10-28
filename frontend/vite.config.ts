@@ -37,6 +37,10 @@ export default defineConfig({
         navigateFallback: "index.html",
         navigateFallbackDenylist: [/^\/api\//],
         cleanupOutdatedCaches: true,
+        // autoUpdate: a new build takes over at once (the plugin only sets these itself when it
+        // injects the registration script, and we register in src/main.tsx).
+        skipWaiting: true,
+        clientsClaim: true,
         runtimeCaching: [
           {
             // Evidence images are stored with faces already blurred by the server.

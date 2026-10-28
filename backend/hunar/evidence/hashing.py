@@ -34,7 +34,7 @@ def hashes_from_bgr(arr: np.ndarray) -> Hashes:
 
 
 def distance(a: str, b: str) -> int:
-    return imagehash.hex_to_hash(a) - imagehash.hex_to_hash(b)
+    return int(imagehash.hex_to_hash(a) - imagehash.hex_to_hash(b))
 
 
 def find_duplicate(phash: str, existing: list[tuple[int, str]], threshold: int = DEFAULT_PHASH_THRESHOLD
