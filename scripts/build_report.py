@@ -95,6 +95,12 @@ def main() -> int:
         return 1
     out_md = REP / "Hunar_Report.md"
     out_md.write_text(md)
+    for src in sorted(REP.glob("*.src.md")):
+        filled = fill(src.read_text())
+        if "{{" in filled:
+            print(f"unresolved placeholders in {src.name}", file=sys.stderr)
+            return 1
+        (REP / src.name.replace(".src.md", ".md")).write_text(filled)
     import pypandoc
 
     pypandoc.convert_file(str(out_md), "docx", outputfile=str(REP / "Hunar_Report.docx"),
