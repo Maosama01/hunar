@@ -551,7 +551,8 @@ export interface Account {
 
 export interface QuizGate {
   done: boolean;
-  finished_trades: Trade[];
+  /** Trades with a finished quiz that counts (at least half the answers at reading pace). */
+  counted_trades: Trade[];
   in_progress: { attempt_id: string; trade: Trade } | null;
 }
 
@@ -719,6 +720,8 @@ export interface Booking {
 
 export interface QuizSummary extends QuizResult {
   attempts_finished: number;
+  /** Finished quizzes that did not count because too many answers were too quick. */
+  attempts_not_counted: number;
 }
 
 export interface AssessmentRequest {
@@ -744,7 +747,7 @@ export interface QuizBank {
   calibrated: boolean;
   nos: Record<string, { title: Bi; weight: number }>;
   languages: { original: string[]; machine_translated: string[] };
-  rules: { min_items: number; max_items: number; se_target: number };
+  rules: { min_items: number; max_items: number; se_target: number; min_read_share: number };
 }
 
 export type TranslationStatus = "original" | "machine" | "reviewed" | "missing";
@@ -786,6 +789,10 @@ export interface QuizResult {
   n_dont_know: number;
   by_nos: NosResult[];
   revise: NosResult[];
+  /** Share of answers given at reading pace; the quiz counts only if it is at least min_read_share. */
+  read_share: number;
+  min_read_share: number;
+  counts: boolean;
   bank: { version: string; status: string; params_version: string; calibrated: boolean };
   calibration_note: string | null;
   note: string;

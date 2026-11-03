@@ -1,7 +1,8 @@
 """Re-estimate quiz item difficulties from real answers (`make quiz-calibrate`).
 
-Only finished attempts by real (non-sample) accounts count, and only answers that were scored (not
-flagged as rapid). Until a trade has MIN_ATTEMPTS finished attempts nothing changes and the result is
+Only finished attempts by real (non-sample) accounts that count (at least half the answers at reading
+pace; a low-effort attempt is left out, as in motivation filtering), and only answers that were scored
+(not flagged as rapid). Until a trade has MIN_ATTEMPTS finished attempts nothing changes and the result is
 written as RESULT PENDING. After that, difficulties are re-estimated by alternating
   1. each attempt's ability by EAP (hunar.quiz.engine.eap) with the current difficulties, and
   2. each item's difficulty by MAP with a N(prior, PRIOR_SD^2) prior around the AI-drafted estimate
@@ -30,6 +31,7 @@ from hunar.paths import EXPERIMENTS
 from hunar.quiz import bank as banks
 from hunar.quiz import engine
 from hunar.quiz.models import QuizAttempt, QuizResponse
+from hunar.quiz.service import counted
 
 MIN_ATTEMPTS = 100
 MIN_PER_ITEM = 30
@@ -70,7 +72,7 @@ def fit_difficulties(responses: list[tuple[str, str, bool]], priors: dict[str, f
 def collect(s: Session, trade: str) -> list[tuple[str, str, bool]]:
     rows = s.exec(select(QuizResponse, QuizAttempt, Account)
                   .where(QuizResponse.attempt_id == QuizAttempt.id, QuizAttempt.account_id == Account.id,
-                         QuizAttempt.trade == trade, QuizAttempt.status == "finished",
+                         QuizAttempt.trade == trade, counted(),
                          Account.is_sample == False, QuizResponse.scored == True))  # noqa: E712
     return [(a.id, r.item_id, r.correct) for r, a, _ in rows]
 

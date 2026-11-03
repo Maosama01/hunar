@@ -5,8 +5,8 @@ assessor account, signed off an assessment of this worker with the outcome "reco
 certification". Quiz results are never shown to customers. Each badge says exactly what was checked,
 by whom and when; none of them is a government certificate or licence.
 
-Listing rule: customers find and book only workers who finished the quiz for their trade (the quiz is
-compulsory for workers). Whether they did, and how well, is not shown.
+Listing rule: customers find and book only workers with a quiz in their trade that counts (finished,
+not rushed; the quiz is compulsory for workers). Whether they did, and how well, is not shown.
 """
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ from hunar.market import trades
 from hunar.market.models import AssessmentRequest, Booking, WorkerProfile
 from hunar.paths import DATA
 from hunar.quiz.models import QuizAttempt
-from hunar.quiz.service import finished_trades
+from hunar.quiz.service import counted, counted_trades
 
 TRANSITIONS = {  # (status, action) -> (new status, who may do it)
     ("requested", "accept"): ("accepted", "worker"),
@@ -87,8 +87,8 @@ def public_profile(s: Session, acc: Account, p: WorkerProfile) -> dict:
 
 
 def listed(s: Session, acc: Account, p: WorkerProfile) -> bool:
-    """Customers can see and book this worker: profile shown, account not erased, quiz finished."""
-    return p.visible and acc.erased_at is None and p.trade in finished_trades(s, acc.id)
+    """Customers can see and book this worker: profile shown, account not erased, quiz counted."""
+    return p.visible and acc.erased_at is None and p.trade in counted_trades(s, acc.id)
 
 
 def search(s: Session, trade: str | None, pincode: str | None, assessed_only: bool, permit_only: bool,
@@ -96,8 +96,7 @@ def search(s: Session, trade: str | None, pincode: str | None, assessed_only: bo
     rows = s.exec(select(WorkerProfile, Account).where(WorkerProfile.account_id == Account.id,
                                                        WorkerProfile.visible == True,  # noqa: E712
                                                        Account.erased_at == None))  # noqa: E711
-    quizzed = {(a, t) for a, t in s.exec(select(QuizAttempt.account_id, QuizAttempt.trade)
-                                         .where(QuizAttempt.status == "finished"))}
+    quizzed = {(a, t) for a, t in s.exec(select(QuizAttempt.account_id, QuizAttempt.trade).where(counted()))}
     out = []
     for p, acc in rows:
         if (trade and p.trade != trade) or (acc.id, p.trade) not in quizzed:

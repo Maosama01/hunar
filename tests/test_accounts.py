@@ -17,8 +17,9 @@ def register(client, phone="9876501234", role="worker", pin="482913", **kw):
     return client.post("/api/auth/register", json=body, headers={"Authorization": ""})
 
 
-def finish_quiz(client, token, trade=None, choice=None):
-    """Answer a worker's quiz to the end ("don't know" by default): the open one, or a new one in `trade`."""
+def finish_quiz(client, token, trade=None, choice=None, seconds=30):
+    """Answer a worker's quiz to the end ("don't know" by default): the open one, or a new one in `trade`.
+    With seconds below reading time every answer is rapid, so the quiz finishes but does not count."""
     h = {"Authorization": f"Bearer {token}"}
     if trade:
         aid = client.post("/api/quiz/attempts", json={"trade": trade}, headers=h).json()["attempt_id"]
@@ -27,7 +28,7 @@ def finish_quiz(client, token, trade=None, choice=None):
     state = client.get(f"/api/quiz/attempts/{aid}", headers=h).json()
     while not state["done"]:
         state = client.post(f"/api/quiz/attempts/{aid}/answers", headers=h,
-                            json={"item_id": state["item"]["id"], "choice": choice, "seconds": 30}).json()
+                            json={"item_id": state["item"]["id"], "choice": choice, "seconds": seconds}).json()
     return state["result"]
 
 

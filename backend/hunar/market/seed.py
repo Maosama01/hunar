@@ -118,7 +118,7 @@ def seed_accounts() -> None:
         for k, (role, _phone, name, _lang, prof) in enumerate(ACCOUNTS):
             if role != "worker":
                 continue
-            if not quiz.finished_trades(s, made[name].id):
+            if not quiz.counted_trades(s, made[name].id):
                 _sample_quiz(s, made[name], prof["trade"], ability=0.3 * k)
             if not s.get(WorkerProfile, made[name].id):
                 s.add(WorkerProfile(account_id=made[name].id, visible=True, **prof))

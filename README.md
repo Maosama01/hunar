@@ -37,8 +37,9 @@ spoken (optional speech to text; the facilitator checks the transcript). Hunar:
    (SMS code ready to switch on), consent per purpose (DPDP Act 2023), and two kinds of user:
    * *workers* (electrician, plumber, carpenter) choose their trade when they register and take a
      **compulsory adaptive self-check quiz** straight away (built from official sources; no pass or
-     fail, but nothing else opens until it is finished), see a score range and topics to revise, then
-     fill in their profile, request a practical assessment and handle bookings;
+     fail, but nothing else opens until it is finished, and a quiz rushed through, with more than half
+     the answers faster than reading time, has to be taken again), see a score range and topics to
+     revise, then fill in their profile, request a practical assessment and handle bookings;
    * *customers* search by trade and PIN code and book a worker. The only "skill assessed" badge comes
      from an assessor's sign-off; electrical jobs that need a State permit (CEA Safety Regulations
      2023, reg. 31) can be booked only with a worker whose permit an admin has checked.

@@ -15,6 +15,9 @@ Linacre, RMT 7:4; Thompson & Weiss 2011).
 * Rapid answers (faster than a person could read the question) are recorded and flagged for the
   assessor but not scored (Wise & Kong 2005). "Don't know" is scored as wrong; it is offered so that
   people do not have to guess.
+* A finished quiz counts (opens the app for a worker, goes to the assessor, feeds calibration) only if
+  at least MIN_READ_SHARE of its answers were given at reading pace. This share is the quiz's
+  response-time effort (Wise & Kong 2005); the threshold of one half is our choice, not a standard.
 
 Before real answers exist, item difficulties are AI-drafted estimates (bank field difficulty_prior),
 labelled "uncalibrated". hunar.quiz.calibrate re-estimates them once enough real answers exist.
@@ -40,6 +43,7 @@ class Rules:
     top_k: int = 3
     rapid_base_s: float = 2.0
     rapid_per_word_s: float = 0.1
+    min_read_share: float = 0.5
 
 
 DEFAULT_RULES = Rules()
@@ -63,6 +67,11 @@ def eap(scored: list[tuple[float, bool]]) -> tuple[float, float]:
 
 def is_rapid(seconds: float | None, words: int, rules: Rules = DEFAULT_RULES) -> bool:
     return seconds is not None and seconds < rules.rapid_base_s + rules.rapid_per_word_s * words
+
+
+def counts(n_scored: int, n_answered: int, rules: Rules = DEFAULT_RULES) -> bool:
+    """Whether a finished quiz counts: enough of its answers were given at reading pace (not rapid)."""
+    return n_answered > 0 and n_scored >= rules.min_read_share * n_answered
 
 
 def choose_item(theta: float, remaining: dict[str, list[tuple[str, float]]], targets: dict[str, float],

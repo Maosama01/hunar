@@ -71,6 +71,12 @@ def test_rapid_flag_scales_with_question_length():
     assert not engine.is_rapid(None, 10)
 
 
+@pytest.mark.parametrize("scored, answered, ok", [(0, 0, False), (0, 25, False), (12, 25, False), (13, 25, True),
+                                                  (5, 10, True), (4, 10, False), (25, 25, True)])
+def test_quiz_counts_only_when_at_least_half_read(scored, answered, ok):
+    assert engine.counts(scored, answered) is ok
+
+
 def test_expected_percent_is_monotonic():
     bs = [-1.0, 0.0, 1.0]
     assert engine.expected_percent(-2, bs) < engine.expected_percent(0, bs) < engine.expected_percent(2, bs)
@@ -224,7 +230,7 @@ def test_worker_registration_needs_a_trade_and_starts_the_quiz(client):
     r = register(client, trade="plumber").json()
     first = r["quiz"]
     assert first["item"]["position"] == 1 and first["item"]["language"] == "hi"
-    assert r["account"]["quiz"] == {"done": False, "finished_trades": [],
+    assert r["account"]["quiz"] == {"done": False, "counted_trades": [],
                                     "in_progress": {"attempt_id": first["attempt_id"], "trade": "plumber"}}
     login = client.post("/api/auth/login", json={"phone": "9876501234", "pin": "482913"}).json()
     assert login["account"]["quiz"]["in_progress"]["attempt_id"] == first["attempt_id"]  # comes back to it
@@ -244,7 +250,7 @@ def test_nothing_else_until_the_quiz_is_finished(client):
     assert client.post("/api/assessment-requests", json={}, headers=bearer(tok)).status_code == 409
     finish_quiz(client, tok)  # "don't know" throughout: the result does not matter, finishing does
     gate = client.get("/api/auth/me", headers=bearer(tok)).json()["quiz"]
-    assert gate == {"done": True, "finished_trades": ["electrician"], "in_progress": None}
+    assert gate == {"done": True, "counted_trades": ["electrician"], "in_progress": None}
     assert client.put("/api/me/profile", json=profile, headers=bearer(tok)).status_code == 200
     assert client.post("/api/assessment-requests", json={}, headers=bearer(tok)).status_code == 200
     # A new trade needs that trade's quiz first.
@@ -253,13 +259,36 @@ def test_nothing_else_until_the_quiz_is_finished(client):
     assert client.put("/api/me/profile", json={**profile, "trade": "plumber"}, headers=bearer(tok)).status_code == 200
 
 
-def test_workers_without_a_finished_quiz_are_not_listed_or_bookable(client):
+def test_a_rushed_quiz_does_not_count(client):
+    tok = register(client).json()["token"]
+    rushed = finish_quiz(client, tok, seconds=0.5)  # every answer faster than reading time
+    assert rushed["status"] == "finished" and rushed["counts"] is False and rushed["read_share"] == 0
+    assert rushed["n_answered"] == engine.DEFAULT_RULES.max_items and rushed["n_scored"] == 0
+    gate = client.get("/api/auth/me", headers=bearer(tok)).json()["quiz"]
+    assert gate == {"done": False, "counted_trades": [], "in_progress": None}
+    profile = {"trade": "electrician", "years_experience": 4, "pincode": "302017"}
+    r = client.put("/api/me/profile", json=profile, headers=bearer(tok))
+    assert r.status_code == 409 and "rushed" in r.json()["detail"]
+    again = finish_quiz(client, tok, trade="electrician")  # taken again at reading pace
+    assert again["counts"] is True and again["read_share"] == 1
+    assert client.get("/api/auth/me", headers=bearer(tok)).json()["quiz"]["done"] is True
+    assert client.put("/api/me/profile", json=profile, headers=bearer(tok)).status_code == 200
+    client.post("/api/assessment-requests", json={}, headers=bearer(tok))
+    summary = client.get("/api/assessment-requests").json()[0]["quiz"]  # assessor view
+    assert summary["attempt_id"] == again["attempt_id"] and summary["attempts_not_counted"] == 1
+
+
+@pytest.mark.parametrize("how", ["unfinished", "rushed"])
+def test_workers_without_a_counted_quiz_are_not_listed_or_bookable(client, how):
     wid, _ = worker_with_profile(client)
     ct = customer(client)
     assert [w["account_id"] for w in client.get("/api/market/workers").json()] == [wid]
-    with Session(db.engine()) as s:  # an older profile saved before the quiz was compulsory
+    with Session(db.engine()) as s:  # e.g. an older profile saved before the quiz was compulsory
         for a in s.exec(select(QuizAttempt).where(QuizAttempt.account_id == wid)):
-            a.status = "in_progress"
+            if how == "unfinished":
+                a.status = "in_progress"
+            else:
+                a.n_scored = a.n_answered // 2 - 1
             s.add(a)
         s.commit()
     assert client.get("/api/market/workers").json() == []
@@ -305,3 +334,12 @@ def test_calibration_is_pending_without_real_data(client):
     with Session(db.engine()) as s:
         res = calibrate("electrician", s)
     assert res["status"] == "RESULT PENDING" and res["n_attempts"] == 0 and res["data_kind"] == "real"
+
+
+def test_calibration_leaves_out_rushed_quizzes(client):
+    from hunar.quiz.calibrate import calibrate
+
+    finish_quiz(client, register(client).json()["token"])
+    finish_quiz(client, register(client, phone="9876500003").json()["token"], seconds=0.5)
+    with Session(db.engine()) as s:
+        assert calibrate("electrician", s)["n_attempts"] == 1

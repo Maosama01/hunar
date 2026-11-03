@@ -53,7 +53,8 @@ Generated from `slides_outline.src.md` by `make report`; numbers come from `expe
 
 12. **Workers and customers.** Onboarding in 23 languages, phone + PIN login, itemised consent
     (DPDP Act). Worker: compulsory adaptive self-check quiz straight after registering (3 trades,
-    built from official sources; no pass mark, but nothing else opens until it is done), then profile,
+    built from official sources; no pass mark, but nothing else opens until it is done, and a rushed
+    quiz has to be taken again), then profile,
     practical assessment request, bookings. Customer: search, badges that say who checked what, booking
     that respects CEA reg. 31 (permit-only jobs). Simulation (labelled): the quiz needs
     15.4 questions instead of 20. Quiz = self-check, never a badge.

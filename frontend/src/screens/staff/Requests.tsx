@@ -26,6 +26,7 @@ function QuizContext({ q }: { q: QuizSummary }) {
         <li>{t("requests.quizWhen", { date: fmtDate(q.finished_at, lang), n: q.attempts_finished })}</li>
         <li>{t("quiz.counts", { n: q.n_answered, dk: q.n_dont_know })}</li>
         {q.n_rapid > 0 && <li className="warn-text">{t("quiz.rapidCount", { n: q.n_rapid })}</li>}
+        {q.attempts_not_counted > 0 && <li className="warn-text">{t("requests.notCounted", { n: q.attempts_not_counted })}</li>}
       </ul>
       <table className="mini-table small">
         <tbody>

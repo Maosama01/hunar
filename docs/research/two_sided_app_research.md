@@ -206,11 +206,16 @@ registering:
   assessment requests all wait.
 - Finishing counts, not the score. There is no pass mark, so the quiz stays a self-check. Pressing
   "don't know" throughout also finishes it, and the assessor then sees that.
+- But a rushed quiz does not count (team decision, same day). A finished quiz counts only if at least
+  half of its answers were slower than the rapid-answer threshold. That share is the quiz's
+  response-time effort (Wise and Kong 2005, doi:10.1207/s15324818ame1802_2); the one-half line is our
+  choice. A rushed quiz asks the worker to take it again. Assessors see how many quizzes did not
+  count, and calibration leaves them out, as in motivation filtering.
 - The quiz processes the worker's answers, so the *assessment* consent is required for workers
   (notice version 2026-11-04.2). Withdrawing it means erasing the account.
 - Every new worker adds a finished attempt, so the 100-attempt calibration threshold is reached sooner.
-- Risk to check with real data: some workers may answer faster just to get through. Rapid answers are
-  flagged and not scored. Their share should be watched.
+- Risk to check with real data: some workers may answer faster just to get through. The share of
+  quizzes that do not count, and whether one half is the right line, should be watched.
 
 **What the quiz never claims**
 - certification;

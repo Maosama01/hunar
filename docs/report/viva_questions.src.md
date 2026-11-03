@@ -171,5 +171,7 @@ one is finished the app shows only the quiz and privacy settings, and the server
 listing, a booking or an assessment request. Finishing is what counts: there is no pass mark, and
 "don't know" is always allowed, so nobody is shut out for a low score. The assessor sees the result as
 context. Because the quiz processes the worker's answers, consent to it is required for workers, and
-withdrawing it means erasing the account. The open risk is rushed answers from workers who only want
-to get through; those are flagged and not scored, and their share has to be checked on real data.
+withdrawing it means erasing the account. A compulsory quiz invites tapping through, so a quiz counts
+only if at least half of its answers came slower than reading time (its response-time effort, Wise and
+Kong 2005); otherwise the worker is asked to take it again. The one-half line is our choice and has to
+be checked on real attempts.

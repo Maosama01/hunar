@@ -1,7 +1,8 @@
 // Adaptive self-check quiz: choose a trade, one question per screen, result with its uncertainty,
 // then a review with explanations. A self-check for the worker, never a certificate or a badge.
 // Compulsory for workers: the first one starts when they register, and until one is finished the app
-// shows only the quiz (see RequireQuiz in App.tsx).
+// shows only the quiz (see RequireQuiz in App.tsx). A quiz rushed through (more than half the answers
+// faster than reading time) does not count and has to be taken again.
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { api, ApiError, TRADES, type QuizItem, type QuizResult, type Trade, type TranslationStatus } from "../../api";
@@ -75,6 +76,8 @@ export function QuizHome() {
   };
 
   const bank = trade ? banks.data?.[trade] : undefined;
+  const lastFinished = attempts.data?.find((a): a is QuizResult => "expected_percent" in a);
+  const lastRushed = pending && !!lastFinished && !lastFinished.counts;
   const intro = t("quiz.intro", { min: bank?.rules.min_items ?? 12, max: bank?.rules.max_items ?? 25 });
 
   return (
@@ -84,6 +87,11 @@ export function QuizHome() {
         <Notice kind="info">
           <strong className="block">{t("quiz.requiredFirst")}</strong>
           {t("quiz.requiredWhy")}
+        </Notice>
+      )}
+      {lastRushed && (
+        <Notice kind="warn" role="alert">
+          {t("quiz.lastNotCounted")}
         </Notice>
       )}
       {pending && open && (
@@ -158,6 +166,7 @@ export function QuizHome() {
                   <div className="small muted">
                     {fmtDate(a.finished_at, lang)} ·{" "}
                     {t("quiz.rangeShort", { lo: Math.round(a.expected_percent_interval90[0]), hi: Math.round(a.expected_percent_interval90[1]) })}
+                    {!a.counts && <span className="warn-text"> · {t("quiz.notCountedShort")}</span>}
                   </div>
                 ) : (
                   <div className="small muted">{t("quiz.unfinished", { n: a.n_answered })}</div>
@@ -209,6 +218,9 @@ export function QuizRun() {
   // Always ask the server: the item passed in navigation state is only a placeholder, and history
   // state survives a reload (the attempt may have moved on or finished since).
   useEffect(() => {
+    setResult(null);
+    setRapid(false);
+    setItem(navState?.item ?? null);
     void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -343,7 +355,10 @@ function RangeBar({ lo, hi, mid }: { lo: number; hi: number; mid: number }) {
 }
 
 export function QuizResultView({ result }: { result: QuizResult }) {
-  const { t, pick, apiText, langOf } = useI18n();
+  const { t, lang, pick, apiText, langOf } = useI18n();
+  const navigate = useNavigate();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<unknown>(null);
   const lo = Math.round(result.expected_percent_interval90[0]);
   const hi = Math.round(result.expected_percent_interval90[1]);
   const headline = t("quiz.resultLine", { lo, hi });
@@ -351,12 +366,31 @@ export function QuizResultView({ result }: { result: QuizResult }) {
   // After the first quiz the next step is the profile (trade, PIN code); a practical assessment needs it.
   const profile = useLoad(() => api.myProfile(), []);
   const noProfile = profile.data === null;
+
+  const retake = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const r = await api.startQuiz(result.trade, lang);
+      navigate(`/w/quiz/${r.attempt_id}`, { state: { item: r.item } });
+    } catch (e) {
+      setError(e);
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="stack">
       <div className="row wrap gap-s">
         <h1 className="h-inline">{t("quiz.resultTitle")}</h1>
         <span className="badge">{t("quiz.selfCheck")}</span>
       </div>
+      {!result.counts && (
+        <Notice kind="warn" role="alert">
+          <strong className="block">{t("quiz.notCountedTitle")}</strong>
+          {t("quiz.notCountedBody", { n: result.n_rapid, total: result.n_answered, pct: Math.round(result.min_read_share * 100) })}
+        </Notice>
+      )}
       <section className="card stack">
         <p className="result-line">{headline}</p>
         <RangeBar lo={result.expected_percent_interval90[0]} hi={result.expected_percent_interval90[1]} mid={result.expected_percent} />
@@ -404,7 +438,12 @@ export function QuizResultView({ result }: { result: QuizResult }) {
 
       <Notice kind="info">{apiText("quiz.note", result.note)}</Notice>
 
-      {noProfile ? (
+      <ErrorBox error={error} />
+      {!result.counts ? (
+        <button type="button" className="btn btn-primary btn-block btn-big" disabled={busy} onClick={() => void retake()}>
+          <Icon name="refresh" /> {busy ? t("common.wait") : t("quiz.retake")}
+        </button>
+      ) : noProfile ? (
         <Link to="/w/profile" state={{ welcome: true }} className="btn btn-primary btn-block btn-big">
           <Icon name="user" /> {t("quiz.nextProfile")}
         </Link>

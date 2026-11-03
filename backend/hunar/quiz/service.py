@@ -121,6 +121,12 @@ def answer(s: Session, a: QuizAttempt, item_id: str, choice: int | None, seconds
     return {"done": False, "item": item_out(a, a.pending_item_id), "rapid_warning": rapid}
 
 
+def counted():
+    """SQL condition for a finished attempt that counts (see engine.counts; kept in step with it)."""
+    return ((QuizAttempt.status == "finished") & (QuizAttempt.n_answered > 0)
+            & (QuizAttempt.n_scored >= engine.DEFAULT_RULES.min_read_share * QuizAttempt.n_answered))
+
+
 def result(s: Session, a: QuizAttempt) -> dict:
     bank, par = banks.load(a.trade), banks.params(a.trade)
     rs = _responses(s, a.id)
@@ -138,6 +144,9 @@ def result(s: Session, a: QuizAttempt) -> dict:
             **engine.summary(a.theta, a.sd, list(par["b"].values())),
             "n_answered": a.n_answered, "n_scored": a.n_scored, "n_rapid": sum(r.rapid for r in rs),
             "n_dont_know": sum(r.choice is None for r in rs), "by_nos": by_nos, "revise": revise,
+            "read_share": round(a.n_scored / a.n_answered, 3) if a.n_answered else 0.0,
+            "min_read_share": engine.DEFAULT_RULES.min_read_share,
+            "counts": a.status == "finished" and engine.counts(a.n_scored, a.n_answered),
             "bank": {"version": a.bank_version, "status": bank.status, "params_version": a.params_version,
                      "calibrated": par["calibrated"]},
             "calibration_note": None if par["calibrated"] else
@@ -164,38 +173,39 @@ def review(s: Session, a: QuizAttempt) -> list[dict]:
     return out
 
 
-def finished_trades(s: Session, account_id: str) -> set[str]:
-    return set(s.exec(select(QuizAttempt.trade).where(QuizAttempt.account_id == account_id,
-                                                       QuizAttempt.status == "finished")).all())
+def counted_trades(s: Session, account_id: str) -> set[str]:
+    return set(s.exec(select(QuizAttempt.trade).where(QuizAttempt.account_id == account_id, counted())).all())
 
 
 def gate(s: Session, account_id: str) -> dict:
     """The quiz is compulsory for workers: the first one starts when they register, and until one is
-    finished they cannot save a profile, be listed or ask for an assessment. The app reads this to send
-    them back to the quiz (to the unfinished one, if any)."""
-    done = sorted(finished_trades(s, account_id))
+    finished and counts (not rushed) they cannot save a profile, be listed or ask for an assessment. The
+    app reads this to send them back to the quiz (to the unfinished one, if any)."""
+    done = sorted(counted_trades(s, account_id))
     open_ = s.exec(select(QuizAttempt).where(QuizAttempt.account_id == account_id,
                                              QuizAttempt.status == "in_progress")
                    .order_by(QuizAttempt.started_at.desc())).first()
-    return {"done": bool(done), "finished_trades": done,
+    return {"done": bool(done), "counted_trades": done,
             "in_progress": {"attempt_id": open_.id, "trade": open_.trade} if open_ else None}
 
 
-def require_finished(s: Session, account_id: str, trade: str) -> None:
-    """A worker works in a trade only after finishing that trade's quiz (the result itself does not matter)."""
-    if trade not in finished_trades(s, account_id):
-        raise HTTPException(409, f"finish the {trade} quiz first")
+def require_counted(s: Session, account_id: str, trade: str) -> None:
+    """A worker works in a trade only after a quiz in that trade that counts (the score does not matter)."""
+    if trade not in counted_trades(s, account_id):
+        raise HTTPException(409, f"finish the {trade} quiz first, reading each question (a rushed quiz does not count)")
 
 
 def latest_summary(s: Session, account_id: str, trade: str) -> dict | None:
+    """For the assessor: the latest quiz in this trade that counts, and how many did not (rushed)."""
     a = s.exec(select(QuizAttempt).where(QuizAttempt.account_id == account_id, QuizAttempt.trade == trade,
-                                         QuizAttempt.status == "finished")
+                                         counted())
                .order_by(QuizAttempt.finished_at.desc())).first()
     if a is None:
         return None
     n = len(s.exec(select(QuizAttempt.id).where(QuizAttempt.account_id == account_id,
                                                 QuizAttempt.status == "finished")).all())
-    return {**result(s, a), "attempts_finished": n}
+    ok = len(s.exec(select(QuizAttempt.id).where(QuizAttempt.account_id == account_id, counted())).all())
+    return {**result(s, a), "attempts_finished": n, "attempts_not_counted": n - ok}
 
 
 def erase_quiz_data(s: Session, account_id: str) -> None:

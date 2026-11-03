@@ -37,7 +37,7 @@ export function WorkerProfile() {
   const [saved, setSaved] = useState(false);
 
   // Each trade needs its quiz first (the server refuses the save otherwise).
-  const quizzed = account?.quiz?.finished_trades ?? [];
+  const quizzed = account?.quiz?.counted_trades ?? [];
   const needsQuiz = !!form.trade && !!account?.quiz && !quizzed.includes(form.trade);
 
   const fill = (p: MyProfile) =>
