@@ -1,0 +1,266 @@
+{
+  "experiment": "bench_cpu",
+  "data_kind": "mixed (see each part)",
+  "command": "uv run python scripts/bench_cpu.py --weights /private/tmp/claude-501/-Users-tanishqkhandelwal-Hunar/6c7fbdd6-14f7-4038-81cf-38f4ea768421/scratchpad/weights/yolov8n.pt --db-dir /private/tmp/claude-501/-Users-tanishqkhandelwal-Hunar/6c7fbdd6-14f7-4038-81cf-38f4ea768421/scratchpad",
+  "created": "2026-11-03T22:45:30",
+  "git_commit": "012700e",
+  "machine": {
+    "cpu": "Apple M3",
+    "logical_cpus": 8,
+    "ram_gb": 8.0,
+    "os": "macOS-27.2-arm64-arm-64bit"
+  },
+  "versions": {
+    "ultralytics": "8.3.228",
+    "torch": "2.14.1",
+    "opencv-python-headless": "4.14.0.94",
+    "sentence-transformers": "6.2.0",
+    "faster-whisper": "1.2.1",
+    "ctranslate2": "4.8.4"
+  },
+  "note": "Speed and memory only, nothing about accuracy. 1 thread = core seconds of work (capacity planning); 4 threads = latency on a 4 vCPU server. A laptop core is usually faster than a cloud vCPU: re-run on the target server before sizing.",
+  "photo_pipeline": {
+    "data_kind": "real_public_dataset",
+    "dataset": "keremberke/protective-equipment-detection test split (CC BY 4.0)",
+    "input": "first 100 images, resized to 1280 px long side, JPEG quality 85",
+    "mean_upload_kb": 151.8,
+    "weights": "yolov8n.pt",
+    "weights_sha256": "f59b3d833e2ff32e194b5bb8e08d211dc7c5bdf144b90d2c8412c47ccfc83b36",
+    "by_threads": {
+      "1": {
+        "decode": {
+          "median_ms": 2.1,
+          "p90_ms": 2.7,
+          "mean_ms": 2.2,
+          "n": 100
+        },
+        "blur_faces": {
+          "median_ms": 350.7,
+          "p90_ms": 469.1,
+          "mean_ms": 367.9,
+          "n": 100
+        },
+        "encode_jpeg": {
+          "median_ms": 2.1,
+          "p90_ms": 2.5,
+          "mean_ms": 2.4,
+          "n": 100
+        },
+        "hash": {
+          "median_ms": 5.2,
+          "p90_ms": 7.3,
+          "mean_ms": 6.8,
+          "n": 100
+        },
+        "detect": {
+          "median_ms": 26.7,
+          "p90_ms": 48.1,
+          "mean_ms": 32.2,
+          "n": 100
+        },
+        "total": {
+          "median_ms": 389.6,
+          "p90_ms": 518.0,
+          "mean_ms": 411.5,
+          "n": 100
+        }
+      },
+      "4": {
+        "decode": {
+          "median_ms": 2.1,
+          "p90_ms": 2.5,
+          "mean_ms": 2.1,
+          "n": 100
+        },
+        "blur_faces": {
+          "median_ms": 106.6,
+          "p90_ms": 162.7,
+          "mean_ms": 119.0,
+          "n": 100
+        },
+        "encode_jpeg": {
+          "median_ms": 2.4,
+          "p90_ms": 2.7,
+          "mean_ms": 2.4,
+          "n": 100
+        },
+        "hash": {
+          "median_ms": 5.8,
+          "p90_ms": 6.7,
+          "mean_ms": 6.0,
+          "n": 100
+        },
+        "detect": {
+          "median_ms": 25.1,
+          "p90_ms": 34.1,
+          "mean_ms": 26.9,
+          "n": 100
+        },
+        "total": {
+          "median_ms": 141.2,
+          "p90_ms": 201.2,
+          "mean_ms": 156.5,
+          "n": 100
+        }
+      }
+    },
+    "weights_note": "not the trained Hunar detector: same YOLOv8n architecture and input size, so speed is comparable; its detections are ignored"
+  },
+  "duplicate_search": {
+    "data_kind": "synthetic",
+    "input": "random 64-bit hashes; time of one reuse lookup, in ms",
+    "by_stored_photos": {
+      "1000": {
+        "full_scan_before_ms": 9.9,
+        "full_scan_fast_distance_ms": 2.2,
+        "indexed_cold_ms": {
+          "median_ms": 0.2,
+          "p90_ms": 0.3,
+          "mean_ms": 0.3,
+          "n": 20
+        },
+        "indexed_warm_ms": {
+          "median_ms": 0.2,
+          "p90_ms": 0.2,
+          "mean_ms": 0.2,
+          "n": 20
+        }
+      },
+      "10000": {
+        "full_scan_before_ms": 93.8,
+        "full_scan_fast_distance_ms": 2.6,
+        "indexed_cold_ms": {
+          "median_ms": 0.2,
+          "p90_ms": 0.2,
+          "mean_ms": 0.2,
+          "n": 20
+        },
+        "indexed_warm_ms": {
+          "median_ms": 0.2,
+          "p90_ms": 0.2,
+          "mean_ms": 0.2,
+          "n": 20
+        }
+      },
+      "100000": {
+        "full_scan_before_ms": 874.3,
+        "full_scan_fast_distance_ms": 19.6,
+        "indexed_cold_ms": {
+          "median_ms": 0.4,
+          "p90_ms": 0.5,
+          "mean_ms": 0.4,
+          "n": 20
+        },
+        "indexed_warm_ms": {
+          "median_ms": 0.4,
+          "p90_ms": 0.4,
+          "mean_ms": 0.4,
+          "n": 20
+        }
+      },
+      "1000000": {
+        "full_scan_before_ms": 8492.9,
+        "full_scan_fast_distance_ms": 212.3,
+        "indexed_cold_ms": {
+          "median_ms": 209.4,
+          "p90_ms": 385.5,
+          "mean_ms": 233.5,
+          "n": 20
+        },
+        "indexed_warm_ms": {
+          "median_ms": 2.7,
+          "p90_ms": 3.5,
+          "mean_ms": 2.9,
+          "n": 20
+        }
+      }
+    },
+    "real_hashes": {
+      "data_kind": "real_public_dataset",
+      "stored_photos": 11978,
+      "candidates_mean": 281.8,
+      "candidates_median": 159,
+      "candidates_p90": 707,
+      "candidates_max": 1439,
+      "indexed_warm_ms": {
+        "median_ms": 0.3,
+        "p90_ms": 0.8,
+        "mean_ms": 0.5,
+        "n": 20
+      }
+    }
+  },
+  "mapper": {
+    "data_kind": "synthetic",
+    "input": "50 AI-written declarations (data/synthetic/)",
+    "minilm": {
+      "load_and_fit_s": 4.74,
+      "criteria": 344,
+      "packs": 5,
+      "by_threads": {
+        "1": {
+          "median_ms": 12.7,
+          "p90_ms": 17.0,
+          "mean_ms": 13.0,
+          "n": 50
+        },
+        "4": {
+          "median_ms": 9.5,
+          "p90_ms": 11.1,
+          "mean_ms": 9.5,
+          "n": 50
+        }
+      }
+    },
+    "labse": {
+      "load_and_fit_s": 4.69,
+      "criteria": 344,
+      "packs": 5,
+      "by_threads": {
+        "1": {
+          "median_ms": 30.1,
+          "p90_ms": 37.0,
+          "mean_ms": 30.6,
+          "n": 50
+        },
+        "4": {
+          "median_ms": 25.9,
+          "p90_ms": 30.2,
+          "mean_ms": 26.2,
+          "n": 50
+        }
+      }
+    }
+  },
+  "speech": {
+    "data_kind": "synthetic",
+    "input": "macOS text-to-speech audio (data/raw/voice_tts/)",
+    "settings": "beam_size=5, vad_filter=True, language from the voice (as hunar.speech.transcribe)",
+    "by_threads": {
+      "1": {
+        "model": "faster-whisper-small int8",
+        "load_s": 0.59,
+        "files": 20,
+        "audio_s": 191.5,
+        "processing_s": 128.9,
+        "processing_s_per_audio_s": 0.673,
+        "rss_mb_after_load_and_run": 621
+      },
+      "4": {
+        "model": "faster-whisper-small int8",
+        "load_s": 0.6,
+        "files": 20,
+        "audio_s": 191.5,
+        "processing_s": 106.6,
+        "processing_s_per_audio_s": 0.557,
+        "rss_mb_after_load_and_run": 978
+      }
+    }
+  },
+  "rss_mb": {
+    "baseline": 157,
+    "after_detector": 214,
+    "after_minilm": 783,
+    "after_labse": 992
+  }
+}

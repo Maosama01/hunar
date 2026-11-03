@@ -10,9 +10,10 @@ from functools import lru_cache
 from pathlib import Path
 
 from fastapi import HTTPException
+from sqlalchemy import and_, delete, func, or_
 from sqlmodel import Session, select
 
-from hunar.api.models import Assessment, ChecklistTick, Decision, EvidenceItem, Worker
+from hunar.api.models import Assessment, ChecklistTick, Decision, EvidenceItem, PhashBand, Worker
 from hunar.audit import log as audit
 from hunar.evidence import detector, hashing, privacy
 from hunar.mapper.mapper import QPMapper
@@ -150,8 +151,7 @@ def add_evidence(s: Session, a: Assessment, task_id: str, photo_id: str, data: b
     path = folder / f"{task_id}_{photo_id}_{uuid.uuid4().hex[:8]}.jpg"
     path.write_bytes(jpeg)
     h = hashing.hashes_from_bgr(blurred)
-    others = s.exec(select(EvidenceItem.id, EvidenceItem.phash).where(EvidenceItem.assessment_id != a.id)).all()
-    dup = hashing.find_duplicate(h.phash, [(i, p) for i, p in others])
+    dup = find_reuse(s, a.id, h.phash)
     dets = detector.detect(blurred, photo_id)
     ev = EvidenceItem(assessment_id=a.id, task_id=task_id, photo_id=photo_id, stored_path=str(path.relative_to(DATA)),
                       sha256=hashlib.sha256(jpeg).hexdigest(), phash=h.phash, dhash=h.dhash, faces_blurred=n_faces,
@@ -161,6 +161,7 @@ def add_evidence(s: Session, a: Assessment, task_id: str, photo_id: str, data: b
                       consent_confirmed=True)
     s.add(ev)
     s.flush()
+    s.add_all(_band_rows(ev.id, ev.phash))
     audit.append(s, actor, "evidence.added", a.id,
                  {"evidence_id": ev.id, "task_id": task_id, "photo_id": photo_id, "sha256": ev.sha256,
                   "faces_blurred": n_faces, "duplicate_of": ev.duplicate_of, "detector": ev.detector_status},
@@ -171,6 +172,51 @@ def add_evidence(s: Session, a: Assessment, task_id: str, photo_id: str, data: b
     s.commit()
     s.refresh(ev)
     return ev
+
+
+def reuse_candidates(assessment_id: str, phash: str):
+    """Query for the stored photos of other assessments that share a pHash band with `phash`.
+
+    No ORDER BY: without table statistics SQLite would meet one by walking every stored photo in id
+    order instead of looking up the few candidates (tests/test_hashing.py checks the plan)."""
+    match = or_(*(and_(PhashBand.band == i, PhashBand.value == v) for i, v in enumerate(hashing.phash_bands(phash))))
+    return (select(EvidenceItem.id, EvidenceItem.phash)
+            .where(EvidenceItem.id.in_(select(PhashBand.evidence_id).where(match)),
+                   EvidenceItem.assessment_id != assessment_id))
+
+
+def find_reuse(s: Session, assessment_id: str, phash: str) -> tuple[int, int] | None:
+    """Closest stored photo of another assessment within the pHash threshold, as (evidence id, distance).
+
+    Reads only the photos that share a pHash band (hashing.BANDS) and compares them in id order, so the
+    result, ties included, is the same as comparing against every stored photo."""
+    return hashing.find_duplicate(phash, sorted((i, p) for i, p in s.exec(reuse_candidates(assessment_id, phash))))
+
+
+def _band_rows(evidence_id: int, phash: str) -> list[PhashBand]:
+    return [PhashBand(evidence_id=evidence_id, band=i, value=v) for i, v in enumerate(hashing.phash_bands(phash))]
+
+
+def index_phashes(s: Session) -> int:
+    """(Re)build the pHash bands of photos stored before the index existed, or of every photo when the
+    threshold or band layout has changed since they were indexed.
+
+    Returns the number of photos re-indexed."""
+    stale = s.exec(select(EvidenceItem.id, EvidenceItem.phash)
+                   .outerjoin(PhashBand, PhashBand.evidence_id == EvidenceItem.id)
+                   .group_by(EvidenceItem.id)
+                   .having(func.count(PhashBand.band) != hashing.BANDS)).all()
+    sample = s.exec(select(EvidenceItem.id, EvidenceItem.phash)
+                    .join(PhashBand, PhashBand.evidence_id == EvidenceItem.id).limit(1)).first()
+    if sample:
+        stored = list(s.exec(select(PhashBand.value).where(PhashBand.evidence_id == sample[0]).order_by(PhashBand.band)))
+        if stored != hashing.phash_bands(sample[1]):  # layout changed: every stored band is stale
+            stale = s.exec(select(EvidenceItem.id, EvidenceItem.phash)).all()
+    for eid, phash in stale:
+        s.exec(delete(PhashBand).where(PhashBand.evidence_id == eid))
+        s.add_all(_band_rows(eid, phash))
+    s.commit()
+    return len(stale)
 
 
 def add_evidence_b64(s: Session, a: Assessment, payload: dict, actor: str) -> EvidenceItem:

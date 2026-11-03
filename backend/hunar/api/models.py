@@ -4,6 +4,7 @@ from __future__ import annotations
 import datetime as dt
 import uuid
 
+from sqlalchemy import Index
 from sqlmodel import Field, SQLModel
 
 
@@ -61,6 +62,17 @@ class EvidenceItem(SQLModel, table=True):
     duplicate_distance: int | None = None
     consent_confirmed: bool = False
     created_at: dt.datetime = Field(default_factory=_now)
+
+
+class PhashBand(SQLModel, table=True):
+    """One bit band of an evidence photo's pHash (hunar.evidence.hashing.phash_bands), indexed so the
+    reuse check reads only photos that share a band."""
+
+    __table_args__ = (Index("ix_phashband_band_value", "band", "value"),)
+
+    evidence_id: int = Field(foreign_key="evidenceitem.id", primary_key=True)
+    band: int = Field(primary_key=True)
+    value: int
 
 
 class Decision(SQLModel, table=True):

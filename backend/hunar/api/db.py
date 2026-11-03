@@ -43,12 +43,14 @@ def reset_engine() -> None:
 
 def init_db() -> None:
     from hunar.api import models  # noqa: F401  (register tables)
+    from hunar.api.services import index_phashes
 
     SQLModel.metadata.create_all(engine())
     with Session(engine()) as s:
         for t in AUDIT_TRIGGERS:
             s.exec(text(t))
         s.commit()
+        index_phashes(s)  # photos stored before the reuse index existed
 
 
 def get_session() -> Iterator[Session]:

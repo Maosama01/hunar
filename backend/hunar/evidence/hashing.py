@@ -34,12 +34,39 @@ def hashes_from_bgr(arr: np.ndarray) -> Hashes:
 
 
 def distance(a: str, b: str) -> int:
-    return int(imagehash.hex_to_hash(a) - imagehash.hex_to_hash(b))
+    """Hamming distance of two hex hashes: the same value as imagehash's `-`, without building arrays."""
+    if len(a) != len(b):
+        raise ValueError("hashes differ in length")
+    return (int(a, 16) ^ int(b, 16)).bit_count()
+
+
+# Pigeonhole: two hashes within t bits of each other agree exactly on at least one of t + 1 disjoint
+# bit bands. The database indexes each photo's bands, so a reuse check only compares the photos that
+# share a band instead of every stored photo (multi-index hashing). Changing the threshold or the
+# band layout changes the bands; hunar.api.services.index_phashes rebuilds them at start-up.
+BANDS = DEFAULT_PHASH_THRESHOLD + 1
+
+
+def phash_bands(phash: str, n: int = BANDS) -> list[int]:
+    """`phash` cut into n disjoint bit bands, as integers. Band i holds bits i, i + n, i + 2n, ...
+
+    Interleaving spreads the correlated low-frequency DCT bits over all bands, so the bands of real
+    photos vary more than runs of adjacent bits would, and a lookup reads fewer candidates."""
+    v, bits = int(phash, 16), 4 * len(phash)
+    out = []
+    for i in range(n):
+        band = 0
+        for j, b in enumerate(range(i, bits, n)):
+            band |= ((v >> b) & 1) << j
+        out.append(band)
+    return out
 
 
 def find_duplicate(phash: str, existing: list[tuple[int, str]], threshold: int = DEFAULT_PHASH_THRESHOLD
                    ) -> tuple[int, int] | None:
-    """Closest (id, distance) among `existing` (id, phash) pairs within the threshold, else None."""
+    """Closest (id, distance) among `existing` (id, phash) pairs within the threshold, else None.
+
+    Ties keep the first pair in `existing`."""
     best = None
     for eid, other in existing:
         d = distance(phash, other)

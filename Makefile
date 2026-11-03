@@ -7,7 +7,7 @@ DL ?= $(HOME)/Downloads
 CSV ?= data/study/items.csv
 
 .PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean \
-        vision voice eval-voice import-detector ppe-split notebook design-sim study-items
+        vision voice eval-voice import-detector ppe-split notebook design-sim study-items bench
 
 help:
 	@echo "setup    install Python 3.11 env (uv) and frontend packages"
@@ -27,6 +27,7 @@ help:
 	@echo "import-detector  bring Colab results back (newest m2_detector*.json, best*.pt in DL=~/Downloads)"
 	@echo "ppe-split  class balance of published vs re-split PPE data -> experiments/m2_ppe_split.json"
 	@echo "notebook   regenerate the Colab notebook (embeds hunar/evidence/ppe_split.py)"
+	@echo "bench      CPU speed + memory per photo, declaration and second of audio -> experiments/bench_cpu.json"
 
 setup:
 	$(UV) python install 3.11
@@ -116,3 +117,6 @@ notebook:
 clean:
 	rm -rf .pytest_cache .ruff_cache frontend/dist data/hunar.db
 
+# WEIGHTS defaults to the trained detector; WEIGHTS=<path to yolov8n.pt> times the same-size COCO model.
+bench:
+	$(PY) scripts/bench_cpu.py $(if $(WEIGHTS),--weights "$(WEIGHTS)",)
