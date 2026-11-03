@@ -138,6 +138,9 @@ def m2_tables() -> str:
     else:
         out.append(f"Dataset: {det['dataset']}. Leakage: {det['leakage']['near_duplicate_in_train']} of "
                    f"{det['leakage']['test_images']} test images have a near-duplicate in train.\n")
+        if det.get("split"):
+            out.append(f"Trained and tested on the re-split data ({det['split']['method']}). Boxes per class:\n")
+            out += _boxes_table(det["split"]["counts"]) + [""]
         out.append(f"YOLOv8n, {det['epochs']} epochs, image size {det['imgsz']}, ultralytics "
                    f"{det.get('ultralytics_version', '?')}. Source: `experiments/m2_detector.json`. "
                    "**Presence only: the model does not judge workmanship.**\n")
@@ -151,7 +154,52 @@ def m2_tables() -> str:
         out.append("| Class | Precision | Recall | mAP50 | mAP50-95 |\n|---|---|---|---|---|")
         for c, v in det["test_clean"]["per_class"].items():
             out.append(f"| {c} | {v['precision']:.3f} | {v['recall']:.3f} | {v['mAP50']:.3f} | {v['mAP50_95']:.3f} |")
+    out.append(split_table())
+    out.append(run1_diagnostic())
     return "\n".join(out) + "\n"
+
+
+def _boxes_table(counts: dict) -> list[str]:
+    classes = list(next(iter(counts.values()))["boxes"])
+    rows = ["| Split | Images | " + " | ".join(classes) + " |", "|---|---|" + "---|" * len(classes)]
+    for s in ("train", "valid", "test"):
+        c = counts[s]
+        rows.append(f"| {s} | {c['images']} | " + " | ".join(str(c["boxes"][k]) for k in classes) + " |")
+    return rows
+
+
+def split_table() -> str:
+    d = load("m2_ppe_split.json")
+    if d is None:
+        return ""
+    r = d["resplit"]
+    out = ["\n**Training data splits (boxes per class).** The dataset's published splits are class-disjoint, "
+           "so a group-aware, class-stratified re-split is used. Source: `experiments/m2_ppe_split.json`.\n",
+           "Published splits:\n", *_boxes_table(d["published_splits"]),
+           f"\nTest images with a near-duplicate (<= 4 bits) in train, published splits: "
+           f"{d['published_test_with_near_duplicate_in_train_4bits']}.\n",
+           f"Re-split ({r['method']}; {r['n_groups']} groups, largest {r['largest_group']} images):\n",
+           *_boxes_table(r["counts"]),
+           f"\nTest images with a near-duplicate (<= 4 bits) in train, re-split: "
+           f"{r['test_with_near_duplicate_in_train_4bits']}.\n"]
+    return "\n".join(out)
+
+
+def run1_diagnostic() -> str:
+    d = load("m2_detector_run1_published_splits.json")
+    if d is None:
+        return ""
+    t, c = d["test"], d["test_clean"]
+    pc = c["per_class"]
+    rows = " | ".join(f"{k} mAP50 {v['mAP50']:.3f}" for k, v in pc.items())
+    return ("\n**Diagnostic first run on the published splits (not the detector result).** "
+            f"YOLOv8n, {d['epochs']} epochs, ultralytics {d.get('ultralytics_version', '?')}. "
+            f"Full test mAP50 {t['mAP50']:.3f}, clean test ({c['n_images']} images) mAP50 {c['mAP50']:.3f}; "
+            f"per class on the clean test: {rows}. Helmet scores 0 because the published training split "
+            "contains no helmet boxes; gloves cannot be scored because the published test split contains none; "
+            "safety shoes had very few training boxes. Only the goggles figure measures what the model learned. "
+            "Source: `experiments/m2_detector_run1_published_splits.json`; confusion matrix: "
+            "`docs/figures/m2_run1_confusion_matrix.png`.\n")
 
 
 def m4_table() -> str:

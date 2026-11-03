@@ -42,8 +42,10 @@ Generated from `slides_outline.src.md` by `make report`; numbers come from `expe
 10. **M2 evidence integrity.** Consent gate, faces blurred before storage. Hashing result: exact
     re-uploads caught (recompression recall {{m2_hashing:hashes.phash.test_recall_by_transform.jpeg_q50|.2f}}) at
     {{m2_hashing:hashes.phash.test.false_flag_rate_fresh|.3f}} false flags; crops/rotations missed. Finding: the
-    public PPE dataset is mostly near-duplicate frames. Detector: Colab notebook ready, mAP RESULT
-    PENDING; presence only, never quality.
+    public PPE dataset is mostly near-duplicate frames, and its published splits are class-disjoint
+    (train has {{m2_ppe_split:published_splits.train.boxes.helmet}} helmet boxes), so run 1 is a
+    diagnostic and the data were re-split; detector mAP RESULT PENDING (run 2). Presence only, never
+    quality.
 
 11. **Offline first.** Outbox → ordered, idempotent replay; client-side UUIDs; demo with network off.
 

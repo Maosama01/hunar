@@ -275,9 +275,22 @@ on the held-out half.
 
 **Presence detector.** A YOLOv8n model [29], [30] is fine-tuned on Colab on the same public PPE dataset
 (classes mapped to helmet, gloves, safety shoes, goggles), optionally with the team's own labelled
-photos of electrician tools. The notebook measures train/test leakage from near-duplicate frames and
-reports mAP on a clean test subset. CPU inference is wired into the application. **The detector
-reports presence only and does not judge workmanship.**
+photos of electrician tools. CPU inference is wired into the application. **The detector reports
+presence only and does not judge workmanship.**
+
+A first training run on the dataset's *published* splits exposed a data problem: the splits are
+class-disjoint. The published training split has {{m2_ppe_split:published_splits.train.boxes.helmet}}
+helmet boxes and {{m2_ppe_split:published_splits.train.boxes.safety_shoes}} safety-shoe boxes, while
+the published test split has {{m2_ppe_split:published_splits.test.boxes.gloves}} glove boxes, and
+{{m2_ppe_split:published_test_with_near_duplicate_in_train_4bits}} test images have a near-duplicate
+in training. We therefore pool all {{m2_ppe_split:n_images}} images, group near-identical frames
+(pHash within 4 bits, single linkage) and assign whole groups to train, validation and test with
+iterative stratification [63], taking the rarest class first and aiming at 70/15/15 of the boxes of
+every class. A looser 8-bit grouping chained whole videos into a single group of thousands of
+images, which made a balanced split impossible. The dataset is dominated by a few videos (all
+safety-shoe boxes come from two of them), so a leakage-free split can only train on one shoe video and
+test on the other. The re-split code is unit-tested in the repository and embedded verbatim in the
+Colab notebook.
 
 ## 4.5 M4: consistency study protocol
 
@@ -395,7 +408,20 @@ a large share of genuinely different site photos, because construction-site phot
 public dataset itself was mostly near-identical video frames, a reminder that the same kind of
 leakage could inflate detector scores if not controlled.
 
-**Q3, detector** and **Q4, assessor agreement** are pending (Section 8).
+**Q3, detector.** The headline result needs the second Colab run on the re-split data (pending).
+The first run, on the published splits, is reported above only as a diagnostic: its helmet score is
+zero because the model never saw a helmet in training, gloves could not be scored because the test
+split had none, and only goggles measure what the model learned (clean-test mAP50
+{{m2_detector_run1_published_splits:test_clean.per_class.goggles.mAP50|.3f}}). The lesson for the
+report is that a public dataset's published split must be checked for class coverage and
+near-duplicate leakage before any number from it is trusted.
+
+![Run 1 confusion matrix, published splits (diagnostic)](../figures/m2_run1_confusion_matrix.png)
+
+*Figure 7. Confusion matrix of the diagnostic first run on the published splits (clean test set).
+All true helmets fall in "background" because the training split contained no helmet boxes.*
+
+**Q4, assessor agreement** is pending (Section 8).
 
 # 7. Limitations
 
@@ -412,6 +438,9 @@ leakage could inflate detector scores if not controlled.
 * **Face blurring** uses Haar cascades, which miss profile, small and occluded faces. Photos taken
   offline wait unblurred in the device's queue until sync.
 * **Hashing** misses edited reuse (crops, rotations, borders, mirroring).
+* **Detector training data** is a public dataset dominated by a few videos; safety shoes come from
+  only two, so per-class scores for shoes rest on a single test video. No electrician-specific photos
+  (tools, Indian domestic settings) are in it yet.
 * **Assessor agreement is unmeasured.** This is the outcome the problem statement cares most about,
   and it requires real assessors and consented photos.
 * **Theory component.** NSQF assessment also includes theory and viva marks; Hunar supports only the
@@ -438,7 +467,7 @@ leakage could inflate detector scores if not controlled.
 | 0 | Setup, schemas, official data | Done |
 | 1 | M1 mapper, baselines, evaluation | Done on synthetic data; real labelled set pending |
 | 2 | M3 rubric engine, backend API, audit log | Done |
-| 3 | M2 evidence checker | Hashing and blurring done; detector training on Colab pending |
+| 3 | M2 evidence checker | Hashing and blurring done; detector run 1 diagnostic; run 2 on the re-split data pending |
 | 4 | Frontend and offline sync | Done; full flow and offline replay exercised in a browser at phone width |
 | 5 | M4 study | Rater mode and analysis done; data collection pending |
 | 6 | Report and viva preparation | This draft |
@@ -446,7 +475,7 @@ leakage could inflate detector scores if not controlled.
 Next steps, in order:
 
 1. The team writes and cross-labels about 150 real declarations, reporting labelling agreement.
-2. Train the detector on Colab; report mAP on the clean test subset.
+2. Run the detector notebook again on the re-split data (run 2); report per-class mAP.
 3. Review the rubrics with a certified assessor; collect consented photos of practice tasks.
 4. Run the assessor-agreement study with 3 to 5 assessors.
 5. Add spoken declarations with Whisper-based speech recognition [57] and on-device face blurring.

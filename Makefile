@@ -6,7 +6,7 @@ NPM := npm --prefix frontend
 DL ?= $(HOME)/Downloads
 
 .PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean \
-        vision import-detector
+        vision import-detector ppe-split notebook
 
 help:
 	@echo "setup    install Python 3.11 env (uv) and frontend packages"
@@ -19,7 +19,9 @@ help:
 	@echo "demo     seed, then start the API (:8000) and the web app (:5173)"
 	@echo "report   build docs/report/Hunar_Report.docx from the Markdown draft"
 	@echo "vision   install YOLO (ultralytics) for detector inference on the laptop"
-	@echo "import-detector  bring Colab results back: DL=folder with m2_detector.json, best.pt"
+	@echo "import-detector  bring Colab results back (newest m2_detector*.json, best*.pt in DL=~/Downloads)"
+	@echo "ppe-split  class balance of published vs re-split PPE data -> experiments/m2_ppe_split.json"
+	@echo "notebook   regenerate the Colab notebook (embeds hunar/evidence/ppe_split.py)"
 
 setup:
 	$(UV) python install 3.11
@@ -76,9 +78,21 @@ report:
 vision:
 	$(UV) sync --extra vision
 
+# Newest matching downloads (browsers rename repeats to "name (1).ext").
+DET_JSON = $(shell ls -t "$(DL)"/m2_detector*.json 2>/dev/null | head -1)
+DET_PT = $(shell ls -t "$(DL)"/best*.pt 2>/dev/null | head -1)
+DET_CM = $(shell ls -t "$(DL)"/confusion_matrix*.png 2>/dev/null | head -1)
+
 import-detector:
-	$(PY) scripts/import_detector_results.py --json "$(DL)/m2_detector.json" --weights "$(DL)/best.pt" \
-		$(if $(wildcard $(DL)/confusion_matrix.png),--confusion "$(DL)/confusion_matrix.png",)
+	$(PY) scripts/import_detector_results.py --json "$(DET_JSON)" --weights "$(DET_PT)" \
+		$(if $(DET_CM),--confusion "$(DET_CM)",)
+
+ppe-split:
+	$(PY) scripts/fetch_ppe_test.py train valid test
+	$(PY) scripts/ppe_split_report.py
+
+notebook:
+	$(PY) scripts/make_colab_notebook.py
 
 clean:
 	rm -rf .pytest_cache .ruff_cache frontend/dist data/hunar.db

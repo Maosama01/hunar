@@ -429,6 +429,14 @@ R. Rambharose, "Exploring the role of artificial intelligence (AI) in recognitio
 - Verified: https://api.crossref.org/works/10.14426/jovacet.v8i1.506 and the DOI landing page (journal, vol. 8, no. 1, dated 2025-10-17). Page range unclear in the metadata, so omitted.
 - Relevance: This is recent peer-reviewed work on AI in RPL assessment and the closest academic precedent for an AI-assisted RPL tool such as Hunar.
 
+## 16. Data splitting
+
+**[63] `sechidis2011stratification`**
+K. Sechidis, G. Tsoumakas, and I. Vlahavas, "On the stratification of multi-label data," in *Machine Learning and Knowledge Discovery in Databases (ECML PKDD 2011)* (Lecture Notes in Computer Science), 2011, pp. 145–158, doi: 10.1007/978-3-642-23808-6_10.
+- DOI: https://doi.org/10.1007/978-3-642-23808-6_10
+- Verified: https://api.crossref.org/works?query.bibliographic=On+the+stratification+of+multi-label+data (Crossref record: title, authors Sechidis/Tsoumakas/Vlahavas, LNCS, pp. 145–158, 2011), checked 3 Nov 2026.
+- Relevance: Iterative stratification, which Hunar adapts to groups of near-identical video frames to re-split the PPE dataset so every class appears in every split.
+
 ---
 
 ## UNVERIFIED — [CITATION NEEDED]

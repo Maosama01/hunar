@@ -1,6 +1,10 @@
 # Walkthrough: train the PPE detector on Colab and bring the results back
 
-This fills the **RESULT PENDING** detector rows in the README and report. You need a Google account
+This fills the **RESULT PENDING** detector rows in the README and report.
+
+> **Run 1 (3 Nov 2026) is a diagnostic, not the result.** It trained on the dataset's published splits,
+> which turned out to be class-disjoint: no helmet boxes in train, no glove boxes in test. The current
+> notebook re-splits the data first (step 2). Run it again as described below. You need a Google account
 with Colab Pro and the laptop with this repo. Every number comes from the notebook's own output
 file, `m2_detector.json`; nothing is typed by hand.
 
@@ -21,12 +25,12 @@ ultralytics version (8.3.228). That checks the code runs; it says nothing about 
    | Setup | Installs ultralytics 8.3.228 | `nvidia-smi` lists a GPU; ultralytics prints a check summary |
    | 0. Drive | Asks to connect Google Drive (approve the pop-up) | `runs will be saved in /content/drive/MyDrive/hunar_runs` |
    | 1. Download | Downloads the PPE dataset (about 2.3 GB) | train / valid / test image counts |
-   | 2. Convert | COCO → YOLO labels with Hunar class names | image and box counts per split |
+   | 2. Re-split | Pools the 11,978 images, groups near-identical frames, splits by class (takes a few minutes to hash) | a train/valid/test table with boxes for all four classes in every split |
    | 3. Tools (optional) | Adds the team's own tool photos if `hunar_tools.zip` is uploaded | otherwise "training PPE classes only" |
-   | 4. Leakage check | Finds test images with a near-duplicate in train | "N of M test images have a near-duplicate in train" |
+   | 4. Leakage check | Independent check of step 2 | "0 of M test images have a near-duplicate in train" (or close to 0) |
    | 5. Train | YOLOv8n, 50 epochs | one progress block per epoch |
    | 6. Evaluate | mAP on the full test split and the clean subset | two lines: `test mAP50 …` and `clean mAP50 …` |
-   | 7. Download | Downloads `m2_detector.json`, `best.pt`, `confusion_matrix.png` | allow multiple downloads if the browser asks |
+   | 7. Download | Downloads `m2_detector_v2.json`, `best.pt`, `confusion_matrix.png` | allow multiple downloads if the browser asks |
 
 4. **How long training takes.** After the first epoch ultralytics prints the time per epoch; multiply
    by 50. If that is too long, stop, set `EPOCHS = 30` in the train cell and run it again. The epoch
@@ -35,11 +39,14 @@ ultralytics version (8.3.228). That checks the code runs; it says nothing about 
 5. **Keep the tab open** and the laptop awake while it trains.
 6. **If Colab disconnects:** reconnect, run Setup, cells 0, 1, 2 and 4 again, then run the
    *resume* cell under step 5 (remove the `#` signs) instead of the train cell. Your weights are safe
-   in Google Drive (`MyDrive/hunar_runs`), and `m2_detector.json` is also saved there.
+   in Google Drive (`MyDrive/hunar_runs/hunar_ppe_v2_resplit`), and `m2_detector_v2.json` is saved
+   there too. Run 1 stays untouched in `MyDrive/hunar_runs/hunar_ppe`.
 
 ## Part B: on the laptop
 
-From the repo folder (`/Users/tanishqkhandelwal/Hunar`), with the three files in `~/Downloads`:
+From the repo folder (`/Users/tanishqkhandelwal/Hunar`), with the three files in `~/Downloads`
+(`make import-detector` takes the **newest** `m2_detector*.json`, `best*.pt` and
+`confusion_matrix*.png`, so browser renames like `best (1).pt` are fine):
 
 ```bash
 make vision
@@ -51,9 +58,10 @@ make import-detector
 
 If the files are somewhere else: `make import-detector DL=/path/to/folder`.
 
-The import script checks the files before copying anything. It refuses smoke-test files, runs with
-fewer than 100 test images, runs under 10 epochs (unless you pass `--allow-short-run`), and weights
-whose class names do not match the results file. Then it:
+The import script checks the files before copying anything. It refuses smoke-test files, runs on the
+old class-disjoint published splits (like run 1), runs with fewer than 100 test images, runs under
+10 epochs (unless you pass `--allow-short-run`), runs where a class has no train or test boxes, and
+weights whose class names do not match the results file. Then it:
 
 * copies `best.pt` to `data/models/hunar_ppe_tools_yolov8n.pt` (gitignored, never committed),
 * copies `m2_detector.json` to `experiments/` and the confusion matrix to `docs/figures/`,

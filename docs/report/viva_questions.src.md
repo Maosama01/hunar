@@ -92,14 +92,21 @@ and {{m2_hashing:hashes.phash.test_recall_by_transform.resize_50pct|.2f}}), but 
 Catching those at a higher threshold would flag many genuinely different site photos.
 
 **17. What is the mAP of your detector?**
-RESULT PENDING. The Colab notebook is ready; it maps the public PPE dataset to our classes, checks
-train/test leakage from near-duplicate frames and reports mAP on a clean test subset. Even when
-trained, it only detects presence of PPE and tools, never quality of work.
+The headline number is RESULT PENDING: it needs the second Colab run on the re-split data. The first
+run, on the dataset's published splits, scored 0 for helmets because that training split has
+{{m2_ppe_split:published_splits.train.boxes.helmet}} helmet boxes, and could not score gloves because
+that test split has {{m2_ppe_split:published_splits.test.boxes.gloves}}. Only goggles were measurable
+(clean-test mAP50 {{m2_detector_run1_published_splits:test_clean.per_class.goggles.mAP50|.3f}}). We
+report that run as a diagnostic, not as the result. Even when trained properly, the model only detects
+presence of PPE and tools, never quality of work.
 
 **18. What did you find about the public dataset?**
-Its test split of 1,935 images contains only 407 distinct images after grouping near-identical frames.
-Random train/test splits of such data leak near-duplicates and inflate mAP, which is why the notebook
-reports a clean-subset score.
+Two things. Its published splits are class-disjoint (no helmets in train, no gloves in test), and it
+is mostly video frames: the 1,935-image test split has only 407 distinct images, and all safety-shoe
+boxes come from two videos. We pool the {{m2_ppe_split:n_images}} images, group near-identical frames
+and re-split with iterative stratification (Sechidis et al. [63]), so every class is in every split and
+{{m2_ppe_split:resplit.test_with_near_duplicate_in_train_4bits}} test images have a near-duplicate in
+training (the published split had {{m2_ppe_split:published_test_with_near_duplicate_in_train_4bits}}).
 
 **19. How will you show improved inter-assessor agreement?**
 A within-subject study: 3 to 5 real assessors (not the rubric authors) score 20 to 30 consented

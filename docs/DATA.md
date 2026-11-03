@@ -58,9 +58,19 @@ and `PSS/N1336` (we use the module summary codes).
   28 Oct 2026, zip SHA-256 `16dfeef2e6e14bb188e40d0e856c12c48033e6a61b5b9230eaf53db97d3feb6e`).
   Finding: the split is dominated by near-identical video frames; only 407 images remain distinct
   after grouping (32x32 thumbnail correlation >= 0.95). Reuse is simulated with nine transformations.
-* **Use 2, detector training:** all splits, in `notebooks/m2_train_yolo_colab.ipynb` (Colab). Mapped
-  to Hunar classes helmet, gloves, safety_shoes, goggles. The notebook measures train/test leakage
-  from near-duplicate frames and reports mAP on a clean test subset as well. **RESULT PENDING.**
+* **Use 2, detector training:** all splits (`make ppe-split` downloads them and writes
+  `experiments/m2_ppe_split.json`), trained in `notebooks/m2_train_yolo_colab.ipynb` on Colab. Mapped
+  to Hunar classes helmet, gloves, safety_shoes, goggles.
+  * **Finding: the published splits are class-disjoint.** Train has 0 helmet and 14 safety-shoe boxes;
+    test has 0 glove boxes; 136 test images have a near-duplicate (pHash <= 4 bits) in train. Run 1
+    (3 Nov 2026) used these splits and is kept only as a diagnostic
+    (`experiments/m2_detector_run1_published_splits.json`, `docs/figures/m2_run1_confusion_matrix.png`).
+  * **Re-split used from run 2:** pool all 11,978 images, group near-identical frames (pHash <= 4 bits,
+    single linkage), assign whole groups with iterative stratification (Sechidis et al., 2011), targets
+    70/15/15 per class. Every class is in every split and no test image has a near-duplicate in train.
+    The data are mostly video: all safety-shoe boxes come from two videos (one trains, one tests).
+    Code: `backend/hunar/evidence/ppe_split.py` (unit-tested, embedded verbatim in the notebook).
+  * Detector result (run 2): **RESULT PENDING.**
 
 ### Team photos of electrician tools (planned)
 About 150 photos of multimeter, tester screwdriver, wire stripper and insulated pliers, taken by the

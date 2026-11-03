@@ -77,7 +77,7 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | M1 labelling tool + guidelines | Done | Team has not written declarations yet |
 | M2 reuse hashing | Done and evaluated | Real public photos, simulated reuse |
 | M2 face blur | Done (OpenCV Haar) | Not yet measured on real assessment photos |
-| M2 YOLOv8n detector | Training notebook ready | **RESULT PENDING**: needs a Colab run; app reports "unavailable" until then |
+| M2 YOLOv8n detector | Run 1 done but only a diagnostic: the dataset's published splits are class-disjoint (no helmets in train, no gloves in test). Notebook now re-splits the data | **RESULT PENDING** for run 2; app reports "unavailable" until then |
 | M3 rubric engine | Done, 6 tasks, unit tests | Rubric descriptors drafted by the team with AI help; need review by a certified assessor |
 | Backend API + audit log + sync | Done, tested | Real |
 | PWA frontend + offline queue | Done: all screens, EN/HI, offline outbox; exercised in a browser at phone width incl. offline replay | Real; not yet tried on a physical phone |
@@ -147,6 +147,32 @@ For comparison, the max-F1 threshold (16) would catch more edited copies (recall
 ### M2 PPE / tool presence detector (YOLOv8n)
 
 RESULT PENDING: train with `notebooks/m2_train_yolo_colab.ipynb` on Colab, then bring the results back with `scripts/import_detector_results.py` (see `docs/m2_colab_walkthrough.md`).
+
+
+**Training data splits (boxes per class).** The dataset's published splits are class-disjoint, so a group-aware, class-stratified re-split is used. Source: `experiments/m2_ppe_split.json`.
+
+Published splits:
+
+| Split | Images | helmet | gloves | safety_shoes | goggles |
+|---|---|---|---|---|---|
+| train | 6473 | 0 | 3679 | 14 | 2692 |
+| valid | 3570 | 283 | 984 | 639 | 1192 |
+| test | 1935 | 1240 | 0 | 102 | 300 |
+
+Test images with a near-duplicate (<= 4 bits) in train, published splits: 136.
+
+Re-split (pHash groups (single linkage, <= 4 bits), iterative stratification over groups (rarest class first, targets train/valid/test 0.70/0.15/0.15, ties to test), seed 0; 2911 groups, largest 2579 images):
+
+| Split | Images | helmet | gloves | safety_shoes | goggles |
+|---|---|---|---|---|---|
+| train | 8384 | 1066 | 3264 | 498 | 2929 |
+| valid | 1797 | 229 | 700 | 11 | 628 |
+| test | 1797 | 228 | 699 | 246 | 627 |
+
+Test images with a near-duplicate (<= 4 bits) in train, re-split: 0.
+
+
+**Diagnostic first run on the published splits (not the detector result).** YOLOv8n, 50 epochs, ultralytics 8.3.228. Full test mAP50 0.530, clean test (1799 images) mAP50 0.397; per class on the clean test: helmet mAP50 0.000 | goggles mAP50 0.795. Helmet scores 0 because the published training split contains no helmet boxes; gloves cannot be scored because the published test split contains none; safety shoes had very few training boxes. Only the goggles figure measures what the model learned. Source: `experiments/m2_detector_run1_published_splits.json`; confusion matrix: `docs/figures/m2_run1_confusion_matrix.png`.
 
 
 ### M4 inter-assessor consistency study

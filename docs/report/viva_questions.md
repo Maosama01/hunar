@@ -92,14 +92,21 @@ and 1.00), but not crops, rotations, borders or mirroring.
 Catching those at a higher threshold would flag many genuinely different site photos.
 
 **17. What is the mAP of your detector?**
-RESULT PENDING. The Colab notebook is ready; it maps the public PPE dataset to our classes, checks
-train/test leakage from near-duplicate frames and reports mAP on a clean test subset. Even when
-trained, it only detects presence of PPE and tools, never quality of work.
+The headline number is RESULT PENDING: it needs the second Colab run on the re-split data. The first
+run, on the dataset's published splits, scored 0 for helmets because that training split has
+0 helmet boxes, and could not score gloves because
+that test split has 0. Only goggles were measurable
+(clean-test mAP50 0.795). We
+report that run as a diagnostic, not as the result. Even when trained properly, the model only detects
+presence of PPE and tools, never quality of work.
 
 **18. What did you find about the public dataset?**
-Its test split of 1,935 images contains only 407 distinct images after grouping near-identical frames.
-Random train/test splits of such data leak near-duplicates and inflate mAP, which is why the notebook
-reports a clean-subset score.
+Two things. Its published splits are class-disjoint (no helmets in train, no gloves in test), and it
+is mostly video frames: the 1,935-image test split has only 407 distinct images, and all safety-shoe
+boxes come from two videos. We pool the 11978 images, group near-identical frames
+and re-split with iterative stratification (Sechidis et al. [63]), so every class is in every split and
+0 test images have a near-duplicate in
+training (the published split had 136).
 
 **19. How will you show improved inter-assessor agreement?**
 A within-subject study: 3 to 5 real assessors (not the rubric authors) score 20 to 30 consented

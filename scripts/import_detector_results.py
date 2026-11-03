@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 from hunar.evidence.detector import CLASSES, WEIGHTS  # noqa: E402
 
-REQUIRED = {"experiment", "dataset", "classes", "epochs", "imgsz", "leakage", "test", "test_clean"}
+REQUIRED = {"experiment", "dataset", "classes", "epochs", "imgsz", "leakage", "test", "test_clean", "split"}
 
 
 def fail(msg: str) -> int:
@@ -40,8 +40,12 @@ def main() -> int:
         if not p.expanduser().exists():
             return fail(f"{p} not found")
     res = json.loads(a.json.expanduser().read_text())
+    if "split" not in res and "test" in res:
+        return fail("this run used the dataset's published splits, which are class-disjoint (no helmets in "
+                    "train, no gloves in test). It is kept as a diagnostic run, not imported as the result. "
+                    "Re-run the current notebook, which re-splits the data.")
     if missing := REQUIRED - set(res):
-        return fail(f"{a.json} is missing {sorted(missing)}; is this the m2_detector.json from the notebook?")
+        return fail(f"{a.json} is missing {sorted(missing)}; is this the m2_detector*.json from the notebook?")
     if res["experiment"] != "m2_detector":
         return fail("not an m2_detector result")
     # Guard against importing a test or partial run as if it were the real result.
@@ -63,6 +67,8 @@ def main() -> int:
         return fail(f"weights classes {sorted(names)} do not match the JSON classes {sorted(res['classes'])}")
     WEIGHTS.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(a.weights.expanduser(), WEIGHTS)
+    if missing_cls := [c for s in ("train", "test") for c, n in res["split"]["counts"][s]["boxes"].items() if n == 0]:
+        return fail(f"a class has no boxes in train or test: {missing_cls}")
     shutil.copy(a.json.expanduser(), ROOT / "experiments" / "m2_detector.json")
     if a.confusion:
         shutil.copy(a.confusion.expanduser(), ROOT / "docs" / "figures" / "m2_confusion_matrix.png")

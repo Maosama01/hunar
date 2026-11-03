@@ -1,0 +1,74 @@
+{
+  "experiment": "m2_ppe_split",
+  "data_kind": "real_public_dataset",
+  "dataset": "keremberke/protective-equipment-detection (Roboflow PPE v7, CC BY 4.0)",
+  "command": "python scripts/ppe_split_report.py",
+  "created": "2026-11-03T13:51:34",
+  "n_images": 11978,
+  "published_splits": {
+    "train": {
+      "images": 6473,
+      "boxes": {
+        "helmet": 0,
+        "gloves": 3679,
+        "safety_shoes": 14,
+        "goggles": 2692
+      }
+    },
+    "valid": {
+      "images": 3570,
+      "boxes": {
+        "helmet": 283,
+        "gloves": 984,
+        "safety_shoes": 639,
+        "goggles": 1192
+      }
+    },
+    "test": {
+      "images": 1935,
+      "boxes": {
+        "helmet": 1240,
+        "gloves": 0,
+        "safety_shoes": 102,
+        "goggles": 300
+      }
+    }
+  },
+  "published_test_with_near_duplicate_in_train_4bits": 136,
+  "resplit": {
+    "method": "pHash groups (single linkage, <= 4 bits), iterative stratification over groups (rarest class first, targets train/valid/test 0.70/0.15/0.15, ties to test), seed 0",
+    "n_groups": 2911,
+    "largest_group": 2579,
+    "groups_with_more_than_one_image": 733,
+    "counts": {
+      "train": {
+        "images": 8384,
+        "boxes": {
+          "helmet": 1066,
+          "gloves": 3264,
+          "safety_shoes": 498,
+          "goggles": 2929
+        }
+      },
+      "test": {
+        "images": 1797,
+        "boxes": {
+          "helmet": 228,
+          "gloves": 699,
+          "safety_shoes": 246,
+          "goggles": 627
+        }
+      },
+      "valid": {
+        "images": 1797,
+        "boxes": {
+          "helmet": 229,
+          "gloves": 700,
+          "safety_shoes": 11,
+          "goggles": 628
+        }
+      }
+    },
+    "test_with_near_duplicate_in_train_4bits": 0
+  }
+}
