@@ -25,7 +25,8 @@ def main() -> int:
     if MANIFEST.exists():
         old = {e["nqr_id"]: e for e in json.loads(MANIFEST.read_text())["files"]}
     entries = []
-    for pack in json.loads(SOURCES.read_text())["packs"]:
+    src = json.loads(SOURCES.read_text())
+    for pack in src["packs"] + src.get("trade_packs", []):
         dest = RAW / f"{pack['nqr_id']}.pdf"
         if dest.exists() and pack["nqr_id"] in old:
             entries.append(old[pack["nqr_id"]])

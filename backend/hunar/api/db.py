@@ -42,8 +42,11 @@ def reset_engine() -> None:
 
 
 def init_db() -> None:
-    from hunar.api import models  # noqa: F401  (register tables)
+    from hunar.accounts import models as _accounts  # noqa: F401  (register tables)
+    from hunar.api import models  # noqa: F401
     from hunar.api.services import index_phashes
+    from hunar.market import models as _market  # noqa: F401
+    from hunar.quiz import models as _quiz  # noqa: F401
 
     SQLModel.metadata.create_all(engine())
     with Session(engine()) as s:

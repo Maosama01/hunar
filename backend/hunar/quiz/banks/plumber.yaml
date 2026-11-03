@@ -1,0 +1,338 @@
+# Question bank: plumber (qualification: Plumber - General, WMPSC, NSQF 4, NQR 12957).
+# Answers are supported by the cited sources; text from BIS standards and NIMI books is paraphrased,
+# never copied, and no item is taken from a published question bank.
+trade: plumber
+version: "2026-11-04"
+status: >-
+  DRAFT: written with AI help from the cited official sources; not yet reviewed by a certified assessor
+  or ITI instructor. Difficulties are AI estimates, not yet calibrated from real answers. NOS PSC/N0142
+  was parsed with gaps from the qualification file, so its items cite the file's text directly.
+qualification_nqr_id: 12957
+nos:
+  PSC/N0130: {weight: 15, title: {en: "Preparing for plumbing installation and maintenance", hi: "प्लंबिंग इंस्टॉलेशन और रखरखाव की तैयारी"}}
+  PSC/N0131: {weight: 20, title: {en: "Installing water supply systems", hi: "पानी सप्लाई सिस्टम लगाना"}}
+  PSC/N0132: {weight: 20, title: {en: "Installing drainage systems", hi: "ड्रेनेज सिस्टम लगाना"}}
+  PSC/N0133: {weight: 20, title: {en: "Installing plumbing fixtures", hi: "प्लंबिंग फ़िक्सचर लगाना"}}
+  PSC/N0142: {weight: 10, title: {en: "Troubleshooting and maintenance of domestic plumbing", hi: "घरेलू प्लंबिंग की ख़राबी ढूँढ़ना और रखरखाव"}}
+  PSC/N0136: {weight: 5, title: {en: "Health and safety at work", hi: "काम पर स्वास्थ्य और सुरक्षा"}}
+  DGT/VSQ/N0102: {weight: 10, title: {en: "Employability skills", hi: "रोज़गार कौशल"}}
+sources:
+  qp: "Plumber - General qualification file QG-04-PL-03441-2024-V2-WMPS (NQR 12957), performance criteria as cited per item"
+  qptools: "Plumber - General qualification file, list of tools and consumables (Teflon tape; CPVC and uPVC solvent cement)"
+  is5329: "IS 5329:1983 Code of practice for sanitary pipe work above ground for buildings, cl. 2.23-2.24 (trap, water seal) and Table 2 (depth of seals)"
+  is5329b: "IS 5329:1983, cl. on waste pipes and ventilating pipes (waste pipe from basins and sinks trapped; vent pipes)"
+  is2065: "IS 2065:1983 Code of practice for water supply in buildings, cl. 14.2 (testing of mains after laying)"
+  cts: "DGT Plumber CTS 3.0 (Aug 2025): jointing of pipes, drainage slope, safety (topic source)"
+items:
+  - id: pl-001
+    nos: PSC/N0132
+    pc_refs: [PSC/N0132.PC1]
+    sources: [is5329]
+    difficulty_prior: -0.6
+    stem: {en: "What does the water seal in a trap do?", hi: "ट्रैप में भरा पानी (वॉटर सील) क्या काम करता है?"}
+    options:
+      - {en: "Stops foul air from the drain coming back into the room", hi: "नाली की बदबूदार हवा को कमरे में आने से रोकता है"}
+      - {en: "Makes the water flow faster", hi: "पानी को तेज़ बहाता है"}
+      - {en: "Keeps the pipe warm", hi: "पाइप को गरम रखता है"}
+      - {en: "Measures how much water is used", hi: "इस्तेमाल हुआ पानी नापता है"}
+    answer: 0
+    explanation: {en: "IS 5329 defines the water seal as the water in a trap that acts as a barrier to the passage of air.", hi: "IS 5329 के अनुसार वॉटर सील ट्रैप में भरा पानी है जो हवा को गुज़रने से रोकता है।"}
+  - id: pl-002
+    nos: PSC/N0132
+    pc_refs: [PSC/N0132.PC7]
+    sources: [is5329]
+    difficulty_prior: 0.9
+    stem: {en: "What depth of water seal does IS 5329 give for the trap of a water closet?", hi: "IS 5329 के अनुसार वॉटर क्लोज़ेट (WC) के ट्रैप में वॉटर सील कितनी गहरी होनी चाहिए?"}
+    options:
+      - {en: "50 mm", hi: "50 mm"}
+      - {en: "5 mm", hi: "5 mm"}
+      - {en: "15 mm", hi: "15 mm"}
+      - {en: "500 mm", hi: "500 mm"}
+    answer: 0
+    explanation: {en: "Table 2 of IS 5329 gives a 50 mm seal for water closets in two-pipe, one-pipe and single-stack systems.", hi: "IS 5329 की तालिका 2 में टू-पाइप, वन-पाइप और सिंगल-स्टैक, तीनों में WC के लिए 50 mm सील है।"}
+  - id: pl-003
+    nos: PSC/N0130
+    pc_refs: [PSC/N0130.PC11]
+    sources: [qp, cts]
+    difficulty_prior: -0.4
+    stem: {en: "Why must a horizontal drain pipe be laid with a slope?", hi: "आड़ी (हॉरिज़ॉन्टल) ड्रेन पाइप ढलान के साथ क्यों बिछाई जाती है?"}
+    options:
+      - {en: "So waste water flows by gravity and the pipe does not block", hi: "ताकि गंदा पानी अपने आप बहे और पाइप बंद न हो"}
+      - {en: "To make the pipe look straight", hi: "ताकि पाइप सीधी दिखे"}
+      - {en: "To increase the water pressure in the taps", hi: "नलों में पानी का प्रेशर बढ़ाने के लिए"}
+      - {en: "A slope is not needed", hi: "ढलान की ज़रूरत नहीं"}
+    answer: 0
+    explanation: {en: "The qualification requires drainage pipes to be fitted with the correct slope so waste flows away and solids do not settle.", hi: "योग्यता के अनुसार ड्रेनेज पाइप सही ढलान से लगानी है ताकि गंदा पानी बह जाए और कचरा जमा न हो।"}
+  - id: pl-004
+    nos: PSC/N0130
+    pc_refs: [PSC/N0130.PC14]
+    sources: [qp, is5329b]
+    difficulty_prior: 0.8
+    stem: {en: "What is a vent pipe in a drainage system for?", hi: "ड्रेनेज सिस्टम में वेंट पाइप किस लिए होती है?"}
+    options:
+      - {en: "To let air in and out so traps do not lose their water seal", hi: "हवा आने-जाने देने के लिए, ताकि ट्रैप की वॉटर सील न टूटे"}
+      - {en: "To carry rain water to the tank", hi: "बारिश का पानी टंकी तक ले जाने के लिए"}
+      - {en: "To supply drinking water", hi: "पीने का पानी देने के लिए"}
+      - {en: "To hold the electric cable", hi: "बिजली की तार रखने के लिए"}
+    answer: 0
+    explanation: {en: "Venting prevents loss of the water seal by siphonage, back pressure or surging; the qualification asks for proper venting and anti-siphonage.", hi: "वेंटिंग से साइफ़न या बैक प्रेशर से वॉटर सील नहीं टूटती; योग्यता में सही वेंटिंग और एंटी-साइफ़ोनेज माँगा गया है।"}
+  - id: pl-005
+    nos: PSC/N0130
+    pc_refs: [PSC/N0130.PC7]
+    sources: [qp]
+    difficulty_prior: -0.2
+    stem: {en: "Hot water pipes in a building should be:", hi: "भवन में गरम पानी की पाइपें:"}
+    options:
+      - {en: "Insulated where needed, to save heat and avoid burns", hi: "ज़रूरत हो तो इंसुलेट की जाएँ, ताकि गर्मी बचे और जलने का ख़तरा न हो"}
+      - {en: "Joined to the drain pipe", hi: "ड्रेन पाइप से जोड़ी जाएँ"}
+      - {en: "Left open at the ends", hi: "सिरों से खुली छोड़ी जाएँ"}
+      - {en: "Painted red only", hi: "सिर्फ़ लाल रंग से रंगी जाएँ"}
+    answer: 0
+    explanation: {en: "The qualification asks the plumber to check that hot and cold lines are laid correctly and insulated where necessary.", hi: "योग्यता के अनुसार गरम और ठंडी लाइनें सही बिछी हों और ज़रूरत पर इंसुलेट हों, यह जाँचना है।"}
+  - id: pl-006
+    nos: PSC/N0130
+    pc_refs: [PSC/N0130.PC19]
+    sources: [qp]
+    difficulty_prior: -1.2
+    stem: {en: "You have dug a trench for a pipe on a busy site. What must you do?", hi: "भीड़ वाली साइट पर पाइप के लिए खाई खोदी है। क्या करना ज़रूरी है?"}
+    options:
+      - {en: "Put barricades and warning signs around it", hi: "उसके चारों ओर बैरिकेड और चेतावनी के निशान लगाएँ"}
+      - {en: "Cover it with a thin cloth", hi: "पतले कपड़े से ढक दें"}
+      - {en: "Leave it open and go for lunch", hi: "खुला छोड़कर खाने चले जाएँ"}
+      - {en: "Nothing", hi: "कुछ नहीं"}
+    answer: 0
+    explanation: {en: "Signs and barricades keep people from falling into pits and trenches.", hi: "निशान और बैरिकेड लोगों को गड्ढे या खाई में गिरने से बचाते हैं।"}
+  - id: pl-007
+    nos: PSC/N0131
+    pc_refs: [PSC/N0131.PC10]
+    sources: [qptools, cts]
+    difficulty_prior: -0.3
+    stem: {en: "Before tightening a threaded GI pipe joint, what is usually wrapped on the male thread to seal it?", hi: "GI पाइप का चूड़ीदार जोड़ कसने से पहले, सील के लिए बाहरी चूड़ी पर आमतौर पर क्या लपेटते हैं?"}
+    options:
+      - {en: "Teflon (PTFE) tape", hi: "टेफ़्लॉन (PTFE) टेप"}
+      - {en: "Paper tape", hi: "काग़ज़ का टेप"}
+      - {en: "Electrical PVC tape", hi: "बिजली का PVC टेप"}
+      - {en: "Nothing; threads seal themselves", hi: "कुछ नहीं; चूड़ियाँ ख़ुद सील हो जाती हैं"}
+    answer: 0
+    explanation: {en: "Teflon tape is listed among the plumber's consumables for sealing threaded joints.", hi: "चूड़ीदार जोड़ सील करने के लिए टेफ़्लॉन टेप प्लंबर के सामान की सूची में है।"}
+  - id: pl-008
+    nos: PSC/N0131
+    pc_refs: [PSC/N0131.PC10]
+    sources: [qptools, cts]
+    difficulty_prior: 0.0
+    stem: {en: "How are CPVC pipes and fittings usually joined?", hi: "CPVC पाइप और फ़िटिंग आमतौर पर कैसे जोड़े जाते हैं?"}
+    options:
+      - {en: "With CPVC solvent cement", hi: "CPVC सॉल्वेंट सीमेंट से"}
+      - {en: "By welding with a gas torch", hi: "गैस टॉर्च से वेल्डिंग करके"}
+      - {en: "With cement mortar", hi: "सीमेंट मसाले से"}
+      - {en: "With cello tape", hi: "सेलो टेप से"}
+    answer: 0
+    explanation: {en: "CPVC (and uPVC) joints are made with the matching solvent cement, which the qualification lists as a consumable.", hi: "CPVC (और uPVC) के जोड़ उसके सॉल्वेंट सीमेंट से बनते हैं; यह योग्यता की सामान-सूची में है।"}
+  - id: pl-009
+    nos: PSC/N0131
+    pc_refs: [PSC/N0131.PC9]
+    sources: [qp]
+    difficulty_prior: 0.5
+    stem: {en: "After cutting a pipe, why do you ream and deburr the cut end?", hi: "पाइप काटने के बाद कटे सिरे की रीमिंग और डीबरिंग क्यों करते हैं?"}
+    options:
+      - {en: "To remove sharp burrs that block flow and spoil the joint", hi: "धार वाले बर हटाने के लिए, जो बहाव रोकते और जोड़ ख़राब करते हैं"}
+      - {en: "To make the pipe longer", hi: "पाइप लंबी करने के लिए"}
+      - {en: "To change the pipe's colour", hi: "पाइप का रंग बदलने के लिए"}
+      - {en: "It is only for decoration", hi: "सिर्फ़ सजावट के लिए"}
+    answer: 0
+    explanation: {en: "The qualification asks for pipe ends to be prepared by reaming, deburring, levelling and filing before jointing.", hi: "योग्यता में जोड़ से पहले पाइप के सिरे की रीमिंग, डीबरिंग, लेवलिंग और फ़ाइलिंग माँगी गई है।"}
+  - id: pl-010
+    nos: PSC/N0131
+    pc_refs: [PSC/N0131.PC7]
+    sources: [qp, cts]
+    difficulty_prior: 0.3
+    stem: {en: "Which tool cuts threads on a GI pipe?", hi: "GI पाइप पर चूड़ी किस औज़ार से काटते हैं?"}
+    options:
+      - {en: "Pipe die set (die stock)", hi: "पाइप डाई सेट (डाई स्टॉक)"}
+      - {en: "Spirit level", hi: "स्पिरिट लेवल"}
+      - {en: "Plumb bob", hi: "साहुल (प्लंब बॉब)"}
+      - {en: "Tile cutter", hi: "टाइल कटर"}
+    answer: 0
+    explanation: {en: "External threads on GI pipe are cut with a pipe die held in a die stock.", hi: "GI पाइप पर बाहरी चूड़ी डाई स्टॉक में लगी पाइप डाई से काटी जाती है।"}
+  - id: pl-011
+    nos: PSC/N0131
+    pc_refs: [PSC/N0131.PC18]
+    sources: [is2065]
+    difficulty_prior: 1.4
+    stem: {en: "A new water main is tested after laying. IS 2065 says the test pressure is held for at least how long without loss?", hi: "नई पानी की मेन लाइन बिछाने के बाद टेस्ट होती है। IS 2065 के अनुसार टेस्ट प्रेशर कम से कम कितनी देर बिना गिरे रहना चाहिए?"}
+    options:
+      - {en: "Half an hour", hi: "आधा घंटा"}
+      - {en: "Ten seconds", hi: "दस सेकंड"}
+      - {en: "One minute", hi: "एक मिनट"}
+      - {en: "No time; just look for leaks", hi: "कोई समय नहीं; बस लीक देख लें"}
+    answer: 0
+    explanation: {en: "IS 2065 cl. 14.2: the test pressure (0.5 N/mm² or working pressure plus 50 %, whichever is greater) must hold without measurable loss for at least half an hour.", hi: "IS 2065 खंड 14.2: टेस्ट प्रेशर (0.5 N/mm² या वर्किंग प्रेशर से 50% ज़्यादा, जो भी बड़ा हो) कम से कम आधा घंटा बिना गिरे रहना चाहिए।"}
+  - id: pl-012
+    nos: PSC/N0132
+    pc_refs: [PSC/N0132.PC12]
+    sources: [qp, cts]
+    difficulty_prior: 0.4
+    stem: {en: "When should a new drainage installation be tested?", hi: "नई ड्रेनेज लाइन की जाँच कब करनी चाहिए?"}
+    options:
+      - {en: "After installing it, before handing over", hi: "लगाने के बाद, सौंपने से पहले"}
+      - {en: "Only if the customer complains", hi: "सिर्फ़ ग्राहक की शिकायत पर"}
+      - {en: "Never", hi: "कभी नहीं"}
+      - {en: "Before buying the pipes", hi: "पाइप ख़रीदने से पहले"}
+    answer: 0
+    explanation: {en: "The qualification requires installations to be tested for proper functioning after installation.", hi: "योग्यता के अनुसार लगाने के बाद लाइन की सही कार्यप्रणाली जाँचनी है।"}
+  - id: pl-013
+    nos: PSC/N0132
+    pc_refs: [PSC/N0132.PC14]
+    sources: [qp]
+    difficulty_prior: 0.2
+    stem: {en: "Why are inspection openings and covers provided in a drainage line?", hi: "ड्रेनेज लाइन में इंस्पेक्शन ओपनिंग और ढक्कन क्यों दिए जाते हैं?"}
+    options:
+      - {en: "To check and clear blockages later", hi: "बाद में जाँच करने और रुकावट साफ़ करने के लिए"}
+      - {en: "To let rainwater into the line", hi: "लाइन में बारिश का पानी डालने के लिए"}
+      - {en: "To store tools", hi: "औज़ार रखने के लिए"}
+      - {en: "They are not needed", hi: "उनकी ज़रूरत नहीं"}
+    answer: 0
+    explanation: {en: "Inspection openings and covers, fitted to standard, allow the line to be inspected and cleaned.", hi: "मानक के अनुसार लगे इंस्पेक्शन ओपनिंग और ढक्कन से लाइन की जाँच और सफ़ाई होती है।"}
+  - id: pl-014
+    nos: PSC/N0132
+    pc_refs: [PSC/N0132.PC15]
+    sources: [qp]
+    difficulty_prior: -0.5
+    stem: {en: "After an underground drain pipe is laid and tested, what is done to the trench?", hi: "ज़मीन के नीचे ड्रेन पाइप बिछाकर टेस्ट करने के बाद खाई का क्या करते हैं?"}
+    options:
+      - {en: "Backfill it to secure the pipe", hi: "पाइप को सुरक्षित करने के लिए उसे भरते हैं"}
+      - {en: "Leave it open for good", hi: "हमेशा के लिए खुली छोड़ देते हैं"}
+      - {en: "Fill it with water", hi: "पानी से भर देते हैं"}
+      - {en: "Pour oil in it", hi: "उसमें तेल डालते हैं"}
+    answer: 0
+    explanation: {en: "Excavated areas are backfilled to secure the installation.", hi: "खोदी गई जगह को भरकर लाइन को सुरक्षित किया जाता है।"}
+  - id: pl-015
+    nos: PSC/N0132
+    pc_refs: [PSC/N0132.PC8]
+    sources: [qp]
+    difficulty_prior: 0.6
+    stem: {en: "Which pipes does the qualification name for drainage work?", hi: "ड्रेनेज के काम के लिए योग्यता में कौन-सी पाइपों का ज़िक्र है?"}
+    options:
+      - {en: "Stoneware (SW) and PVC pipes", hi: "स्टोनवेयर (SW) और PVC पाइप"}
+      - {en: "Gas cylinders", hi: "गैस सिलेंडर"}
+      - {en: "Electrical conduit only", hi: "सिर्फ़ बिजली की कंड्यूट"}
+      - {en: "Garden hose only", hi: "सिर्फ़ बग़ीचे का पाइप"}
+    answer: 0
+    explanation: {en: "Fitting activities on stoneware (SW) and PVC pipes are part of installing drainage systems.", hi: "ड्रेनेज सिस्टम लगाने में स्टोनवेयर (SW) और PVC पाइप की फ़िटिंग शामिल है।"}
+  - id: pl-016
+    nos: PSC/N0133
+    pc_refs: [PSC/N0133.PC4]
+    sources: [qp]
+    difficulty_prior: 0.1
+    stem: {en: "When tightening the connections of a new wash basin, you should:", hi: "नए वॉश बेसिन के कनेक्शन कसते समय आपको:"}
+    options:
+      - {en: "Tighten firmly but not over-tighten", hi: "मज़बूती से कसना चाहिए, पर ज़रूरत से ज़्यादा नहीं"}
+      - {en: "Tighten as hard as possible with a long bar", hi: "लंबी रॉड से जितना हो सके उतना कसना चाहिए"}
+      - {en: "Leave them loose so they can move", hi: "ढीला छोड़ना चाहिए ताकि हिल सकें"}
+      - {en: "Glue them with any glue", hi: "किसी भी गोंद से चिपका देना चाहिए"}
+    answer: 0
+    explanation: {en: "Over-tightening cracks fittings and damages washers; the qualification asks for secure connections without over-tightening.", hi: "ज़्यादा कसने से फ़िटिंग टूटती है और वॉशर ख़राब होता है; योग्यता में बिना ज़्यादा कसे मज़बूत कनेक्शन माँगा गया है।"}
+  - id: pl-017
+    nos: PSC/N0133
+    pc_refs: [PSC/N0133.PC13]
+    sources: [qp]
+    difficulty_prior: -0.7
+    stem: {en: "Which tool checks that a wash basin is fixed level?", hi: "वॉश बेसिन सीधा (लेवल) लगा है, यह किस औज़ार से जाँचते हैं?"}
+    options:
+      - {en: "Spirit level", hi: "स्पिरिट लेवल"}
+      - {en: "Pipe wrench", hi: "पाइप रिंच"}
+      - {en: "Hacksaw", hi: "हैक्सॉ"}
+      - {en: "Teflon tape", hi: "टेफ़्लॉन टेप"}
+    answer: 0
+    explanation: {en: "Supports and fixtures are plumbed and levelled; a spirit level shows whether a surface is level.", hi: "सपोर्ट और फ़िक्सचर को साहुल और लेवल में लगाया जाता है; स्पिरिट लेवल बताता है कि सतह सीधी है या नहीं।"}
+  - id: pl-018
+    nos: PSC/N0133
+    pc_refs: [PSC/N0133.PC17]
+    sources: [qp]
+    difficulty_prior: -0.6
+    stem: {en: "After fitting a new geyser or tap, what should you give the customer?", hi: "नया गीज़र या नल लगाने के बाद ग्राहक को क्या देना चाहिए?"}
+    options:
+      - {en: "Information on its use and the warranty card", hi: "इस्तेमाल की जानकारी और वारंटी कार्ड"}
+      - {en: "Nothing", hi: "कुछ नहीं"}
+      - {en: "The old broken parts only", hi: "सिर्फ़ पुराने टूटे पुर्ज़े"}
+      - {en: "A blank receipt", hi: "ख़ाली रसीद"}
+    answer: 0
+    explanation: {en: "Handover to the customer includes full information and the products' warranty cards.", hi: "ग्राहक को सौंपते समय पूरी जानकारी और सामान के वारंटी कार्ड दिए जाते हैं।"}
+  - id: pl-019
+    nos: PSC/N0133
+    pc_refs: [PSC/N0133.PC10]
+    sources: [qp]
+    difficulty_prior: 0.7
+    stem: {en: "A fixture needs both water and an electrical connection (for example a sensor tap). What is the safe practice?", hi: "किसी फ़िक्सचर में पानी और बिजली, दोनों का कनेक्शन है (जैसे सेंसर नल)। सुरक्षित तरीका क्या है?"}
+    options:
+      - {en: "Keep the electrical parts away from water and connect them as the maker instructs", hi: "बिजली के पुर्ज़े पानी से दूर रखें और निर्माता के निर्देश के अनुसार जोड़ें"}
+      - {en: "Join the wires under running water", hi: "बहते पानी के नीचे तार जोड़ें"}
+      - {en: "Use the water pipe as the earth wire", hi: "पानी की पाइप को अर्थ तार की तरह इस्तेमाल करें"}
+      - {en: "Leave the wires bare so they cool", hi: "तार नंगे छोड़ दें ताकि ठंडे रहें"}
+    answer: 0
+    explanation: {en: "Fixtures are connected to water, drainage and electricity as per specifications; plumbing work is kept isolated from electrical wiring to avoid accidents.", hi: "फ़िक्सचर को पानी, ड्रेनेज और बिजली से निर्देशों के अनुसार जोड़ा जाता है; हादसों से बचने के लिए प्लंबिंग को बिजली की वायरिंग से अलग रखा जाता है।"}
+  - id: pl-020
+    nos: PSC/N0142
+    pc_refs: [PSC/N0142.PC1]
+    sources: [qp]
+    difficulty_prior: 0.6
+    stem: {en: "Water comes very slowly from the taps even though the tank is full. What is a likely cause to check first?", hi: "टंकी भरी है फिर भी नलों से पानी बहुत धीरे आता है। पहले कौन-सी संभावित वजह जाँचें?"}
+    options:
+      - {en: "An air lock or a blockage in the pipe", hi: "पाइप में एयर लॉक या रुकावट"}
+      - {en: "The colour of the tank", hi: "टंकी का रंग"}
+      - {en: "The electricity bill", hi: "बिजली का बिल"}
+      - {en: "The weather forecast", hi: "मौसम का अनुमान"}
+    answer: 0
+    explanation: {en: "The qualification asks the plumber to find the reason for low flow or low pressure and to remove air locks and blockages.", hi: "योग्यता के अनुसार कम बहाव या कम प्रेशर की वजह ढूँढ़नी और एयर लॉक व रुकावट हटानी है।"}
+  - id: pl-021
+    nos: PSC/N0142
+    pc_refs: [PSC/N0142.PC1]
+    sources: [qp]
+    difficulty_prior: -0.1
+    stem: {en: "A tap keeps dripping after it is closed. What is the usual repair?", hi: "बंद करने के बाद भी नल टपकता रहता है। आमतौर पर क्या ठीक करते हैं?"}
+    options:
+      - {en: "Replace the worn washer or cartridge", hi: "घिसा हुआ वॉशर या कार्ट्रिज बदलना"}
+      - {en: "Paint the tap", hi: "नल पर पेंट करना"}
+      - {en: "Increase the water pressure", hi: "पानी का प्रेशर बढ़ाना"}
+      - {en: "Remove the trap below the sink", hi: "सिंक के नीचे का ट्रैप निकाल देना"}
+    answer: 0
+    explanation: {en: "Repairing dripping faucets is part of domestic plumbing maintenance in the qualification; a worn washer or cartridge is the usual cause.", hi: "टपकते नल ठीक करना योग्यता में घरेलू रखरखाव का हिस्सा है; आमतौर पर घिसा वॉशर या कार्ट्रिज वजह होता है।"}
+  - id: pl-022
+    nos: PSC/N0136
+    pc_refs: [PSC/N0136.PC6]
+    sources: [qp]
+    difficulty_prior: 0.2
+    stem: {en: "Before entering a manhole or underground chamber, what must be done?", hi: "मैनहोल या ज़मीन के नीचे के चैंबर में उतरने से पहले क्या करना ज़रूरी है?"}
+    options:
+      - {en: "Ventilate it first, because harmful gases may collect", hi: "पहले हवा का इंतज़ाम करें, क्योंकि ज़हरीली गैस जमा हो सकती है"}
+      - {en: "Light a match to see inside", hi: "अंदर देखने के लिए माचिस जलाएँ"}
+      - {en: "Go in quickly before it gets dark", hi: "अंधेरा होने से पहले जल्दी से उतर जाएँ"}
+      - {en: "Nothing special", hi: "कुछ ख़ास नहीं"}
+    answer: 0
+    explanation: {en: "The qualification requires ventilation to be established before entering underground work areas.", hi: "योग्यता के अनुसार ज़मीन के नीचे काम की जगह में जाने से पहले हवा का इंतज़ाम ज़रूरी है।"}
+  - id: pl-023
+    nos: PSC/N0136
+    pc_refs: [PSC/N0136.PC4]
+    sources: [qp]
+    difficulty_prior: -0.4
+    stem: {en: "You must drill a wall to run a pipe near switches. What do you do first?", hi: "स्विच के पास पाइप ले जाने के लिए दीवार में ड्रिल करनी है। पहले क्या करेंगे?"}
+    options:
+      - {en: "Find where the wires run and keep the work away from them", hi: "पता करें कि तार कहाँ से जाते हैं और काम उनसे दूर रखें"}
+      - {en: "Drill straight through the switch box", hi: "सीधे स्विच बॉक्स में ड्रिल करें"}
+      - {en: "Wet the wall first", hi: "पहले दीवार गीली करें"}
+      - {en: "Nothing; wires are never in walls", hi: "कुछ नहीं; दीवार में तार नहीं होते"}
+    answer: 0
+    explanation: {en: "Plumbing work is kept isolated from electrical wiring to avoid accidents.", hi: "हादसों से बचने के लिए प्लंबिंग का काम बिजली की वायरिंग से अलग रखा जाता है।"}
+  - id: pl-024
+    nos: DGT/VSQ/N0102
+    pc_refs: []
+    sources: [qp]
+    difficulty_prior: -1.0
+    stem: {en: "You finish a job later than you promised the customer. What is the best thing to do?", hi: "आपने ग्राहक से जितना समय कहा था, काम उससे देर से पूरा हुआ। सबसे अच्छा क्या है?"}
+    options:
+      - {en: "Explain honestly why and tell them what was done", hi: "ईमानदारी से वजह बताएँ और क्या काम हुआ यह बताएँ"}
+      - {en: "Leave without saying anything", hi: "बिना कुछ कहे चले जाएँ"}
+      - {en: "Blame the customer", hi: "ग्राहक को दोष दें"}
+      - {en: "Ask for double payment", hi: "दोगुना पैसा माँगें"}
+    answer: 0
+    explanation: {en: "Employability skills include responding to customers professionally and honestly.", hi: "रोज़गार कौशल में ग्राहकों से पेशेवर और ईमानदार बर्ताव शामिल है।"}

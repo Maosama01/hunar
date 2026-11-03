@@ -19,6 +19,14 @@ flowchart TB
     SVC --> M2[M2 evidence<br/>face blur, pHash, YOLOv8n]
     SVC --> M3[M3 rubric engine<br/>YAML rubrics]
     SVC --> AU[Audit log<br/>SHA-256 chain]
+    API --> ACC[Accounts<br/>phone + PIN, consent, roles]
+    API --> MKT[Marketplace<br/>profiles, badges, bookings]
+    API --> QZ[Adaptive quiz<br/>Rasch + EAP, 3 trades]
+    API --> BH[Bhashini proxy<br/>TTS, server-side keys]
+    MKT -->|badge only from| AU
+    ACC --> DB
+    MKT --> DB
+    QZ --> DB
     SVC --> DB[(SQLite)]
     AU --> DB
     M2 --> FS[(Blurred photos<br/>data/uploads)]
@@ -82,3 +90,16 @@ sign-off) → `ChecklistTick`, `EvidenceItem` (sha256, pHash, dHash, faces blurr
 duplicate_of), `Decision` (append-only; latest per criterion wins). `AuditEntry` (seq, ts, actor,
 action, subject, payload, prev_hash, hash). `AppliedOp` (offline idempotency). `StudyItem`,
 `StudyRating` (M4).
+
+## Who can do what
+
+| Role | Created by | Can |
+|---|---|---|
+| worker | self-registration (18+, consent per purpose) | profile, quiz, assessment requests, accept/decline bookings |
+| customer | self-registration | search, book, cancel, rate |
+| facilitator | `make staff` on the server | capture declarations, checklists and photos (offline outbox) |
+| assessor | `make staff` | everything a facilitator can, plus pack confirmation, decisions, sign-off, assessment requests |
+| admin | `make staff` | everything an assessor can, plus permit-document checks and the audit view |
+
+A customer-facing "skill assessed" badge exists only when an assessor account signed off a positive
+recommendation. Quiz results go to the worker and, as context, to the assessor; never to customers.

@@ -14,6 +14,7 @@ from sqlmodel import Session, select
 from hunar.api import services as svc
 from hunar.api.db import engine, init_db
 from hunar.api.models import Worker
+from hunar.market.seed import seed_accounts
 from hunar.paths import DATA
 from hunar.rubric import engine as rubric
 
@@ -45,7 +46,8 @@ def main() -> None:
     SAMPLE_DIR.mkdir(parents=True, exist_ok=True)
     with Session(engine()) as s:
         if s.exec(select(Worker).where(Worker.code == "SAMPLE-W001")).first():
-            print("sample worker already present; nothing to do")
+            print("sample worker already present")
+            seed_accounts()
             return
         w = svc.create_worker(s, "SAMPLE-W001", "hi", "seed", id="sample-worker-1", is_sample=True)
         a = svc.create_assessment(s, w.id, SAMPLE_DECLARATION, "seed", id="sample-assessment-1", is_sample=True)
@@ -76,6 +78,7 @@ def main() -> None:
                             criterion_id=crit_id, prescore_json=ps.model_dump_json(), is_sample=True))
         s.commit()
     print("seeded SAMPLE-W001 (sample data) with one assessment and 6 sample rater-mode items")
+    seed_accounts()
 
 
 if __name__ == "__main__":

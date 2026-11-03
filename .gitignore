@@ -10,6 +10,8 @@ __pycache__/
 data/raw/
 data/uploads/
 data/study/
+data/secret_pepper
+data/tts_cache/
 data/models/
 *.db
 *.sqlite

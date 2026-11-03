@@ -46,7 +46,7 @@ class QualificationPack(BaseModel):
     sector: str | None = None
     nsqf_level: float | None = None
     awarding_body: str | None = None
-    role: Literal["target", "distractor"] = "distractor"
+    role: Literal["target", "distractor", "trade"] = "distractor"
     is_stub: bool = False
     parse_method: ParseMethod
     verification_note: str = ""

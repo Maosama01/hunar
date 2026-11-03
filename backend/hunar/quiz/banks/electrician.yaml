@@ -1,0 +1,567 @@
+# Question bank: electrician (target qualification: Assistant Electrician, CSDCI, NSQF 3, NQR 13772).
+# Every answer is supported by the sources listed per item. Items paraphrase the sources; no text is
+# copied from BIS standards or NIMI/DGT question banks (those are not openly licensed).
+trade: electrician
+version: "2026-11-04"
+status: >-
+  DRAFT: written with AI help from the cited official sources; not yet reviewed by a certified assessor
+  or ITI instructor. Difficulties are AI estimates, not yet calibrated from real answers.
+qualification_nqr_id: 13772
+nos:
+  CON/N0602: {weight: 20, title: {en: "Hand and power tools for electrical work", hi: "बिजली के काम के हाथ और पावर औज़ार"}}
+  CON/N0603: {weight: 20, title: {en: "Temporary lighting at construction sites", hi: "निर्माण स्थल पर अस्थायी लाइटिंग"}}
+  CON/N0604: {weight: 20, title: {en: "Low-voltage wiring in buildings", hi: "भवनों में लो-वोल्टेज वायरिंग"}}
+  CON/N0605: {weight: 20, title: {en: "Distribution boards and panels", hi: "डिस्ट्रीब्यूशन बोर्ड और पैनल"}}
+  CON/N9001: {weight: 5, title: {en: "Health and safety at work", hi: "काम पर स्वास्थ्य और सुरक्षा"}}
+  CON/N8001: {weight: 5, title: {en: "Working in a team", hi: "टीम में काम"}}
+  CON/N8002: {weight: 5, title: {en: "Planning work", hi: "काम की योजना"}}
+  DGT/VSQ/N0101: {weight: 5, title: {en: "Employability skills", hi: "रोज़गार कौशल"}}
+sources:
+  qp: "Assistant Electrician qualification file QG-03-CO-03951-2025-V2-CSDCI (NQR 13772), performance criteria as cited per item"
+  cea17: "CEA (Measures relating to Safety and Electric Supply) Regulations, 2023, reg. 17 (no switch or fuse in the earthed neutral except a linked switch)"
+  cea18: "CEA Safety Regulations 2023, reg. 18 (earthed terminal on consumer's premises)"
+  cea20: "CEA Safety Regulations 2023, reg. 20 (danger notices above 250 V)"
+  cea21: "CEA Safety Regulations 2023, reg. 21 (discharge/earth before handling; PPE such as rubber gloves, safety footwear, line tester, voltage detector)"
+  cea30: "CEA Safety Regulations 2023, reg. 30 (instructions for resuscitation after electric shock)"
+  cea31: "CEA Safety Regulations 2023, reg. 31 (who may carry out installation work; exemption for like-for-like replacement)"
+  cea35: "CEA Safety Regulations 2023, regs. 35-36 (insulation resistance checked before connection; supply may be cut for leakage)"
+  cea37: "CEA Safety Regulations 2023, reg. 37(2) (switch fuse unit or circuit breaker near the point of supply)"
+  cea42: "CEA Safety Regulations 2023, reg. 42 (insulation resistance test before reconnecting after addition, alteration or repair)"
+  cea43: "CEA Safety Regulations 2023, reg. 43 (earthing: bonding, three-pin earthed sockets, testing before energising, earth fault loop impedance)"
+  cea44: "CEA Safety Regulations 2023, reg. 44 (residual current device; not more than 30 mA in domestic installations)"
+  ceasch1: "CEA Safety Regulations 2023, Schedule I Part II (permit to work; isolate, de-energise and earth; positively confirm dead)"
+  is5216: "IS 5216 (Part 1):1982 Recommendations on safety procedures and practices in electrical work, cl. 3 and 5.1 (permit to work; isolate, prove dead, earth)"
+  is694: "IS 694:2010 PVC insulated cables, cl. 12.1.1 (green-and-yellow core for protective earth)"
+  dgt1: "DGT Electrician CTS 3.0 (Aug 2025), LO1 (PSS/N9490): safety, fire fighting, elementary first aid, rescue and artificial respiration"
+  dgt2: "DGT Electrician CTS 3.0, LO2 (PSS/N9491): wire joints, crimping lugs, insulation resistance with megger"
+  dgt3: "DGT Electrician CTS 3.0, LO3 (PSS/N9492): Ohm's law, series and parallel circuits, open and short circuits (answer is standard physics)"
+  dgt5: "DGT Electrician CTS 3.0, LO5 (PSS/N9494): wiring, MCB/ELCB/RCCB, grading of cables, voltage drop, load estimation"
+  dgt6: "DGT Electrician CTS 3.0, LO6 (PSS/N9495): pipe and plate earthing, earth resistance with earth tester"
+  dgt8: "DGT Electrician CTS 3.0, LO8 (PSS/N9496): multimeter, tong tester and other measuring instruments"
+items:
+  # ---- CON/N0602 tools and instruments -------------------------------------------------------
+  - id: el-001
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC8]
+    sources: [qp, dgt2]
+    difficulty_prior: -0.5
+    stem: {en: "Which instrument is used to measure the insulation resistance of a cable?", hi: "केबल का इंसुलेशन रेज़िस्टेंस नापने के लिए कौन-सा यंत्र इस्तेमाल होता है?"}
+    options:
+      - {en: "Megger (insulation tester)", hi: "मेगर (इंसुलेशन टेस्टर)"}
+      - {en: "Energy meter", hi: "एनर्जी मीटर"}
+      - {en: "Tong tester", hi: "टोंग टेस्टर"}
+      - {en: "Neon line tester", hi: "नियॉन लाइन टेस्टर"}
+    answer: 0
+    explanation: {en: "A megger applies a test voltage and reads the insulation resistance in megohms.", hi: "मेगर टेस्ट वोल्टेज देकर इंसुलेशन रेज़िस्टेंस मेगा-ओम में बताता है।"}
+  - id: el-002
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC10]
+    sources: [qp, dgt8]
+    difficulty_prior: -0.3
+    stem: {en: "You need to measure the current flowing in a wire without disconnecting it. Which instrument do you use?", hi: "तार को खोले बिना उसमें बहने वाला करंट नापना है। कौन-सा यंत्र लेंगे?"}
+    options:
+      - {en: "Tong tester (clamp meter)", hi: "टोंग टेस्टर (क्लैम्प मीटर)"}
+      - {en: "Megger", hi: "मेगर"}
+      - {en: "Earth tester", hi: "अर्थ टेस्टर"}
+      - {en: "Wire gauge", hi: "वायर गेज"}
+    answer: 0
+    explanation: {en: "A tong tester clamps around one conductor and reads its current; the circuit stays connected.", hi: "टोंग टेस्टर एक तार के चारों ओर लगाकर करंट पढ़ता है; सर्किट जुड़ा रहता है।"}
+  - id: el-003
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC1]
+    sources: [qp]
+    difficulty_prior: -1.5
+    stem: {en: "What should you do before using a power drill?", hi: "पावर ड्रिल इस्तेमाल करने से पहले क्या करना चाहिए?"}
+    options:
+      - {en: "Check the cable, plug and body for damage", hi: "केबल, प्लग और बॉडी में टूट-फूट जाँचें"}
+      - {en: "Remove the plug's earth pin so it fits any socket", hi: "प्लग का अर्थ पिन निकाल दें ताकि हर सॉकेट में लगे"}
+      - {en: "Run it in water to cool it", hi: "ठंडा करने के लिए पानी में चलाएँ"}
+      - {en: "Nothing, power tools need no checks", hi: "कुछ नहीं, पावर औज़ार को जाँच की ज़रूरत नहीं"}
+    answer: 0
+    explanation: {en: "The qualification requires basic checks on power tools before use; a damaged lead can give a shock.", hi: "योग्यता में उपयोग से पहले पावर औज़ार की बुनियादी जाँच ज़रूरी है; ख़राब तार से करंट लग सकता है।"}
+  - id: el-004
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC4]
+    sources: [qp, dgt2]
+    difficulty_prior: 0.0
+    stem: {en: "Which tool measures the size (diameter) of a wire?", hi: "तार का साइज़ (मोटाई) किस औज़ार से नापते हैं?"}
+    options:
+      - {en: "Wire gauge or micrometer", hi: "वायर गेज या माइक्रोमीटर"}
+      - {en: "Line tester", hi: "लाइन टेस्टर"}
+      - {en: "Spirit level", hi: "स्पिरिट लेवल"}
+      - {en: "Tong tester", hi: "टोंग टेस्टर"}
+    answer: 0
+    explanation: {en: "Conductor size is measured with a wire gauge (SWG/metric) or a micrometer.", hi: "तार का साइज़ वायर गेज (SWG/मीट्रिक) या माइक्रोमीटर से नापा जाता है।"}
+  - id: el-005
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC2]
+    sources: [dgt2]
+    difficulty_prior: 0.3
+    stem: {en: "Which tool is used to fix a cable lug firmly onto a stranded wire?", hi: "मल्टी-स्ट्रैंड तार पर केबल लग मज़बूती से लगाने के लिए कौन-सा औज़ार है?"}
+    options:
+      - {en: "Crimping tool", hi: "क्रिम्पिंग टूल"}
+      - {en: "Hacksaw", hi: "हैक्सॉ"}
+      - {en: "Pipe wrench", hi: "पाइप रिंच"}
+      - {en: "Line tester", hi: "लाइन टेस्टर"}
+    answer: 0
+    explanation: {en: "A crimping tool presses the lug onto the conductor for a tight, low-resistance joint.", hi: "क्रिम्पिंग टूल लग को तार पर दबाकर मज़बूत और कम रेज़िस्टेंस वाला जोड़ बनाता है।"}
+  - id: el-006
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC3]
+    sources: [qp, dgt8]
+    difficulty_prior: 0.2
+    stem: {en: "With the supply switched off, a multimeter on the continuity (beep) setting shows NO continuity across a length of wire. What does this mean?", hi: "सप्लाई बंद करके मल्टीमीटर को कंटिन्यूटी (बीप) पर रखकर तार के दोनों सिरों पर लगाया, पर कंटिन्यूटी नहीं मिली। इसका मतलब?"}
+    options:
+      - {en: "The wire is broken somewhere (open circuit)", hi: "तार कहीं से टूटा है (ओपन सर्किट)"}
+      - {en: "The wire is perfectly fine", hi: "तार बिलकुल ठीक है"}
+      - {en: "The wire is short-circuited to earth", hi: "तार अर्थ से शॉर्ट है"}
+      - {en: "The supply voltage is too high", hi: "सप्लाई वोल्टेज बहुत ज़्यादा है"}
+    answer: 0
+    explanation: {en: "No continuity between the two ends of one conductor means an open circuit (a break).", hi: "एक ही तार के दोनों सिरों में कंटिन्यूटी न मिलना ओपन सर्किट (टूटा तार) बताता है।"}
+  - id: el-007
+    nos: CON/N0602
+    pc_refs: [CON/N0602.PC10]
+    sources: [dgt6]
+    difficulty_prior: 0.6
+    stem: {en: "Which instrument measures the resistance of an earth electrode?", hi: "अर्थ इलेक्ट्रोड का रेज़िस्टेंस किस यंत्र से नापते हैं?"}
+    options:
+      - {en: "Earth tester", hi: "अर्थ टेस्टर"}
+      - {en: "Energy meter", hi: "एनर्जी मीटर"}
+      - {en: "Neon line tester", hi: "नियॉन लाइन टेस्टर"}
+      - {en: "Ammeter in series with the load", hi: "लोड के सीरीज़ में एमीटर"}
+    answer: 0
+    explanation: {en: "Earth electrode resistance is measured with an earth tester (or a megger with an earth-test function).", hi: "अर्थ इलेक्ट्रोड का रेज़िस्टेंस अर्थ टेस्टर (या अर्थ-टेस्ट वाला मेगर) से नापा जाता है।"}
+  # ---- CON/N0603 temporary lighting ----------------------------------------------------------
+  - id: el-008
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC12, CON/N0603.PC7]
+    sources: [qp, cea21]
+    difficulty_prior: -1.5
+    stem: {en: "Before replacing a burnt-out bulb in a site light fitting, what must you do first?", hi: "साइट की लाइट फ़िटिंग में फ़्यूज़ बल्ब बदलने से पहले सबसे पहले क्या करना है?"}
+    options:
+      - {en: "Switch off and isolate the supply to that fitting", hi: "उस फ़िटिंग की सप्लाई बंद और अलग करें"}
+      - {en: "Wet your hands so the bulb does not slip", hi: "हाथ गीले करें ताकि बल्ब न फिसले"}
+      - {en: "Touch the holder to check if it is live", hi: "होल्डर छूकर देखें कि करंट है या नहीं"}
+      - {en: "Nothing; bulbs can be changed while live", hi: "कुछ नहीं; बल्ब चालू सप्लाई में बदल सकते हैं"}
+    answer: 0
+    explanation: {en: "Work on fittings only after the supply is isolated and steps are taken so it cannot be switched on by accident.", hi: "फ़िटिंग पर काम तभी करें जब सप्लाई अलग हो और ग़लती से चालू न हो सके।"}
+  - id: el-009
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC5]
+    sources: [qp]
+    difficulty_prior: 0.4
+    stem: {en: "Two LV cables are joined with a straight-through joint at a site. How is the joint finished?", hi: "साइट पर दो LV केबल स्ट्रेट-थ्रू जोड़ से जोड़ी गईं। जोड़ को कैसे पूरा करते हैं?"}
+    options:
+      - {en: "Insulate and secure it, for example with PVC insulation tape", hi: "उसे इंसुलेट करके सुरक्षित करें, जैसे PVC इंसुलेशन टेप से"}
+      - {en: "Leave the bare joint open so it can be inspected", hi: "नंगा जोड़ खुला छोड़ दें ताकि देख सकें"}
+      - {en: "Cover it with paper", hi: "काग़ज़ से ढक दें"}
+      - {en: "Wrap it with a wet cloth", hi: "गीले कपड़े से लपेट दें"}
+    answer: 0
+    explanation: {en: "The qualification asks for joints to be secured with PVC tape (or another standard method); bare joints are a shock risk.", hi: "योग्यता के अनुसार जोड़ को PVC टेप (या दूसरे मानक तरीके) से सुरक्षित करना है; नंगा जोड़ करंट का ख़तरा है।"}
+  - id: el-010
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC9]
+    sources: [qp]
+    difficulty_prior: -0.2
+    stem: {en: "Why are cables embedded in walls or floors on a site tagged or marked?", hi: "साइट पर दीवार या फ़र्श में दबी केबलों पर टैग या निशान क्यों लगाते हैं?"}
+    options:
+      - {en: "So that others do not drill or cut into a live cable by mistake", hi: "ताकि कोई ग़लती से चालू केबल में ड्रिल या कटाई न करे"}
+      - {en: "To make the site look tidy only", hi: "सिर्फ़ साइट सुंदर दिखाने के लिए"}
+      - {en: "Because tags reduce the electricity bill", hi: "क्योंकि टैग से बिजली का बिल कम होता है"}
+      - {en: "Tags are not needed on sites", hi: "साइट पर टैग की ज़रूरत नहीं"}
+    answer: 0
+    explanation: {en: "Tagging embedded and exposed lines warns other workers where live cables run.", hi: "दबी और खुली लाइनों पर टैग दूसरे कामगारों को बताते हैं कि चालू केबल कहाँ है।"}
+  - id: el-011
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC13]
+    sources: [qp, dgt8]
+    difficulty_prior: 0.3
+    stem: {en: "A row of site lights is off. The supply at the board is present. What is a sensible first test?", hi: "साइट की एक लाइन की लाइटें बंद हैं। बोर्ड पर सप्लाई आ रही है। पहला सही टेस्ट क्या है?"}
+    options:
+      - {en: "Isolate the circuit and check continuity of the wiring and joints with a multimeter", hi: "सर्किट अलग करके मल्टीमीटर से वायरिंग और जोड़ों की कंटिन्यूटी जाँचें"}
+      - {en: "Replace every fitting at once", hi: "एक साथ सारी फ़िटिंग बदल दें"}
+      - {en: "Increase the MCB rating", hi: "MCB की रेटिंग बढ़ा दें"}
+      - {en: "Touch each joint to feel for current", hi: "हर जोड़ छूकर करंट महसूस करें"}
+    answer: 0
+    explanation: {en: "Tracing a power interruption means testing continuity along the circuit, with the supply isolated.", hi: "बिजली रुकने की वजह ढूँढ़ने के लिए सप्लाई अलग करके सर्किट में कंटिन्यूटी जाँचते हैं।"}
+  - id: el-012
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC15]
+    sources: [qp, dgt5]
+    difficulty_prior: 0.8
+    stem: {en: "An MCB on a lighting circuit keeps tripping. What should you NOT do?", hi: "लाइटिंग सर्किट का MCB बार-बार ट्रिप होता है। क्या नहीं करना चाहिए?"}
+    options:
+      - {en: "Fit a higher-rated MCB so it stops tripping", hi: "ज़्यादा रेटिंग का MCB लगा दें ताकि ट्रिप न हो"}
+      - {en: "Look for a short circuit or overload", hi: "शॉर्ट सर्किट या ओवरलोड ढूँढ़ें"}
+      - {en: "Check the load connected to the circuit", hi: "सर्किट पर लगा लोड जाँचें"}
+      - {en: "Test the insulation of the circuit", hi: "सर्किट का इंसुलेशन जाँचें"}
+    answer: 0
+    explanation: {en: "Tripping is a warning. A bigger MCB lets the wire overheat; find and fix the fault instead.", hi: "ट्रिप होना चेतावनी है। बड़ा MCB लगाने से तार गरम होगा; ख़राबी ढूँढ़कर ठीक करें।"}
+  - id: el-013
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC2]
+    sources: [dgt5]
+    difficulty_prior: 0.9
+    stem: {en: "What happens if a cable is too thin for the current it carries?", hi: "अगर केबल उसमें बहने वाले करंट के हिसाब से पतली हो तो क्या होगा?"}
+    options:
+      - {en: "It overheats, which can damage the insulation and cause a fire", hi: "वह गरम होगी, इंसुलेशन ख़राब हो सकता है और आग लग सकती है"}
+      - {en: "It works better because thin wire is lighter", hi: "बेहतर चलेगी क्योंकि पतला तार हल्का है"}
+      - {en: "The voltage at the load rises", hi: "लोड पर वोल्टेज बढ़ जाएगा"}
+      - {en: "Nothing changes", hi: "कुछ नहीं बदलेगा"}
+    answer: 0
+    explanation: {en: "Each cable size has a current rating; above it the conductor overheats and the voltage drop also grows.", hi: "हर केबल साइज़ की करंट रेटिंग होती है; उससे ज़्यादा करंट पर तार गरम होता है और वोल्टेज ड्रॉप भी बढ़ता है।"}
+  - id: el-014
+    nos: CON/N0603
+    pc_refs: [CON/N0603.PC16]
+    sources: [qp]
+    difficulty_prior: 1.0
+    stem: {en: "A diesel generator supplies temporary site lighting. How is its maintenance done?", hi: "डीज़ल जनरेटर साइट की अस्थायी लाइटिंग चलाता है। उसकी देखभाल कैसे की जाती है?"}
+    options:
+      - {en: "Preventive maintenance at scheduled intervals", hi: "तय समय पर निवारक (प्रिवेंटिव) रखरखाव"}
+      - {en: "Only after it breaks down", hi: "सिर्फ़ ख़राब होने के बाद"}
+      - {en: "Never; generators need no maintenance", hi: "कभी नहीं; जनरेटर को रखरखाव की ज़रूरत नहीं"}
+      - {en: "By running it without oil", hi: "बिना तेल चलाकर"}
+    answer: 0
+    explanation: {en: "The qualification asks for preventive maintenance of site generators at scheduled intervals.", hi: "योग्यता में साइट जनरेटर का तय समय पर निवारक रखरखाव माँगा गया है।"}
+  # ---- CON/N0604 wiring in buildings ---------------------------------------------------------
+  - id: el-015
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC2]
+    sources: [cea17, dgt5]
+    difficulty_prior: 0.0
+    stem: {en: "In a house circuit, a single switch for a light should be connected in which conductor?", hi: "घर के सर्किट में लाइट का सिंगल स्विच किस तार में लगना चाहिए?"}
+    options:
+      - {en: "Phase (live)", hi: "फ़ेज़ (लाइव)"}
+      - {en: "Neutral", hi: "न्यूट्रल"}
+      - {en: "Earth", hi: "अर्थ"}
+      - {en: "Any of them", hi: "किसी में भी"}
+    answer: 0
+    explanation: {en: "No switch may be placed in the earthed neutral unless it is a linked switch that also breaks the phase (CEA reg. 17). A switch in the phase makes the lamp dead when off.", hi: "न्यूट्रल में स्विच नहीं लगा सकते, जब तक वह फ़ेज़ के साथ जुड़ा (लिंक्ड) स्विच न हो (CEA नियम 17)। फ़ेज़ में स्विच से बंद करने पर बल्ब में करंट नहीं रहता।"}
+  - id: el-016
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC11]
+    sources: [cea43]
+    difficulty_prior: 0.5
+    stem: {en: "In a new or renovated house wiring (up to 250 V), what type must every plug socket be?", hi: "नई या दोबारा की गई घरेलू वायरिंग (250 V तक) में हर प्लग सॉकेट कैसा होना चाहिए?"}
+    options:
+      - {en: "Three-pin, with the third pin effectively earthed", hi: "तीन पिन वाला, तीसरा पिन अच्छी तरह अर्थ से जुड़ा"}
+      - {en: "Two-pin only", hi: "सिर्फ़ दो पिन वाला"}
+      - {en: "Any type the customer likes", hi: "जो ग्राहक को पसंद हो"}
+      - {en: "Three-pin, with the third pin left unconnected", hi: "तीन पिन वाला, तीसरा पिन बिना जोड़े"}
+    answer: 0
+    explanation: {en: "CEA reg. 43(viii) requires three-pin sockets with the third pin permanently and effectively earthed in new or renovated installations up to 250 V.", hi: "CEA नियम 43(viii): 250 V तक की नई या दोबारा की गई वायरिंग में तीन पिन सॉकेट, तीसरा पिन स्थायी रूप से अर्थ से जुड़ा।"}
+  - id: el-017
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC11]
+    sources: [cea44]
+    difficulty_prior: 0.8
+    stem: {en: "A house installation must be protected by a residual current device (RCCB). What is the most its residual operating current may be?", hi: "घरेलू वायरिंग में RCCB (रेज़िडुअल करंट डिवाइस) लगाना है। उसका ऑपरेटिंग करंट ज़्यादा से ज़्यादा कितना हो सकता है?"}
+    options:
+      - {en: "30 mA", hi: "30 mA"}
+      - {en: "300 mA", hi: "300 mA"}
+      - {en: "3 A", hi: "3 A"}
+      - {en: "30 A", hi: "30 A"}
+    answer: 0
+    explanation: {en: "CEA reg. 44: in domestic installations the RCD's residual operating current shall not exceed 30 mA. A 30 mA RCD trips fast enough to protect people from many shocks.", hi: "CEA नियम 44: घरेलू वायरिंग में RCD का ऑपरेटिंग करंट 30 mA से ज़्यादा नहीं होना चाहिए। 30 mA का RCD जल्दी ट्रिप होकर लोगों को कई झटकों से बचाता है।"}
+  - id: el-018
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC10]
+    sources: [cea43]
+    difficulty_prior: 0.6
+    stem: {en: "When must the earthing of a new installation be tested?", hi: "नई वायरिंग की अर्थिंग की जाँच कब होनी चाहिए?"}
+    options:
+      - {en: "Before the installation is energised", hi: "वायरिंग में सप्लाई चालू करने से पहले"}
+      - {en: "Only if someone gets a shock", hi: "सिर्फ़ तब जब किसी को झटका लगे"}
+      - {en: "One year after it is switched on", hi: "चालू होने के एक साल बाद"}
+      - {en: "It never needs testing", hi: "कभी जाँच की ज़रूरत नहीं"}
+    answer: 0
+    explanation: {en: "CEA reg. 43(ix)(c): earthing systems shall be tested for effective earth bonding before the supply lines or apparatus are energised.", hi: "CEA नियम 43(ix)(c): सप्लाई चालू करने से पहले अर्थिंग की प्रभावी बॉन्डिंग की जाँच ज़रूरी है।"}
+  - id: el-019
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC10]
+    sources: [cea42, dgt2]
+    difficulty_prior: 1.0
+    stem: {en: "You added two new points to an existing circuit. Before reconnecting it to the supply, which test is required?", hi: "पुराने सर्किट में दो नए पॉइंट जोड़े। सप्लाई से दोबारा जोड़ने से पहले कौन-सा टेस्ट ज़रूरी है?"}
+    options:
+      - {en: "Insulation resistance test", hi: "इंसुलेशन रेज़िस्टेंस टेस्ट"}
+      - {en: "Energy meter accuracy test", hi: "एनर्जी मीटर की सटीकता का टेस्ट"}
+      - {en: "Frequency test", hi: "फ़्रीक्वेंसी टेस्ट"}
+      - {en: "No test is needed for small changes", hi: "छोटे बदलाव के लिए कोई टेस्ट नहीं"}
+    answer: 0
+    explanation: {en: "CEA reg. 42: a line disconnected for addition, alteration or repair shall not be reconnected until the insulation resistance test has been done.", hi: "CEA नियम 42: जोड़, बदलाव या मरम्मत के लिए अलग की गई लाइन इंसुलेशन रेज़िस्टेंस टेस्ट के बिना दोबारा नहीं जोड़ी जाएगी।"}
+  - id: el-020
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC6]
+    sources: [qp, dgt5]
+    difficulty_prior: -0.3
+    stem: {en: "How are wires usually pulled through a long concealed conduit?", hi: "लंबी छिपी कंड्यूट में तार आमतौर पर कैसे खींचे जाते हैं?"}
+    options:
+      - {en: "With a fish wire (draw wire) pushed through first", hi: "पहले फ़िश वायर (ड्रॉ वायर) डालकर उसकी मदद से"}
+      - {en: "By pouring oil into the conduit", hi: "कंड्यूट में तेल डालकर"}
+      - {en: "By breaking the wall along the conduit", hi: "कंड्यूट के साथ दीवार तोड़कर"}
+      - {en: "Wires cannot go through conduits", hi: "कंड्यूट में तार नहीं जा सकते"}
+    answer: 0
+    explanation: {en: "A fish (draw) wire is pushed through the conduit and the conductors are tied to it and pulled back.", hi: "फ़िश (ड्रॉ) वायर कंड्यूट में डालकर, उससे तार बाँधकर वापस खींचे जाते हैं।"}
+  - id: el-021
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC11]
+    sources: [is694]
+    difficulty_prior: -0.2
+    stem: {en: "In a modern cable, which colour of insulation marks the protective earth conductor?", hi: "आधुनिक केबल में प्रोटेक्टिव अर्थ तार किस रंग के इंसुलेशन से पहचाना जाता है?"}
+    options:
+      - {en: "Green-and-yellow", hi: "हरा-पीला"}
+      - {en: "Red", hi: "लाल"}
+      - {en: "Blue", hi: "नीला"}
+      - {en: "Brown", hi: "भूरा"}
+    answer: 0
+    explanation: {en: "IS 694 reserves green-and-yellow for the protective (earth) core.", hi: "IS 694 में हरा-पीला रंग प्रोटेक्टिव (अर्थ) तार के लिए तय है।"}
+  - id: el-022
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC1]
+    sources: [dgt3, dgt5]
+    difficulty_prior: 1.2
+    stem: {en: "A 2,000 W heater runs on 230 V. About how much current does it draw?", hi: "2,000 W का हीटर 230 V पर चलता है। लगभग कितना करंट लेगा?"}
+    options:
+      - {en: "About 8.7 A", hi: "लगभग 8.7 A"}
+      - {en: "About 0.9 A", hi: "लगभग 0.9 A"}
+      - {en: "About 46 A", hi: "लगभग 46 A"}
+      - {en: "About 460 A", hi: "लगभग 460 A"}
+    answer: 0
+    explanation: {en: "Current = power / voltage = 2000 / 230 ≈ 8.7 A. This decides the cable size and MCB rating for the circuit.", hi: "करंट = पावर / वोल्टेज = 2000 / 230 ≈ 8.7 A। इसी से सर्किट की केबल और MCB की रेटिंग तय होती है।"}
+  # ---- CON/N0605 distribution boards ---------------------------------------------------------
+  - id: el-023
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC2]
+    sources: [dgt5]
+    difficulty_prior: -0.8
+    stem: {en: "What does an MCB in a distribution board do?", hi: "डिस्ट्रीब्यूशन बोर्ड में MCB क्या काम करता है?"}
+    options:
+      - {en: "Switches off a circuit automatically on overload or short circuit", hi: "ओवरलोड या शॉर्ट सर्किट पर सर्किट अपने-आप बंद करता है"}
+      - {en: "Measures the electricity used", hi: "इस्तेमाल हुई बिजली नापता है"}
+      - {en: "Raises the voltage", hi: "वोल्टेज बढ़ाता है"}
+      - {en: "Stores electricity for power cuts", hi: "बिजली जाने पर बिजली जमा रखता है"}
+    answer: 0
+    explanation: {en: "A miniature circuit breaker protects a circuit against overcurrent: overload and short circuit.", hi: "मिनिएचर सर्किट ब्रेकर सर्किट को ओवरकरंट (ओवरलोड और शॉर्ट सर्किट) से बचाता है।"}
+  - id: el-024
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC2]
+    sources: [cea44, dgt5]
+    difficulty_prior: 0.4
+    stem: {en: "What does an RCCB detect that an ordinary MCB does not?", hi: "RCCB ऐसा क्या पकड़ता है जो साधारण MCB नहीं पकड़ता?"}
+    options:
+      - {en: "Leakage current to earth, for example through a person", hi: "अर्थ की ओर लीकेज करंट, जैसे किसी व्यक्ति के शरीर से"}
+      - {en: "Low voltage", hi: "कम वोल्टेज"}
+      - {en: "The time of day", hi: "दिन का समय"}
+      - {en: "The colour of the wires", hi: "तारों का रंग"}
+    answer: 0
+    explanation: {en: "A residual current device compares the current in phase and neutral and trips on the difference that leaks to earth.", hi: "रेज़िडुअल करंट डिवाइस फ़ेज़ और न्यूट्रल के करंट की तुलना करता है और अर्थ में लीक हुए अंतर पर ट्रिप होता है।"}
+  - id: el-025
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC7]
+    sources: [qp, cea43]
+    difficulty_prior: 0.2
+    stem: {en: "The metal body of a distribution board must be:", hi: "डिस्ट्रीब्यूशन बोर्ड की धातु की बॉडी को:"}
+    options:
+      - {en: "Connected to earth", hi: "अर्थ से जोड़ना चाहिए"}
+      - {en: "Connected to the neutral only", hi: "सिर्फ़ न्यूट्रल से जोड़ना चाहिए"}
+      - {en: "Left floating", hi: "बिना जोड़े छोड़ देना चाहिए"}
+      - {en: "Painted, which is enough insulation", hi: "पेंट कर देना काफ़ी है"}
+    answer: 0
+    explanation: {en: "Metal casings that contain or protect supply lines or apparatus are connected with earth (CEA reg. 43(viii)); panels are earthed as standard procedure.", hi: "सप्लाई लाइन या उपकरण वाले धातु के कवर अर्थ से जुड़े होते हैं (CEA नियम 43(viii)); पैनल की अर्थिंग मानक प्रक्रिया है।"}
+  - id: el-026
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC3]
+    sources: [qp]
+    difficulty_prior: -0.6
+    stem: {en: "Before connecting a newly assembled board to the power source, you should:", hi: "नया बोर्ड बनाकर पावर से जोड़ने से पहले आपको:"}
+    options:
+      - {en: "Check that all wires and fixtures are tight and safe", hi: "सारे तार और फ़िटिंग कसे और सुरक्षित हैं, यह जाँचना चाहिए"}
+      - {en: "Switch on and watch for sparks", hi: "चालू करके चिंगारी देखनी चाहिए"}
+      - {en: "Remove all MCBs", hi: "सारे MCB निकाल देने चाहिए"}
+      - {en: "Spray water to clean it", hi: "साफ़ करने के लिए पानी छिड़कना चाहिए"}
+    answer: 0
+    explanation: {en: "The qualification requires tightness and safe condition of wires and fixtures to be checked before connection.", hi: "योग्यता के अनुसार जोड़ने से पहले तारों और फ़िटिंग की कसावट और सुरक्षा जाँचनी है।"}
+  - id: el-027
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC5]
+    sources: [qp]
+    difficulty_prior: -0.7
+    stem: {en: "Where should a temporary distribution board on a site be placed?", hi: "साइट पर अस्थायी डिस्ट्रीब्यूशन बोर्ड कहाँ रखना चाहिए?"}
+    options:
+      - {en: "Secured and protected from water, fire and damage", hi: "सुरक्षित जगह पर, पानी, आग और टूट-फूट से बचाकर"}
+      - {en: "On the ground where water collects", hi: "ज़मीन पर जहाँ पानी जमा होता है"}
+      - {en: "Next to the fuel store", hi: "ईंधन रखने की जगह के पास"}
+      - {en: "Anywhere, it does not matter", hi: "कहीं भी, कोई फ़र्क़ नहीं"}
+    answer: 0
+    explanation: {en: "The board is placed and secured against damaging agents such as water and fire.", hi: "बोर्ड को पानी और आग जैसी नुक़सानदेह चीज़ों से बचाकर लगाया जाता है।"}
+  - id: el-028
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC8]
+    sources: [qp, cea20]
+    difficulty_prior: -0.4
+    stem: {en: "Near a live distribution board on a site, what must be done?", hi: "साइट पर चालू डिस्ट्रीब्यूशन बोर्ड के पास क्या करना ज़रूरी है?"}
+    options:
+      - {en: "Put up tags or danger signs and barricade it", hi: "टैग या ख़तरे के निशान लगाकर घेराबंदी करें"}
+      - {en: "Remove its door so people can see inside", hi: "उसका दरवाज़ा हटा दें ताकि सब अंदर देख सकें"}
+      - {en: "Let anyone operate it", hi: "किसी को भी चलाने दें"}
+      - {en: "Hide it under a tarpaulin while live", hi: "चालू हालत में तिरपाल से ढक दें"}
+    answer: 0
+    explanation: {en: "Tagging and barricading keep untrained people away from live boards; installations above 250 V also need permanent danger notices.", hi: "टैग और घेराबंदी अनजान लोगों को चालू बोर्ड से दूर रखते हैं; 250 V से ऊपर स्थायी ख़तरे के नोटिस भी चाहिए।"}
+  - id: el-029
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC16, CON/N0605.PC13]
+    sources: [ceasch1, is5216]
+    difficulty_prior: 0.7
+    stem: {en: "You must work on a board. Put the safe-isolation steps in the right order.", hi: "बोर्ड पर काम करना है। सुरक्षित तरीके से सप्लाई अलग करने के चरण सही क्रम में चुनें।"}
+    options:
+      - {en: "Isolate the supply, lock or tag it off, prove it is dead with a tester, then start work", hi: "सप्लाई अलग करें, लॉक या टैग करें, टेस्टर से बंद होना साबित करें, फिर काम शुरू करें"}
+      - {en: "Start work, then switch off if you feel a shock", hi: "काम शुरू करें, झटका लगे तो बंद करें"}
+      - {en: "Test for voltage, start work, then isolate the supply", hi: "वोल्टेज जाँचें, काम शुरू करें, फिर सप्लाई अलग करें"}
+      - {en: "Switch off, and start work at once without testing", hi: "बंद करें और बिना जाँचे तुरंत काम शुरू करें"}
+    answer: 0
+    explanation: {en: "Isolate, secure against switching on, then positively confirm the circuit is dead before touching it (CEA Schedule I Part II; IS 5216).", hi: "सप्लाई अलग करें, चालू होने से रोकें, फिर छूने से पहले पक्का करें कि सर्किट बंद है (CEA अनुसूची I भाग II; IS 5216)।"}
+  - id: el-030
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC15]
+    sources: [qp]
+    difficulty_prior: 0.6
+    stem: {en: "After repairing a panel, what should you do with the details of the repair?", hi: "पैनल ठीक करने के बाद मरम्मत की जानकारी का क्या करें?"}
+    options:
+      - {en: "Write them in the maintenance record", hi: "रखरखाव रिकॉर्ड में लिखें"}
+      - {en: "Keep them only in your memory", hi: "सिर्फ़ याद रखें"}
+      - {en: "Tell no one", hi: "किसी को न बताएँ"}
+      - {en: "Write them on the wall", hi: "दीवार पर लिख दें"}
+    answer: 0
+    explanation: {en: "Maintenance and repair of panels is documented as per organisational norms.", hi: "पैनल के रखरखाव और मरम्मत को संस्था के नियमों के अनुसार दर्ज किया जाता है।"}
+  # ---- who may do the work, supply rules (wiring) --------------------------------------------
+  - id: el-031
+    nos: CON/N0604
+    pc_refs: [CON/N0604.PC9]
+    sources: [cea31]
+    difficulty_prior: 1.3
+    stem: {en: "Under the CEA Safety Regulations 2023, which job may be done WITHOUT a licensed contractor and permit holder?", hi: "CEA सुरक्षा विनियम 2023 के अनुसार कौन-सा काम बिना लाइसेंसधारी ठेकेदार और परमिट धारक के किया जा सकता है?"}
+    options:
+      - {en: "Replacing a fan with the same type, without changing the wiring", hi: "उसी प्रकार का पंखा बदलना, वायरिंग बदले बिना"}
+      - {en: "Adding a new circuit", hi: "नया सर्किट जोड़ना"}
+      - {en: "Rewiring a room", hi: "कमरे की दोबारा वायरिंग"}
+      - {en: "Changing the distribution board", hi: "डिस्ट्रीब्यूशन बोर्ड बदलना"}
+    answer: 0
+    explanation: {en: "Reg. 31(1) exempts only replacing lamps, fans, fuses, switches, domestic appliances up to 250 V and fittings in a way that does not alter the installation. Other work needs a licensed contractor and a permit holder.", hi: "नियम 31(1) में सिर्फ़ बल्ब, पंखे, फ़्यूज़, स्विच, 250 V तक के घरेलू उपकरण और फ़िटिंग बदलने की छूट है, बिना वायरिंग बदले। बाक़ी काम के लिए लाइसेंसधारी ठेकेदार और परमिट धारक चाहिए।"}
+  - id: el-032
+    nos: CON/N0605
+    pc_refs: [CON/N0605.PC4]
+    sources: [cea37]
+    difficulty_prior: 1.1
+    stem: {en: "Near the point where supply enters a house, what control must be installed to completely isolate the installation?", hi: "घर में सप्लाई आने की जगह के पास पूरी वायरिंग को अलग करने के लिए क्या लगाना ज़रूरी है?"}
+    options:
+      - {en: "A switch fuse unit or circuit breaker", hi: "स्विच फ़्यूज़ यूनिट या सर्किट ब्रेकर"}
+      - {en: "A voltage stabiliser", hi: "वोल्टेज स्टेबलाइज़र"}
+      - {en: "A doorbell transformer", hi: "डोरबेल ट्रांसफ़ॉर्मर"}
+      - {en: "Nothing; the meter isolates it", hi: "कुछ नहीं; मीटर ही अलग कर देता है"}
+    answer: 0
+    explanation: {en: "CEA reg. 37(2): below 11 kV the consumer installs a switch fuse unit or circuit breaker near the point of commencement of supply, readily accessible.", hi: "CEA नियम 37(2): 11 kV से कम पर उपभोक्ता सप्लाई शुरू होने की जगह के पास आसानी से पहुँचने लायक स्विच फ़्यूज़ यूनिट या सर्किट ब्रेकर लगाता है।"}
+  # ---- CON/N9001 health and safety -----------------------------------------------------------
+  - id: el-033
+    nos: CON/N9001
+    pc_refs: [CON/N9001.PC7]
+    sources: [qp, cea21]
+    difficulty_prior: -1.8
+    stem: {en: "Which PPE protects an electrician's hands from shock?", hi: "कौन-सा PPE इलेक्ट्रीशियन के हाथों को झटके से बचाता है?"}
+    options:
+      - {en: "Insulated rubber gloves", hi: "इंसुलेटेड रबर के दस्ताने"}
+      - {en: "Cotton gloves soaked in water", hi: "पानी में भीगे सूती दस्ताने"}
+      - {en: "Metal wrist watch", hi: "धातु की कलाई घड़ी"}
+      - {en: "No PPE is needed for hands", hi: "हाथों के लिए PPE की ज़रूरत नहीं"}
+    answer: 0
+    explanation: {en: "CEA reg. 21(2) lists rubber gloves and safety footwear suitable for the working voltage among required PPE.", hi: "CEA नियम 21(2) में काम के वोल्टेज के लायक रबर दस्ताने और सेफ़्टी जूते ज़रूरी PPE में हैं।"}
+  - id: el-034
+    nos: CON/N9001
+    pc_refs: [CON/N9001.PC5]
+    sources: [qp, dgt1]
+    difficulty_prior: -0.6
+    stem: {en: "An electrical panel catches fire. Which extinguisher must NOT be used?", hi: "बिजली के पैनल में आग लगी है। कौन-सा अग्निशामक इस्तेमाल नहीं करना चाहिए?"}
+    options:
+      - {en: "Water", hi: "पानी वाला"}
+      - {en: "Carbon dioxide (CO₂)", hi: "कार्बन डाइऑक्साइड (CO₂)"}
+      - {en: "Dry chemical powder", hi: "ड्राई केमिकल पाउडर"}
+    answer: 0
+    explanation: {en: "Water conducts electricity and can give the person using it a shock. Switch off the supply and use CO₂ or dry powder.", hi: "पानी में करंट बहता है, इस्तेमाल करने वाले को झटका लग सकता है। सप्लाई बंद करें और CO₂ या ड्राई पाउडर इस्तेमाल करें।"}
+  - id: el-035
+    nos: CON/N9001
+    pc_refs: [CON/N9001.PC2]
+    sources: [dgt1, cea30]
+    difficulty_prior: -0.9
+    stem: {en: "A co-worker is stuck to a live wire. What do you do first?", hi: "एक साथी चालू तार से चिपक गया है। आप सबसे पहले क्या करेंगे?"}
+    options:
+      - {en: "Switch off the supply, or push him away with a dry non-conducting object", hi: "सप्लाई बंद करें, या सूखी, करंट न बहने वाली चीज़ से उसे अलग करें"}
+      - {en: "Pull him away with your bare hands", hi: "नंगे हाथों से उसे खींचें"}
+      - {en: "Throw water on him", hi: "उस पर पानी डालें"}
+      - {en: "Wait for him to let go", hi: "उसके छोड़ने का इंतज़ार करें"}
+    answer: 0
+    explanation: {en: "Touching him while he is in contact with the supply passes the current to you. Break the contact safely first, then give first aid and call for help.", hi: "जब तक वह सप्लाई से जुड़ा है, उसे छूने से करंट आपको भी लगेगा। पहले सुरक्षित तरीके से संपर्क तोड़ें, फिर प्राथमिक उपचार दें और मदद बुलाएँ।"}
+  - id: el-036
+    nos: CON/N9001
+    pc_refs: [CON/N9001.PC6]
+    sources: [qp]
+    difficulty_prior: 0.5
+    stem: {en: "A heavy tool falls from a height and lands next to a worker without hitting anyone. What is this called?", hi: "ऊँचाई से भारी औज़ार गिरा और किसी को लगे बिना एक कामगार के पास गिरा। इसे क्या कहते हैं?"}
+    options:
+      - {en: "A near miss, which should be reported", hi: "नियर मिस, जिसकी रिपोर्ट करनी चाहिए"}
+      - {en: "Nothing, because no one was hurt", hi: "कुछ नहीं, क्योंकि कोई घायल नहीं हुआ"}
+      - {en: "A routine event", hi: "रोज़ की बात"}
+      - {en: "Good luck", hi: "क़िस्मत अच्छी थी"}
+    answer: 0
+    explanation: {en: "A near miss could have caused injury; identifying and reporting it helps prevent the next accident.", hi: "नियर मिस से चोट लग सकती थी; उसे पहचानकर रिपोर्ट करने से अगला हादसा रुकता है।"}
+  - id: el-037
+    nos: CON/N9001
+    pc_refs: [CON/N9001.PC1]
+    sources: [qp]
+    difficulty_prior: -1.2
+    stem: {en: "You see a damaged, exposed cable on a site walkway. What should you do?", hi: "साइट के रास्ते पर कटी, खुली केबल दिखी। क्या करना चाहिए?"}
+    options:
+      - {en: "Keep people away and report it to the person in charge", hi: "लोगों को दूर रखें और ज़िम्मेदार व्यक्ति को बताएँ"}
+      - {en: "Step over it and continue", hi: "उसके ऊपर से निकलकर चलते रहें"}
+      - {en: "Cover it with soil", hi: "उसे मिट्टी से ढक दें"}
+      - {en: "Ignore it; it is someone else's job", hi: "अनदेखा करें; यह किसी और का काम है"}
+    answer: 0
+    explanation: {en: "Hazards and breaches in site safety are identified and reported to the appropriate authority.", hi: "साइट पर ख़तरे और सुरक्षा में चूक की पहचान करके सही व्यक्ति को रिपोर्ट करनी होती है।"}
+  # ---- CON/N8001, CON/N8002, DGT/VSQ/N0101 ---------------------------------------------------
+  - id: el-038
+    nos: CON/N8001
+    pc_refs: [CON/N8001.PC2, CON/N8001.PC3]
+    sources: [qp]
+    difficulty_prior: -1.0
+    stem: {en: "You find that the wiring drawing does not match the site. What do you do?", hi: "आपने देखा कि वायरिंग का नक़्शा साइट से मेल नहीं खाता। क्या करेंगे?"}
+    options:
+      - {en: "Tell your supervisor before going ahead", hi: "आगे बढ़ने से पहले सुपरवाइज़र को बताएँगे"}
+      - {en: "Change the work your own way and tell no one", hi: "अपने तरीके से काम बदल देंगे और किसी को नहीं बताएँगे"}
+      - {en: "Stop working and go home", hi: "काम छोड़कर घर चले जाएँगे"}
+      - {en: "Follow the drawing even if it is unsafe", hi: "असुरक्षित हो तो भी नक़्शे के अनुसार करेंगे"}
+    answer: 0
+    explanation: {en: "Deviations and unresolved problems are reported to co-workers and superiors.", hi: "बदलाव और न सुलझी समस्याएँ साथियों और सुपरवाइज़र को बताई जाती हैं।"}
+  - id: el-039
+    nos: CON/N8002
+    pc_refs: [CON/N8002.PC2, CON/N8002.PC3]
+    sources: [qp]
+    difficulty_prior: -0.5
+    stem: {en: "Before starting a wiring job, what is good planning?", hi: "वायरिंग का काम शुरू करने से पहले अच्छी योजना क्या है?"}
+    options:
+      - {en: "Check the drawing, the materials and tools needed, the safety needs and the time available", hi: "नक़्शा, ज़रूरी सामान और औज़ार, सुरक्षा की ज़रूरतें और उपलब्ध समय जाँचना"}
+      - {en: "Buy materials only after starting", hi: "काम शुरू करने के बाद ही सामान ख़रीदना"}
+      - {en: "Start anywhere and decide later", hi: "कहीं से भी शुरू करके बाद में तय करना"}
+      - {en: "Skip the safety check to save time", hi: "समय बचाने के लिए सुरक्षा जाँच छोड़ देना"}
+    answer: 0
+    explanation: {en: "Planning means working out the requirements (drawings, safety, tools, materials) and the time and resources before work starts.", hi: "योजना का मतलब है काम शुरू करने से पहले ज़रूरतें (नक़्शा, सुरक्षा, औज़ार, सामान), समय और संसाधन तय करना।"}
+  - id: el-040
+    nos: DGT/VSQ/N0101
+    pc_refs: [DGT/VSQ/N0101.PC1]
+    sources: [qp]
+    difficulty_prior: -1.0
+    stem: {en: "A customer asks how long a repair will take, and you are not sure. What is the best answer?", hi: "ग्राहक पूछता है कि मरम्मत में कितना समय लगेगा और आपको पक्का नहीं पता। सबसे अच्छा जवाब क्या है?"}
+    options:
+      - {en: "Give an honest estimate and say you will update them after checking", hi: "ईमानदारी से अंदाज़ा बताएँ और कहें कि जाँच के बाद बताएँगे"}
+      - {en: "Promise it will take five minutes", hi: "वादा करें कि पाँच मिनट लगेंगे"}
+      - {en: "Do not answer", hi: "जवाब न दें"}
+      - {en: "Say it cannot be repaired", hi: "कह दें कि ठीक नहीं हो सकता"}
+    answer: 0
+    explanation: {en: "Employability skills include honest, clear communication with customers.", hi: "रोज़गार कौशल में ग्राहकों से ईमानदार और साफ़ बात करना शामिल है।"}

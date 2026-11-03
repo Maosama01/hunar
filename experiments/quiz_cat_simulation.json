@@ -1,0 +1,229 @@
+{
+  "experiment": "quiz_cat_simulation",
+  "simulation_of_method": true,
+  "data_kind": "synthetic",
+  "warning": "SIMULATION OF THE METHOD, NOT A RESULT: simulated workers answering under assumed scenarios. It checks the quiz design; it says nothing about real workers.",
+  "rules": {
+    "min_items": 12,
+    "max_items": 25,
+    "se_target": 0.5,
+    "top_k": 3,
+    "rapid_base_s": 2.0,
+    "rapid_per_word_s": 0.1
+  },
+  "fixed_length": 20,
+  "scenarios": {
+    "calibrated": {
+      "difficulty_error_sd": 0.0,
+      "guessing": 0.0
+    },
+    "cold_start": {
+      "difficulty_error_sd": 0.7,
+      "guessing": 0.0
+    },
+    "cold_start_guessing": {
+      "difficulty_error_sd": 0.7,
+      "guessing": 0.2
+    }
+  },
+  "n_simulated_per_cell": 1000,
+  "command": "python -m hunar.quiz.simulate",
+  "created": "2026-11-03T23:06:56",
+  "trades": {
+    "carpenter": {
+      "n_items": 24,
+      "scenarios": {
+        "calibrated": {
+          "adaptive": {
+            "bias": 0.005,
+            "rmse": 0.5,
+            "mean_items": 15.7,
+            "coverage90": 0.896,
+            "mean_sd": 0.494,
+            "bias_low_ability": 0.407,
+            "corr": 0.859
+          },
+          "fixed": {
+            "bias": 0.008,
+            "rmse": 0.468,
+            "mean_items": 20.0,
+            "coverage90": 0.894,
+            "mean_sd": 0.454,
+            "bias_low_ability": 0.303,
+            "corr": 0.878
+          }
+        },
+        "cold_start": {
+          "adaptive": {
+            "bias": 0.006,
+            "rmse": 0.525,
+            "mean_items": 15.5,
+            "coverage90": 0.883,
+            "mean_sd": 0.493,
+            "bias_low_ability": 0.459,
+            "corr": 0.847
+          },
+          "fixed": {
+            "bias": 0.02,
+            "rmse": 0.476,
+            "mean_items": 20.0,
+            "coverage90": 0.891,
+            "mean_sd": 0.453,
+            "bias_low_ability": 0.351,
+            "corr": 0.876
+          }
+        },
+        "cold_start_guessing": {
+          "adaptive": {
+            "bias": 0.358,
+            "rmse": 0.713,
+            "mean_items": 15.7,
+            "coverage90": 0.757,
+            "mean_sd": 0.494,
+            "bias_low_ability": 1.042,
+            "corr": 0.795
+          },
+          "fixed": {
+            "bias": 0.375,
+            "rmse": 0.678,
+            "mean_items": 20.0,
+            "coverage90": 0.72,
+            "mean_sd": 0.452,
+            "bias_low_ability": 0.981,
+            "corr": 0.838
+          }
+        }
+      }
+    },
+    "electrician": {
+      "n_items": 40,
+      "scenarios": {
+        "calibrated": {
+          "adaptive": {
+            "bias": -0.013,
+            "rmse": 0.504,
+            "mean_items": 15.4,
+            "coverage90": 0.886,
+            "mean_sd": 0.493,
+            "bias_low_ability": 0.363,
+            "corr": 0.857
+          },
+          "fixed": {
+            "bias": -0.001,
+            "rmse": 0.463,
+            "mean_items": 20.0,
+            "coverage90": 0.89,
+            "mean_sd": 0.459,
+            "bias_low_ability": 0.333,
+            "corr": 0.881
+          }
+        },
+        "cold_start": {
+          "adaptive": {
+            "bias": 0.015,
+            "rmse": 0.526,
+            "mean_items": 15.2,
+            "coverage90": 0.877,
+            "mean_sd": 0.493,
+            "bias_low_ability": 0.45,
+            "corr": 0.847
+          },
+          "fixed": {
+            "bias": 0.042,
+            "rmse": 0.486,
+            "mean_items": 20.0,
+            "coverage90": 0.894,
+            "mean_sd": 0.458,
+            "bias_low_ability": 0.413,
+            "corr": 0.871
+          }
+        },
+        "cold_start_guessing": {
+          "adaptive": {
+            "bias": 0.37,
+            "rmse": 0.697,
+            "mean_items": 15.4,
+            "coverage90": 0.755,
+            "mean_sd": 0.494,
+            "bias_low_ability": 0.964,
+            "corr": 0.813
+          },
+          "fixed": {
+            "bias": 0.426,
+            "rmse": 0.738,
+            "mean_items": 20.0,
+            "coverage90": 0.699,
+            "mean_sd": 0.458,
+            "bias_low_ability": 1.071,
+            "corr": 0.809
+          }
+        }
+      }
+    },
+    "plumber": {
+      "n_items": 24,
+      "scenarios": {
+        "calibrated": {
+          "adaptive": {
+            "bias": 0.01,
+            "rmse": 0.494,
+            "mean_items": 16.0,
+            "coverage90": 0.898,
+            "mean_sd": 0.494,
+            "bias_low_ability": 0.393,
+            "corr": 0.863
+          },
+          "fixed": {
+            "bias": -0.002,
+            "rmse": 0.456,
+            "mean_items": 20.0,
+            "coverage90": 0.904,
+            "mean_sd": 0.456,
+            "bias_low_ability": 0.302,
+            "corr": 0.885
+          }
+        },
+        "cold_start": {
+          "adaptive": {
+            "bias": 0.016,
+            "rmse": 0.529,
+            "mean_items": 16.0,
+            "coverage90": 0.879,
+            "mean_sd": 0.494,
+            "bias_low_ability": 0.443,
+            "corr": 0.844
+          },
+          "fixed": {
+            "bias": 0.021,
+            "rmse": 0.48,
+            "mean_items": 20.0,
+            "coverage90": 0.887,
+            "mean_sd": 0.455,
+            "bias_low_ability": 0.35,
+            "corr": 0.874
+          }
+        },
+        "cold_start_guessing": {
+          "adaptive": {
+            "bias": 0.379,
+            "rmse": 0.727,
+            "mean_items": 15.8,
+            "coverage90": 0.739,
+            "mean_sd": 0.494,
+            "bias_low_ability": 1.078,
+            "corr": 0.794
+          },
+          "fixed": {
+            "bias": 0.396,
+            "rmse": 0.706,
+            "mean_items": 20.0,
+            "coverage90": 0.699,
+            "mean_sd": 0.452,
+            "bias_low_ability": 1.014,
+            "corr": 0.822
+          }
+        }
+      }
+    }
+  }
+}

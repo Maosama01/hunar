@@ -1,0 +1,655 @@
+{
+  "nqr_id": 12957,
+  "nqr_code": "QG-04-PL-03441-2024-V2-WMPS",
+  "title": "Plumber - General",
+  "sector": "Plumbing",
+  "nsqf_level": 4.0,
+  "awarding_body": "Water Management and Plumbing Skill Council (WMPSC)",
+  "role": "trade",
+  "is_stub": false,
+  "parse_method": "pdf_auto",
+  "verification_note": "Parsed automatically from the official PDF. Spot-checked against the PDF by the AI assistant; HUMAN CHECK PENDING.",
+  "source": {
+    "pdf_url": "https://www.nqr.gov.in/qualification/file/Q-File_Plumber%20-%20General.pdf",
+    "page_url": "https://www.nqr.gov.in/qualifications/12957",
+    "downloaded_on": "2026-11-03",
+    "sha256": "1f812f1a3f79c2e062d34f300d89b2dede3981ca6ff3cddff98981e541b6bf89"
+  },
+  "nos": [
+    {
+      "code": "PSC/N0130",
+      "title": "Prepare for Plumbing Installations and Maintenance",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSC/N0130.PC1",
+          "code": "PC1",
+          "text": "Explain in detail the use of different tools, measuring & inspection device equipment, and fittings for plumbing."
+        },
+        {
+          "id": "PSC/N0130.PC2",
+          "code": "PC2",
+          "text": "Perform cutting deburring/filing, marking, and fixing operations using vice."
+        },
+        {
+          "id": "PSC/N0130.PC3",
+          "code": "PC3",
+          "text": "Assess the tool's material quality to ensure long-term use in demanding plumbing environments."
+        },
+        {
+          "id": "PSC/N0130.PC4",
+          "code": "PC4",
+          "text": "Check if the tool & fitting required for different pipe types and plumbing applications."
+        },
+        {
+          "id": "PSC/N0130.PC5",
+          "code": "PC5",
+          "text": "Ensure that the tool includes necessary safety features to prevent injuries during use. Read and interpret the plumbing drawing"
+        },
+        {
+          "id": "PSC/N0130.PC6",
+          "code": "PC6",
+          "text": "Ensure that the pipes are installed correctly, with minimal short turns, correct distances, and optimal use of space."
+        },
+        {
+          "id": "PSC/N0130.PC7",
+          "code": "PC7",
+          "text": "Verify that hot and cold-water lines are correctly laid and insulated where necessary to prevent heat loss."
+        },
+        {
+          "id": "PSC/N0130.PC8",
+          "code": "PC8",
+          "text": "Interpret the position of the fixtures and their accessories for supply and drainage systems"
+        },
+        {
+          "id": "PSC/N0130.PC10",
+          "code": "PC10",
+          "text": "Ensure correct pipe -size/dia / type are used to get the required pressure & flow rate for water supply system."
+        },
+        {
+          "id": "PSC/N0130.PC11",
+          "code": "PC11",
+          "text": "Ensure correct usage pipe size & fitting the pipe with correct slope to install drainage system"
+        },
+        {
+          "id": "PSC/N0130.PC12",
+          "code": "PC12",
+          "text": "Ensure that all plumbing fixtures (sinks, toilets, showers) are positioned according to the architectural plan, with proper spacing for usability and maintenance."
+        },
+        {
+          "id": "PSC/N0130.PC13",
+          "code": "PC13",
+          "text": "Ensure that each fixture has clearly indicated connection points for water supply."
+        },
+        {
+          "id": "PSC/N0130.PC14",
+          "code": "PC14",
+          "text": "Check the drainage system for proper venting, position of traps & anti siphonage to prevent breaking of water seals Prepare for work"
+        },
+        {
+          "id": "PSC/N0130.PC15",
+          "code": "PC15",
+          "text": "Collect required plumbing material -type, size, and quantities based on specifications from drawings and plans."
+        },
+        {
+          "id": "PSC/N0130.PC16",
+          "code": "PC16",
+          "text": "Check if the tools and equipment are functioning properly and inform the relevant authority in case of any deviation."
+        },
+        {
+          "id": "PSC/N0130.PC17",
+          "code": "PC17",
+          "text": "Clear the area of hazardous substances, debris, and waste as per organizational norms"
+        },
+        {
+          "id": "PSC/N0130.PC18",
+          "code": "PC18",
+          "text": "Store collected materials to be used in a secure manner to ensure there is no spillage or cross-contamination."
+        },
+        {
+          "id": "PSC/N0130.PC19",
+          "code": "PC19",
+          "text": "place signages and barricades as required to ensure safety and security of the work area, workers, and visitors"
+        },
+        {
+          "id": "PSC/N0130.PC20",
+          "code": "PC20",
+          "text": "plan tasks in agreement with others while adhering to time commitments."
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSC/N0131",
+      "title": "Install Water Supply Systems",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSC/N0131.PC1",
+          "code": "PC1",
+          "text": "Study a typical water distribution system and identify its different components."
+        },
+        {
+          "id": "PSC/N0131.PC2",
+          "code": "PC2",
+          "text": "Explain in detail the hot-water and cold-water distribution/circulation system."
+        },
+        {
+          "id": "PSC/N0131.PC3",
+          "code": "PC3",
+          "text": "Inspect typical solar water heater system and demonstrate its different components with its applications."
+        },
+        {
+          "id": "PSC/N0131.PC4",
+          "code": "PC4",
+          "text": "Identify & select the fitting requirements to install the pipes"
+        },
+        {
+          "id": "PSC/N0131.PC5",
+          "code": "PC5",
+          "text": "measure and mark dimensions for installation of the pipes and fittings base on site condition making allowances for finale finishing Cut, prepare, and assemble various types of pipes"
+        },
+        {
+          "id": "PSC/N0131.PC7",
+          "code": "PC7",
+          "text": "Cut threads on G I pipe as required."
+        },
+        {
+          "id": "PSC/N0131.PC8",
+          "code": "PC8",
+          "text": "Bend and form the pipes to specified angles and offsets."
+        },
+        {
+          "id": "PSC/N0131.PC9",
+          "code": "PC9",
+          "text": "prepare pipe ends using techniques such as reaming, deburring, levelling, filing, and grinding"
+        },
+        {
+          "id": "PSC/N0131.PC10",
+          "code": "PC10",
+          "text": "Join different types of pipes using fittings and with specified techniques."
+        },
+        {
+          "id": "PSC/N0131.PC11",
+          "code": "PC11",
+          "text": "Ensure the assembled pipe meets the required specifications"
+        },
+        {
+          "id": "PSC/N0131.PC12",
+          "code": "PC12",
+          "text": "Report any issues/ difficulties that may arise. Carry out the corrective actions"
+        },
+        {
+          "id": "PSC/N0131.PC13",
+          "code": "PC13",
+          "text": "Install the assembled pipe fittings and other water supply components"
+        },
+        {
+          "id": "PSC/N0131.PC14",
+          "code": "PC14",
+          "text": "identify the area and route where the assembled pipes are to be installed"
+        },
+        {
+          "id": "PSC/N0131.PC15",
+          "code": "PC15",
+          "text": "perform wall chasing, drilling, and nailing on a range of building materials such as brickwork, concrete, block work, timber, etc."
+        },
+        {
+          "id": "PSC/N0131.PC16",
+          "code": "PC16",
+          "text": "install pipes and other water supply components according to given specifications and site requirements without damage or interference to the surrounding structures"
+        },
+        {
+          "id": "PSC/N0131.PC17",
+          "code": "PC17",
+          "text": "finish the cut area of the wall after installing pipes and other water supply components post-installation activities"
+        },
+        {
+          "id": "PSC/N0131.PC18",
+          "code": "PC18",
+          "text": "check if all the water supply system installations are properly aligned, sized, supported, and installed properly"
+        },
+        {
+          "id": "PSC/N0131.PC19",
+          "code": "PC19",
+          "text": "identify and rectify faults that are within limits of expertise and authority and escalate others to authorized personnel"
+        },
+        {
+          "id": "PSC/N0131.PC20",
+          "code": "PC20",
+          "text": "clear the work area and dispose, reuse, or recycle leftover materials according to regulations and, codes of practice"
+        },
+        {
+          "id": "PSC/N0131.PC21",
+          "code": "PC21",
+          "text": "clean and store tools and equipment according to manufacturer’s recommendations and workplace procedures"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSC/N0132",
+      "title": "Install Drainage Systems",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSC/N0132.PC1",
+          "code": "PC1",
+          "text": "identify the type of drainage piping systems and its components to be installed as appropriate for the type of building"
+        },
+        {
+          "id": "PSC/N0132.PC2",
+          "code": "PC2",
+          "text": "use plumbing project plans to determine the location of various drainage components and the route of the water drainage piping and traps"
+        },
+        {
+          "id": "PSC/N0132.PC4",
+          "code": "PC4",
+          "text": "construct chambers to accommodate drainage systems"
+        },
+        {
+          "id": "PSC/N0132.PC5",
+          "code": "PC5",
+          "text": "determine fitting requirements for installing various types of drainage pipes according to given specifications and site requirements"
+        },
+        {
+          "id": "PSC/N0132.PC6",
+          "code": "PC6",
+          "text": "check if the area is prepared for laying the pipes for underground, above ground and overhead piping systems Perform installation of drainage systems"
+        },
+        {
+          "id": "PSC/N0132.PC7",
+          "code": "PC7",
+          "text": "install the various components of drainage system such as various pipes and their fittings, manholes, traps, cleanouts, catch basins, inspection chamber, soak pit etc."
+        },
+        {
+          "id": "PSC/N0132.PC8",
+          "code": "PC8",
+          "text": "perform fitting activities on various types of pipes such as stoneware (SW) pipes, polyvinyl chloride (PVC) pipes etc."
+        },
+        {
+          "id": "PSC/N0132.PC9",
+          "code": "PC9",
+          "text": "install stormwater and sub-soil drainage system"
+        },
+        {
+          "id": "PSC/N0132.PC10",
+          "code": "PC10",
+          "text": "install different types of pumps used in sanitary and drainage systems such as submersible water pumps, dewatering pumps (for rainwater piping) etc."
+        },
+        {
+          "id": "PSC/N0132.PC11",
+          "code": "PC11",
+          "text": "install pipework for water and sewage treatment plant Post-installation activities"
+        },
+        {
+          "id": "PSC/N0132.PC12",
+          "code": "PC12",
+          "text": "test the installations for proper functioning PC13. repair faulty drainage pipes and traps"
+        },
+        {
+          "id": "PSC/N0132.PC14",
+          "code": "PC14",
+          "text": "ensure that all inspection openings and covers are fitted according to relevant standards and job specifications"
+        },
+        {
+          "id": "PSC/N0132.PC15",
+          "code": "PC15",
+          "text": "backfill excavated areas to secure the installation"
+        },
+        {
+          "id": "PSC/N0132.PC16",
+          "code": "PC16",
+          "text": "put required signages at the site after the plumbing task has been completed"
+        },
+        {
+          "id": "PSC/N0132.PC17",
+          "code": "PC17",
+          "text": "clear the work area and dispose, reuse or recycle left over materials according to legislation, regulations, codes of practice and job specification"
+        },
+        {
+          "id": "PSC/N0132.PC18",
+          "code": "PC18",
+          "text": "clean and store tools and equipment according to manufacturer’s recommendations and workplace procedures"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSC/N0133",
+      "title": "Install Plumbing Fixtures",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSC/N0133.PC1",
+          "code": "PC1",
+          "text": "Plan the correct fixtures requirement, parts, and support material provided in the packing with the manufacturer’s list or order form."
+        },
+        {
+          "id": "PSC/N0133.PC3",
+          "code": "PC3",
+          "text": "locate and mark the position of fixtures and fixture supports in structures"
+        },
+        {
+          "id": "PSC/N0133.PC4",
+          "code": "PC4",
+          "text": "Ensure fixtures are level and securely fastened. Tighten connections without over- tightening, which can damage the fittings. Install sanitary fixtures, support, and related accessories"
+        },
+        {
+          "id": "PSC/N0133.PC5",
+          "code": "PC5",
+          "text": "cut the physical structures such as walls, and concrete in line with the correct markings and specifications for performing internal pipe installations"
+        },
+        {
+          "id": "PSC/N0133.PC6",
+          "code": "PC6",
+          "text": "install supports for plumbing piping using correct tool to ensure grade, spacing, and alignment"
+        },
+        {
+          "id": "PSC/N0133.PC7",
+          "code": "PC7",
+          "text": "install fixtures as per specifications without damage to pipework, the surrounding area."
+        },
+        {
+          "id": "PSC/N0133.PC8",
+          "code": "PC8",
+          "text": "Install and secure the sensor for touchless fittings and fixtures in the slot provided slot."
+        },
+        {
+          "id": "PSC/N0133.PC9",
+          "code": "PC9",
+          "text": "insert batteries for sensor-based fittings and fixtures safely and in compliance with the manufacturer’s specifications"
+        },
+        {
+          "id": "PSC/N0133.PC10",
+          "code": "PC10",
+          "text": "connect fixture to water supply, drainage and electricity supply & ensuring proper functioning, safety and compliance to manufacturer’s specifications"
+        },
+        {
+          "id": "PSC/N0133.PC11",
+          "code": "PC11",
+          "text": "perform installation of smart plumbing fixtures."
+        },
+        {
+          "id": "PSC/N0133.PC12",
+          "code": "PC12",
+          "text": "Perform Installation of smart sensors and automated systems to monitor and control water flow, temperature, and energy usage in real-time. Perform post-Installation activities"
+        },
+        {
+          "id": "PSC/N0133.PC13",
+          "code": "PC13",
+          "text": "plumb and level the supports and fixtures installed to ensure alignment and balance"
+        },
+        {
+          "id": "PSC/N0133.PC14",
+          "code": "PC14",
+          "text": "check if all installations are properly aligned, supported and functioning"
+        },
+        {
+          "id": "PSC/N0133.PC15",
+          "code": "PC15",
+          "text": "identify and rectify/ replace faults that are within limits of expertise and authority and escalate others to authorized personnel"
+        },
+        {
+          "id": "PSC/N0133.PC16",
+          "code": "PC16",
+          "text": "clear the work area and dispose, reuse or recycle left over materials according to regulations and codes of practice"
+        },
+        {
+          "id": "PSC/N0133.PC17",
+          "code": "PC17",
+          "text": "Handover to customer with full information and warranty card of products."
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSC/N0142",
+      "title": "Perform Troubleshooting and Maintenance for Domestic Plumbing Fixtures and Systems",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSC/N0142.PC1",
+          "code": "PC1",
+          "text": "Detect root cause for problem"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSC/N0136",
+      "title": "Apply Health and Safety Practices at the Workplace",
+      "core": false,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSC/N0136.PC1",
+          "code": "PC1",
+          "text": "identify risks and hazards at the workplace"
+        },
+        {
+          "id": "PSC/N0136.PC2",
+          "code": "PC2",
+          "text": "wear personal protective equipment (PPE) as per the type of plumbing work"
+        },
+        {
+          "id": "PSC/N0136.PC3",
+          "code": "PC3",
+          "text": "place protective barricades and signages around the pits and trenches"
+        },
+        {
+          "id": "PSC/N0136.PC4",
+          "code": "PC4",
+          "text": "isolate the plumbing fittings and fixtures from electrical wiring to avoid accidents"
+        },
+        {
+          "id": "PSC/N0136.PC5",
+          "code": "PC5",
+          "text": "adhere to organizational procedures for reporting hazards and incidents to relevant authorities"
+        },
+        {
+          "id": "PSC/N0136.PC6",
+          "code": "PC6",
+          "text": "establish ventilation before entering underground work areas"
+        },
+        {
+          "id": "PSC/N0136.PC7",
+          "code": "PC7",
+          "text": "work safely in and around trenches, elevated places and confined areas"
+        },
+        {
+          "id": "PSC/N0136.PC8",
+          "code": "PC8",
+          "text": "ensure tools and hazardous materials are not left unattended"
+        },
+        {
+          "id": "PSC/N0136.PC9",
+          "code": "PC9",
+          "text": "ensure good housekeeping in order to prevent hazards e.g. fire"
+        },
+        {
+          "id": "PSC/N0136.PC10",
+          "code": "PC10",
+          "text": "dispose waste materials and used PPE according to regulations and codes of practice Follow hygiene and sanitation practices"
+        },
+        {
+          "id": "PSC/N0136.PC11",
+          "code": "PC11",
+          "text": "follow recommended personal hygiene and sanitation practices, for example, washing/sanitizing hands, covering face with a bent elbow while coughing/sneezing etc."
+        },
+        {
+          "id": "PSC/N0136.PC12",
+          "code": "PC12",
+          "text": "clean and disinfect work area, materials/supplies, equipment etc. before and after use."
+        },
+        {
+          "id": "PSC/N0136.PC13",
+          "code": "PC13",
+          "text": "report hygiene and sanitation issues to appropriate authority Use tools, equipment and materials safely"
+        },
+        {
+          "id": "PSC/N0136.PC14",
+          "code": "PC14",
+          "text": "check that the tools, equipment and materials are in good condition and as per industry standards before use PC15. use power tools and machinery that are grounded PC16. replace or repair split or loose tools before use PC17. store and transport various plumbing materials safely Deal with emergencies"
+        },
+        {
+          "id": "PSC/N0136.PC18",
+          "code": "PC18",
+          "text": "follow workplace emergency and evacuation procedures"
+        },
+        {
+          "id": "PSC/N0136.PC19",
+          "code": "PC19",
+          "text": "use a fire extinguisher correctly PC20. use safe methods to free a person from electrocution"
+        },
+        {
+          "id": "PSC/N0136.PC21",
+          "code": "PC21",
+          "text": "administer appropriate first aid (such as CPR etc.) to victims in case of cuts, bleeding, burns, choking, electric shock, poisoning etc"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "DGT/VSQ/N0102",
+      "title": "Employability Skills (60 Hours)",
+      "core": false,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "DGT/VSQ/N0102.PC19",
+          "code": "PC19",
+          "text": "create a basic biodata"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC20",
+          "code": "PC20",
+          "text": "search for suitable jobs and apply"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC21",
+          "code": "PC21",
+          "text": "identify and register apprenticeship opportunities as per requirement"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "PSC/N0183",
+      "title": "Perform Installation of Insulation on Pipes",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "PSC/N0183.PC1",
+          "code": "PC1",
+          "text": "Identify different types of insulation materials like fibre glass, mineral wood, foam insulation, cellulose, etc."
+        },
+        {
+          "id": "PSC/N0183.PC2",
+          "code": "PC2",
+          "text": "identify different types of covering for the protection of insulation material."
+        },
+        {
+          "id": "PSC/N0183.PC3",
+          "code": "PC3",
+          "text": "identify different types of fasteners and joints."
+        },
+        {
+          "id": "PSC/N0183.PC4",
+          "code": "PC4",
+          "text": "identify different types of sealings and jointing material."
+        },
+        {
+          "id": "PSC/N0183.PC5",
+          "code": "PC5",
+          "text": "identify the accessories such as insulation hanger, insulation saddle, etc."
+        },
+        {
+          "id": "PSC/N0183.PC6",
+          "code": "PC6",
+          "text": "identify the different types and grade of pipes"
+        },
+        {
+          "id": "PSC/N0183.PC7",
+          "code": "PC7",
+          "text": "identify the different types of measuring devices"
+        },
+        {
+          "id": "PSC/N0183.PC8",
+          "code": "PC8",
+          "text": "identify the different types of cutting and sealing devices. perform measurement and cutting of insulation materials."
+        },
+        {
+          "id": "PSC/N0183.PC9",
+          "code": "PC9",
+          "text": "identify the irregularities in pipe diameter, shape, or surface condition and rectify it."
+        },
+        {
+          "id": "PSC/N0183.PC10",
+          "code": "PC10",
+          "text": "ensure proper alignment and sealing of insulation joints."
+        },
+        {
+          "id": "PSC/N0183.PC11",
+          "code": "PC11",
+          "text": "perform different techniques for cutting such as nesting or pattern cutting to maximize the number of usable pieces from each insulation sheet or roll."
+        },
+        {
+          "id": "PSC/N0183.PC12",
+          "code": "PC12",
+          "text": "perform clean and smooth cutting of edges of insulation material to facilitate proper sealing and adhesion during installation."
+        },
+        {
+          "id": "PSC/N0183.PC13",
+          "code": "PC13",
+          "text": "avoid ragged or jagged edges"
+        },
+        {
+          "id": "PSC/N0183.PC14",
+          "code": "PC14",
+          "text": "identify the correct measurement of material with required instruments. Perform installation of insulation materials."
+        },
+        {
+          "id": "PSC/N0183.PC15",
+          "code": "PC15",
+          "text": "calculate the desired thickness of insulation material based on pipe diameter."
+        },
+        {
+          "id": "PSC/N0183.PC16",
+          "code": "PC16",
+          "text": "perform checking of thermal conductivity, density and durability."
+        },
+        {
+          "id": "PSC/N0183.PC17",
+          "code": "PC17",
+          "text": "perform tightly fit of insulation material around the pipes."
+        },
+        {
+          "id": "PSC/N0183.PC18",
+          "code": "PC18",
+          "text": "Ensure complete coverage of the pipe, including bends, joints, and fittings."
+        },
+        {
+          "id": "PSC/N0183.PC19",
+          "code": "PC19",
+          "text": "perform secured sealing of seams, joints, and edges of insulation to prevent air leakage and moisture ingress."
+        }
+      ],
+      "knowledge_items": []
+    }
+  ]
+}

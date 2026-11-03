@@ -44,6 +44,24 @@
       "downloaded_on": "2026-10-28",
       "sha256": "69c6f3b9f11d8e8eb68893ef19fc721529b3157b135481c4225fb13f119ef2c5",
       "bytes": 1293415
+    },
+    {
+      "nqr_id": 12957,
+      "title": "Plumber - General",
+      "source_url": "https://www.nqr.gov.in/qualification/file/Q-File_Plumber%20-%20General.pdf",
+      "page_url": "https://www.nqr.gov.in/qualifications/12957",
+      "downloaded_on": "2026-11-03",
+      "sha256": "1f812f1a3f79c2e062d34f300d89b2dede3981ca6ff3cddff98981e541b6bf89",
+      "bytes": 2733593
+    },
+    {
+      "nqr_id": 9884,
+      "title": "Assistant Carpenter",
+      "source_url": "https://www.nqr.gov.in/qualification/file/Assistant%20Carpenter%20QFile%20English.pdf",
+      "page_url": "https://www.nqr.gov.in/qualifications/9884",
+      "downloaded_on": "2026-11-03",
+      "sha256": "368672d07dfadd56f4c5ba06ec4942180252024babf98007449e193d8be46ed1",
+      "bytes": 778638
     }
   ]
 }

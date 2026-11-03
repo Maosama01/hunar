@@ -444,6 +444,88 @@ SYSTRAN, "faster-whisper: Faster Whisper transcription with CTranslate2," versio
 - Verified: https://github.com/SYSTRAN/faster-whisper (owner SYSTRAN, MIT license, "a reimplementation of OpenAI's Whisper model using CTranslate2"; the repository gives no formal citation), checked 3 Nov 2026. Version from the installed package metadata.
 - Relevance: The speech-recognition library behind Hunar's optional spoken declarations (Whisper `small`, CPU, int8). The model itself is [57].
 
+## 18. Two-sided app: law, measurement, accessibility, language technology and trade standards
+
+**[65] `cea2023safety`**
+Central Electricity Authority, "Central Electricity Authority (Measures relating to Safety and Electric Supply) Regulations, 2023," Gazette of India, notification No. CEA-PS-16/1/2021-CEI Division, 8 Jun. 2023. [Online]. Available: https://cea.nic.in/whats-new/file?path=%2Fhome%2Fcea_website%2Freports%2Fgeneral%2Fen%2Fpdf_100_183_English.pdf&mode=view
+- Verified: Official CEA PDF read in full by a research agent, 3 Nov 2026 (regs 17, 18, 20, 21, 30, 31, 33-37, 42-44 and Schedule I).
+- Relevance: Legal basis for permit-only electrical jobs in booking (reg. 31) and for most electrician quiz answers.
+
+**[66] `dpdp2023`**
+Government of India, "The Digital Personal Data Protection Act, 2023," enacted 11 Aug. 2023; Digital Personal Data Protection Rules, 2025, notified 14 Nov. 2025. [Online]. Available: https://www.pib.gov.in/PressReleasePage.aspx?PRID=2190014
+- Verified: Dates and themes from PIB/MeitY releases (3 Nov 2026). Section wording was read from a third-party mirror and must be checked against the official MeitY text.
+- Relevance: Itemised consent, withdrawal, erasure and adults-only design of accounts.
+
+**[67] `linacre1994sample`**
+J. M. Linacre, "Sample size and item calibration [or person measure] stability," Rasch Measurement Transactions, vol. 7, no. 4, p. 328, 1994. [Online]. Available: https://www.rasch.org/rmt/rmt74m.htm
+- Verified: Opened 4 Nov 2026: title, author, RMT 7:4 p. 328, 1994; table of sample sizes for +/- 1 and +/- 1/2 logit.
+- Relevance: Why the quiz uses the Rasch model and needs about 100-150 answers per item before calibration.
+
+**[68] `thompson2011cat`**
+N. A. Thompson and D. J. Weiss, "A framework for the development of computerized adaptive tests," Practical Assessment, Research, and Evaluation, vol. 16, art. 1, 2011, doi: 10.7275/wqzt-9427.
+- Verified: DOI checked against Crossref by a research agent, 3 Nov 2026.
+- Relevance: CAT design steps, item-bank sizes, stopping rules; 3PL calibration sample sizes.
+
+**[69] `bock1982eap`**
+R. D. Bock and R. J. Mislevy, "Adaptive EAP estimation of ability in a microcomputer environment," Applied Psychological Measurement, vol. 6, no. 4, pp. 431-444, 1982, doi: 10.1177/014662168200600405.
+- Verified: DOI checked against Crossref by a research agent, 3 Nov 2026.
+- Relevance: EAP scoring used by the quiz engine.
+
+**[70] `kingsbury1989cat`**
+G. G. Kingsbury and A. R. Zara, "Procedures for selecting items for computerized adaptive tests," Applied Measurement in Education, vol. 2, no. 4, pp. 359-375, 1989, doi: 10.1207/s15324818ame0204_6.
+- Verified: DOI checked against Crossref by a research agent, 3 Nov 2026.
+- Relevance: Content balancing across NOS during item selection.
+
+**[71] `mislevy1988aux`**
+R. J. Mislevy, "Exploiting auxiliary information about items in the estimation of Rasch item difficulty parameters," Applied Psychological Measurement, vol. 12, no. 3, pp. 281-296, 1988, doi: 10.1177/014662168801200306.
+- Verified: DOI checked against Crossref by a research agent, 3 Nov 2026.
+- Relevance: Cold start: expert difficulty estimates as priors, refined by data.
+
+**[72] `wise2005rte`**
+S. L. Wise and X. Kong, "Response time effort: A new measure of examinee motivation in computer-based tests," Applied Measurement in Education, vol. 18, no. 2, pp. 163-183, 2005, doi: 10.1207/s15324818ame1802_2.
+- Verified: DOI checked against Crossref by a research agent, 3 Nov 2026.
+- Relevance: Rapid answers are flagged and not scored.
+
+**[73] `medhi2006textfree`**
+I. Medhi, A. Sagar, and K. Toyama, "Text-free user interfaces for illiterate and semi-literate users," in Proc. Int. Conf. Information and Communication Technologies and Development (ICTD), 2006, doi: 10.1109/ICTD.2006.301841.
+- Verified: DOI checked against Crossref by a research agent, 3 Nov 2026.
+- Relevance: Icon-led, voice-supported interface for low-literacy users.
+
+**[74] `medhi2011mobile`**
+I. Medhi, S. Patnaik, E. Brunskill, S. N. N. Gautama, W. Thies, and K. Toyama, "Designing mobile interfaces for novice and low-literacy users," ACM Transactions on Computer-Human Interaction, vol. 18, no. 1, art. 2, 2011, doi: 10.1145/1959022.1959024.
+- Verified: DOI checked against Crossref by a research agent, 3 Nov 2026.
+- Relevance: Text interfaces are unusable for first-time low-literacy users; graphical and spoken alternatives.
+
+**[75] `bhashini_api`**
+Digital India Bhashini Division, Ministry of Electronics and Information Technology, "Bhashini APIs: pipeline config and pipeline compute calls," online documentation. [Online]. Available: https://bhashini.gitbook.io/bhashini-apis (accessed 4 Nov. 2026).
+- Verified: Opened 4 Nov 2026: config and compute request/response payloads.
+- Relevance: Machine translation and text to speech for the 22 scheduled languages.
+
+**[76] `dgt2025ctselectrician`**
+Directorate General of Training (CSTARI), "Electrician, Craftsmen Training Scheme (CTS 3.0), NSQF level 4," revised Aug. 2025. [Online]. Available: https://bharatskills.gov.in/pdf/Curriculum/CTS/English/Electrician_CTS3.0_NSQF-4%20(2).pdf
+- Verified: Opened by a research agent, 3 Nov 2026.
+- Relevance: Topic source for electrician quiz items (Ohm's law, cables, earthing, instruments, first aid).
+
+**[77] `wmpsc2024plumber`**
+Water Management and Plumbing Skill Council, "Qualification File: Plumber - General," QG-04-PL-03441-2024-V2-WMPS, NSQF level 4, NQR id 12957, approved 17 Dec. 2024. [Online]. Available: https://www.nqr.gov.in/qualifications/12957
+- Verified: PDF downloaded 4 Nov 2026; SHA-256 recorded in data/processed/qp_manifest.json.
+- Relevance: Official standard behind the plumber quiz bank.
+
+**[78] `ffsc2023carpenter`**
+Furniture and Fittings Skill Council, "Qualification File: Assistant Carpenter," QG-04-WC-00828-2023-V2-FFSC, NSQF level 4, NQR id 9884 (NQR validity ended 31 Aug. 2026). [Online]. Available: https://www.nqr.gov.in/qualifications/9884
+- Verified: PDF downloaded 4 Nov 2026; SHA-256 recorded in data/processed/qp_manifest.json.
+- Relevance: Closest official standard behind the carpenter quiz bank (labelled as lapsed).
+
+**[79] `bis1983is5329`**
+Bureau of Indian Standards, "IS 5329:1983 Code of practice for sanitary pipe work above ground for buildings," 1983.
+- Verified: Text read 4 Nov 2026 (cl. 2.23-2.24, Table 2).
+- Relevance: Trap and water-seal items in the plumber bank.
+
+**[80] `bis1983is2065`**
+Bureau of Indian Standards, "IS 2065:1983 Code of practice for water supply in buildings," 1983.
+- Verified: Text read 4 Nov 2026 (cl. 14.2).
+- Relevance: Pressure-test item in the plumber bank.
+
 ---
 
 ## UNVERIFIED — [CITATION NEEDED]

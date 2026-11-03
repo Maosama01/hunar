@@ -1,0 +1,334 @@
+# Question bank: carpenter (qualification: Assistant Carpenter, FFSC, NSQF 4, NQR 9884).
+# No worker-level domestic carpentry qualification on the NQR was current on 3 Nov 2026; this file's
+# validity ended on 31/08/2026 and it is used as the closest official standard until a re-approved
+# version appears. Its Employability Skills NOS (DGT/VSQ/N0102) did not parse cleanly and is not
+# covered here. Answers are supported by the cited sources; nothing is copied from NIMI books.
+trade: carpenter
+version: "2026-11-04"
+status: >-
+  DRAFT: written with AI help from the cited official sources; not yet reviewed by a certified assessor
+  or ITI instructor. Difficulties are AI estimates, not yet calibrated. The qualification file's NQR
+  validity ended on 31/08/2026; it is used as the closest available standard.
+qualification_nqr_id: 9884
+nos:
+  FFS/N2206: {weight: 25, title: {en: "Preparing the worksite", hi: "काम की जगह तैयार करना"}}
+  FFS/N2207: {weight: 25, title: {en: "Fabrication: marking, cutting, joints and finishing", hi: "निर्माण: निशान, कटाई, जोड़ और फ़िनिश"}}
+  FFS/N2208: {weight: 30, title: {en: "Assembly, finishing and installation", hi: "जोड़ना, फ़िनिश और फ़िटिंग"}}
+  FFS/N8201: {weight: 10, title: {en: "Health, safety and greening practices", hi: "स्वास्थ्य, सुरक्षा और पर्यावरण"}}
+sources:
+  qp: "Assistant Carpenter qualification file QG-04-WC-00828-2023-V2-FFSC (NQR 9884), performance criteria as cited per item"
+  qptools: "Assistant Carpenter qualification file, tools list: hand saw 8 TPI (cross cut), hand saw 4-5 TPI (rip), back saw 13-15 TPI"
+  cts: "DGT Wood Work Technician CTS 3.0 (Aug 2025): timber, seasoning, joints, fasteners, machine safety (topic source)"
+items:
+  - id: cp-001
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC10]
+    sources: [qptools]
+    difficulty_prior: 0.6
+    stem: {en: "Which hand saw is meant for cutting along the grain of the wood?", hi: "लकड़ी के रेशे (ग्रेन) की दिशा में काटने के लिए कौन-सी आरी होती है?"}
+    options:
+      - {en: "Rip saw, with about 4-5 large teeth per inch", hi: "रिप आरी, लगभग 4-5 बड़े दाँत प्रति इंच"}
+      - {en: "Back saw, with about 13-15 teeth per inch", hi: "बैक आरी, लगभग 13-15 दाँत प्रति इंच"}
+      - {en: "Hacksaw for metal", hi: "धातु काटने की हैक्सॉ"}
+      - {en: "Any saw; the direction of the grain does not matter", hi: "कोई भी; रेशे की दिशा से फ़र्क़ नहीं पड़ता"}
+    answer: 0
+    explanation: {en: "The qualification's tool list has a rip saw (4-5 TPI) for cutting along the grain and a cross-cut saw (8 TPI) for cutting across it.", hi: "योग्यता की औज़ार-सूची में रेशे की दिशा में काटने के लिए रिप आरी (4-5 TPI) और आर-पार काटने के लिए क्रॉस-कट आरी (8 TPI) है।"}
+  - id: cp-002
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC10]
+    sources: [qptools]
+    difficulty_prior: 0.9
+    stem: {en: "For cutting fine joints such as tenons accurately, which saw is used?", hi: "टेनन जैसे बारीक जोड़ सही-सही काटने के लिए कौन-सी आरी इस्तेमाल होती है?"}
+    options:
+      - {en: "Back saw (fine teeth, stiff back)", hi: "बैक आरी (बारीक दाँत, सख़्त पीठ)"}
+      - {en: "Rip saw", hi: "रिप आरी"}
+      - {en: "Bow saw for firewood", hi: "जलाऊ लकड़ी की बो-आरी"}
+      - {en: "Pipe cutter", hi: "पाइप कटर"}
+    answer: 0
+    explanation: {en: "A back saw has fine teeth (13-15 TPI in the tool list) and a stiffened back for straight, accurate joint cuts.", hi: "बैक आरी के दाँत बारीक (सूची में 13-15 TPI) और पीठ सख़्त होती है, जिससे जोड़ सीधे और सही कटते हैं।"}
+  - id: cp-003
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC14]
+    sources: [qp, cts]
+    difficulty_prior: -0.8
+    stem: {en: "Which tool checks that two pieces meet at a right angle (90°)?", hi: "दो टुकड़े समकोण (90°) पर मिलते हैं, यह किस औज़ार से जाँचते हैं?"}
+    options:
+      - {en: "Try square", hi: "ट्राई स्क्वेयर"}
+      - {en: "Hammer", hi: "हथौड़ा"}
+      - {en: "Chisel", hi: "छेनी"}
+      - {en: "Sandpaper", hi: "रेगमाल"}
+    answer: 0
+    explanation: {en: "A try square checks right angles; the qualification asks for checks of measurement accuracy and the fitting of assembled parts.", hi: "ट्राई स्क्वेयर से समकोण जाँचते हैं; योग्यता में माप और जोड़े गए हिस्सों की फ़िटिंग की सटीकता जाँचना शामिल है।"}
+  - id: cp-004
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC12]
+    sources: [qp, cts]
+    difficulty_prior: -0.2
+    stem: {en: "How should you sand a wooden surface for a smooth finish?", hi: "लकड़ी की सतह को चिकना करने के लिए रेगमाल कैसे चलाएँ?"}
+    options:
+      - {en: "Along the grain, moving from coarse to fine sandpaper", hi: "रेशे की दिशा में, मोटे से बारीक रेगमाल की ओर"}
+      - {en: "Across the grain with only the coarsest paper", hi: "रेशे के आर-पार, सिर्फ़ सबसे मोटे रेगमाल से"}
+      - {en: "In circles with wet paper", hi: "गीले रेगमाल से गोल-गोल"}
+      - {en: "Sanding is not needed before finishing", hi: "फ़िनिश से पहले रेगमाल की ज़रूरत नहीं"}
+    answer: 0
+    explanation: {en: "Sanding along the grain avoids scratches; finer grades remove the marks left by coarser ones. The qualification asks for suitable sanding papers and tools.", hi: "रेशे की दिशा में रगड़ने से खरोंच नहीं आती; बारीक रेगमाल मोटे के निशान हटाता है। योग्यता में सही रेगमाल और औज़ार का इस्तेमाल माँगा गया है।"}
+  - id: cp-005
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC9]
+    sources: [qp]
+    difficulty_prior: -0.5
+    stem: {en: "Before cutting an expensive board, what is good practice?", hi: "महँगा तख़्ता काटने से पहले अच्छा तरीका क्या है?"}
+    options:
+      - {en: "Check the measurement and marking again before cutting", hi: "काटने से पहले माप और निशान दोबारा जाँचें"}
+      - {en: "Cut first and measure later", hi: "पहले काटें, बाद में नापें"}
+      - {en: "Guess the size by eye", hi: "आँख से अंदाज़ा लगाएँ"}
+      - {en: "Cut it a little short to be safe", hi: "सुरक्षा के लिए थोड़ा छोटा काटें"}
+    answer: 0
+    explanation: {en: "The qualification asks for calculations and checks to confirm accuracy before forming joints and members.", hi: "योग्यता में जोड़ और हिस्से बनाने से पहले गणना और जाँच से सटीकता पक्की करना माँगा गया है।"}
+  - id: cp-006
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC4]
+    sources: [cts]
+    difficulty_prior: 1.0
+    stem: {en: "Why is timber seasoned (dried) before use?", hi: "इस्तेमाल से पहले लकड़ी को सुखाया (सीज़न) क्यों जाता है?"}
+    options:
+      - {en: "To reduce moisture so it shrinks and warps less later", hi: "नमी कम करने के लिए, ताकि बाद में कम सिकुड़े और कम टेढ़ी हो"}
+      - {en: "To make it heavier", hi: "उसे भारी बनाने के लिए"}
+      - {en: "To change its colour only", hi: "सिर्फ़ उसका रंग बदलने के लिए"}
+      - {en: "Seasoning makes wood rot faster", hi: "सीज़निंग से लकड़ी जल्दी सड़ती है"}
+    answer: 0
+    explanation: {en: "Seasoning lowers the moisture content, so the wood is more stable, stronger and less likely to warp, crack or decay.", hi: "सीज़निंग से नमी घटती है, लकड़ी स्थिर और मज़बूत होती है और टेढ़ी होने, फटने या सड़ने का ख़तरा कम होता है।"}
+  - id: cp-007
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC10]
+    sources: [cts]
+    difficulty_prior: 0.4
+    stem: {en: "A table leg is joined to the rail with a projecting tongue that fits into a hole. What is this joint?", hi: "मेज़ की टाँग को रेल से एक निकली हुई जीभ से जोड़ा गया जो छेद में फँसती है। यह कौन-सा जोड़ है?"}
+    options:
+      - {en: "Mortise and tenon joint", hi: "मोर्टिस और टेनन जोड़"}
+      - {en: "Butt joint with nails only", hi: "सिर्फ़ कीलों वाला बट जोड़"}
+      - {en: "Lap joint in metal", hi: "धातु का लैप जोड़"}
+      - {en: "Soldered joint", hi: "सोल्डर जोड़"}
+    answer: 0
+    explanation: {en: "The tenon (tongue) fits into the mortise (hole); it is a strong joint for frames, legs and rails.", hi: "टेनन (जीभ) मोर्टिस (छेद) में बैठता है; यह फ़्रेम, टाँग और रेल का मज़बूत जोड़ है।"}
+  - id: cp-008
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC13]
+    sources: [qp]
+    difficulty_prior: -0.3
+    stem: {en: "Before using a piece of wood, why do you check it visually?", hi: "लकड़ी का टुकड़ा इस्तेमाल करने से पहले उसे आँख से क्यों जाँचते हैं?"}
+    options:
+      - {en: "To find cracks, knots or damage that could weaken the work", hi: "दरार, गाँठ या टूट-फूट ढूँढ़ने के लिए, जो काम को कमज़ोर कर सकती है"}
+      - {en: "To check its price", hi: "उसकी क़ीमत जाँचने के लिए"}
+      - {en: "There is no need to check", hi: "जाँचने की ज़रूरत नहीं"}
+      - {en: "To see if it is wet so you can paint it at once", hi: "यह देखने के लिए कि गीली है तो तुरंत पेंट कर दें"}
+    answer: 0
+    explanation: {en: "The qualification asks for a visual check for errors or damage in the wood and in parts.", hi: "योग्यता में लकड़ी और पुर्ज़ों में ग़लती या टूट-फूट की आँख से जाँच माँगी गई है।"}
+  - id: cp-009
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC3]
+    sources: [qp, cts]
+    difficulty_prior: 0.5
+    stem: {en: "When driving a screw near the edge of a board, how do you stop the wood from splitting?", hi: "तख़्ते के किनारे के पास पेंच लगाते समय लकड़ी को फटने से कैसे बचाएँ?"}
+    options:
+      - {en: "Drill a pilot hole first", hi: "पहले छोटा पायलट छेद करें"}
+      - {en: "Hammer the screw in", hi: "पेंच को हथौड़े से ठोकें"}
+      - {en: "Use the biggest screw available", hi: "सबसे बड़ा पेंच लगाएँ"}
+      - {en: "Wet the wood first", hi: "पहले लकड़ी गीली करें"}
+    answer: 0
+    explanation: {en: "A pilot hole lets the screw enter without forcing the fibres apart; the qualification asks for the specified fasteners to be used correctly.", hi: "पायलट छेद से पेंच रेशों को फाड़े बिना जाता है; योग्यता में तय फ़ास्टनर सही तरीके से लगाने को कहा गया है।"}
+  - id: cp-010
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC7]
+    sources: [qp]
+    difficulty_prior: -0.1
+    stem: {en: "What does a good joint in finished furniture look like?", hi: "तैयार फ़र्नीचर में अच्छा जोड़ कैसा दिखता है?"}
+    options:
+      - {en: "Tight, with no gaps", hi: "कसा हुआ, बिना किसी गैप के"}
+      - {en: "With a wide gap filled with paint", hi: "चौड़े गैप के साथ, जिसे पेंट से भरा गया हो"}
+      - {en: "Loose, so it can move", hi: "ढीला, ताकि हिल सके"}
+      - {en: "Held only by tape", hi: "सिर्फ़ टेप से टिका"}
+    answer: 0
+    explanation: {en: "The qualification asks for accurate joints and intersections with no gaps.", hi: "योग्यता में बिना गैप के सटीक जोड़ और मिलान माँगा गया है।"}
+  - id: cp-011
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC8]
+    sources: [qp]
+    difficulty_prior: -0.4
+    stem: {en: "Small nail holes and cracks are visible before polishing. What is used to fill them?", hi: "पॉलिश से पहले कीलों के छोटे छेद और दरारें दिख रही हैं। इन्हें किससे भरते हैं?"}
+    options:
+      - {en: "Wood filler, then sand it smooth", hi: "वुड फ़िलर, फिर रेगमाल से चिकना"}
+      - {en: "Cement mortar", hi: "सीमेंट मसाला"}
+      - {en: "Chewing gum", hi: "च्यूइंग गम"}
+      - {en: "Leave them; polish hides everything", hi: "छोड़ दें; पॉलिश सब छुपा देती है"}
+    answer: 0
+    explanation: {en: "Wood fillers and sanding papers are used to finish the product to the specified standard.", hi: "उत्पाद को तय मानक तक फ़िनिश करने के लिए वुड फ़िलर और रेगमाल इस्तेमाल होते हैं।"}
+  - id: cp-012
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC10]
+    sources: [qp]
+    difficulty_prior: 0.3
+    stem: {en: "You must make a cut-out in a cabinet for a switch socket. What do you do first?", hi: "कैबिनेट में स्विच सॉकेट के लिए कट-आउट बनाना है। पहले क्या करेंगे?"}
+    options:
+      - {en: "Mark the exact position and make sure the power to that point is off", hi: "सही जगह का निशान लगाएँ और पक्का करें कि उस पॉइंट की बिजली बंद है"}
+      - {en: "Cut anywhere and adjust later", hi: "कहीं भी काटें, बाद में ठीक कर लेंगे"}
+      - {en: "Cut while the socket is live", hi: "सॉकेट में करंट रहते हुए काटें"}
+      - {en: "Ask the customer to hold the wire", hi: "ग्राहक से तार पकड़ने को कहें"}
+    answer: 0
+    explanation: {en: "Cut-outs for electrical outlets and plumbing points are made as per design; safety measures apply around electrical work.", hi: "बिजली के आउटलेट और प्लंबिंग पॉइंट के कट-आउट डिज़ाइन के अनुसार बनते हैं; बिजली के आसपास सुरक्षा ज़रूरी है।"}
+  - id: cp-013
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC12]
+    sources: [qp, cts]
+    difficulty_prior: 0.2
+    stem: {en: "A door is fitted with hinges but rubs against the frame. What is a likely fix?", hi: "दरवाज़ा कब्ज़ों पर लगा है पर चौखट से रगड़ता है। संभावित उपाय क्या है?"}
+    options:
+      - {en: "Adjust the hinges or plane the edge where it rubs", hi: "कब्ज़े ठीक करें या जहाँ रगड़ता है वहाँ किनारे पर रंदा चलाएँ"}
+      - {en: "Remove all the screws", hi: "सारे पेंच निकाल दें"}
+      - {en: "Pour oil on the frame", hi: "चौखट पर तेल डालें"}
+      - {en: "Slam the door harder", hi: "दरवाज़ा और ज़ोर से बंद करें"}
+    answer: 0
+    explanation: {en: "Fitting doors includes adjusting hinges and planing so the door closes freely; installation is checked at regular intervals.", hi: "दरवाज़ा लगाने में कब्ज़े ठीक करना और रंदा चलाना शामिल है ताकि वह आराम से बंद हो; फ़िटिंग की बीच-बीच में जाँच होती है।"}
+  - id: cp-014
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC14]
+    sources: [qp]
+    difficulty_prior: 0.0
+    stem: {en: "During installation of a wardrobe, when should you check level and alignment?", hi: "अलमारी लगाते समय लेवल और सीध कब जाँचनी चाहिए?"}
+    options:
+      - {en: "At regular steps during installation", hi: "फ़िटिंग के दौरान हर कुछ क़दम पर"}
+      - {en: "Only after the customer complains", hi: "सिर्फ़ ग्राहक की शिकायत के बाद"}
+      - {en: "Never", hi: "कभी नहीं"}
+      - {en: "Only before buying the wood", hi: "सिर्फ़ लकड़ी ख़रीदने से पहले"}
+    answer: 0
+    explanation: {en: "The qualification asks for checks at regular intervals during installation to avoid defects.", hi: "योग्यता में ख़राबी से बचने के लिए फ़िटिंग के दौरान नियमित जाँच माँगी गई है।"}
+  - id: cp-015
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC13]
+    sources: [qp]
+    difficulty_prior: -1.2
+    stem: {en: "Before handing over new furniture to the customer, what should you do?", hi: "नया फ़र्नीचर ग्राहक को सौंपने से पहले क्या करना चाहिए?"}
+    options:
+      - {en: "Clean it thoroughly", hi: "अच्छी तरह साफ़ करें"}
+      - {en: "Leave the sawdust on it", hi: "उस पर बुरादा छोड़ दें"}
+      - {en: "Remove the handles", hi: "हैंडल निकाल दें"}
+      - {en: "Nothing", hi: "कुछ नहीं"}
+    answer: 0
+    explanation: {en: "The installed product is cleaned thoroughly before handover.", hi: "लगाए गए उत्पाद को सौंपने से पहले अच्छी तरह साफ़ किया जाता है।"}
+  - id: cp-016
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC5]
+    sources: [qp]
+    difficulty_prior: 0.4
+    stem: {en: "You are removing old kitchen cabinets that have lights fitted. What must you do first?", hi: "पुरानी किचन कैबिनेट हटानी हैं जिनमें लाइटें लगी हैं। पहले क्या करना ज़रूरी है?"}
+    options:
+      - {en: "Have the power to the lights switched off and disconnected", hi: "लाइटों की बिजली बंद और अलग करवाएँ"}
+      - {en: "Pull the cabinets off the wall at once", hi: "कैबिनेट तुरंत दीवार से खींच लें"}
+      - {en: "Cut the wires with a saw", hi: "आरी से तार काट दें"}
+      - {en: "Spray water on the lights", hi: "लाइटों पर पानी छिड़कें"}
+    answer: 0
+    explanation: {en: "Knocking down existing cabinets and fittings is part of the job; electrical safety comes first.", hi: "पुरानी कैबिनेट और फ़िटिंग हटाना काम का हिस्सा है; बिजली की सुरक्षा पहले है।"}
+  - id: cp-017
+    nos: FFS/N2206
+    pc_refs: [FFS/N2206.PC1]
+    sources: [qp]
+    difficulty_prior: 0.3
+    stem: {en: "What is a job card?", hi: "जॉब कार्ड क्या होता है?"}
+    options:
+      - {en: "The supervisor's written instructions for the work to be done", hi: "करने वाले काम के लिए सुपरवाइज़र के लिखित निर्देश"}
+      - {en: "A shop's discount card", hi: "दुकान का डिस्काउंट कार्ड"}
+      - {en: "A bank ATM card", hi: "बैंक का ATM कार्ड"}
+      - {en: "A greeting card for customers", hi: "ग्राहकों के लिए बधाई कार्ड"}
+    answer: 0
+    explanation: {en: "The work is planned from the job card received from the supervisor, and the card is filled in and returned on time.", hi: "काम की योजना सुपरवाइज़र से मिले जॉब कार्ड से बनती है, और कार्ड समय पर भरकर लौटाया जाता है।"}
+  - id: cp-018
+    nos: FFS/N2206
+    pc_refs: [FFS/N2206.PC17]
+    sources: [qp]
+    difficulty_prior: -0.6
+    stem: {en: "Why is sawdust and wood waste cleared at the end of each day?", hi: "हर दिन के अंत में बुरादा और लकड़ी का कचरा क्यों साफ़ किया जाता है?"}
+    options:
+      - {en: "Because it can catch fire easily", hi: "क्योंकि उसमें आसानी से आग लग सकती है"}
+      - {en: "Because it is valuable", hi: "क्योंकि वह क़ीमती है"}
+      - {en: "There is no reason", hi: "कोई वजह नहीं"}
+      - {en: "To make the floor slippery", hi: "फ़र्श फिसलन भरा बनाने के लिए"}
+    answer: 0
+    explanation: {en: "Combustible waste is disposed of properly at the end of each workday.", hi: "जलने वाला कचरा हर काम के दिन के अंत में ठीक से हटाया जाता है।"}
+  - id: cp-019
+    nos: FFS/N2206
+    pc_refs: [FFS/N2206.PC20]
+    sources: [qp]
+    difficulty_prior: -0.3
+    stem: {en: "Before running a circular saw, what must be in place?", hi: "सर्कुलर आरी चलाने से पहले क्या लगा होना ज़रूरी है?"}
+    options:
+      - {en: "The machine guard, and a clean work area", hi: "मशीन का गार्ड, और साफ़ काम की जगह"}
+      - {en: "Loose clothing", hi: "ढीले कपड़े"}
+      - {en: "A wet floor", hi: "गीला फ़र्श"}
+      - {en: "Nothing; guards slow you down", hi: "कुछ नहीं; गार्ड से काम धीमा होता है"}
+    answer: 0
+    explanation: {en: "The work area is cleaned for hazard-free operation and the floor and machine guards are kept in place.", hi: "सुरक्षित काम के लिए जगह साफ़ रखी जाती है और फ़र्श व मशीन के गार्ड लगे रहते हैं।"}
+  - id: cp-020
+    nos: FFS/N2206
+    pc_refs: [FFS/N2206.PC15]
+    sources: [qp]
+    difficulty_prior: 0.1
+    stem: {en: "How should screws, bolts and small fittings be kept on site?", hi: "साइट पर पेंच, बोल्ट और छोटी फ़िटिंग कैसे रखनी चाहिए?"}
+    options:
+      - {en: "In suitable containers so they are not lost or stepped on", hi: "सही डिब्बों में, ताकि खोएँ नहीं और पैर में न चुभें"}
+      - {en: "Scattered on the floor", hi: "फ़र्श पर बिखरे"}
+      - {en: "In your mouth", hi: "मुँह में"}
+      - {en: "In the customer's cupboard", hi: "ग्राहक की अलमारी में"}
+    answer: 0
+    explanation: {en: "Appropriate containers are used to store or carry rivets, bolts and similar parts.", hi: "रिवेट, बोल्ट जैसे पुर्ज़े रखने या ले जाने के लिए सही डिब्बे इस्तेमाल होते हैं।"}
+  - id: cp-021
+    nos: FFS/N2206
+    pc_refs: [FFS/N2206.PC8]
+    sources: [qp]
+    difficulty_prior: 0.2
+    stem: {en: "Before fitting a modular kitchen, what is done at the site?", hi: "मॉड्यूलर किचन लगाने से पहले साइट पर क्या किया जाता है?"}
+    options:
+      - {en: "Mark the site as per the layout and take measurements", hi: "लेआउट के अनुसार निशान लगाना और माप लेना"}
+      - {en: "Start drilling anywhere", hi: "कहीं भी ड्रिल करना शुरू करना"}
+      - {en: "Paint the walls black", hi: "दीवारें काली रंगना"}
+      - {en: "Nothing", hi: "कुछ नहीं"}
+    answer: 0
+    explanation: {en: "The worksite is marked as per the layout plan and measured before work starts.", hi: "काम शुरू होने से पहले लेआउट के अनुसार जगह पर निशान और माप लिए जाते हैं।"}
+  - id: cp-022
+    nos: FFS/N8201
+    pc_refs: [FFS/N8201.PC4]
+    sources: [qp, cts]
+    difficulty_prior: -1.0
+    stem: {en: "Which PPE protects you while sanding or cutting wood with a power tool?", hi: "पावर टूल से लकड़ी काटते या रगड़ते समय कौन-सा PPE बचाता है?"}
+    options:
+      - {en: "Safety glasses and a dust mask", hi: "सेफ़्टी चश्मा और डस्ट मास्क"}
+      - {en: "A tie", hi: "टाई"}
+      - {en: "Sandals", hi: "चप्पल"}
+      - {en: "A gold ring", hi: "सोने की अँगूठी"}
+    answer: 0
+    explanation: {en: "The qualification lists masks, safety glasses, head protection, ear muffs, safety footwear and gloves as PPE to use as the work needs.", hi: "योग्यता में मास्क, सेफ़्टी चश्मा, सिर की सुरक्षा, ईयर मफ़, सेफ़्टी जूते और दस्ताने, काम के अनुसार PPE में हैं।"}
+  - id: cp-023
+    nos: FFS/N8201
+    pc_refs: [FFS/N8201.PC12]
+    sources: [qp]
+    difficulty_prior: -0.6
+    stem: {en: "How should you lift a heavy plank from the floor?", hi: "फ़र्श से भारी तख़्ता कैसे उठाना चाहिए?"}
+    options:
+      - {en: "Bend your knees, keep your back straight, and get help if it is too heavy", hi: "घुटने मोड़ें, पीठ सीधी रखें, और बहुत भारी हो तो मदद लें"}
+      - {en: "Bend your back and pull hard", hi: "कमर झुकाकर ज़ोर से खींचें"}
+      - {en: "Twist while lifting", hi: "उठाते समय मुड़ें"}
+      - {en: "Throw it up quickly", hi: "झटके से ऊपर फेंकें"}
+    answer: 0
+    explanation: {en: "The qualification asks for correct ways of lifting or moving heavy material.", hi: "योग्यता में भारी सामान उठाने या ले जाने का सही तरीका माँगा गया है।"}
+  - id: cp-024
+    nos: FFS/N8201
+    pc_refs: [FFS/N8201.PC15]
+    sources: [qp]
+    difficulty_prior: -1.3
+    stem: {en: "What should you do with power tools and machines when you are not using them?", hi: "जब पावर टूल और मशीनें इस्तेमाल में न हों, तब क्या करें?"}
+    options:
+      - {en: "Switch them off", hi: "उन्हें बंद कर दें"}
+      - {en: "Leave them running", hi: "चलते रहने दें"}
+      - {en: "Cover them with a wet cloth", hi: "गीले कपड़े से ढक दें"}
+      - {en: "Remove the guards", hi: "गार्ड निकाल दें"}
+    answer: 0
+    explanation: {en: "Electrical appliances are kept in the OFF position when not in use.", hi: "बिजली के उपकरण इस्तेमाल न होने पर बंद रखे जाते हैं।"}

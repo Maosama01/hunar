@@ -23,6 +23,13 @@ MODEL = os.environ.get("HUNAR_WHISPER_MODEL", "small")
 MAX_BYTES = 20 * 1024 * 1024
 AUDIO_SUFFIXES = {".webm", ".ogg", ".oga", ".wav", ".mp3", ".m4a", ".mp4", ".aac", ".aiff", ".flac"}
 NOTE = "Draft transcript: read it back to the worker and correct it before saving. Audio is not stored."
+# App languages Whisper has a language token for; for the other scheduled languages (Bodo, Dogri,
+# Kashmiri, Konkani, Maithili, Manipuri, Odia, Santali) Whisper auto-detects, usually as a related language.
+WHISPER_LANGS = {"en", "as", "bn", "gu", "hi", "kn", "ml", "mr", "ne", "pa", "sa", "sd", "ta", "te", "ur"}
+
+
+def whisper_language(app_language: str | None) -> str | None:
+    return app_language if app_language in WHISPER_LANGS else None
 
 
 def available() -> bool:

@@ -28,6 +28,19 @@ The four distractors are neighbouring electrical jobs that share vocabulary (wir
 safety) so the mapper has to discriminate. Two distractors show a "valid till" date that has passed
 on the NQR page as of 28 Oct 2026; they are still listed on NQR and are used only as distractors.
 
+**Trade qualification files (quiz banks only; not candidates for the M1 mapper).** Listed under
+`trade_packs` in `data/qp_sources.json`, fetched and parsed by the same commands:
+
+| Trade | NQR id | Qualification | NQR code | NSQF | Valid till (NQR page) |
+|---|---|---|---|---|---|
+| plumber | 12957 | Plumber - General (WMPSC) | QG-04-PL-03441-2024-V2-WMPS | 4 | 17/12/2027 |
+| carpenter | 9884 | Assistant Carpenter (FFSC) | QG-04-WC-00828-2023-V2-FFSC | 4 | 31/08/2026 (lapsed) |
+
+No worker-level domestic carpentry qualification on NQR was current on 3 Nov 2026, so the lapsed
+FFSC file is used as the closest official standard and the app labels it as lapsed. Parsing gaps to
+fix by hand: PSC/N0142 (plumber) came out with one performance criterion, the carpenter NOS titles are
+truncated, and the carpenter file's Employability Skills NOS lost its code.
+
 Parsing status: parsed automatically from the PDFs (`parse_method: pdf_auto`) and spot-checked
 against the PDFs by the AI assistant. **A human check of every performance criterion is still
 pending**; after checking, set `parse_method` to `pdf_auto_hand_checked` in the JSON so the parser
@@ -44,6 +57,17 @@ and `PSS/N1336` (we use the module summary codes).
 |---|---|---|
 | `data/labels/declarations.csv` | Team-written, team-labelled declarations (English, Hindi, Hinglish) | **Empty: to be written by the team** following `docs/labelling_guidelines.md` |
 | `data/synthetic/declarations_synthetic.csv` | Declarations written by an AI assistant to exercise the pipeline | **SYNTHETIC.** Not real workers. Used only as a pipeline check. |
+
+### Worker quiz question banks
+
+`backend/hunar/quiz/banks/{electrician,plumber,carpenter}.yaml`: multiple-choice questions written
+with AI help from the official sources each item cites (qualification files and their performance
+criteria; CEA Safety Regulations 2023; IS 5329, IS 2065, IS 694 and IS 5216 by clause, paraphrased; the
+DGT curricula as topic sources). No item is copied from NIMI books or published question banks, which
+are not openly licensed. Status **DRAFT** until reviewed by a certified assessor or ITI instructor.
+Difficulties are AI estimates until `make quiz-calibrate` has about 100 real attempts per trade.
+Machine translations into other languages (`banks/i18n/`) are written by `make translate` (Bhashini)
+and marked unreviewed. Real quiz answers live only in the local database (gitignored).
 
 ### Synthetic speech (voice input check)
 

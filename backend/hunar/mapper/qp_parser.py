@@ -223,7 +223,8 @@ def parse_pack(pdf_path: Path, meta: dict, manifest_entry: dict | None) -> Quali
 
 
 def main() -> int:
-    sources = json.loads((DATA / "qp_sources.json").read_text())["packs"]
+    src = json.loads((DATA / "qp_sources.json").read_text())
+    sources = src["packs"] + src.get("trade_packs", [])  # trade packs: quiz banks only, not M1
     manifest = {e["nqr_id"]: e for e in json.loads((DATA / "processed" / "qp_manifest.json").read_text())["files"]}
     out_dir = DATA / "processed" / "qp"
     out_dir.mkdir(parents=True, exist_ok=True)

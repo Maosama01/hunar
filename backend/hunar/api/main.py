@@ -11,18 +11,24 @@ from typing import Literal
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, PlainTextResponse
+from fastapi.responses import FileResponse, PlainTextResponse, Response
 from pydantic import BaseModel, Field
 from sqlmodel import Session, select
 
+from hunar.accounts import auth
+from hunar.accounts.models import Account
+from hunar.accounts.routes import router as accounts_router
 from hunar.api import services as svc
 from hunar.api.db import get_session, init_db
 from hunar.api.models import AppliedOp, Assessment, AuditEntry, EvidenceItem, StudyItem, StudyRating, Worker
 from hunar.audit import log as audit
 from hunar.evidence import detector
+from hunar.market.routes import router as market_router
 from hunar.paths import DATA
+from hunar.quiz.routes import router as quiz_router
 from hunar.rubric import engine
 from hunar.schemas import MappingResult
+from hunar.speech import bhashini
 from hunar.speech import transcribe as speech
 
 
@@ -36,6 +42,11 @@ app = FastAPI(title="Hunar API", version="0.1.0", lifespan=lifespan,
               description="AI assisted RPL for domestic electricians. AI suggests; the assessor decides.")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 DB = Depends(get_session)
+for _r in (accounts_router, market_router, quiz_router):
+    app.include_router(_r)
+# Assessor-side work needs a staff account; decisions that affect a worker's result need an assessor.
+STAFF = Depends(auth.require_roles("facilitator", "assessor", "admin"))
+ASSESSOR = Depends(auth.require_roles("assessor", "admin"))
 
 
 # ---- Request bodies ---------------------------------------------------------------------------
@@ -116,6 +127,7 @@ class RatingIn(BaseModel):
 @app.get("/api/health")
 def health():
     return {"status": "ok", "detector": detector.status(), "speech": speech.status(),
+            "bhashini": {"configured": bhashini.Bhashini.from_env() is not None},
             "mapper": svc.mapper().matcher.name, "principle": "AI suggests, the assessor decides."}
 
 
@@ -140,7 +152,8 @@ def map_declaration(body: MapIn):
 
 
 @app.post("/api/transcribe")
-def transcribe(language: Literal["hi", "en"] | None = Form(None), file: UploadFile = File(...)):
+def transcribe(language: str | None = Form(None), file: UploadFile = File(...),
+               _acc: Account = Depends(auth.current_account)):
     """Draft transcript of a spoken declaration. The audio is not stored."""
     if not speech.available():
         raise HTTPException(503, "voice input is not installed on this server (make voice); please type instead")
@@ -150,9 +163,33 @@ def transcribe(language: Literal["hi", "en"] | None = Form(None), file: UploadFi
     if len(data) > speech.MAX_BYTES:
         raise HTTPException(413, "recording too long; please record a shorter part")
     try:
-        return speech.transcribe_bytes(data, language, file.filename or "")
+        return speech.transcribe_bytes(data, speech.whisper_language(language), file.filename or "")
     except Exception as e:  # undecodable audio, or the model could not be downloaded while offline
         raise HTTPException(422, f"could not transcribe the recording: {type(e).__name__}") from e
+
+
+class TtsIn(BaseModel):
+    text: str = Field(min_length=1, max_length=600)
+    language: str
+
+
+@app.post("/api/tts")
+def tts(body: TtsIn, _acc: Account | None = Depends(auth.optional_account)):
+    """Read text aloud with Bhashini TTS (server-side keys). WAV, cached by language and text."""
+    if body.language not in bhashini.LANGS:
+        raise HTTPException(422, f"unknown language {body.language!r}")
+    cache = DATA / "tts_cache" / f"{hashlib.sha256(f'{body.language}|{body.text}'.encode()).hexdigest()}.wav"
+    if not cache.exists():
+        client = bhashini.Bhashini.from_env()
+        if client is None:
+            raise HTTPException(503, "read-aloud by Bhashini is not set up on this server")
+        try:
+            audio = client.tts(body.text, body.language)
+        except Exception as e:  # network, quota or unsupported language
+            raise HTTPException(502, f"Bhashini TTS failed: {type(e).__name__}") from e
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_bytes(audio)
+    return Response(cache.read_bytes(), media_type="audio/wav")
 
 
 @app.get("/api/rubrics")
@@ -165,22 +202,22 @@ def rubrics():
 
 
 @app.post("/api/workers", response_model=Worker)
-def create_worker(body: WorkerIn, s: Session = DB):
-    return svc.create_worker(s, body.code, body.preferred_language, body.actor, body.id)
+def create_worker(body: WorkerIn, acc: Account = STAFF, s: Session = DB):
+    return svc.create_worker(s, body.code, body.preferred_language, auth.actor(acc), body.id)
 
 
 @app.get("/api/workers", response_model=list[Worker])
-def list_workers(s: Session = DB):
+def list_workers(_acc: Account = STAFF, s: Session = DB):
     return list(s.exec(select(Worker).order_by(Worker.created_at)))
 
 
 @app.post("/api/assessments")
-def create_assessment(body: AssessmentIn, s: Session = DB):
-    return svc.create_assessment(s, body.worker_id, body.declaration_text, body.actor, body.id)
+def create_assessment(body: AssessmentIn, acc: Account = STAFF, s: Session = DB):
+    return svc.create_assessment(s, body.worker_id, body.declaration_text, auth.actor(acc), body.id)
 
 
 @app.get("/api/assessments")
-def list_assessments(s: Session = DB):
+def list_assessments(_acc: Account = STAFF, s: Session = DB):
     out = []
     for a in s.exec(select(Assessment).order_by(Assessment.created_at.desc())):
         w = s.get(Worker, a.worker_id)
@@ -190,7 +227,7 @@ def list_assessments(s: Session = DB):
 
 
 @app.get("/api/assessments/{aid}")
-def get_assessment(aid: str, s: Session = DB):
+def get_assessment(aid: str, _acc: Account = STAFF, s: Session = DB):
     a = svc.get_or_404(s, Assessment, aid)
     dec = svc.latest_decisions(s, aid)
     return {
@@ -205,14 +242,14 @@ def get_assessment(aid: str, s: Session = DB):
 
 
 @app.post("/api/assessments/{aid}/confirm-pack")
-def confirm_pack(aid: str, body: ConfirmPackIn, s: Session = DB):
-    a = svc.confirm_pack(s, svc.get_or_404(s, Assessment, aid), body.nqr_id, body.actor, body.reason)
+def confirm_pack(aid: str, body: ConfirmPackIn, acc: Account = ASSESSOR, s: Session = DB):
+    a = svc.confirm_pack(s, svc.get_or_404(s, Assessment, aid), body.nqr_id, auth.actor(acc), body.reason)
     return {"id": a.id, "confirmed_nqr_id": a.confirmed_nqr_id}
 
 
 @app.put("/api/assessments/{aid}/checklist")
-def set_checklist(aid: str, body: ChecklistIn, s: Session = DB):
-    return svc.set_checklist(s, svc.get_or_404(s, Assessment, aid), body.task_id, body.ticks, body.actor)
+def set_checklist(aid: str, body: ChecklistIn, acc: Account = STAFF, s: Session = DB):
+    return svc.set_checklist(s, svc.get_or_404(s, Assessment, aid), body.task_id, body.ticks, auth.actor(acc))
 
 
 def _evidence_out(e: EvidenceItem) -> dict:
@@ -225,38 +262,38 @@ def _evidence_out(e: EvidenceItem) -> dict:
 @app.post("/api/assessments/{aid}/evidence")
 async def add_evidence(aid: str, task_id: str = Form(...), photo_id: str = Form(...),
                        consent_confirmed: bool = Form(False), actor: str = Form("facilitator"),
-                       file: UploadFile = File(...), s: Session = DB):
+                       file: UploadFile = File(...), acc: Account = STAFF, s: Session = DB):
     a = svc.get_or_404(s, Assessment, aid)
-    ev = svc.add_evidence(s, a, task_id, photo_id, await file.read(), consent_confirmed, actor)
+    ev = svc.add_evidence(s, a, task_id, photo_id, await file.read(), consent_confirmed, auth.actor(acc))
     return _evidence_out(ev)
 
 
 @app.get("/api/evidence/{eid}/image")
-def evidence_image(eid: int, s: Session = DB):
+def evidence_image(eid: int, _acc: Account = STAFF, s: Session = DB):
     e = svc.get_or_404(s, EvidenceItem, eid)
     return FileResponse(DATA / e.stored_path, media_type="image/jpeg")
 
 
 @app.get("/api/assessments/{aid}/prescores", response_model=list[engine.PreScore])
-def prescores(aid: str, s: Session = DB):
+def prescores(aid: str, _acc: Account = STAFF, s: Session = DB):
     return svc.prescores(s, svc.get_or_404(s, Assessment, aid))
 
 
 @app.post("/api/assessments/{aid}/decisions")
-def decide(aid: str, body: DecisionIn, s: Session = DB):
+def decide(aid: str, body: DecisionIn, acc: Account = ASSESSOR, s: Session = DB):
     a = svc.get_or_404(s, Assessment, aid)
-    return svc.decide(s, a, body.task_id, body.criterion_id, body.action, body.level, body.reason, body.assessor,
+    return svc.decide(s, a, body.task_id, body.criterion_id, body.action, body.level, body.reason, auth.actor(acc),
                       body.expected_level)
 
 
 @app.get("/api/assessments/{aid}/profile", response_model=engine.Profile)
-def profile(aid: str, s: Session = DB):
+def profile(aid: str, _acc: Account = STAFF, s: Session = DB):
     return svc.profile(s, svc.get_or_404(s, Assessment, aid))
 
 
 @app.post("/api/assessments/{aid}/signoff")
-def signoff(aid: str, body: SignoffIn, s: Session = DB):
-    a = svc.signoff(s, svc.get_or_404(s, Assessment, aid), body.assessor, body.agrees, body.outcome, body.comment)
+def signoff(aid: str, body: SignoffIn, acc: Account = ASSESSOR, s: Session = DB):
+    a = svc.signoff(s, svc.get_or_404(s, Assessment, aid), auth.actor(acc), body.agrees, body.outcome, body.comment)
     return {"id": a.id, "status": a.status, "signoff": json.loads(a.signoff_json)}
 
 
@@ -264,7 +301,8 @@ def signoff(aid: str, body: SignoffIn, s: Session = DB):
 
 
 @app.get("/api/audit")
-def audit_log(limit: int = 200, subject: str | None = None, before_seq: int | None = None, s: Session = DB):
+def audit_log(limit: int = 200, subject: str | None = None, before_seq: int | None = None, _acc: Account = ASSESSOR,
+              s: Session = DB):
     """Newest first. Page backwards with before_seq = the smallest seq of the previous page."""
     q = select(AuditEntry).order_by(AuditEntry.seq.desc()).limit(min(limit, 1000))
     if subject:
@@ -275,7 +313,7 @@ def audit_log(limit: int = 200, subject: str | None = None, before_seq: int | No
 
 
 @app.get("/api/audit/verify")
-def audit_verify(s: Session = DB):
+def audit_verify(_acc: Account = ASSESSOR, s: Session = DB):
     return audit.verify(s)
 
 
@@ -283,16 +321,20 @@ def audit_verify(s: Session = DB):
 
 
 @app.post("/api/sync")
-def sync(body: SyncIn, s: Session = DB):
-    """Apply queued offline operations in order. Replaying an op_id returns the stored result."""
+def sync(body: SyncIn, acc: Account = STAFF, s: Session = DB):
+    """Apply queued offline operations in order. Replaying an op_id returns the stored result. The actor
+    of every op is the logged-in account; names in the payload are ignored."""
     results = []
+    who = auth.actor(acc)
     for op in body.ops:
         done = s.get(AppliedOp, op.op_id)
         if done:
             results.append({"op_id": op.op_id, "status": "duplicate", "result": json.loads(done.result_json)})
             continue
-        p = op.payload
+        p = {**op.payload, "actor": who, "assessor": who}
         try:
+            if op.kind in ("pack.confirm", "decision.add") and acc.role not in ("assessor", "admin"):
+                raise HTTPException(403, f"{op.kind} needs an assessor account")
             if op.kind == "worker.create":
                 r = svc.create_worker(s, p["code"], p.get("preferred_language", "hi"), p.get("actor", "facilitator"),
                                       p.get("id")).model_dump(mode="json")

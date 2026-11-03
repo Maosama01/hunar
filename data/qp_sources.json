@@ -61,5 +61,35 @@
       "pdf_url": "https://www.nqr.gov.in/qualification/file/Qualification%20File%20New%20Template%20Jr.%20Technician%20%28Smart%20Energy%20Meter%29.pdf",
       "valid_till_on_nqr_page": "31/08/2026"
     }
+  ],
+  "_note_trade_packs": "trade_packs are the official qualifications behind the plumber and carpenter quiz banks. They are not candidates for the M1 mapper, which uses `packs` only.",
+  "trade_packs": [
+    {
+      "nqr_id": 12957,
+      "role": "trade",
+      "trade": "plumber",
+      "title": "Plumber - General",
+      "nqr_code": "QG-04-PL-03441-2024-V2-WMPS",
+      "sector": "Plumbing",
+      "nsqf_level": 4,
+      "awarding_body": "Water Management and Plumbing Skill Council (WMPSC)",
+      "page_url": "https://www.nqr.gov.in/qualifications/12957",
+      "pdf_url": "https://www.nqr.gov.in/qualification/file/Q-File_Plumber%20-%20General.pdf",
+      "valid_till_on_nqr_page": "17/12/2027"
+    },
+    {
+      "nqr_id": 9884,
+      "role": "trade",
+      "trade": "carpenter",
+      "title": "Assistant Carpenter",
+      "nqr_code": "QG-04-WC-00828-2023-V2-FFSC",
+      "sector": "Furniture and Fittings",
+      "nsqf_level": 4,
+      "awarding_body": "Furniture and Fittings Skill Council (FFSC)",
+      "page_url": "https://www.nqr.gov.in/qualifications/9884",
+      "pdf_url": "https://www.nqr.gov.in/qualification/file/Assistant%20Carpenter%20QFile%20English.pdf",
+      "valid_till_on_nqr_page": "31/08/2026",
+      "validity_note": "Validity on NQR ended 31/08/2026 (checked 3 Nov 2026); no current worker-level domestic carpentry qualification was found, so this is used as the closest standard and labelled as lapsed."
+    }
   ]
 }

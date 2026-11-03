@@ -33,8 +33,10 @@ def test_transcribe_passes_language_and_rejects_bad_input(client, monkeypatch):
     assert seen == {"data": b"abc", "language": "hi", "filename": "rec.webm"}
 
     assert client.post("/api/transcribe", files={"file": ("rec.webm", b"", "audio/webm")}).status_code == 422
-    assert client.post("/api/transcribe", data={"language": "fr"},
-                       files={"file": ("rec.webm", b"abc", "audio/webm")}).status_code == 422
+    client.post("/api/transcribe", data={"language": "sat"}, files={"file": ("rec.webm", b"abc", "audio/webm")})
+    assert seen["language"] is None  # no Whisper token for Santali: auto-detect
+    client.post("/api/transcribe", data={"language": "ta"}, files={"file": ("rec.webm", b"abc", "audio/webm")})
+    assert seen["language"] == "ta"
     monkeypatch.setattr(speech, "MAX_BYTES", 2)
     assert client.post("/api/transcribe", files={"file": ("rec.webm", b"abc", "audio/webm")}).status_code == 413
 

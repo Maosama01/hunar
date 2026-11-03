@@ -1,0 +1,480 @@
+{
+  "nqr_id": 9884,
+  "nqr_code": "QG-04-WC-00828-2023-V2-FFSC",
+  "title": "Assistant Carpenter",
+  "sector": "Furniture and Fittings",
+  "nsqf_level": 4.0,
+  "awarding_body": "Furniture and Fittings Skill Council (FFSC)",
+  "role": "trade",
+  "is_stub": false,
+  "parse_method": "pdf_auto",
+  "verification_note": "Parsed automatically from the official PDF. Spot-checked against the PDF by the AI assistant; HUMAN CHECK PENDING.",
+  "source": {
+    "pdf_url": "https://www.nqr.gov.in/qualification/file/Assistant%20Carpenter%20QFile%20English.pdf",
+    "page_url": "https://www.nqr.gov.in/qualifications/9884",
+    "downloaded_on": "2026-11-03",
+    "sha256": "368672d07dfadd56f4c5ba06ec4942180252024babf98007449e193d8be46ed1"
+  },
+  "nos": [
+    {
+      "code": "FFS/N2206",
+      "title": "Prepare the",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "FFS/N2206.PC1",
+          "code": "PC1",
+          "text": "Interpret and plan out the work in accordance with the job cards received from the supervisor"
+        },
+        {
+          "id": "FFS/N2206.PC2",
+          "code": "PC2",
+          "text": "prepare a list of all the necessary materials, tools, and equipment required for the various job work"
+        },
+        {
+          "id": "FFS/N2206.PC3",
+          "code": "PC3",
+          "text": "ensure coordination with the various departments for material movement at various intervals"
+        },
+        {
+          "id": "FFS/N2206.PC4",
+          "code": "PC4",
+          "text": "ensure daily filling and timely submission of job cards to the supervisor Prepare the worksite for recce and take measurements"
+        },
+        {
+          "id": "FFS/N2206.PC5",
+          "code": "PC5",
+          "text": "update the supervisor for any shortage or requirement of the tools and equipment"
+        },
+        {
+          "id": "FFS/N2206.PC6",
+          "code": "PC6",
+          "text": "assist in interpreting the site layout in order to perform the physical survey of the worksite during recce"
+        },
+        {
+          "id": "FFS/N2206.PC7",
+          "code": "PC7",
+          "text": "examine the recce site for any possible health and safety hazards and ensure it is prepared for marking and measurement purpose"
+        },
+        {
+          "id": "FFS/N2206.PC8",
+          "code": "PC8",
+          "text": "assist in marking the worksite as per layout plan and take measurements"
+        },
+        {
+          "id": "FFS/N2206.PC9",
+          "code": "PC9",
+          "text": "prepare the measurement sheet and handover to the supervisor in-time Perform loading and unloading operations"
+        },
+        {
+          "id": "FFS/N2206.PC10",
+          "code": "PC10",
+          "text": "interpret the material loading/ unloading/ handling instruction sheet"
+        },
+        {
+          "id": "FFS/N2206.PC11",
+          "code": "PC11",
+          "text": "assist in preparing the execution plan with a supervisor as per the instruction sheet"
+        },
+        {
+          "id": "FFS/N2206.PC12",
+          "code": "PC12",
+          "text": "assist in performing a visual quality check of handling equipment"
+        },
+        {
+          "id": "FFS/N2206.PC13",
+          "code": "PC13",
+          "text": "ensure proper arrangement of the handling equipment for loading and unloading of the materials at the specified location Segregate and store the materials, tools, and equipment"
+        },
+        {
+          "id": "FFS/N2206.PC15",
+          "code": "PC15",
+          "text": "ensure the use of appropriate containers to store or carry rivets, bolts, drift pins, etc."
+        },
+        {
+          "id": "FFS/N2206.PC16",
+          "code": "PC16",
+          "text": "ensure that all the materials and equipment are adequately stacked for easy identification and traceability"
+        },
+        {
+          "id": "FFS/N2206.PC17",
+          "code": "PC17",
+          "text": "ensure proper disposal of combustible waste products at the end of each workday"
+        },
+        {
+          "id": "FFS/N2206.PC18",
+          "code": "PC18",
+          "text": "maintain proper records of materials, tools, and equipment for each workday and update the supervisor Prepare the worksite for fabrication, assembly, and installation purposes"
+        },
+        {
+          "id": "FFS/N2206.PC19",
+          "code": "PC19",
+          "text": "organize all the necessary tools, materials, and equipment required for the specified operations"
+        },
+        {
+          "id": "FFS/N2206.PC20",
+          "code": "PC20",
+          "text": "ensure the work area is cleaned for hazard-free operations, and appropriate floor and machine guards are in place"
+        },
+        {
+          "id": "FFS/N2206.PC21",
+          "code": "PC21",
+          "text": "ensure power sockets are functional as per the required job work"
+        },
+        {
+          "id": "FFS/N2206.PC22",
+          "code": "PC22",
+          "text": "set the workbench, tools, and machines as per the required job work"
+        },
+        {
+          "id": "FFS/N2206.PC23",
+          "code": "PC23",
+          "text": "ensure the usage of proper methods for cleaning and maintenance of the tools and equipment at regular intervals"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "FFS/N2207",
+      "title": "Assist in the",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "FFS/N2207.PC1",
+          "code": "PC1",
+          "text": "interpret the job card and plan out the workday in consultation with the supervisor"
+        },
+        {
+          "id": "FFS/N2207.PC2",
+          "code": "PC2",
+          "text": "interpret the CAD-based or conventionally prepared drawings and specifications"
+        },
+        {
+          "id": "FFS/N2207.PC3",
+          "code": "PC3",
+          "text": "select the correct materials to comply with drawings and specifications Set out, measure, and mark the timber and timber-based materials"
+        },
+        {
+          "id": "FFS/N2207.PC4",
+          "code": "PC4",
+          "text": "identify the timber and timber-based materials for appropriate operations"
+        },
+        {
+          "id": "FFS/N2207.PC5",
+          "code": "PC5",
+          "text": "assist in identifying different members of the products as per the given specifications"
+        },
+        {
+          "id": "FFS/N2207.PC7",
+          "code": "PC7",
+          "text": "use the suitable tool for marking on the wood as per the specified dimensions"
+        },
+        {
+          "id": "FFS/N2207.PC8",
+          "code": "PC8",
+          "text": "assist in collecting information related to marking and measuring of materials using appropriate means or techniques"
+        },
+        {
+          "id": "FFS/N2207.PC9",
+          "code": "PC9",
+          "text": "use appropriate calculations and formulae to confirm the accuracy Form joints and prepare members of the product for assembly"
+        },
+        {
+          "id": "FFS/N2207.PC10",
+          "code": "PC10",
+          "text": "cut the joints safely and accurately using hand and power tools"
+        },
+        {
+          "id": "FFS/N2207.PC11",
+          "code": "PC11",
+          "text": "use the appropriate planning and shaping tools to prepare the members of the product as per specifications"
+        },
+        {
+          "id": "FFS/N2207.PC12",
+          "code": "PC12",
+          "text": "smoothen out the wooden surface using suitable sanding papers and tools"
+        },
+        {
+          "id": "FFS/N2207.PC13",
+          "code": "PC13",
+          "text": "conduct a visual check for any errors or damages in the wood or a given part"
+        },
+        {
+          "id": "FFS/N2207.PC14",
+          "code": "PC14",
+          "text": "check the overall accuracy and quality regarding measurements, fitting of assembled parts, rigidity, steadiness, leveling, etc."
+        },
+        {
+          "id": "FFS/N2207.PC15",
+          "code": "PC15",
+          "text": "rectify if any defects are found in any members of the product"
+        },
+        {
+          "id": "FFS/N2207.PC16",
+          "code": "PC16",
+          "text": "clean the parts of the product for the assembly operation"
+        },
+        {
+          "id": "FFS/N2207.PC17",
+          "code": "PC17",
+          "text": "assist in preparing the production status update report"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "FFS/N2208",
+      "title": "Assist in the",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "FFS/N2208.PC1",
+          "code": "PC1",
+          "text": "interpret the assembly drawings and instructions of the product"
+        },
+        {
+          "id": "FFS/N2208.PC2",
+          "code": "PC2",
+          "text": "measure the various components and segregate them for the pre-assembly marking operation"
+        },
+        {
+          "id": "FFS/N2208.PC3",
+          "code": "PC3",
+          "text": "select and use the specified fasteners wherever required"
+        },
+        {
+          "id": "FFS/N2208.PC4",
+          "code": "PC4",
+          "text": "assist in assembling and erecting structures accurately without damage to components"
+        },
+        {
+          "id": "FFS/N2208.PC5",
+          "code": "PC5",
+          "text": "assist in knocking down the existing cabinets, fixtures, and other fittings on the worksite as per the directions from the supervisor Assist in finishing the surface of the product"
+        },
+        {
+          "id": "FFS/N2208.PC7",
+          "code": "PC7",
+          "text": "prepare accurate joints and intersections with no gaps"
+        },
+        {
+          "id": "FFS/N2208.PC8",
+          "code": "PC8",
+          "text": "use the appropriate wood fillers and sanding papers to finish the product to a specified standard as per the supervisor’s instruction Assist in installation of the product and its handover"
+        },
+        {
+          "id": "FFS/N2208.PC9",
+          "code": "PC9",
+          "text": "identify slots for placing/ installing each furniture part as per design"
+        },
+        {
+          "id": "FFS/N2208.PC10",
+          "code": "PC10",
+          "text": "undertake requisite cut-outs for electrical outlets, plumbing points, and other arrangements"
+        },
+        {
+          "id": "FFS/N2208.PC11",
+          "code": "PC11",
+          "text": "assist in installing and fastening furniture components to the surface/ wall using appropriate adhesives/ hardware, etc."
+        },
+        {
+          "id": "FFS/N2208.PC12",
+          "code": "PC12",
+          "text": "assist in the installation of fittings (like locks, latch etc.), decorative moulding / finish accessories (crown moulding, decorative panels, etc.)"
+        },
+        {
+          "id": "FFS/N2208.PC13",
+          "code": "PC13",
+          "text": "ensure that the installed product is cleaned thoroughly before handover"
+        },
+        {
+          "id": "FFS/N2208.PC14",
+          "code": "PC14",
+          "text": "undertake checks at regular intervals during installation to avoid any defects/ error detection at a later stage"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "FFS/N8201",
+      "title": "Follow health,",
+      "core": false,
+      "nsqf_level": 3.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "FFS/N8201.PC1",
+          "code": "PC1",
+          "text": "ensure adequate stock of cleaning materials and consumables"
+        },
+        {
+          "id": "FFS/N8201.PC2",
+          "code": "PC2",
+          "text": "identify and report poor organizational practices concerning hygiene, food handling, cleaning 1`"
+        },
+        {
+          "id": "FFS/N8201.PC3",
+          "code": "PC3",
+          "text": "ensure that the trash cans or waste collection points are cleared every day Follow health and safety procedures"
+        },
+        {
+          "id": "FFS/N8201.PC4",
+          "code": "PC4",
+          "text": "Use appropriate personal protective equipment compatible with the work and compliant to relevant Occupational Health and Safety (OHS) guidelines: masks, safety glasses, head protection, ear muffs, safety footwear, gloves, aprons, etc."
+        },
+        {
+          "id": "FFS/N8201.PC5",
+          "code": "PC5",
+          "text": "use emergency equipment following manufacturers' specifications as per requirement Maintain personal hygiene"
+        },
+        {
+          "id": "FFS/N8201.PC6",
+          "code": "PC6",
+          "text": "follow the dress code of the worksite Follow precautionary measures to avoid work hazards"
+        },
+        {
+          "id": "FFS/N8201.PC8",
+          "code": "PC8",
+          "text": "follow the displayed safety signs at the worksite"
+        },
+        {
+          "id": "FFS/N8201.PC9",
+          "code": "PC9",
+          "text": "Undertake the safety measures and checks while handling any electrically powered tools and equipment, etc."
+        },
+        {
+          "id": "FFS/N8201.PC10",
+          "code": "PC10",
+          "text": "ensure the usage of harmful chemicals inside the work area as per the specified guidelines only"
+        },
+        {
+          "id": "FFS/N8201.PC11",
+          "code": "PC11",
+          "text": "ensure safe handling and disposal of waste and debris"
+        },
+        {
+          "id": "FFS/N8201.PC12",
+          "code": "PC12",
+          "text": "undertake correct ways while lifting or movement of the heavy material from one place to another Ensure material conservation and optimization of resources"
+        },
+        {
+          "id": "FFS/N8201.PC13",
+          "code": "PC13",
+          "text": "ensure optimal material utilization in the specific processes"
+        },
+        {
+          "id": "FFS/N8201.PC14",
+          "code": "PC14",
+          "text": "implement the suggested ways to conserve and re-use water"
+        },
+        {
+          "id": "FFS/N8201.PC15",
+          "code": "PC15",
+          "text": "ensure to keep the electrical appliances in OFF position when not in use"
+        },
+        {
+          "id": "FFS/N8201.PC16",
+          "code": "PC16",
+          "text": "carry out routine cleaning of tools, machines, and equipment as per instruction"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "9884/NOS5",
+      "title": "DGT/VSQ/N0102: Employability Skills (60 Hours) PC6. practice the 21st Century Skills such as Self- Awareness, Behaviour Skills, time management, critical and adaptive thinking, problem-solving, creative thinking, social and cultural awareness, emotional awareness, learning to learn for continuous learning etc. in personal and professional life Basic English Skills PC7. use basic English for everyday conversation in different contexts, in person and over the telephone PC8. read and understand routine information, notes, instructions, mails, letters etc. written in English PC9. write short messages, notes, letters, e-mails etc. in English Career Development & Goal Setting PC10. understand the difference between job and career PC11. prepare a career development plan with short- and long- term goals, based on aptitude Communication Skills PC12. follow verbal and non-verbal communication etiquette and active listening techniques in various settings PC13. work collaboratively with others in a team Diversity & Inclusion PC14. communicate and behave appropriately with all genders and PwD PC15. escalate any issues related to sexual harassment at workplace according to POSH Act Financial and Legal Literacy PC16. select financial institutions, products and services as per requirement PC17. carry out offline and online financial transactions, safely and securely PC18. identify common components of salary and compute income, expenses, taxes, investments etc PC19. identify relevant rights and laws and use legal aids to fight against legal exploitation Essential Digital Skills PC20. operate digital devices and carry out basic internet operations securely and safely PC21. use e- mail and social media platforms and virtual collaboration tools to work effectively",
+      "core": null,
+      "nsqf_level": null,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "9884/NOS5.PC1",
+          "code": "PC1",
+          "text": "identify employability skills required for jobs in various industries"
+        },
+        {
+          "id": "9884/NOS5.PC2",
+          "code": "PC2",
+          "text": "identify and explore learning and employability portals Constitutional values – Citizenship"
+        },
+        {
+          "id": "9884/NOS5.PC3",
+          "code": "PC3",
+          "text": "recognize the significance of constitutional values, including civic rights and duties, citizenship, responsibility towards society etc. and personal values and ethics such as honesty, integrity, caring and respecting others, etc."
+        },
+        {
+          "id": "9884/NOS5.PC4",
+          "code": "PC4",
+          "text": "follow environmentally sustainable practices Becoming a Professional in the 21st Century"
+        },
+        {
+          "id": "9884/NOS5.PC5",
+          "code": "PC5",
+          "text": "recognize the significance of 21st Century Skills for employment Entrepreneurship"
+        },
+        {
+          "id": "9884/NOS5.PC23",
+          "code": "PC23",
+          "text": "identify different types of Entrepreneurship and Enterprises and assess opportunities for potential business through research"
+        },
+        {
+          "id": "9884/NOS5.PC24",
+          "code": "PC24",
+          "text": "develop a business plan and a work model, considering the 4Ps of Marketing Product, Price, Place and Promotion"
+        },
+        {
+          "id": "9884/NOS5.PC25",
+          "code": "PC25",
+          "text": "identify sources of funding, anticipate, and mitigate any financial/ legal hurdles for the potential business opportunity Customer Service"
+        },
+        {
+          "id": "9884/NOS5.PC26",
+          "code": "PC26",
+          "text": "identify different types of customers"
+        },
+        {
+          "id": "9884/NOS5.PC27",
+          "code": "PC27",
+          "text": "identify and respond to customer requests and needs in a professional manner."
+        },
+        {
+          "id": "9884/NOS5.PC28",
+          "code": "PC28",
+          "text": "follow appropriate hygiene and grooming standards Getting ready for apprenticeship & Jobs"
+        },
+        {
+          "id": "9884/NOS5.PC29",
+          "code": "PC29",
+          "text": "create a professional Curriculum vitae (Résumé)"
+        },
+        {
+          "id": "9884/NOS5.PC30",
+          "code": "PC30",
+          "text": "search for suitable jobs using reliable offline and online sources such as Employment exchange, recruitment agencies, newspapers etc. and job portals, respectively"
+        },
+        {
+          "id": "9884/NOS5.PC31",
+          "code": "PC31",
+          "text": "apply to identified job openings using offline /online methods as per requirement"
+        },
+        {
+          "id": "9884/NOS5.PC32",
+          "code": "PC32",
+          "text": "answer questions politely, with clarity and confidence, during recruitment and selection"
+        },
+        {
+          "id": "9884/NOS5.PC33",
+          "code": "PC33",
+          "text": "identify apprenticeship opportunities and register for it as per guidelines and requirements"
+        }
+      ],
+      "knowledge_items": []
+    }
+  ]
+}
