@@ -138,3 +138,71 @@ def test_erasure_cancels_bookings(client):
     mine = client.get("/api/bookings", headers=bearer(ct)).json()
     assert mine[0]["id"] == b["id"] and mine[0]["status"] == "cancelled" and mine[0]["description"] == ""
     assert client.get(f"/api/market/workers/{wid}").status_code == 404
+
+
+def test_granting_profile_consent_makes_existing_profile_visible(client):
+    r = register(client, consents={"account": True, "contact_share": True, "assessment": True,
+                                   "profile_display": False}).json()
+    client.put("/api/me/profile", json={"trade": "plumber", "years_experience": 3, "pincode": "302017"},
+               headers=bearer(r["token"]))
+    assert client.get(f"/api/market/workers/{r['account']['id']}").status_code == 404
+    client.post("/api/auth/consents", json={"purpose": "profile_display", "granted": True}, headers=bearer(r["token"]))
+    assert client.get(f"/api/market/workers/{r['account']['id']}").status_code == 200
+
+
+def test_update_language_and_name(client):
+    tok = register(client).json()["token"]
+    me = client.patch("/api/auth/me", json={"language": "ta", "display_name": "Ramu"}, headers=bearer(tok)).json()
+    assert me["language"] == "ta" and me["display_name"] == "Ramu"
+    assert client.patch("/api/auth/me", json={"language": "xx"}, headers=bearer(tok)).status_code == 422
+
+
+def test_admin_lists_hidden_profiles_with_masked_phones(client):
+    r = register(client, consents={"account": True, "contact_share": True, "assessment": True,
+                                   "profile_display": False}).json()
+    client.put("/api/me/profile", json={"trade": "carpenter", "years_experience": 3, "pincode": "302017"},
+               headers=bearer(r["token"]))
+    _, admin = make_account(role="admin", phone="9000000002")
+    rows = client.get("/api/admin/workers", headers=bearer(admin)).json()
+    assert rows[0]["visible"] is False and "•" in rows[0]["phone_masked"] and "9876501234" not in json.dumps(rows)
+    assert client.get("/api/admin/workers", headers=bearer(r["token"])).status_code == 403
+
+
+def test_worker_cancels_open_request(client):
+    _, wt = worker_with_profile(client)
+    rid = client.post("/api/assessment-requests", json={}, headers=bearer(wt)).json()["id"]
+    assert client.post(f"/api/assessment-requests/{rid}/cancel", headers=bearer(wt)).json()["status"] == "cancelled"
+    assert client.post(f"/api/assessment-requests/{rid}/cancel", headers=bearer(wt)).status_code == 409
+    assert client.post("/api/assessment-requests", json={}, headers=bearer(wt)).status_code == 200  # can ask again
+
+
+def test_phone_hidden_some_time_after_completion(client):
+    from hunar.market.models import Booking
+
+    wid, wt = worker_with_profile(client)
+    ct = customer(client)
+    b = client.post("/api/bookings", json=booking(wid), headers=bearer(ct)).json()
+    client.post(f"/api/bookings/{b['id']}/accept", headers=bearer(wt))
+    done = client.post(f"/api/bookings/{b['id']}/complete", headers=bearer(ct)).json()
+    assert "phone" in done["other_party"]
+    with Session(db.engine()) as s:
+        row = s.get(Booking, b["id"])
+        row.updated_at = dt.datetime.now(dt.UTC) - dt.timedelta(days=15)
+        s.add(row)
+        s.commit()
+    assert "phone" not in client.get("/api/bookings", headers=bearer(ct)).json()[0]["other_party"]
+
+
+def test_write_endpoints_return_full_rows(client):
+    wid, wt = worker_with_profile(client)
+    saved = client.put("/api/me/profile", json={"trade": "electrician", "years_experience": 9, "pincode": "302017"},
+                       headers=bearer(wt)).json()
+    assert saved["trade"] == "electrician" and saved["years_experience"] == 9
+    _, admin = make_account(role="admin", phone="9000000002")
+    permit = client.post(f"/api/admin/workers/{wid}/permit", json={"status": "document_checked", "state": "RJ"},
+                         headers=bearer(admin)).json()
+    assert permit["permit_status"] == "document_checked"
+    client.post("/api/assessment-requests", json={}, headers=bearer(wt))
+    rid = client.get("/api/assessment-requests").json()[0]["id"]
+    started = client.post(f"/api/assessment-requests/{rid}/start").json()
+    assert started["request"]["status"] == "started"

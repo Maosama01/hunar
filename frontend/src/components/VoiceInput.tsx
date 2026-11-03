@@ -15,7 +15,16 @@ function canRecord(): boolean {
  * Records the worker speaking and returns a draft transcript (faster-whisper on the server).
  * The audio is sent once for transcription and never stored; the facilitator must check the text.
  */
-export function VoiceInput({ language, onText }: { language: Lang; onText: (text: string) => void }) {
+export function VoiceInput({
+  language,
+  onText,
+  forSelf = false,
+}: {
+  language: Lang;
+  onText: (text: string) => void;
+  /** The person records themselves (worker app) rather than a facilitator recording a worker. */
+  forSelf?: boolean;
+}) {
   const { t } = useI18n();
   const status = useStatus();
   const [installed, setInstalled] = useState<boolean | null>(null);
@@ -96,12 +105,12 @@ export function VoiceInput({ language, onText }: { language: Lang; onText: (text
           disabled={!!blocked || state === "transcribing"}
           aria-describedby="voice-note"
         >
-          🎤 {state === "transcribing" ? t("voice.transcribing") : t("voice.record")}
+          🎤 {state === "transcribing" ? t("voice.transcribing") : t(forSelf ? "voice.recordSelf" : "voice.record")}
         </button>
       )}
       {state === "recording" && (
         <Notice kind="info" role="status">
-          {t("voice.recording")}
+          {t(forSelf ? "voice.recordingSelf" : "voice.recording")}
         </Notice>
       )}
       <span id="voice-note" className="hint">

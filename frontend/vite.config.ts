@@ -15,9 +15,10 @@ export default defineConfig({
       injectRegister: false, // registered in src/main.tsx via virtual:pwa-register
       includeAssets: ["icon.svg", "icon-192.png", "icon-512.png", "apple-touch-icon.png"],
       manifest: {
-        name: "Hunar: RPL for domestic electricians",
+        name: "Hunar: skills and work for electricians, plumbers and carpenters",
         short_name: "Hunar",
-        description: "AI assisted Recognition of Prior Learning. AI suggests, the assessor decides.",
+        description:
+          "Self-check quiz, practical assessment requests and bookings for skilled workers. AI suggests, the assessor decides.",
         lang: "en",
         start_url: "/",
         scope: "/",
@@ -51,6 +52,26 @@ export default defineConfig({
               cacheName: "hunar-api-images",
               expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 30 },
               cacheableResponse: { statuses: [200] },
+            },
+          },
+          {
+            // Noto Sans Ol Chiki / Meetei Mayek stylesheets, requested only when Santali or Manipuri is
+            // chosen; cached so those scripts still render offline after first use.
+            urlPattern: ({ url }) => url.origin === "https://fonts.googleapis.com",
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "hunar-font-css",
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: ({ url }) => url.origin === "https://fonts.gstatic.com",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "hunar-font-files",
+              expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
             },
           },
         ],

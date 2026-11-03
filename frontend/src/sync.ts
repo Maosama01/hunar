@@ -9,6 +9,7 @@ import { api, ApiError, apiUrl, detailText, errorText, NetworkError, type Eviden
 import { refreshAssessment, refreshAssessmentList, refreshReference } from "./data";
 import { db, type OutboxOp } from "./db";
 import { thumbFromUrl } from "./photo";
+import { getSession, isStaff, subscribeSession } from "./session";
 import { getStatus, setStatus } from "./status";
 import { nowIso, uuid } from "./util";
 
@@ -188,10 +189,17 @@ async function onApplied(op: OutboxOp, result: unknown, touched: Set<string>, th
   if (op.assessment_id) touched.add(op.assessment_id);
 }
 
+/** Outbox ops are sent only with a staff login: /api/sync needs a staff token, and the server records
+ * the logged-in account as the actor. Without one the ops simply wait on this device. */
+function canSendOps(): boolean {
+  const s = getSession();
+  return !!s.token && isStaff(s.account);
+}
+
 async function runOnce(): Promise<void> {
   setStatus({ online: navigator.onLine });
   if (!navigator.onLine) return;
-  const pendingOps = await db.outbox.count();
+  const pendingOps = canSendOps() ? await db.outbox.count() : 0;
   const pendingRatings = await db.ratings.count();
   if (pendingOps === 0 && pendingRatings === 0) return;
 
@@ -203,7 +211,7 @@ async function runOnce(): Promise<void> {
     // Ops left "sending" by an interrupted run are safe to resend: the server dedupes by op_id.
     await db.outbox.where("status").equals("sending").modify({ status: "pending" });
     let limit = BATCH_MAX_OPS;
-    for (let guard = 0; guard < 1000; guard++) {
+    for (let guard = 0; guard < 1000 && pendingOps > 0; guard++) {
       const batch = await takeBatch(limit);
       if (batch.length === 0) break;
       let results;
@@ -213,6 +221,12 @@ async function runOnce(): Promise<void> {
         if (e instanceof NetworkError) {
           await backToPending(batch);
           failed = e.message;
+          break;
+        }
+        if (e instanceof ApiError && (e.status === 401 || e.status === 403)) {
+          // Not logged in (any more) as staff: the ops are fine, they wait for the next staff login.
+          await backToPending(batch);
+          failed = e.status === 401 ? "please log in to send the queued changes" : errorText(e);
           break;
         }
         if (e instanceof ApiError) {
@@ -253,7 +267,7 @@ async function runOnce(): Promise<void> {
       if (stop) break;
       limit = BATCH_MAX_OPS;
     }
-    if (!failed) {
+    if (!failed && pendingOps > 0) {
       const head = await db.outbox.orderBy("seq").first();
       if (head?.status === "rejected") failed = head.error ?? "a queued change was refused";
     }
@@ -301,7 +315,7 @@ export async function flushRatings(): Promise<string | null> {
 // ---- Loop --------------------------------------------------------------------------------------------
 
 async function tick(): Promise<void> {
-  const queued = (await db.outbox.count()) + (await db.ratings.count());
+  const queued = (canSendOps() ? await db.outbox.count() : 0) + (await db.ratings.count());
   if (queued > 0) {
     await syncNow();
   } else if (navigator.onLine) {
@@ -327,8 +341,16 @@ export function startSyncLoop(): () => void {
   window.addEventListener("offline", onOffline);
   document.addEventListener("visibilitychange", onVisible);
   const timer = window.setInterval(() => void tick(), INTERVAL_MS);
+  // A staff login sends whatever waited on this device.
+  let wasStaff = canSendOps();
+  const unsubscribe = subscribeSession(() => {
+    const now = canSendOps();
+    if (now && !wasStaff) requestSync(0);
+    wasStaff = now;
+  });
   void tick();
   return () => {
+    unsubscribe();
     window.removeEventListener("online", onOnline);
     window.removeEventListener("offline", onOffline);
     document.removeEventListener("visibilitychange", onVisible);

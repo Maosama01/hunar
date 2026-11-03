@@ -1,4 +1,5 @@
 // Small helpers shared across the app.
+import { intlLocale } from "./i18n/languages";
 
 /** RFC 4122 v4 UUID. crypto.randomUUID only exists in secure contexts (https or localhost), but a
  * facilitator may open the dev server over plain http on the LAN, so fall back to getRandomValues. */
@@ -34,10 +35,28 @@ export function fmtTime(s: string | null | undefined, lang: string): string {
   const d = parseTs(s);
   if (!d) return "";
   try {
-    return d.toLocaleString(lang === "hi" ? "hi-IN" : "en-IN", { dateStyle: "medium", timeStyle: "short" });
+    return d.toLocaleString(intlLocale(lang), { dateStyle: "medium", timeStyle: "short" });
   } catch {
     return d.toISOString();
   }
+}
+
+/** A calendar date ("2026-11-03") or timestamp, shown as a date in the app language. */
+export function fmtDate(s: string | null | undefined, lang: string): string {
+  if (!s) return "";
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(s) ? new Date(`${s}T12:00:00`) : parseTs(s);
+  if (!d || Number.isNaN(d.getTime())) return s;
+  try {
+    return d.toLocaleDateString(intlLocale(lang), { dateStyle: "medium" });
+  } catch {
+    return s;
+  }
+}
+
+/** Today's date in the device's time zone as YYYY-MM-DD (for <input type="date" min>). */
+export function todayIso(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 export function pct(x: number | null | undefined, digits = 0): string {
@@ -63,5 +82,13 @@ export function lsSet(key: string, value: string): void {
     window.localStorage.setItem(key, value);
   } catch {
     /* storage unavailable: the choice just is not remembered */
+  }
+}
+
+export function lsRemove(key: string): void {
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    /* storage unavailable */
   }
 }

@@ -1,18 +1,29 @@
 # Hunar web app (PWA)
 
-React + TypeScript progressive web app for Hunar, the AI-assisted Recognition of Prior Learning
-tool for domestic electricians (SIH26242). It talks to the FastAPI backend in `backend/hunar/api`.
+React + TypeScript progressive web app for Hunar (SIH26242). It talks to the FastAPI backend in
+`backend/hunar/api`. Three groups of people use it:
+
+* **Workers** (electrician, plumber, carpenter): an adaptive self-check quiz, a profile that customers
+  can see, a request for a practical assessment, bookings, privacy settings.
+* **Customers**: search for workers (no login needed to look), book one, rate after the job.
+* **Staff** (facilitator, assessor, admin): the assessor screens (declaration, mapping, practical tasks,
+  scoring, sign-off, audit log, rater study) with the offline outbox, plus assessment requests and, for
+  admins, permit checks.
 
 **AI suggests, the assessor decides.** The app never certifies anyone. It shows a *suggested level*,
 a *pre score* and a *recommendation for assessor review*; only an assessor's sign-off produces an
-outcome, and every accept, override and sign-off is written to the backend's hash-chained audit log.
+outcome. The quiz is a **self-check**, never a certificate and never shown to customers; a customer
+badge appears only after an assessor has signed off a practical assessment, and every badge says what
+was checked, by whom and when, and that it is not a government certificate.
 
 ## Run it
 
 ```bash
-# 1. API on :8000 (from the repo root)
-make api                     # or: uv run uvicorn hunar.api.main:app --port 8000
-make seed                    # optional: one clearly labelled SAMPLE worker + 6 sample rater items
+# 1. API on :8000 with a throwaway database (never data/hunar.db for demos)
+export HUNAR_DB=sqlite:////tmp/hunar-demo.db HUNAR_PIN_PEPPER=dev-pepper HUNAR_MAPPER=tfidf
+export HUNAR_OTP_PROVIDER=test        # optional: SMS-code step in TEST MODE (code shown on screen)
+uv run python -m hunar.api.seed       # SAMPLE accounts, workers and items (all labelled SAMPLE)
+uv run uvicorn hunar.api.main:app --port 8000
 
 # 2. Web app
 cd frontend
@@ -20,7 +31,9 @@ npm install
 npm run dev                  # http://localhost:5173  (proxies /api -> http://localhost:8000)
 ```
 
-Other scripts:
+Sample logins (all `is_sample`, shown with a **SAMPLE DATA** badge) are listed at the top of
+`backend/hunar/market/seed.py`. Staff cannot self-register: admins create staff accounts with
+`python -m hunar.accounts.cli`.
 
 | Command | What it does |
 |---|---|
@@ -31,31 +44,107 @@ Other scripts:
 The service worker only exists in the production build, so test offline behaviour with
 `npm run build && npm run preview`. Set `HUNAR_API=http://host:port` to proxy to another API, or
 `VITE_API_BASE` at build time to call an API on another origin (CORS is open on the backend).
-
-To try it on a phone on the same Wi-Fi, run `npx vite --host` (or `npx vite preview --host`).
-Note that browsers only enable service workers on `https://` or `localhost`, so offline start-up
-from the home screen needs HTTPS in a real deployment; the IndexedDB queue works either way.
+Browsers only enable service workers (and the microphone) on `https://` or `localhost`.
 
 ## Screens
 
+Every screen works from 360 px wide; worker and customer screens have a bottom navigation with
+icon + short label (tap targets of at least 48 px).
+
+**First run and accounts**
+
 | Route | Screen |
 |---|---|
-| `/` | Choose a role (Worker/Facilitator, Assessor, Admin, Rater) and enter your name or ID (stored on the device, used as `actor` / `assessor`). List of assessments with **SAMPLE DATA** badges. |
-| `/declare` | New worker with a pseudonymous code (warns against real names), preferred language, declaration text. Voice input is shown as *planned* (disabled). |
-| `/a/:id/mapping` | The declaration and the top 3 qualification packs: score bars, matched performance criteria with the worker's sentences and similarity, NOS coverage, and skill gaps (core criteria with no match). Labelled "Suggestion only — the assessor confirms the pack". |
-| `/a/:id/tasks` | The 6 practical tasks from `/api/rubrics`: instructions, checklist items as large Yes/No toggles, photo slots with a written-consent checkbox, evidence thumbnails, faces-blurred count, duplicate warning, detector status. |
-| `/a/:id/score` | Step 1: confirm the pack (top suggestion by default; another pack needs a reason). Step 2: per criterion, the text, four anchored level descriptors, the suggested level with confidence and every reason, conflicts highlighted, critical (safety) criteria marked. Accept, or override with a level and a reason (5+ characters). Latest decision per criterion. |
-| `/a/:id/profile` | Overall score vs the pass mark (70 %, from the official qualification file), per-NOS bars, gaps, critical failures, unscored count, the recommendation for assessor review, then the sign-off form (online only). After sign-off the assessment is shown as signed off and editing is frozen. |
-| `/admin` | Audit log table (seq, time, actor, action, subject, collapsible payload), subject filter, "Verify chain". |
-| `/rater` | Consistency study: rater ID, condition, session number, "include sample items (demo only)". One item at a time, no going back, seconds per item recorded, progress bar, thank-you screen. Assisted condition also shows the level descriptors and the pre score reasons. |
-| `/queue` | The sync queue (what is waiting, in order). |
+| `/welcome` | Onboarding: (1) language picker with all 23 languages, each in its own script; (2) "I am a worker" / "I want to hire a worker" cards, "I already have an account", small "Staff login"; (3) 2-3 intro cards per role with icons and read-aloud; (4) itemised consent from `GET /api/auth/config` (required purposes need an explicit "I agree" and say why; optional ones are switches, off by default; data used and what withdrawal does; notice version) plus "I am 18 or older"; (5) register: mobile number, display name ("a first name or nickname is enough"), PIN + confirmation with the PIN rules checked as you type; (6) when `otp_required`, the SMS code step (TEST MODE banner and code when the API returns one). `?step=intro&role=worker&replay=1` replays the intro from Settings. |
+| `/login` | Mobile number + PIN (numeric keypad, `autocomplete="off"`, show/hide). Clear messages for a wrong PIN (401) and lockout (429). "Forgot PIN?" leads to the SMS reset when the server has OTP, otherwise says to ask an admin or facilitator. `?staff=1` is the staff login. Shows how many offline changes wait on the device. |
+| `/reset-pin` | SMS code (TEST MODE shown) + new PIN twice. |
+| `/language` | Change language (also the globe button in the header). |
+| `/settings` | Account (name, masked phone, role), language, "How Hunar works", privacy, staff: sync queue and rater mode, log out. |
 
-English and Hindi UI strings live in `src/i18n/en.ts` and `src/i18n/hi.ts`; TypeScript enforces the
-same keys in both. The header toggle switches language (remembered in `localStorage`). Rubric
-content comes from the API with `{en, hi}` fields; level descriptors and pre score reasons are
-English-only in the backend and are shown as such.
+**Worker** (`/w/...`)
 
-## Offline design
+| Route | Screen |
+|---|---|
+| `/w/quiz` | Choose a trade (only trades with a question bank; others "Questions coming soon"), start, history of results. Needs the *assessment* consent. |
+| `/w/quiz/:id` | One question per screen: option cards, a separate "Don't know" button, read-aloud of question and options, "Question n of up to N", seconds per question measured and sent, no going back, gentle "please read each question fully" after a rapid answer, label for machine-translated or not-yet-translated questions (shown in Hindi). When done: the result. |
+| result | "You would likely answer about X–Y% of our questions correctly" with a range bar (90 % interval, middle marked), counts, per-NOS bars ("Not enough answers to say" when `enough` is false), topics to revise, the result note, "Request a practical assessment", "See answers and explanations", and in small print the DRAFT bank and "uncalibrated" labels. |
+| `/w/quiz/:id/review` | Each question with the right answer, the worker's answer, the explanation and the sources. |
+| `/w/profile` | Edit trade, years, PIN code, district, languages (23 endonyms), short bio, self-declared electrical permit. Shows exactly what customers will see (the same card and badge text) and whether it is visible (depends on the *profile display* consent). |
+| `/w/assess` | Request a practical assessment: declaration typed or spoken (`VoiceInput`, "I read the text and corrected the mistakes" tick after speech), optional preferred date, request status. Explains that the quiz is only context for the assessor. |
+| `/w/bookings` | Accept / decline new requests, mark as done, cancel; the customer's phone appears only after accepting. |
+| `/w/privacy` | Every consent purpose with its data and what withdrawal does; optional ones as switches (turning off asks first); erase the account with a typed confirmation word. |
+
+**Customer** (`/c/...`)
+
+| Route | Screen |
+|---|---|
+| `/c/find` | Trade chips with icons, PIN code, filters "Skills checked by an assessor" and "Permit document checked". Worker cards with SAMPLE DATA badge, rating, languages and badges. Open to everyone. |
+| `/c/worker/:id` | The card, then "What was checked" in plain words, e.g. "Practical skills checked by an assessor on 3 Nov 2026 against Assistant Electrician (NSQF 3). Not a government certificate." Booking form (customers only): jobs from `/api/trades`; jobs that need a State permit are disabled with the permit note when the worker's permit is not checked; date from today; morning / afternoon / evening. |
+| `/c/bookings` | Cancel, mark as done, rate (1-5 stars and a few words) after completion; the worker's phone appears after acceptance. |
+| `/c/privacy` | As for workers. |
+
+**Staff** (assessor-side screens unchanged apart from the login)
+
+| Route | Screen |
+|---|---|
+| `/staff` | What this role can do, and the list of assessments with **SAMPLE DATA** badges. |
+| `/staff/requests` | Assessor/admin: open assessment requests with the worker's declaration and latest quiz summary, labelled "Self-check quiz (context only)". *Start practical assessment* creates the assessment and opens its mapping screen. |
+| `/staff/permits` | Admin: mark "Permit document checked" (with the State, after ticking "I have seen the original permit document") or remove the check. |
+| `/declare`, `/a/:id/mapping`, `/a/:id/tasks`, `/a/:id/score`, `/a/:id/profile` | Declaration, pack suggestions, practical tasks with photos, scoring, competency profile and sign-off (see the previous sections of the project docs; behaviour unchanged). |
+| `/admin` | Audit log and chain check (assessor or admin). |
+| `/rater` | Consistency study (rater mode); open without a login. |
+| `/queue` | The sync queue. |
+
+## Accounts and auth
+
+* `src/session.ts` keeps the bearer token and the account in `localStorage` (so a staff device can
+  reload offline) and exposes `useSession()`. `src/api.ts` adds `Authorization: Bearer <token>` to
+  every request; a 401 on any request that carried the token ends the session and the route guards
+  open `/login` (queued offline changes are kept).
+* Route guards (`RequireRole` in `src/App.tsx`): `/w/*` workers, `/c/bookings` and `/c/privacy`
+  customers, staff screens facilitator/assessor/admin, requests and audit assessor/admin, permits admin.
+* The role and name are no longer picked on the device: `src/settings.tsx` now reads them from the
+  logged-in account (the server ignores names in request bodies).
+
+## Languages
+
+* UI strings live in `src/i18n/locales/en.json` (the source of keys; `Key` is derived from it) and
+  `hi.json`, which must have every key (checked at compile time).
+* Any other language is an optional file `src/i18n/locales/<code>.json`, loaded only when chosen
+  (`import.meta.glob`). Format: a flat object `key -> string`, plus an optional
+  `"_meta": {"provider": "...", "reviewed": false, "generated": "2026-11-03"}`. `{name}` placeholders
+  must be kept. Missing keys fall back to English.
+* When the chosen language's file is missing or incomplete, a small banner says "Not all text is
+  translated into <endonym> yet"; when `_meta.reviewed` is false it also says "Machine-translated, not
+  yet checked by a native speaker". The language picker marks languages without a file
+  ("mostly English for now").
+* `<html lang>` follows the language (with script subtags for `mni-Mtei`, `sat-Olck`, `ks-Arab`,
+  `sd-Arab`) and `dir="rtl"` is set for Urdu, Kashmiri and Sindhi. The CSS uses logical properties
+  (`inset-inline-start`, `margin-inline-*`, `border-inline-start`, `text-align: start`); in RTL, text
+  elements use `unicode-bidi: plaintext` so English fallback strings keep their punctuation in place.
+  Quiz content that arrives in another script (e.g. the Hindi fallback) gets its own `lang` and `dir`.
+* Fonts: system fonts, plus Noto Sans Ol Chiki and Noto Sans Meetei Mayek from Google Fonts, loaded
+  only when Santali or Manipuri is chosen (the picker loads just the glyphs of the two names). A
+  Workbox runtime-caching rule keeps those fonts available offline after first use.
+* Consent texts: the English text of each purpose comes from the server (the legal source). A
+  translated text is used only when the locale's `consent.translatedNotice` equals the server's
+  `notice_version`; otherwise the English server text is shown.
+* Rubric/qualification content: the API's `{en, hi}` fields; for other languages the app shows Hindi
+  to readers of Devanagari-script languages and English to everyone else. Quiz items come from the API
+  in the chosen language when a translation exists (labelled machine-translated or reviewed), otherwise
+  in Hindi with a label.
+* The Hindi strings were written during development and have **not yet been checked by a native
+  speaker**; the other 21 languages are to be generated by a separate Bhashini script.
+
+## Read-aloud
+
+`src/tts.ts` defines a `TtsProvider` interface (`canSpeak`, `speak`, `stop`, `subscribe`) and a
+`WebSpeechTts` implementation that picks a device voice by BCP-47 tag (`hi-IN`, `ta-IN`, `bn-IN`, ...).
+`<SpeakButton>` hides itself when no voice exists for that language. A server-side Bhashini TTS proxy
+can be plugged in with `setTtsProvider()`; Bhashini is never called from the browser (keys stay on the
+server). Untranslated strings are read with an English voice.
+
+## Offline design (staff screens)
 
 ```
 user action ──> Dexie (IndexedDB) ──> outbox (ordered by seq) ──> POST /api/sync ──> server
@@ -103,45 +192,59 @@ user action ──> Dexie (IndexedDB) ──> outbox (ordered by seq) ──> PO
   instead of restarting it; images are prefetched when a session starts.
 * **App shell**: `vite-plugin-pwa` (Workbox) precaches the built app, so it opens offline after the
   first visit. Evidence and study images are cached at runtime (cache-first).
+* **Auth and the outbox**: every request, including sync replay, sends `Authorization: Bearer <token>`.
+  Ops are only sent while a staff account is logged in; the server records the logged-in account as
+  the actor (names in payloads are ignored). A 401 (expired session, PIN reset, logged out elsewhere)
+  or 403 on `/api/sync` puts the batch back to *pending* (never *refused*), ends the session on this
+  device and opens the login screen, which shows how many changes are waiting. The next staff login
+  sends them. Logging out keeps the queue too (Settings warns how many changes are not sent yet).
+* **Evidence images** need the staff token, which an `<img src>` cannot send, so they are fetched with
+  the token and shown as blob URLs (the service worker still caches them for offline use).
 
 ## Honesty rules in the UI
 
-* Wording: "suggested level", "pre score", "recommendation for assessor review". No "certified",
-  "passed" or "approved" before an assessor signs off.
-* A persistent footer: "AI suggests, the assessor decides" / "AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का है".
+* Wording: "suggested level", "pre score", "recommendation for assessor review", "self-check". No
+  "certified", "passed" or "approved" before an assessor signs off.
+* A persistent line above the bottom navigation: "AI suggests, the assessor decides" (and the English
+  text when the line is translated).
+* The quiz says on every screen that it is a self-check; the result shows its uncertainty (a range,
+  not one number), the DRAFT status of the question bank and that difficulties are uncalibrated.
+  Assessors see the quiz only as "context only".
+* Badges explain what was checked, by whom and when, and "Not a government certificate" / "Hunar does
+  not issue permits". A self-declared permit is shown as "Says they have a permit".
 * Wherever photo checks appear: the model only checks whether PPE and tools are visible and does
-  **not** judge the quality of the work. With no trained model: "Photo check not available yet
-  (model not trained)".
-* Anything with `is_sample = true` (workers, assessments, audit subjects, study items) shows a
-  **SAMPLE DATA** badge.
+  **not** judge the quality of the work.
+* Anything with `is_sample = true` (accounts, workers, assessments, audit subjects, study items) shows
+  a **SAMPLE DATA** badge.
 
 ## Known limitations
 
+* Worker and customer screens need the network (a friendly offline message is shown); only the staff
+  screens have the offline outbox.
+* Changing the language in the app does not change the account's language on the server (there is no
+  endpoint for it); the quiz is started in the app's current language.
+* Logging out removes the token but keeps the device's cached assessments and queued changes (by
+  design, so offline work is not lost); a shared device should be cleared by an admin.
+* Server messages that the app cannot map to a translated string (some validation errors) are shown in
+  English.
+* Read-aloud depends on the voices installed on the device; many Indian languages have none on
+  desktop browsers, so the button is hidden there.
+* Hindi strings are not yet reviewed by a native speaker; no other language files exist yet.
 * Mapping, pre scores and the competency profile are computed only on the server; offline the app
-  shows the last copy it saw and says when it may be out of date.
-* An *accept* decision carries the level the assessor saw (`expected_level`); the API refuses it
-  (409) if its own suggestion has changed meanwhile. Accept is also disabled while
-  prescore-affecting changes are queued.
-* Each rating has a client-generated `client_id`, so a retried upload is stored once.
-* No authentication: the role and name are chosen on the device, as the project brief allows.
-* Voice input (`src/components/VoiceInput.tsx`) needs the server, a browser with `MediaRecorder` and
-  microphone access, which browsers only grant on `https://` or `localhost`. Offline or without
-  `make voice` on the server, the button is disabled with a note. The transcript is a draft; saving
-  needs the "read back to the worker" tick. Audio is sent once and not stored.
-* On-device face blurring (MediaPipe) was not implemented; blurring happens on the server only.
-* The audit view shows at most 1000 entries (the API can page with `before_seq`, the screen does not).
-* Service workers need `https://` or `localhost`; over plain HTTP on a LAN the app works online
-  and keeps its IndexedDB queue, but cannot start without a connection.
+  shows the last copy it saw. Sign-off is online only. Voice input needs the server (`make voice`).
+* On-device face blurring was not implemented; blurring happens on the server only.
+* The audit view shows at most 1000 entries.
 
 ## Code map
 
 | File | Purpose |
 |---|---|
-| `src/api.ts` | Typed API client and response types |
-| `src/db.ts` | Dexie schema: outbox, workers, assessments, snapshots, photos, cache, ratings, study progress |
-| `src/sync.ts` | Outbox writes and the ordered sync engine |
-| `src/actions.ts` | User actions (each one writes locally and queues an op) |
-| `src/data.ts` | Refresh from the API and build screen views (snapshot + queued ops) |
-| `src/photo.ts` | Downscaling and thumbnails |
-| `src/i18n/` | English and Hindi strings, language context |
-| `src/screens/`, `src/components/` | Screens and shared components |
+| `src/api.ts` | Typed API client (adds the bearer token; 401 ends the session) and response types |
+| `src/session.ts` | Token + account store, `useSession()`, role home paths |
+| `src/i18n/index.tsx`, `languages.ts`, `locales/*.json` | Strings, lazy locales, coverage banner data, the 23 languages (endonyms, BCP-47, RTL, fonts) |
+| `src/tts.ts` | Read-aloud (`TtsProvider`, Web Speech implementation) |
+| `src/consent.ts` | Consent purpose texts (server English or matching translation) |
+| `src/trades.ts` | Cached `/api/trades` |
+| `src/db.ts`, `src/sync.ts`, `src/actions.ts`, `src/data.ts`, `src/photo.ts` | Staff offline outbox, sync engine, local views, photos |
+| `src/components/` | Layout (headers, translation banner, bottom nav), auth inputs, worker card and badges, icons, shared UI |
+| `src/screens/` | Onboarding, login, reset PIN, settings, privacy, bookings; `worker/`, `customer/`, `staff/` and the existing assessor screens |

@@ -1,4 +1,4 @@
-# Slide outline (12 slides, about 10 minutes + demo)
+# Slide outline (13 slides, about 11 minutes + demo)
 
 Generated from `slides_outline.src.md` by `make report`; numbers come from `experiments/`.
 
@@ -51,7 +51,13 @@ Generated from `slides_outline.src.md` by `make report`; numbers come from `expe
 
 11. **Offline first.** Outbox → ordered, idempotent replay; client-side UUIDs; demo with network off.
 
-12. **Honest status and next steps.** What is real, what is synthetic, what is pending (real
+12. **Workers and customers.** Onboarding in 23 languages, phone + PIN login, itemised consent
+    (DPDP Act). Worker: adaptive self-check quiz (3 trades, built from official sources), request a
+    practical assessment, handle bookings. Customer: search, badges that say who checked what, booking
+    that respects CEA reg. 31 (permit-only jobs). Simulation (labelled): the quiz needs
+    15.4 questions instead of 20. Quiz = self-check, never a badge.
+
+13. **Honest status and next steps.** What is real, what is synthetic, what is pending (real
     declarations, detector training, rubric review by a certified assessor, the assessor-agreement
     study). Figure `m4_design_power.png`, labelled SIMULATION OF THE METHOD: 3 raters x 20 items
     catch a large improvement (alpha 0.50 to 0.80) in

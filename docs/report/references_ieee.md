@@ -125,3 +125,35 @@
 [63] K. Sechidis, G. Tsoumakas, and I. Vlahavas, "On the stratification of multi-label data," in *Machine Learning and Knowledge Discovery in Databases (ECML PKDD 2011)* (Lecture Notes in Computer Science), 2011, pp. 145–158, doi: 10.1007/978-3-642-23808-6_10.
 
 [64] SYSTRAN, "faster-whisper: Faster Whisper transcription with CTranslate2," version 1.2.1, software, GitHub repository. [Online]. Available: https://github.com/SYSTRAN/faster-whisper (MIT license).
+
+[65] Central Electricity Authority, "Central Electricity Authority (Measures relating to Safety and Electric Supply) Regulations, 2023," Gazette of India, notification No. CEA-PS-16/1/2021-CEI Division, 8 Jun. 2023. [Online]. Available: https://cea.nic.in/whats-new/file?path=%2Fhome%2Fcea_website%2Freports%2Fgeneral%2Fen%2Fpdf_100_183_English.pdf&mode=view
+
+[66] Government of India, "The Digital Personal Data Protection Act, 2023," enacted 11 Aug. 2023; Digital Personal Data Protection Rules, 2025, notified 14 Nov. 2025. [Online]. Available: https://www.pib.gov.in/PressReleasePage.aspx?PRID=2190014
+
+[67] J. M. Linacre, "Sample size and item calibration [or person measure] stability," Rasch Measurement Transactions, vol. 7, no. 4, p. 328, 1994. [Online]. Available: https://www.rasch.org/rmt/rmt74m.htm
+
+[68] N. A. Thompson and D. J. Weiss, "A framework for the development of computerized adaptive tests," Practical Assessment, Research, and Evaluation, vol. 16, art. 1, 2011, doi: 10.7275/wqzt-9427.
+
+[69] R. D. Bock and R. J. Mislevy, "Adaptive EAP estimation of ability in a microcomputer environment," Applied Psychological Measurement, vol. 6, no. 4, pp. 431-444, 1982, doi: 10.1177/014662168200600405.
+
+[70] G. G. Kingsbury and A. R. Zara, "Procedures for selecting items for computerized adaptive tests," Applied Measurement in Education, vol. 2, no. 4, pp. 359-375, 1989, doi: 10.1207/s15324818ame0204_6.
+
+[71] R. J. Mislevy, "Exploiting auxiliary information about items in the estimation of Rasch item difficulty parameters," Applied Psychological Measurement, vol. 12, no. 3, pp. 281-296, 1988, doi: 10.1177/014662168801200306.
+
+[72] S. L. Wise and X. Kong, "Response time effort: A new measure of examinee motivation in computer-based tests," Applied Measurement in Education, vol. 18, no. 2, pp. 163-183, 2005, doi: 10.1207/s15324818ame1802_2.
+
+[73] I. Medhi, A. Sagar, and K. Toyama, "Text-free user interfaces for illiterate and semi-literate users," in Proc. Int. Conf. Information and Communication Technologies and Development (ICTD), 2006, doi: 10.1109/ICTD.2006.301841.
+
+[74] I. Medhi, S. Patnaik, E. Brunskill, S. N. N. Gautama, W. Thies, and K. Toyama, "Designing mobile interfaces for novice and low-literacy users," ACM Transactions on Computer-Human Interaction, vol. 18, no. 1, art. 2, 2011, doi: 10.1145/1959022.1959024.
+
+[75] Digital India Bhashini Division, Ministry of Electronics and Information Technology, "Bhashini APIs: pipeline config and pipeline compute calls," online documentation. [Online]. Available: https://bhashini.gitbook.io/bhashini-apis (accessed 4 Nov. 2026).
+
+[76] Directorate General of Training (CSTARI), "Electrician, Craftsmen Training Scheme (CTS 3.0), NSQF level 4," revised Aug. 2025. [Online]. Available: https://bharatskills.gov.in/pdf/Curriculum/CTS/English/Electrician_CTS3.0_NSQF-4%20(2).pdf
+
+[77] Water Management and Plumbing Skill Council, "Qualification File: Plumber - General," QG-04-PL-03441-2024-V2-WMPS, NSQF level 4, NQR id 12957, approved 17 Dec. 2024. [Online]. Available: https://www.nqr.gov.in/qualifications/12957
+
+[78] Furniture and Fittings Skill Council, "Qualification File: Assistant Carpenter," QG-04-WC-00828-2023-V2-FFSC, NSQF level 4, NQR id 9884 (NQR validity ended 31 Aug. 2026). [Online]. Available: https://www.nqr.gov.in/qualifications/9884
+
+[79] Bureau of Indian Standards, "IS 5329:1983 Code of practice for sanitary pipe work above ground for buildings," 1983.
+
+[80] Bureau of Indian Standards, "IS 2065:1983 Code of practice for water supply in buildings," 1983.

@@ -1,4 +1,4 @@
-# Viva preparation: 21 likely questions with answers
+# Viva preparation: 23 likely questions with answers
 
 Generated from `viva_questions.src.md` by `make report`. Every number comes from `experiments/` or the
 parsed data; if a result is pending, say so plainly.
@@ -141,3 +141,25 @@ moved. Even English, with almost no word errors, lost top-1 accuracy: punctuatio
 number format changed the sentence units and tokens the model sees, which told us the mapper's top-1
 margins are thin.
 Real workers on a noisy site will do worse; testing with consenting workers is a next step.
+
+**22. How does the worker quiz work, and can a worker cheat it?**
+It is adaptive: a Rasch model scores answers with EAP, the next question balances the qualification's
+NOS weights and targets the current estimate, and it stops when the uncertainty is small enough
+(posterior SD 0.5 after 12 answers) or at 25 questions. In our labelled simulation it needed
+{{quiz_cat_simulation:trades.electrician.scenarios.calibrated.adaptive.mean_items|.1f}} questions instead of 20 for a similar error. It can be cheated: it is
+unsupervised and someone else could answer. That is exactly why it never produces a badge; it is a
+self-check for the worker and context for the assessor. We still reduce noise: options are shuffled,
+the answer key never reaches the phone, answers faster than reading time are flagged and not scored,
+and "don't know" discourages guessing. The questions are drafts from official sources (qualification
+files, CEA regulations, Indian Standards) and need review by an ITI instructor; difficulties are
+uncalibrated until about 100 real attempts exist.
+
+**23. What does a customer's "verified" badge mean? What stops a fake assessor?**
+The badge says "practical skills assessed by an assessor against Assistant Electrician (NSQF 3) on
+<date>, not a government certificate". It appears only when an assessor account, created by an admin
+on the server, signs off a positive recommendation; every decision and the sign-off are in the
+hash-chained audit log under that account. Assessor accounts cannot self-register. A second badge,
+"permit document checked", is set by an admin after seeing the State permit; electrical jobs that
+need a permit under CEA regulation 31 cannot be booked without it. We do not claim identity
+verification: there is no Aadhaar or permit-register check yet.
+

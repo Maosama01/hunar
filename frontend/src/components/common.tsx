@@ -45,7 +45,7 @@ export function Bar({
       aria-valuenow={value ?? 0}
     >
       <div className={`bar-fill tone-${tone}`} style={{ width: `${v * 100}%` }} />
-      {marker !== undefined && <div className="bar-marker" style={{ left: `${clamp01(marker) * 100}%` }} />}
+      {marker !== undefined && <div className="bar-marker" style={{ insetInlineStart: `${clamp01(marker) * 100}%` }} />}
     </div>
   );
 }

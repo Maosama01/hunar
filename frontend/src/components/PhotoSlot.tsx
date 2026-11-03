@@ -1,19 +1,41 @@
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { addPhoto } from "../actions";
-import { errorText, intFromApi, type LabelledItem } from "../api";
+import { errorText, fetchBlob, intFromApi, type LabelledItem } from "../api";
 import type { EvidenceView } from "../data";
 import { useI18n } from "../i18n";
 import { preparePhoto, type PreparedPhoto } from "../photo";
 import { Notice, PendingBadge } from "./common";
 
+/** Evidence images need the staff login, which an <img src> cannot send: fetch with the token and
+ * show a blob URL (the service worker still caches the response for offline use). */
+function useAuthedImage(url: string | null): string | null {
+  const [obj, setObj] = useState<string | null>(null);
+  useEffect(() => {
+    if (!url) return;
+    let alive = true;
+    let made: string | null = null;
+    void fetchBlob(url).then((b) => {
+      if (!alive || !b) return;
+      made = URL.createObjectURL(b);
+      setObj(made);
+    });
+    return () => {
+      alive = false;
+      if (made) URL.revokeObjectURL(made);
+    };
+  }, [url]);
+  return obj;
+}
+
 function EvidenceCard({ ev, slotLabel }: { ev: EvidenceView; slotLabel: string }) {
   const { t } = useI18n();
   const s = ev.server;
-  const src = ev.thumb ?? ev.imageUrl;
+  const full = useAuthedImage(ev.imageUrl);
+  const src = ev.thumb ?? full;
   return (
     <figure className="evidence">
       {src && (
-        <a href={ev.imageUrl ?? undefined} target="_blank" rel="noreferrer" aria-label={t("tasks.openFull")} onClick={(e) => !ev.imageUrl && e.preventDefault()}>
+        <a href={full ?? undefined} target="_blank" rel="noreferrer" aria-label={t("tasks.openFull")} onClick={(e) => !full && e.preventDefault()}>
           <img src={src} alt={t("tasks.photoAlt", { slot: slotLabel })} loading="lazy" />
         </a>
       )}

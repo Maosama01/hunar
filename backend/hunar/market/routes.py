@@ -215,7 +215,39 @@ def start_assessment(rid: str, acc: Account = ASSESSOR, s: Session = DB):
     s.add(r)
     audit.append(s, auth.actor(acc), "assessment.request_started", r.id, {"assessment_id": a.id}, commit=False)
     s.commit()
+    s.refresh(r)
     return {"request": _request_out(s, r, True), "assessment_id": a.id}
+
+
+@router.post("/api/assessment-requests/{rid}/cancel")
+def cancel_request(rid: str, acc: Account = WORKER, s: Session = DB):
+    r = s.get(AssessmentRequest, rid)
+    if r is None or r.account_id != acc.id:
+        raise HTTPException(404, "request not found")
+    if r.status != "open":
+        raise HTTPException(409, f"cannot cancel a request that is {r.status}")
+    r.status = "cancelled"
+    s.add(r)
+    audit.append(s, auth.actor(acc), "assessment.request_cancelled", r.id, {}, commit=False)
+    s.commit()
+    s.refresh(r)
+    return _request_out(s, r, False)
+
+
+@router.get("/api/admin/workers")
+def admin_workers(trade: str | None = None, q: str = "", acc: Account = ADMIN, s: Session = DB):
+    """All worker profiles, hidden ones included, for permit checks. Phone numbers stay masked."""
+    from hunar.accounts.routes import mask_phone
+
+    rows = s.exec(select(WorkerProfile, Account).where(WorkerProfile.account_id == Account.id,
+                                                       Account.erased_at == None))  # noqa: E711
+    out = []
+    for p, a in rows:
+        if (trade and p.trade != trade) or (q and q.lower() not in a.display_name.lower()):
+            continue
+        out.append({**service.public_profile(s, a, p), "visible": p.visible, "phone_masked": mask_phone(a.phone),
+                    "permit_state": p.permit_state})
+    return out
 
 
 @router.post("/api/admin/workers/{account_id}/permit")
@@ -232,4 +264,5 @@ def set_permit(account_id: str, body: PermitIn, acc: Account = ADMIN, s: Session
     audit.append(s, auth.actor(acc), "permit.status_set", account_id, {"status": body.status, "state": p.permit_state},
                  commit=False)
     s.commit()
+    s.refresh(p)
     return p.model_dump(mode="json")

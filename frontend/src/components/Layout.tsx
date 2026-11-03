@@ -1,28 +1,86 @@
 import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { api, type OpKind } from "../api";
+import { Link, NavLink, Outlet } from "react-router-dom";
+import { api, type AccountRole, type OpKind } from "../api";
 import { refreshAssessmentList, useBlockingOp, useQueueCounts } from "../data";
-import { dicts, useI18n, type Key } from "../i18n";
-import { useSettings } from "../settings";
-import { isConnected, useStatus } from "../status";
+import { enText, useI18n, type Key } from "../i18n";
+import { endonym } from "../i18n/languages";
+import { homePath, isStaff, useSession } from "../session";
+import { useStatus } from "../status";
 import { discardOp, retryOp, syncNow } from "../sync";
 import { fmtTime } from "../util";
+import { Icon, type IconName } from "./Icon";
+import { OfflineNotice } from "./ui";
 
 export const kindKey = (k: OpKind) => `kind.${k}` as Key;
 
-function Header() {
-  const { t, lang, setLang } = useI18n();
+function ConnBadge({ quietWhenOnline = false }: { quietWhenOnline?: boolean }) {
+  const { t } = useI18n();
   const status = useStatus();
-  const counts = useQueueCounts();
-  const { role, actor } = useSettings();
-  const connected = isConnected(status);
-  const queued = (counts?.ops ?? 0) + (counts?.ratings ?? 0);
-
   const badge = !status.online
     ? { cls: "off", text: t("header.offline") }
     : status.reachable === false
       ? { cls: "warn", text: t("header.unreachable") }
       : { cls: "on", text: t("header.online") };
+  if (quietWhenOnline && badge.cls === "on") return null;
+  return (
+    <span className={`conn conn-${badge.cls}`} role="status" aria-live="polite">
+      <span className="dot" aria-hidden="true" />
+      {badge.text}
+    </span>
+  );
+}
+
+function LangButton() {
+  const { t, lang } = useI18n();
+  return (
+    <Link to="/language" className="btn btn-small lang-btn" aria-label={t("header.changeLang")}>
+      <Icon name="globe" size={18} />
+      <span lang={lang}>{endonym(lang)}</span>
+    </Link>
+  );
+}
+
+function SettingsButton() {
+  const { t } = useI18n();
+  const { account } = useSession();
+  if (!account) return null;
+  return (
+    <Link to="/settings" className="btn btn-small icon-btn" aria-label={t("nav.settings")} title={t("nav.settings")}>
+      <Icon name="settings" size={20} />
+    </Link>
+  );
+}
+
+function Brand() {
+  const { t } = useI18n();
+  const { account } = useSession();
+  return (
+    <Link to={homePath(account)} className="brand" aria-label={t("header.home")}>
+      <img src="/icon.svg" alt="" width={28} height={28} />
+      <span>{t("app.name")}</span>
+    </Link>
+  );
+}
+
+function PublicHeader() {
+  return (
+    <header className="app-header">
+      <div className="header-row">
+        <Brand />
+        <ConnBadge quietWhenOnline />
+        <LangButton />
+        <SettingsButton />
+      </div>
+    </header>
+  );
+}
+
+function StaffHeader() {
+  const { t, lang } = useI18n();
+  const status = useStatus();
+  const counts = useQueueCounts();
+  const { account } = useSession();
+  const queued = (counts?.ops ?? 0) + (counts?.ratings ?? 0);
 
   const manualSync = async () => {
     await syncNow();
@@ -37,23 +95,10 @@ function Header() {
   return (
     <header className="app-header">
       <div className="header-row">
-        <Link to="/" className="brand" aria-label={t("header.home")}>
-          <img src="/icon.svg" alt="" width={28} height={28} />
-          <span>{t("app.name")}</span>
-        </Link>
-        <span className={`conn conn-${badge.cls}`} role="status" aria-live="polite">
-          <span className="dot" aria-hidden="true" />
-          {badge.text}
-        </span>
-        <button
-          type="button"
-          className="btn btn-small btn-ghost lang-toggle"
-          onClick={() => setLang(lang === "en" ? "hi" : "en")}
-          aria-label={t("header.switchLangAria")}
-          lang={lang === "en" ? "hi" : "en"}
-        >
-          {t("header.switchLang")}
-        </button>
+        <Brand />
+        <ConnBadge />
+        <LangButton />
+        <SettingsButton />
       </div>
       <div className="header-row header-sub">
         <Link to="/queue" className={`queue-chip ${queued ? "has" : ""}`} aria-label={t("header.queuedAria", { n: queued })}>
@@ -67,13 +112,11 @@ function Header() {
         >
           {status.syncing ? t("header.syncing") : t("header.syncNow")}
         </button>
-        {role && (
+        {account && (
           <span className="who" title={status.lastSyncAt ? t("header.lastSync", { time: fmtTime(status.lastSyncAt, lang) }) : undefined}>
-            {t(`roles.${role}` as Key)}
-            {actor.trim() ? ` · ${actor.trim()}` : ""}
+            {account.display_name} · {t(`roles.${account.role}` as Key)}
           </span>
         )}
-        {!connected && <span className="sr-only">{t("common.needsConnection")}</span>}
       </div>
     </header>
   );
@@ -121,29 +164,120 @@ function BlockingBanner() {
   );
 }
 
-function Footer() {
-  const { lang } = useI18n();
-  const other = lang === "en" ? "hi" : "en";
+/** "Not all text is translated" / "Machine-translated" notes for the chosen language. */
+export function TranslationBanner() {
+  const { t, lang, coverage, loading } = useI18n();
+  const [closed, setClosed] = useState<Record<string, boolean>>({});
+  if (lang === "en" || loading || closed[lang]) return null;
+  const incomplete = !coverage.exists || coverage.share < 0.999;
+  const machine = coverage.meta?.reviewed === false;
+  if (!incomplete && !machine) return null;
   return (
-    <footer className="principle" role="note">
-      <strong>{dicts[lang].principle}</strong>
-      <span lang={other}> · {dicts[other].principle}</span>
-    </footer>
+    <div className="tr-banner" role="note">
+      <div className="tr-banner-inner">
+        <Icon name="globe" size={18} />
+        <div className="grow">
+          {incomplete && <p>{t("i18n.incomplete", { lang: endonym(lang) })}</p>}
+          {machine && <p>{t("i18n.machine")}</p>}
+        </div>
+        <button type="button" className="btn btn-small btn-ghost" onClick={() => setClosed((c) => ({ ...c, [lang]: true }))}>
+          {t("common.close")}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+interface NavItem {
+  to: string;
+  icon: IconName;
+  label: Key;
+}
+
+function navFor(role: AccountRole | null): NavItem[] {
+  switch (role) {
+    case "worker":
+      return [
+        { to: "/w/quiz", icon: "quiz", label: "nav.quiz" },
+        { to: "/w/profile", icon: "user", label: "nav.myProfile" },
+        { to: "/w/assess", icon: "clipboard", label: "nav.assess" },
+        { to: "/w/bookings", icon: "calendar", label: "nav.bookings" },
+        { to: "/w/privacy", icon: "shield", label: "nav.privacy" },
+      ];
+    case "customer":
+      return [
+        { to: "/c/find", icon: "search", label: "nav.find" },
+        { to: "/c/bookings", icon: "calendar", label: "nav.bookings" },
+        { to: "/c/privacy", icon: "shield", label: "nav.privacy" },
+      ];
+    case "facilitator":
+      return [
+        { to: "/staff", icon: "home", label: "nav.staffHome" },
+        { to: "/declare", icon: "plus", label: "nav.newDeclaration" },
+        { to: "/queue", icon: "refresh", label: "nav.queue" },
+      ];
+    case "assessor":
+      return [
+        { to: "/staff", icon: "home", label: "nav.staffHome" },
+        { to: "/staff/requests", icon: "inbox", label: "nav.requests" },
+        { to: "/admin", icon: "file", label: "nav.audit" },
+        { to: "/queue", icon: "refresh", label: "nav.queue" },
+      ];
+    case "admin":
+      return [
+        { to: "/staff", icon: "home", label: "nav.staffHome" },
+        { to: "/staff/requests", icon: "inbox", label: "nav.requests" },
+        { to: "/staff/permits", icon: "idcard", label: "nav.permits" },
+        { to: "/admin", icon: "file", label: "nav.audit" },
+      ];
+    default:
+      return [
+        { to: "/c/find", icon: "search", label: "nav.find" },
+        { to: "/welcome", icon: "home", label: "nav.start" },
+        { to: "/login", icon: "user", label: "nav.login" },
+      ];
+  }
+}
+
+function BottomBar() {
+  const { t, lang, has } = useI18n();
+  const { account } = useSession();
+  const items = navFor(account?.role ?? null);
+  return (
+    <div className="bottom">
+      <p className="principle" role="note">
+        <strong>{t("principle")}</strong>
+        {lang !== "en" && has("principle") && <span lang="en"> · {enText("principle")}</span>}
+      </p>
+      <nav className="bottom-nav" aria-label={t("nav.main")} style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}>
+        {items.map((it) => (
+          <NavLink key={it.to} to={it.to} end={it.to === "/staff"} className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+            <Icon name={it.icon} size={24} />
+            <span className="nav-label">{t(it.label)}</span>
+          </NavLink>
+        ))}
+      </nav>
+    </div>
   );
 }
 
 export function Layout() {
+  const { t } = useI18n();
+  const { account } = useSession();
+  const staff = isStaff(account);
   return (
-    <div className="app">
+    <div className={`app ${staff ? "is-staff" : "is-public"}`}>
       <a href="#main" className="skip">
-        Skip to content
+        {t("common.skip")}
       </a>
-      <Header />
-      <BlockingBanner />
+      {staff ? <StaffHeader /> : <PublicHeader />}
+      {staff && <BlockingBanner />}
+      <TranslationBanner />
       <main id="main" className="main">
+        {!staff && <OfflineNotice />}
         <Outlet />
       </main>
-      <Footer />
+      <BottomBar />
     </div>
   );
 }

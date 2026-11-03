@@ -141,11 +141,24 @@ def booking_out(s: Session, b: Booking, viewer: Account) -> dict:
     other = s.get(Account, other_id)
     d["other_party"] = {"account_id": other_id, "display_name": other.display_name if other else "Unknown",
                         "role": "worker" if other_id == b.worker_id else "customer"}
-    if b.status in ("accepted", "completed") and other and other.erased_at is None:
+    if other and other.erased_at is None and contact_visible(b):
         d["other_party"]["phone"] = other.phone  # shared only after acceptance (contact_share consent)
     d["job"] = trades.TRADES.get(b.trade, {}).get("jobs", {}).get(b.job_type)
     d["you_are"] = "customer" if viewer.id == b.customer_id else "worker"
     return d
+
+
+CONTACT_DAYS_AFTER_COMPLETION = 14
+
+
+def contact_visible(b: Booking) -> bool:
+    """Phones are shared while a booking is accepted and for a short time after it is completed."""
+    if b.status == "accepted":
+        return True
+    if b.status == "completed":
+        done = b.updated_at if b.updated_at.tzinfo else b.updated_at.replace(tzinfo=dt.UTC)
+        return _now() - done <= dt.timedelta(days=CONTACT_DAYS_AFTER_COMPLETION)
+    return False
 
 
 def act_on_booking(s: Session, b: Booking, viewer: Account, action: str) -> Booking:
@@ -180,6 +193,13 @@ def rate_booking(s: Session, b: Booking, viewer: Account, stars: int, review: st
 
 
 # ---- consent withdrawal and erasure ---------------------------------------------------------------
+
+
+def on_consent_granted(s: Session, acc: Account, purpose: str) -> None:
+    if purpose == "profile_display" and (p := s.get(WorkerProfile, acc.id)):
+        p.visible = True
+        s.add(p)
+        s.commit()
 
 
 def on_consent_withdrawn(s: Session, acc: Account, purpose: str) -> None:

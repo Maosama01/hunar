@@ -1,5 +1,6 @@
 // Client-side photo handling: downscale to at most 1280 px JPEG before queueing, so uploads stay
 // small on slow connections. Faces are blurred by the server before anything is stored there.
+import { fetchBlob } from "./api";
 
 export const MAX_DIM = 1280;
 export const JPEG_QUALITY = 0.85;
@@ -91,9 +92,9 @@ export async function preparePhoto(file: Blob, maxDim = MAX_DIM, quality = JPEG_
 /** Thumbnail of an image on the server (the face-blurred copy), for offline display. */
 export async function thumbFromUrl(url: string): Promise<string | null> {
   try {
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    const d = await decode(await res.blob());
+    const blob = await fetchBlob(url); // evidence images need the staff login
+    if (!blob) return null;
+    const d = await decode(blob);
     try {
       return drawScaled(d, THUMB_DIM).toDataURL("image/jpeg", 0.7);
     } finally {

@@ -33,6 +33,17 @@ spoken (optional speech to text; the facilitator checks the transcript). Hunar:
 7. **M4 Consistency study.** Rater mode collects scores with and without the rubric, and the
    analysis computes Fleiss' kappa, ordinal Krippendorff's alpha and bootstrap CIs. **It needs real
    raters; the result is pending.** How to run it: [docs/m4_study_walkthrough.md](docs/m4_study_walkthrough.md).
+8. **Workers and customers.** Onboarding in English and the 22 scheduled languages, phone + PIN login
+   (SMS code ready to switch on), consent per purpose (DPDP Act 2023), and two kinds of user:
+   * *workers* (electrician, plumber, carpenter) take an **adaptive self-check quiz** built from
+     official sources, see a score range and topics to revise, request a practical assessment and
+     handle bookings;
+   * *customers* search by trade and PIN code and book a worker. The only "skill assessed" badge comes
+     from an assessor's sign-off; electrical jobs that need a State permit (CEA Safety Regulations
+     2023, reg. 31) can be booked only with a worker whose permit an admin has checked.
+
+   The quiz never certifies anyone and is never shown to customers. Research behind the design:
+   [docs/research/two_sided_app_research.md](docs/research/two_sided_app_research.md).
 
 ```mermaid
 flowchart LR
@@ -66,6 +77,10 @@ make eval       # M1 + M2 evaluations -> experiments/*.json -> results tables be
 make demo       # seed the SAMPLE worker, start the API on :8000 and the web app on :5173
 ```
 
+Demo logins (SAMPLE accounts, local only) are listed at the top of
+[backend/hunar/market/seed.py](backend/hunar/market/seed.py). Staff accounts are made on the server:
+`make staff ROLE=assessor PHONE=98xxxxxxxx NAME="..."`.
+
 Optional extras: `make voice` (spoken declarations with faster-whisper; about 500 MB model on first
 use) and `make vision` (YOLO inference once the detector is trained).
 
@@ -87,6 +102,10 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | PWA frontend + offline queue | Done: all screens, EN/HI, offline outbox; exercised in a browser at phone width incl. offline replay | Real; not yet tried on a physical phone |
 | M4 rater mode + analysis | Built; photo import for the study (`make study-items`); step-by-step guide for the team | **RESULT PENDING**: no real raters yet |
 | M4 study sizing | Simulation of the method under stated assumptions | **Simulation, not a result**; used only to choose the number of raters and items |
+| Accounts, consent, roles | Done: phone + PIN (salted, peppered scrypt; lockout), OTP-ready, itemised DPDP consent, erasure; staff endpoints need a staff login | Real; SMS gateway not configured |
+| Worker quiz (3 trades) | Done: adaptive Rasch quiz, 40 / 24 / 24 questions from official sources, review with sources | Questions are **DRAFT** (expert review pending); difficulties **uncalibrated** until about 100 real attempts per trade |
+| Booking and badges | Done: search, booking lifecycle, ratings, assessment requests, permit rule (CEA reg. 31), badges only from assessor sign-off | Real; permit check is manual (no State register API) |
+| 23 languages | UI and quiz support 23 languages with fallback, RTL and read-aloud; Bhashini client and `make translate` | Only English and Hindi written so far (Hindi with AI help, native-speaker review pending); Bhashini **not yet run** (needs credentials); machine translations will need review |
 | Voice input | Done: record on the declaration screen, faster-whisper `small` on CPU, transcript must be read back before saving; audio never stored | Checked on **synthetic** text-to-speech audio only; not yet tried with real workers' voices |
 
 ## Results
@@ -214,6 +233,32 @@ Share of 500 simulated studies per cell in which the 95% CI of the assisted-minu
 | 5 | 25 | 0.02 | 0.21 | 0.75 | 0.96 |
 | 5 | 30 | 0.03 | 0.27 | 0.79 | 1.00 |
 
+### Worker quiz: design check (SIMULATION OF THE METHOD, not a result)
+
+> **SIMULATION OF THE METHOD, NOT A RESULT: simulated workers answering under assumed scenarios. It checks the quiz design; it says nothing about real workers.**
+
+1000 simulated workers per cell, ability ~ N(0, 1). Adaptive quiz: Rasch model, EAP scoring, stop at posterior SD <= 0.5 after 12 items or at 25 items; compared with a fixed 20-item quiz. Scenarios: difficulties as estimated (*calibrated*), off by N(0, 0.7²) logits (*cold start*), and cold start with a 0.2 guessing floor. Coverage = share of 90% intervals containing the true ability. Source: `experiments/quiz_cat_simulation.json`; figure `docs/figures/quiz_cat_simulation.png`.
+
+| Trade | Scenario | Questions (adaptive / fixed) | RMSE (adaptive / fixed) | 90% coverage (adaptive / fixed) |
+|---|---|---|---|---|
+| carpenter | calibrated | 15.7 / 20 | 0.50 / 0.47 | 0.90 / 0.89 |
+| carpenter | cold start | 15.5 / 20 | 0.53 / 0.48 | 0.88 / 0.89 |
+| carpenter | cold start guessing | 15.7 / 20 | 0.71 / 0.68 | 0.76 / 0.72 |
+| electrician | calibrated | 15.4 / 20 | 0.50 / 0.46 | 0.89 / 0.89 |
+| electrician | cold start | 15.2 / 20 | 0.53 / 0.49 | 0.88 / 0.89 |
+| electrician | cold start guessing | 15.4 / 20 | 0.70 / 0.74 | 0.76 / 0.70 |
+| plumber | calibrated | 16.0 / 20 | 0.49 / 0.46 | 0.90 / 0.90 |
+| plumber | cold start | 16.0 / 20 | 0.53 / 0.48 | 0.88 / 0.89 |
+| plumber | cold start guessing | 15.8 / 20 | 0.73 / 0.71 | 0.74 / 0.70 |
+
+### Worker quiz: calibration from real answers
+
+| Trade | Status |
+|---|---|
+| carpenter | RESULT PENDING (0 finished real attempts; 100 needed) |
+| electrician | RESULT PENDING (0 finished real attempts; 100 needed) |
+| plumber | RESULT PENDING (0 finished real attempts; 100 needed) |
+
 <!-- RESULTS:END -->
 
 Figures: [docs/figures/](docs/figures/).
@@ -229,6 +274,9 @@ backend/hunar/
   audit/      hash-chained audit log
   speech/     spoken declarations: faster-whisper transcription + synthetic-speech pipeline check
   study/      M4 agreement analysis, study photo import, study-size simulation
+  accounts/   phone + PIN login, sessions, OTP hook, consent notice, staff CLI
+  market/     trades and jobs, worker profiles, badges, bookings, assessment requests, SAMPLE accounts
+  quiz/       question banks (YAML), adaptive engine, API, simulation, calibration
 frontend/     React + Vite PWA (Dexie offline outbox, English / Hindi)
 data/
   qp_sources.json      which NQR qualifications we use and where they come from
@@ -239,7 +287,7 @@ data/
 notebooks/   m2_train_yolo_colab.ipynb, m1_error_analysis.ipynb
 experiments/ results as JSON (+ per-item predictions)
 docs/        DATA.md, architecture.md, consent_form.md, labelling_guidelines.md, report/,
-             m2_colab_walkthrough.md, m4_study_walkthrough.md
+             m2_colab_walkthrough.md, m4_study_walkthrough.md, research/
 scripts/     data download, labelling tool, results table, report build
 tests/       pytest suite
 ```

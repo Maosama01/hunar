@@ -160,7 +160,7 @@ def review(s: Session, a: QuizAttempt) -> list[dict]:
                     "your_choice": None if r.choice is None else shown[r.choice], "answer": shown[it.answer],
                     "correct": r.correct, "rapid": r.rapid,
                     "explanation": text["explanation"], "sources": [bank.sources[k] for k in it.sources],
-                    "translation": text["translation"]})
+                    "translation": text["translation"], "language": text["language"]})
     return out
 
 

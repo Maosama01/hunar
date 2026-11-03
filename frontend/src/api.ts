@@ -1,5 +1,7 @@
 // Typed client for the Hunar REST API (docs/api/openapi.json). All writes that can happen offline
 // go through the outbox and POST /api/sync (see sync.ts); this module only talks HTTP.
+import type { LangCode } from "./i18n/languages";
+import { clearSession, getToken } from "./session";
 import { setStatus } from "./status";
 
 /** Same origin by default: Vite proxies /api to the FastAPI server. */
@@ -9,7 +11,8 @@ export const apiUrl = (path: string): string => `${API_BASE}${path}`;
 
 // ---- Types (mirror backend/hunar/schemas.py, api/models.py and rubric/engine.py) ---------------
 
-export type Lang = "en" | "hi";
+/** Any of the 23 app language codes. */
+export type Lang = LangCode;
 
 export interface Bi {
   en: string;
@@ -380,11 +383,15 @@ async function request<T>(method: string, path: string, body?: unknown, opts: Re
   const ctrl = new AbortController();
   const timer = window.setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 15000);
   let res: Response;
+  const token = getToken();
   try {
     const form = body instanceof FormData;
+    const headers: Record<string, string> = {};
+    if (body !== undefined && !form) headers["Content-Type"] = "application/json";
+    if (token) headers.Authorization = `Bearer ${token}`;
     res = await fetch(apiUrl(path), {
       method,
-      headers: body === undefined || form ? undefined : { "Content-Type": "application/json" },
+      headers,
       body: body === undefined ? undefined : form ? body : JSON.stringify(body),
       signal: ctrl.signal,
       cache: "no-store",
@@ -404,6 +411,11 @@ async function request<T>(method: string, path: string, body?: unknown, opts: Re
       throw new NetworkError(`the server is not reachable (HTTP ${res.status})`);
     }
     setStatus({ reachable: true });
+    // A token the server no longer accepts (expired, logged out elsewhere, PIN reset): end the
+    // session here; the guards send the person to the login screen. Queued changes stay in Dexie.
+    if (res.status === 401 && token && token === getToken() && !path.startsWith("/api/auth/login")) {
+      clearSession("expired");
+    }
     let detail: unknown = text;
     try {
       const parsed = JSON.parse(text) as { detail?: unknown };
@@ -419,6 +431,24 @@ async function request<T>(method: string, path: string, body?: unknown, opts: Re
 
 const get = <T>(path: string, opts?: RequestOpts) => request<T>("GET", path, undefined, opts);
 const post = <T>(path: string, body: unknown, opts?: RequestOpts) => request<T>("POST", path, body, opts);
+const put = <T>(path: string, body: unknown, opts?: RequestOpts) => request<T>("PUT", path, body, opts);
+const del = <T>(path: string, opts?: RequestOpts) => request<T>("DELETE", path, undefined, opts);
+const patch = <T>(path: string, body: unknown, opts?: RequestOpts) => request<T>("PATCH", path, body, opts);
+const enc = encodeURIComponent;
+
+/** Fetch an API resource that needs the login (e.g. evidence images) as a Blob. */
+export async function fetchBlob(path: string): Promise<Blob | null> {
+  const token = getToken();
+  try {
+    const res = await fetch(path.startsWith("http") ? path : apiUrl(path), {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    });
+    if (res.status === 401 && token && token === getToken()) clearSession("expired");
+    return res.ok ? await res.blob() : null;
+  } catch {
+    return null;
+  }
+}
 
 const q = (params: Record<string, string | number | boolean | undefined>) =>
   Object.entries(params)
@@ -446,11 +476,324 @@ export const api = {
     get<StudyItem[]>(`/api/study/items?${q(params)}`),
   addRating: (body: RatingIn) => post<unknown>("/api/study/ratings", body),
   /** Draft transcript of a recording; the server does not keep the audio. The first call loads the model. */
-  transcribe: (audio: Blob, language: Lang) => {
+  transcribe: (audio: Blob, language: string) => {
     const form = new FormData();
     const ext = audio.type.includes("mp4") ? "m4a" : audio.type.includes("ogg") ? "ogg" : "webm";
     form.append("file", audio, `declaration.${ext}`);
     form.append("language", language);
     return post<Transcript>("/api/transcribe", form, { timeoutMs: 180000 });
   },
+
+  // ---- accounts (/api/auth) ----
+  authConfig: () => get<AuthConfig>("/api/auth/config"),
+  requestOtp: (phone: string, purpose: "register" | "reset") => post<OtpOut>("/api/auth/otp", { phone, purpose }),
+  register: (body: RegisterIn) => post<AuthOut>("/api/auth/register", body),
+  login: (phone: string, pin: string) => post<AuthOut>("/api/auth/login", { phone, pin }),
+  logout: () => post<{ ok: boolean }>("/api/auth/logout", {}, { timeoutMs: 5000 }),
+  me: () => get<Account>("/api/auth/me"),
+  resetPin: (body: { phone: string; new_pin: string; otp_challenge_id: string; otp_code: string }) =>
+    post<{ ok: boolean }>("/api/auth/reset-pin", body),
+  setConsent: (purpose: string, granted: boolean) => post<Account>("/api/auth/consents", { purpose, granted }),
+  eraseMe: () => del<{ erased: boolean }>("/api/auth/me"),
+  updateMe: (body: { language?: string; display_name?: string }) => patch<Account>("/api/auth/me", body),
+
+  // ---- marketplace ----
+  trades: () => get<TradesOut>("/api/trades"),
+  myProfile: () => get<MyProfile | null>("/api/me/profile"),
+  saveProfile: (body: ProfileIn) => put<MyProfile>("/api/me/profile", body),
+  searchWorkers: (p: { trade?: string; pincode?: string; assessed_only?: boolean; permit_only?: boolean }) =>
+    get<PublicProfile[]>(`/api/market/workers?${q(p)}`),
+  publicWorker: (id: string) => get<PublicProfile>(`/api/market/workers/${enc(id)}`),
+  book: (body: BookingIn) => post<Booking>("/api/bookings", body),
+  bookings: () => get<Booking[]>("/api/bookings"),
+  bookingAction: (id: string, action: "accept" | "decline" | "cancel" | "complete") =>
+    post<Booking>(`/api/bookings/${enc(id)}/${action}`, {}),
+  rateBooking: (id: string, stars: number, review: string) =>
+    post<Booking>(`/api/bookings/${enc(id)}/rate`, { stars, review }),
+  requestAssessment: (body: { declaration_text: string; preferred_date: string | null }) =>
+    post<AssessmentRequest>("/api/assessment-requests", body),
+  assessmentRequests: () => get<AssessmentRequest[]>("/api/assessment-requests"),
+  startRequest: (id: string) =>
+    post<{ request: AssessmentRequest; assessment_id: string }>(`/api/assessment-requests/${enc(id)}/start`, {}),
+  cancelRequest: (id: string) => post<AssessmentRequest>(`/api/assessment-requests/${enc(id)}/cancel`, {}),
+  adminWorkers: (p: { trade?: string }) =>
+    get<(PublicProfile & { visible: boolean; phone_masked: string })[]>(`/api/admin/workers?${q(p)}`),
+  setPermit: (accountId: string, status: PermitStatus, state: string) =>
+    post<unknown>(`/api/admin/workers/${enc(accountId)}/permit`, { status, state }),
+
+  // ---- quiz ----
+  quizBanks: () => get<Record<string, QuizBank>>("/api/quiz/banks"),
+  startQuiz: (trade: string, language: string) => post<{ attempt_id: string; item: QuizItem }>("/api/quiz/attempts", { trade, language }),
+  answerQuiz: (attemptId: string, body: { item_id: string; choice: number | null; seconds: number | null }) =>
+    post<QuizAnswerOut>(`/api/quiz/attempts/${enc(attemptId)}/answers`, body),
+  quizAttempts: () => get<QuizAttemptRow[]>("/api/quiz/attempts"),
+  quizAttempt: (id: string) => get<QuizAttemptOut>(`/api/quiz/attempts/${enc(id)}`),
+  quizReview: (id: string) => get<QuizReviewItem[]>(`/api/quiz/attempts/${enc(id)}/review`),
 };
+
+// ---- Accounts, marketplace and quiz types (backend/hunar/accounts, market, quiz) ----------------
+
+export type AccountRole = "worker" | "customer" | "facilitator" | "assessor" | "admin";
+
+export interface Account {
+  id: string;
+  role: AccountRole;
+  display_name: string;
+  language: string;
+  phone_masked: string;
+  phone_verified: boolean;
+  is_sample: boolean;
+  consents: Record<string, boolean>;
+}
+
+export interface AuthOut {
+  token: string;
+  account: Account;
+}
+
+export interface Purpose {
+  roles: string[];
+  required: boolean;
+  data: string[];
+  why: string;
+  withdraw: string;
+}
+
+export interface AuthConfig {
+  otp_required: boolean;
+  otp_provider: string | null;
+  languages: string[];
+  notice_version: string;
+  purposes: Record<string, Record<string, Purpose>>;
+  pin_rules: string;
+}
+
+export interface OtpOut {
+  otp_required: boolean;
+  challenge_id?: string;
+  expires_in_minutes?: number;
+  test_code?: string;
+  test_note?: string;
+}
+
+export interface RegisterIn {
+  phone: string;
+  pin: string;
+  role: "worker" | "customer";
+  display_name: string;
+  language: string;
+  is_adult: boolean;
+  consents: Record<string, boolean>;
+  otp_challenge_id?: string;
+  otp_code?: string;
+}
+
+export type Trade = "electrician" | "plumber" | "carpenter";
+export const TRADES: Trade[] = ["electrician", "plumber", "carpenter"];
+
+export interface Job {
+  en: string;
+  hi: string;
+  needs_permit: boolean;
+}
+
+export interface QualificationRef {
+  nqr_id: number;
+  title: string;
+  nsqf_level: number | null;
+  awarding_body: string | null;
+}
+
+export interface TradeInfo {
+  name: Bi;
+  qualification: QualificationRef | null;
+  jobs: Record<string, Job>;
+}
+
+export type TradesOut = Record<string, TradeInfo> & { _permit_note?: string };
+
+export type PermitStatus = "none" | "self_declared" | "document_checked";
+
+export interface Badge {
+  kind: "skill_assessed" | "permit_checked";
+  qualification?: QualificationRef | null;
+  assessment_id?: string;
+  state?: string;
+  date: string | null;
+  note: string;
+}
+
+export interface PublicProfile {
+  account_id: string;
+  display_name: string;
+  trade: Trade;
+  trade_name: Bi | null;
+  years_experience: number;
+  district: string;
+  pincode_area: string;
+  languages: string[];
+  bio: string;
+  badges: Badge[];
+  skill_assessed: boolean;
+  permit: { status: PermitStatus; state: string };
+  rating: { average: number | null; count: number };
+  is_sample: boolean;
+}
+
+export interface ProfileIn {
+  trade: Trade;
+  years_experience: number;
+  pincode: string;
+  district: string;
+  languages: string[];
+  bio: string;
+  permit_status: "none" | "self_declared";
+  permit_state: string;
+}
+
+export interface MyProfile {
+  account_id: string;
+  trade: Trade;
+  years_experience: number;
+  pincode: string;
+  district: string;
+  languages: string; // comma-separated codes
+  bio: string;
+  visible: boolean;
+  permit_status: PermitStatus;
+  permit_state: string;
+  permit_checked_at: string | null;
+  updated_at: string;
+  public: PublicProfile;
+  visible_reason: string | null;
+}
+
+export type Slot = "morning" | "afternoon" | "evening";
+
+export interface BookingIn {
+  worker_id: string;
+  job_type: string;
+  description: string;
+  pincode: string;
+  preferred_date: string;
+  slot: Slot;
+}
+
+export type BookingStatus = "requested" | "accepted" | "declined" | "cancelled" | "completed";
+
+export interface Booking {
+  id: string;
+  customer_id: string;
+  worker_id: string;
+  trade: Trade;
+  job_type: string;
+  description: string;
+  pincode: string;
+  preferred_date: string;
+  slot: Slot;
+  status: BookingStatus;
+  rating: number | null;
+  review: string;
+  created_at: string;
+  updated_at: string;
+  other_party: { account_id: string; display_name: string; role: "worker" | "customer"; phone?: string };
+  job: Job | null;
+  you_are: "customer" | "worker";
+}
+
+export interface QuizSummary extends QuizResult {
+  attempts_finished: number;
+}
+
+export interface AssessmentRequest {
+  id: string;
+  account_id: string;
+  trade: Trade;
+  declaration_text: string;
+  pincode: string;
+  preferred_date: string | null;
+  status: "open" | "started" | "cancelled";
+  assessor_account_id: string | null;
+  assessment_id: string | null;
+  created_at: string;
+  worker_display_name?: string | null;
+  quiz?: QuizSummary | null;
+}
+
+export interface QuizBank {
+  version: string;
+  status: string;
+  n_items: number;
+  qualification_nqr_id: number | null;
+  calibrated: boolean;
+  nos: Record<string, { title: Bi; weight: number }>;
+  languages: { original: string[]; machine_translated: string[] };
+  rules: { min_items: number; max_items: number; se_target: number };
+}
+
+export type TranslationStatus = "original" | "machine" | "reviewed" | "missing";
+
+export interface QuizItem {
+  id: string;
+  position: number;
+  nos: string;
+  nos_title: Bi;
+  stem: string;
+  options: string[];
+  image: string | null;
+  language: string;
+  translation: TranslationStatus;
+  max_items: number;
+}
+
+export interface NosResult {
+  nos: string;
+  title: Bi;
+  answered: number;
+  correct: number;
+  enough: boolean;
+}
+
+export interface QuizResult {
+  attempt_id: string;
+  trade: Trade;
+  status: string;
+  started_at: string;
+  finished_at: string | null;
+  theta: number;
+  sd: number;
+  expected_percent: number;
+  expected_percent_interval90: [number, number];
+  n_answered: number;
+  n_scored: number;
+  n_rapid: number;
+  n_dont_know: number;
+  by_nos: NosResult[];
+  revise: NosResult[];
+  bank: { version: string; status: string; params_version: string; calibrated: boolean };
+  calibration_note: string | null;
+  note: string;
+}
+
+export type QuizAnswerOut =
+  | { done: false; item: QuizItem; rapid_warning: boolean }
+  | { done: true; result: QuizResult };
+
+export type QuizAttemptOut = { done: false; item: QuizItem } | { done: true; result: QuizResult };
+
+export type QuizAttemptRow =
+  | QuizResult
+  | { attempt_id: string; trade: Trade; status: "in_progress"; n_answered: number };
+
+export interface QuizReviewItem {
+  position: number;
+  stem: string;
+  options: string[];
+  your_choice: number | null;
+  answer: number;
+  correct: boolean;
+  rapid: boolean;
+  explanation: string;
+  sources: string[];
+  translation: TranslationStatus;
+}

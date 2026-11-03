@@ -119,3 +119,29 @@ Share of 500 simulated studies per cell in which the 95% CI of the assisted-minu
 | 5 | 20 | 0.02 | 0.24 | 0.60 | 0.95 |
 | 5 | 25 | 0.02 | 0.21 | 0.75 | 0.96 |
 | 5 | 30 | 0.03 | 0.27 | 0.79 | 1.00 |
+
+### Worker quiz: design check (SIMULATION OF THE METHOD, not a result)
+
+> **SIMULATION OF THE METHOD, NOT A RESULT: simulated workers answering under assumed scenarios. It checks the quiz design; it says nothing about real workers.**
+
+1000 simulated workers per cell, ability ~ N(0, 1). Adaptive quiz: Rasch model, EAP scoring, stop at posterior SD <= 0.5 after 12 items or at 25 items; compared with a fixed 20-item quiz. Scenarios: difficulties as estimated (*calibrated*), off by N(0, 0.7²) logits (*cold start*), and cold start with a 0.2 guessing floor. Coverage = share of 90% intervals containing the true ability. Source: `experiments/quiz_cat_simulation.json`; figure `docs/figures/quiz_cat_simulation.png`.
+
+| Trade | Scenario | Questions (adaptive / fixed) | RMSE (adaptive / fixed) | 90% coverage (adaptive / fixed) |
+|---|---|---|---|---|
+| carpenter | calibrated | 15.7 / 20 | 0.50 / 0.47 | 0.90 / 0.89 |
+| carpenter | cold start | 15.5 / 20 | 0.53 / 0.48 | 0.88 / 0.89 |
+| carpenter | cold start guessing | 15.7 / 20 | 0.71 / 0.68 | 0.76 / 0.72 |
+| electrician | calibrated | 15.4 / 20 | 0.50 / 0.46 | 0.89 / 0.89 |
+| electrician | cold start | 15.2 / 20 | 0.53 / 0.49 | 0.88 / 0.89 |
+| electrician | cold start guessing | 15.4 / 20 | 0.70 / 0.74 | 0.76 / 0.70 |
+| plumber | calibrated | 16.0 / 20 | 0.49 / 0.46 | 0.90 / 0.90 |
+| plumber | cold start | 16.0 / 20 | 0.53 / 0.48 | 0.88 / 0.89 |
+| plumber | cold start guessing | 15.8 / 20 | 0.73 / 0.71 | 0.74 / 0.70 |
+
+### Worker quiz: calibration from real answers
+
+| Trade | Status |
+|---|---|
+| carpenter | RESULT PENDING (0 finished real attempts; 100 needed) |
+| electrician | RESULT PENDING (0 finished real attempts; 100 needed) |
+| plumber | RESULT PENDING (0 finished real attempts; 100 needed) |

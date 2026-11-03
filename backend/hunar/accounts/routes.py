@@ -56,6 +56,11 @@ class ConsentIn(BaseModel):
     granted: bool
 
 
+class MeIn(BaseModel):
+    display_name: str | None = Field(default=None, min_length=1, max_length=40)
+    language: str | None = None
+
+
 def _phone_or_422(raw: str) -> str:
     try:
         return auth.normalise_phone(raw)
@@ -198,10 +203,24 @@ def change_consent(body: ConsentIn, acc: Account = Depends(auth.current_account)
         raise HTTPException(409, f"withdrawing '{body.purpose}' erases your account: use DELETE /api/auth/me")
     record_consent(s, acc, body.purpose, body.granted)
     s.commit()
-    if not body.granted:
-        from hunar.market.service import on_consent_withdrawn
+    from hunar.market.service import on_consent_granted, on_consent_withdrawn
 
-        on_consent_withdrawn(s, acc, body.purpose)
+    (on_consent_granted if body.granted else on_consent_withdrawn)(s, acc, body.purpose)
+    return account_out(s, acc)
+
+
+@router.patch("/me")
+def update_me(body: MeIn, acc: Account = Depends(auth.current_account), s: Session = DB):
+    if body.language is not None:
+        if body.language not in LANGUAGES:
+            raise HTTPException(422, f"unknown language {body.language!r}")
+        acc.language = body.language
+    if body.display_name is not None:
+        acc.display_name = body.display_name.strip()
+    s.add(acc)
+    audit.append(s, auth.actor(acc), "account.updated", acc.id,
+                 {"fields": sorted(k for k, v in body.model_dump().items() if v is not None)}, commit=False)
+    s.commit()
     return account_out(s, acc)
 
 

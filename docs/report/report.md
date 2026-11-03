@@ -51,6 +51,15 @@ study with real assessors; Hunar includes the rater mode, photo import and analy
 result is **pending**. A simulation of the method shows that the planned study (3 to 5 raters, 20 to
 30 items) can detect only a large improvement.
 
+Hunar was then extended to workers and customers. Workers log in with a phone number and PIN, give
+consent per purpose, take an adaptive self-check quiz (electrician, plumber, carpenter) built from
+official sources, and request a practical assessment; customers find and book workers, and see a
+"skill assessed" badge only after an assessor's sign-off. Electrical jobs that need a State permit
+under the CEA Safety Regulations 2023 can be booked only with a worker whose permit was checked. In a
+simulation of the method, the adaptive quiz needed
+{{quiz_cat_simulation:trades.electrician.scenarios.calibrated.adaptive.mean_items|.1f}} questions instead of 20
+for a similar error; real calibration is pending.
+
 # 1. Introduction
 
 ## 1.1 Background
@@ -104,6 +113,9 @@ where it would replace human judgement.
 6. A ready-to-run protocol, rater mode, photo import and analysis for measuring inter-assessor
    agreement, sized with a simulation of the method.
 7. Optional spoken declarations with a read-back safeguard, checked end to end on synthetic speech.
+8. A two-sided extension for workers and customers: phone and PIN login with itemised DPDP consent, an
+   adaptive self-check quiz for three trades built on official sources, booking that respects the
+   CEA permit rule, and badges that only an assessor's sign-off can produce.
 
 # 2. Literature review
 
@@ -188,7 +200,9 @@ blurred before storage; works offline; runs on CPU; the vision model reports pre
 good in all three languages? *Q1b.* How much do speech-recognition errors change the mapping when
 the declaration is spoken (pipeline check on synthetic speech)? *Q2.* How reliably does perceptual hashing flag reused evidence without
 false alarms? *Q3.* How well does the detector find PPE (mAP50, mAP50-95)? *Q4.* Do assessors agree
-more with the rubric and pre scores than without them?
+more with the rubric and pre scores than without them? *Q5.* How precisely, and in how many
+questions, can an adaptive quiz estimate a worker's knowledge before its items are calibrated
+(simulation of the method)?
 
 # 4. Methodology
 
@@ -344,7 +358,66 @@ same paired item bootstrap and counted how often the 95 % interval of the improv
 These are artificial ratings; they say nothing about whether the rubric helps, only how precise a
 study of a given size can be.
 
-## 4.6 Where the tool supports and where it does not replace human judgement
+## 4.6 Workers and customers: accounts, quiz and booking
+
+The problem statement is about assessment, but a certified skill only helps a worker if customers can
+find and trust them. Hunar was therefore extended to two kinds of user: workers (electricians,
+plumbers, carpenters) who want an honest picture of their skills, and customers who want to book
+someone whose skills were checked. The design rests on desk research summarised in
+`docs/research/two_sided_app_research.md`.
+
+**What "verified" means.** Platforms in India mostly verify identity, not skill, and RPL evidence has
+been weak: a CAG audit of PMKVY found reused photos and missing geotags. Hunar's customer-facing badge
+says exactly what was checked: "practical skills assessed by an assessor against <qualification> on
+<date>, not a government certificate". It appears only when an assessor, logged in with an assessor
+account, signs off a positive recommendation through the M3 flow. The quiz never produces a badge.
+
+**Who may do electrical work.** Regulation 31 of the CEA Safety Regulations 2023 [65] allows
+installation work, including repairs and alterations, only by a State-licensed contractor and a permit
+holder, except like-for-like replacement of lamps, fans, fuses, switches, fittings and appliances up
+to 250 V. Each electrical job in the booking catalogue is marked accordingly, and a job that needs a
+permit can be booked only with a worker whose permit document an admin has checked. A self-declared
+permit is shown as self-declared.
+
+**Accounts and privacy.** Workers and customers log in with a phone number and a 4-6 digit PIN. The
+PIN is stored as scrypt over an HMAC with a server-side pepper and a per-account salt, because a short
+PIN alone could be brute-forced from a leaked database; five wrong PINs lock the account for 15
+minutes. An SMS one-time code can be switched on with a configuration setting once a gateway is
+available. Consent follows the DPDP Act 2023 [66]: one consent per purpose (account, assessment,
+profile display, contact sharing), each listing its data items; withdrawal is one action and triggers
+hiding or erasure; only adults register; audit entries name accounts by id, never by phone or name;
+and a phone number is shown to the other party only after a booking is accepted. Staff accounts
+(facilitator, assessor, admin) are created on the server, and every assessor-side endpoint, including
+offline sync, now uses the logged-in account as the actor instead of a name sent by the client.
+
+**The self-check quiz.** Each trade has a bank of multiple-choice questions written from official
+sources: the trade's qualification file and its performance criteria (CSDCI Assistant Electrician,
+WMPSC Plumber - General [77], FFSC Assistant Carpenter [78]), the CEA regulations, Indian Standards
+such as IS 5329 [79] and IS 2065 [80] (cited by clause, paraphrased), and the DGT curriculum [76] as a
+topic source. Every item names its NOS, criteria and sources; all banks are marked DRAFT until a
+certified assessor or ITI instructor reviews them. The quiz is adaptive. Ability is on a Rasch scale,
+chosen because it needs far fewer respondents to calibrate than two- or three-parameter models [67],
+[68]; it is estimated by EAP with a standard normal prior [69], and the posterior SD is reported with
+it. The next question comes from the NOS furthest below its share of the qualification's weightage
+[70], then, at random among the three items closest to the current estimate, to spread exposure. The
+quiz stops when the posterior SD is at most 0.5 after at least 12 scored answers, or at 25 questions.
+Item difficulties start as AI-drafted estimates labelled uncalibrated and act as priors [71]; once 100
+real attempts exist, `make quiz-calibrate` re-estimates them by MAP and writes a new, versioned
+parameter set (never changed during a quiz). Answers given faster than the question can be read are
+recorded and flagged but not scored [72], and a "don't know" option reduces guessing. Options are
+shuffled per attempt, the answer key never reaches the device, and the worker sees a range ("likely
+X-Y % of our questions") with topics to revise, never a pass or fail. Assessors see the latest quiz
+summary as context when they pick up a worker's assessment request.
+
+**Languages and accessibility.** The app offers English and the 22 languages of the Eighth Schedule,
+each named in its own script, with right-to-left layout for Urdu, Kashmiri and Sindhi. Interfaces for
+low-literacy users work better with icons, short text and voice than with text alone [73], [74], so the
+screens use large icon cards and read questions aloud. Translation and text to speech use Bhashini
+[75] from the server, so the keys never reach the browser; a batch script writes machine translations
+marked "not reviewed", and the app labels them and falls back to English or Hindi where a translation
+is missing.
+
+## 4.7 Where the tool supports and where it does not replace human judgement
 
 | Decision | Tool | Assessor |
 |---|---|---|
@@ -400,6 +473,29 @@ Electrician); the assessor sees the matched sentences and confirms the correct q
 
 *Figure 3. One criterion on the assessor's scoring screen: safety flag, suggested level with
 confidence and the reasons behind it, level descriptors, and the accept/override controls.*
+
+**Screens for workers and customers.** First use starts with a language picker (each language in its
+own script, with an honest "mostly English for now" until its translation exists), then the choice
+between "I am a worker" and "I want to hire a worker", the itemised consent screen, and registration
+with a phone number and PIN. Workers get bottom navigation for the quiz, their profile, assessment
+requests, bookings and privacy; customers for finding a worker, bookings and privacy; staff keep the
+assessor screens, plus assessment requests and (for admins) permit checks. Every screen was exercised
+in a browser at 375 px width, including Urdu in right-to-left layout.
+
+![Onboarding: language, role, consent](../figures/app_onboarding.png)
+
+*Figure 3b. Onboarding: language picker, role choice, and consent per purpose with the data each uses.*
+
+![Worker quiz](../figures/app_worker_quiz.png)
+
+*Figure 3c. Worker quiz: one question per screen with read-aloud; the result as a range with
+per-NOS bars (test account, answers given by a script); Urdu layout with a question shown in Hindi
+because its translation is missing.*
+
+![Customer search and booking](../figures/app_customer.png)
+
+*Figure 3d. Customer: search with badges that say what was checked (SAMPLE DATA worker), and booking
+where jobs needing a State permit are disabled for a worker whose permit is not checked.*
 
 # 6. Experiments and results
 
@@ -503,6 +599,27 @@ just its sign.
 *Figure 8. SIMULATION OF THE METHOD, not a result: share of simulated studies of each size whose
 95 % interval for the improvement in Krippendorff's alpha excludes zero, for three assumed effects.*
 
+**Q5, quiz design (simulation of the method).** Simulated workers answered through the same engine
+the app uses. For electricians, when the item difficulties are right, the adaptive quiz asked
+{{quiz_cat_simulation:trades.electrician.scenarios.calibrated.adaptive.mean_items|.1f}} questions on average against 20 for a fixed quiz, for an
+RMSE of {{quiz_cat_simulation:trades.electrician.scenarios.calibrated.adaptive.rmse|.2f}} against {{quiz_cat_simulation:trades.electrician.scenarios.calibrated.fixed.rmse|.2f}} logits, and its 90 %
+intervals contained the true ability {{quiz_cat_simulation:trades.electrician.scenarios.calibrated.adaptive.coverage90|.0%}} of the time. With the
+difficulties off by about 0.7 logits, as they may be before calibration, coverage was
+{{quiz_cat_simulation:trades.electrician.scenarios.cold_start.adaptive.coverage90|.0%}}. With guessing, which the Rasch scorer does not model,
+the RMSE rose to {{quiz_cat_simulation:trades.electrician.scenarios.cold_start_guessing.adaptive.rmse|.2f}} and coverage fell to
+{{quiz_cat_simulation:trades.electrician.scenarios.cold_start_guessing.adaptive.coverage90|.0%}}: weaker workers (true ability below -1) were
+overestimated by {{quiz_cat_simulation:trades.electrician.scenarios.cold_start_guessing.adaptive.bias_low_ability|.2f}} logits on average, against
+{{quiz_cat_simulation:trades.electrician.scenarios.calibrated.adaptive.bias_low_ability|.2f}} without guessing (the prior's usual pull towards the middle). The adaptive
+quiz therefore saves about a fifth of the questions at a small cost in precision, the stated
+uncertainty is honest only when difficulties are calibrated and guessing is low, and the quiz is
+fit for self-check and assessor context, not for any decision about a worker. Calibration from real
+answers is pending for every trade.
+
+![Quiz design check (simulation of the method, not a result)](../figures/quiz_cat_simulation.png)
+
+*Figure 9. SIMULATION OF THE METHOD, not a result: error of the ability estimate and number of
+questions, adaptive against fixed-length quiz, for three trades and three assumed scenarios.*
+
 # 7. Limitations
 
 * **No real worker data yet.** M1 results come from synthetic declarations written by an AI model;
@@ -530,6 +647,16 @@ just its sign.
   and free of background noise; real workers on site speak faster, mix languages and have regional
   accents. Even on clean audio, Whisper `small` makes many errors in Hindi. Recognition also needs
   the server, so it does not work offline.
+* **Quiz items are drafts and uncalibrated.** They were written with AI help from official sources and
+  have not yet been reviewed by an assessor or ITI instructor; difficulties are estimates until about
+  100 real attempts per trade exist. The quiz is unsupervised, so it cannot tell who answered.
+* **Trade qualification files.** The carpenter file's NQR validity ended on 31 Aug 2026 and no current
+  worker-level domestic carpentry qualification was found; parts of the plumber and carpenter files
+  parsed with gaps and need a human check.
+* **No identity or permit verification service.** Hunar does not check Aadhaar or a State permit
+  register; an admin checks the permit document by eye, and badges say exactly that.
+* **Languages.** The Bhashini client follows the documented API but has not been run against the live
+  service (no credentials yet); machine translations will need native-speaker review.
 * **Theory component.** NSQF assessment also includes theory and viva marks; Hunar supports only the
   practical component.
 
@@ -546,6 +673,10 @@ just its sign.
 * **Fairness.** Accuracy is reported per language; a model that only worked in English would be
   excluded on fairness grounds.
 * **Honest limits.** The interface states that the photo model judges presence only.
+* **Customers and workers.** Consent is itemised per purpose and can be withdrawn in one step;
+  profiles show an area, not an address; phone numbers are shared only after a booking is accepted;
+  only adults can register. Quiz results stay between the worker and the assessor, and the badge a
+  customer sees always says who checked what, and that it is not a government certificate.
 
 # 9. Status and future work
 
@@ -558,6 +689,7 @@ just its sign.
 | 4 | Frontend and offline sync | Done; full flow and offline replay exercised in a browser at phone width |
 | 5 | M4 study | Rater mode, photo import and analysis done; study sized by simulation; data collection pending |
 | 6 | Report and viva preparation | This draft |
+| 7 | Workers and customers | Accounts, consent, quiz (three trades), booking, assessment requests and 23-language support built and tested; quiz banks await expert review; calibration pending real attempts; Bhashini credentials pending |
 
 Next steps, in order:
 
@@ -567,7 +699,10 @@ Next steps, in order:
 4. Run the assessor-agreement study, aiming for 4 to 5 assessors and 30 items (Section 4.5).
 5. Try voice input with consenting workers' real speech; if Hindi errors stay frequent, test a larger
    or Hindi-specialised speech model. Add on-device face blurring.
-6. Extend to more trades by running the same parser on more NQR qualification files.
+6. Get the quiz banks reviewed by an ITI instructor and an assessor; collect about 100 real attempts
+   per trade, then calibrate.
+7. Register with Bhashini, run `make translate`, and have each language reviewed by a native speaker.
+8. Extend to more trades by running the same parser on more NQR qualification files.
 
 # References
 
