@@ -197,6 +197,21 @@ profile display and contact sharing. Each lists its data items (`backend/hunar/a
   inflates the scores of weaker workers and weakens the stated uncertainty, which is one reason the
   quiz is never used for a badge.
 
+**When the quiz is taken**
+
+The team decided on 2026-11-04 that the quiz is compulsory for workers and comes straight after
+registering:
+- The worker picks a trade on the sign-up screens, and creating the account starts that trade's quiz.
+- Nothing else opens until one quiz is finished: the profile, the customer listing, bookings and
+  assessment requests all wait.
+- Finishing counts, not the score. There is no pass mark, so the quiz stays a self-check. Pressing
+  "don't know" throughout also finishes it, and the assessor then sees that.
+- The quiz processes the worker's answers, so the *assessment* consent is required for workers
+  (notice version 2026-11-04.2). Withdrawing it means erasing the account.
+- Every new worker adds a finished attempt, so the 100-attempt calibration threshold is reached sooner.
+- Risk to check with real data: some workers may answer faster just to get through. Rapid answers are
+  flagged and not scored. Their share should be watched.
+
 **What the quiz never claims**
 - certification;
 - equivalence with the CSDCI theory exam or its 70 % pass mark;

@@ -1,16 +1,19 @@
 """Itemised consent notice (Digital Personal Data Protection Act 2023, s. 5-6; DPDP Rules 2025, r. 3).
 
 Each purpose lists the personal data it uses. Consent is asked per purpose, can be withdrawn as easily
-as it was given, and withdrawal of a purpose stops that processing (profile hidden, quiz data erased,
-or the whole account erased). The app shows this text in the user's language; the server records which
-notice version and language the person saw.
+as it was given, and withdrawal of a purpose stops that processing (profile hidden, or the whole account
+erased). The app shows this text in the user's language; the server records which notice version and
+language the person saw.
+
+Every worker takes the skill quiz right after registering (project decision of 2026-11-04), so the
+"assessment" purpose is required for workers: a worker account cannot exist without it.
 
 Only adults (18+) can register: the DPDP Act treats anyone under 18 as a child, whose data needs
 verifiable parental consent, and RPL under PMKVY 4.0 is for ages 18-59.
 """
 from __future__ import annotations
 
-NOTICE_VERSION = "2026-11-04"
+NOTICE_VERSION = "2026-11-04.2"  # .2: the skill quiz became required for workers
 
 PURPOSES: dict[str, dict] = {
     "account": {
@@ -22,12 +25,12 @@ PURPOSES: dict[str, dict] = {
     },
     "assessment": {
         "roles": ["worker"],
-        "required": False,
+        "required": True,
         "data": ["quiz answers and answer times", "your work declaration", "practical assessment records",
                  "task photos (faces blurred before storage)"],
-        "why": "to estimate your skills and let an assessor review them",
-        "withdraw": "erases your quiz answers; assessor records already signed off are kept only as the "
-                    "signed-off result",
+        "why": "to estimate your skills with a quiz right after you register, and to let an assessor review them",
+        "withdraw": "erases your account and your quiz answers (every worker takes the quiz); assessor records "
+                    "already signed off are kept only as the signed-off result",
     },
     "profile_display": {
         "roles": ["worker"],

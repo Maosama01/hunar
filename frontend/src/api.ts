@@ -488,7 +488,7 @@ export const api = {
   // ---- accounts (/api/auth) ----
   authConfig: () => get<AuthConfig>("/api/auth/config"),
   requestOtp: (phone: string, purpose: "register" | "reset") => post<OtpOut>("/api/auth/otp", { phone, purpose }),
-  register: (body: RegisterIn) => post<AuthOut>("/api/auth/register", body),
+  register: (body: RegisterIn) => post<RegisterOut>("/api/auth/register", body),
   login: (phone: string, pin: string) => post<AuthOut>("/api/auth/login", { phone, pin }),
   logout: () => post<{ ok: boolean }>("/api/auth/logout", {}, { timeoutMs: 5000 }),
   me: () => get<Account>("/api/auth/me"),
@@ -545,11 +545,24 @@ export interface Account {
   phone_verified: boolean;
   is_sample: boolean;
   consents: Record<string, boolean>;
+  /** Workers only: the compulsory quiz. Until one is finished the app shows nothing but the quiz. */
+  quiz?: QuizGate;
+}
+
+export interface QuizGate {
+  done: boolean;
+  finished_trades: Trade[];
+  in_progress: { attempt_id: string; trade: Trade } | null;
 }
 
 export interface AuthOut {
   token: string;
   account: Account;
+}
+
+/** A new worker's first quiz starts with the account. */
+export interface RegisterOut extends AuthOut {
+  quiz?: { attempt_id: string; item: QuizItem };
 }
 
 export interface Purpose {
@@ -585,6 +598,8 @@ export interface RegisterIn {
   language: string;
   is_adult: boolean;
   consents: Record<string, boolean>;
+  /** Workers only: the trade of the quiz that starts right after registering. */
+  trade?: Trade;
   otp_challenge_id?: string;
   otp_code?: string;
 }

@@ -17,6 +17,7 @@ from hunar.api.db import get_session
 from hunar.audit import log as audit
 from hunar.market import service, trades
 from hunar.market.models import AssessmentRequest, Booking, WorkerProfile
+from hunar.quiz import service as quiz
 
 router = APIRouter(tags=["marketplace"])
 DB = Depends(get_session)
@@ -84,6 +85,7 @@ def my_profile(acc: Account = WORKER, s: Session = DB):
 def save_profile(body: ProfileIn, acc: Account = WORKER, s: Session = DB):
     if bad := [x for x in body.languages if x not in LANGUAGES]:
         raise HTTPException(422, f"unknown languages: {', '.join(bad)}")
+    quiz.require_finished(s, acc.id, body.trade)  # the quiz comes first, and again for a new trade
     p = s.get(WorkerProfile, acc.id) or WorkerProfile(account_id=acc.id, trade=body.trade, pincode=body.pincode)
     if p.permit_status == "document_checked" and (body.trade != p.trade):
         p.permit_status, p.permit_checked_by, p.permit_checked_at = "self_declared", None, None
@@ -113,7 +115,7 @@ def search_workers(trade: str | None = None, pincode: str | None = None, assesse
 @router.get("/api/market/workers/{account_id}")
 def worker_public(account_id: str, s: Session = DB):
     acc, p = s.get(Account, account_id), s.get(WorkerProfile, account_id)
-    if acc is None or p is None or not p.visible or acc.erased_at is not None:
+    if acc is None or p is None or not service.listed(s, acc, p):
         raise HTTPException(404, "worker not found")
     return service.public_profile(s, acc, p)
 
@@ -170,6 +172,7 @@ def request_assessment(body: RequestIn, acc: Account = WORKER, s: Session = DB):
     p = s.get(WorkerProfile, acc.id)
     if p is None:
         raise HTTPException(409, "fill in your profile (trade and PIN code) first")
+    quiz.require_finished(s, acc.id, p.trade)
     if s.exec(select(AssessmentRequest).where(AssessmentRequest.account_id == acc.id,
                                               AssessmentRequest.status == "open")).first():
         raise HTTPException(409, "you already have an open request")

@@ -1,20 +1,25 @@
-// First run: language -> who are you -> 2-3 intro cards -> itemised consent -> register (-> SMS code).
+// First run: language -> who are you -> 2-3 intro cards -> (workers: trade) -> itemised consent ->
+// register (-> SMS code). A worker's first quiz starts with the account, so registering opens question 1.
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { api, ApiError, type AuthConfig, type OtpOut } from "../api";
+import { api, ApiError, TRADES, type AuthConfig, type OtpOut, type Trade } from "../api";
 import { normalisePhone, OtpInput, PhoneInput, pinProblem, PinInput } from "../components/AuthInputs";
 import { Notice } from "../components/common";
-import { Icon, type IconName } from "../components/Icon";
+import { Icon, TRADE_ICON, type IconName } from "../components/Icon";
 import { LanguageGrid } from "../components/LanguageGrid";
 import { TranslationBanner } from "../components/Layout";
 import { ErrorBox, Ltr, SpeakButton, Switch, useLoad } from "../components/ui";
 import { orderedPurposes, usePurposeText } from "../consent";
 import { enText, hasChosenLanguage, useI18n, type Key } from "../i18n";
 import { acknowledgeEnded, homePath, setSession, useSession } from "../session";
+import { useTrades } from "../trades";
 
-type Step = "lang" | "role" | "intro" | "consent" | "register" | "otp";
+type Step = "lang" | "role" | "intro" | "trade" | "consent" | "register" | "otp";
 type PublicRole = "worker" | "customer";
-const STEPS: Step[] = ["lang", "role", "intro", "consent", "register"];
+
+function stepsFor(role: PublicRole | null): Step[] {
+  return role === "worker" ? ["lang", "role", "intro", "trade", "consent", "register"] : ["lang", "role", "intro", "consent", "register"];
+}
 
 const INTRO: Record<PublicRole, { icon: IconName; title: Key; body: Key }[]> = {
   worker: [
@@ -29,12 +34,13 @@ const INTRO: Record<PublicRole, { icon: IconName; title: Key; body: Key }[]> = {
   ],
 };
 
-function Progress({ step }: { step: Step }) {
+function Progress({ step, role }: { step: Step; role: PublicRole | null }) {
   const { t } = useI18n();
-  const i = Math.max(0, STEPS.indexOf(step === "otp" ? "register" : step));
+  const steps = stepsFor(role);
+  const i = Math.max(0, steps.indexOf(step === "otp" ? "register" : step));
   return (
-    <div className="onb-progress" aria-label={t("onb.stepOf", { n: i + 1, total: STEPS.length })}>
-      {STEPS.map((s, k) => (
+    <div className="onb-progress" aria-label={t("onb.stepOf", { n: i + 1, total: steps.length })}>
+      {steps.map((s, k) => (
         <span key={s} className={`onb-dot ${k <= i ? "on" : ""}`} />
       ))}
     </div>
@@ -50,11 +56,12 @@ export function Onboarding() {
   const paramRole = params.get("role");
   const [role, setRole] = useState<PublicRole | null>(paramRole === "worker" || paramRole === "customer" ? paramRole : null);
   const firstStep = (params.get("step") as Step | null) ?? (hasChosenLanguage() ? "role" : "lang");
-  const [step, setStep] = useState<Step>(firstStep === "intro" && !role ? "role" : firstStep);
+  const [step, setStep] = useState<Step>((firstStep === "intro" || firstStep === "trade") && !role ? "role" : firstStep);
   const [introIdx, setIntroIdx] = useState(0);
   const cfg = useLoad(() => api.authConfig(), []);
 
   // Registration form state lives here so Back does not lose it.
+  const [trade, setTrade] = useState<Trade | null>(null);
   const [consents, setConsents] = useState<Record<string, boolean>>({});
   const [adult, setAdult] = useState(false);
   const [phone, setPhone] = useState("");
@@ -67,7 +74,7 @@ export function Onboarding() {
   const [error, setError] = useState<unknown>(null);
   const [exists, setExists] = useState(false);
   /** Where to go right after registering (the logged-in redirect below uses it). */
-  const registeredTo = useRef<string | null>(null);
+  const registeredTo = useRef<{ to: string; state: object } | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -75,20 +82,27 @@ export function Onboarding() {
   }, [step, introIdx]);
 
   if (session.account && !replay) {
-    const to = registeredTo.current;
-    return <Navigate to={to ?? homePath(session.account)} replace state={to ? { welcome: true } : undefined} />;
+    const next = registeredTo.current;
+    return <Navigate to={next?.to ?? homePath(session.account)} replace state={next?.state} />;
   }
 
   const ended = session.ended;
   const back = () => {
-    const prev: Partial<Record<Step, Step>> = { role: "lang", intro: "role", consent: "intro", register: "consent", otp: "register" };
+    const prev: Partial<Record<Step, Step>> = {
+      role: "lang",
+      intro: "role",
+      trade: "intro",
+      consent: role === "worker" ? "trade" : "intro",
+      register: "consent",
+      otp: "register",
+    };
     if (step === "intro" && introIdx > 0) setIntroIdx(introIdx - 1);
     else if (prev[step]) setStep(prev[step]!);
   };
 
   const finishIntro = () => {
     if (replay) navigate(homePath(session.account), { replace: true });
-    else setStep("consent");
+    else setStep(role === "worker" ? "trade" : "consent");
   };
 
   // ---------------------------------------------------------------------------------------------
@@ -118,6 +132,7 @@ export function Onboarding() {
               onClick={() => {
                 setRole(r);
                 setIntroIdx(0);
+                setTrade(null);
                 setConsents({});
                 setStep("intro");
                 acknowledgeEnded();
@@ -181,6 +196,10 @@ export function Onboarding() {
         )}
       </>
     );
+  } else if (step === "trade" && role === "worker") {
+    body = <TradeStep trade={trade} setTrade={setTrade} onNext={() => setStep("consent")} />;
+  } else if (step === "trade") {
+    body = null;
   } else if (step === "consent" && role) {
     body = (
       <ConsentStep
@@ -194,7 +213,7 @@ export function Onboarding() {
         onNext={() => setStep("register")}
       />
     );
-  } else if ((step === "register" || step === "otp") && role && cfg.data) {
+  } else if ((step === "register" || step === "otp") && role && cfg.data && (role === "customer" || trade)) {
     const config = cfg.data;
     const phone10 = normalisePhone(phone);
     const pinErr = pin ? pinProblem(pin, phone10) : null;
@@ -214,10 +233,14 @@ export function Onboarding() {
           language: config.languages.includes(lang) ? lang : "en",
           is_adult: adult,
           consents,
+          trade: role === "worker" ? trade! : undefined,
           otp_challenge_id: challenge?.challenge_id,
           otp_code: challenge ? code : undefined,
         });
-        registeredTo.current = role === "worker" ? "/w/profile" : "/c/find";
+        // A worker goes straight into the first quiz question; a customer to the search.
+        registeredTo.current = res.quiz
+          ? { to: `/w/quiz/${res.quiz.attempt_id}`, state: { item: res.quiz.item, welcome: true } }
+          : { to: role === "worker" ? "/w/quiz" : "/c/find", state: { welcome: true } };
         setSession(res.token, res.account); // the redirect above then opens registeredTo
       } catch (e) {
         if (e instanceof ApiError && e.status === 409) setExists(true);
@@ -253,6 +276,7 @@ export function Onboarding() {
       step === "register" ? (
         <form className="stack" onSubmit={submit} noValidate>
           <h1>{t(role === "worker" ? "reg.titleWorker" : "reg.titleCustomer")}</h1>
+          {role === "worker" && trade && <QuizNext trade={trade} />}
           <PhoneInput value={phone} onChange={setPhone} invalid={!!phone && !phone10} autoFocus />
           {phone && !phone10 && <p className="hint warn-text">{t("auth.phoneInvalid")}</p>}
           <label className="field">
@@ -274,7 +298,7 @@ export function Onboarding() {
           )}
           <ErrorBox error={error} />
           <button type="submit" className="btn btn-primary btn-block btn-big" disabled={!formOk || busy}>
-            {busy ? t("common.wait") : config.otp_required ? t("reg.sendCode") : t("reg.create")}
+            {busy ? t("common.wait") : config.otp_required ? t("reg.sendCode") : t(role === "worker" ? "reg.createAndQuiz" : "reg.create")}
           </button>
         </form>
       ) : (
@@ -304,13 +328,15 @@ export function Onboarding() {
           )}
           <ErrorBox error={error} />
           <button type="submit" className="btn btn-primary btn-block btn-big" disabled={code.length !== 6 || busy}>
-            {busy ? t("common.wait") : t("reg.create")}
+            {busy ? t("common.wait") : t(role === "worker" ? "reg.createAndQuiz" : "reg.create")}
           </button>
           <button type="button" className="btn btn-ghost btn-block" onClick={() => void sendCode()} disabled={busy}>
             {t("otp.resend")}
           </button>
         </form>
       );
+  } else if ((step === "register" || step === "otp") && role === "worker" && !trade) {
+    body = <TradeStep trade={trade} setTrade={setTrade} onNext={() => setStep("register")} />;
   } else if (step === "register" || step === "otp") {
     body = cfg.error ? <ErrorBox error={cfg.error} /> : <p className="muted">{t("common.loading")}</p>;
   } else {
@@ -328,13 +354,65 @@ export function Onboarding() {
         ) : (
           <span />
         )}
-        {!replay && <Progress step={step} />}
+        {!replay && <Progress step={step} role={role} />}
         <Link to="/language" className="btn btn-small btn-ghost" aria-label={t("header.changeLang")}>
           <Icon name="globe" size={20} />
         </Link>
       </div>
       <div className="onb-body stack">{body}</div>
     </div>
+  );
+}
+
+/** Workers choose their trade before registering: the compulsory quiz in that trade starts with the account. */
+function TradeStep({ trade, setTrade, onNext }: { trade: Trade | null; setTrade: (t: Trade) => void; onNext: () => void }) {
+  const { t, pick } = useI18n();
+  const { trades } = useTrades();
+  const banks = useLoad(() => api.quizBanks(), []);
+  return (
+    <div className="stack">
+      <h1>{t("onb.whichTrade")}</h1>
+      <ErrorBox error={banks.error} />
+      <div className="chip-grid" role="radiogroup" aria-label={t("onb.whichTrade")}>
+        {TRADES.map((tr) => {
+          const has = !!banks.data?.[tr];
+          return (
+            <button
+              key={tr}
+              type="button"
+              role="radio"
+              aria-checked={trade === tr}
+              className={`trade-chip ${trade === tr ? "on" : ""}`}
+              disabled={!has}
+              onClick={() => setTrade(tr)}
+            >
+              <Icon name={TRADE_ICON[tr]} size={28} />
+              <span>{trades ? pick(trades[tr]?.name) : t(`trade.${tr}`)}</span>
+              {banks.data && !has && <span className="chip-note">{t("quiz.comingSoon")}</span>}
+            </button>
+          );
+        })}
+      </div>
+      {trade && <QuizNext trade={trade} rules={banks.data?.[trade]?.rules} />}
+      <button type="button" className="btn btn-primary btn-block btn-big" disabled={!trade || !banks.data?.[trade]} onClick={onNext}>
+        {t("common.next")}
+      </button>
+    </div>
+  );
+}
+
+/** Says, before the account exists, that the quiz comes straight after and is part of every worker account. */
+function QuizNext({ trade, rules }: { trade: Trade; rules?: { min_items: number; max_items: number } }) {
+  const { t, pick, langOf } = useI18n();
+  const { trades } = useTrades();
+  const name = trades ? pick(trades[trade]?.name) : t(`trade.${trade}`);
+  const text = t("onb.quizNext", { trade: name, min: rules?.min_items ?? 12, max: rules?.max_items ?? 25 });
+  return (
+    <Notice kind="info">
+      <span className="block">{text}</span>
+      <span className="block small">{t("quiz.dontGuess")}</span>
+      <SpeakButton small text={`${text} ${t("quiz.dontGuess")}`} lang={langOf("onb.quizNext")} />
+    </Notice>
   );
 }
 

@@ -4,7 +4,7 @@ import { api, type AccountRole, type OpKind } from "../api";
 import { refreshAssessmentList, useBlockingOp, useQueueCounts } from "../data";
 import { enText, useI18n, type Key } from "../i18n";
 import { endonym } from "../i18n/languages";
-import { homePath, isStaff, useSession } from "../session";
+import { homePath, isStaff, quizPending, useSession } from "../session";
 import { useStatus } from "../status";
 import { discardOp, retryOp, syncNow } from "../sync";
 import { fmtTime } from "../util";
@@ -194,9 +194,14 @@ interface NavItem {
   label: Key;
 }
 
-function navFor(role: AccountRole | null): NavItem[] {
+function navFor(role: AccountRole | null, quizFirst = false): NavItem[] {
   switch (role) {
     case "worker":
+      if (quizFirst)
+        return [
+          { to: "/w/quiz", icon: "quiz", label: "nav.quiz" },
+          { to: "/w/privacy", icon: "shield", label: "nav.privacy" },
+        ];
       return [
         { to: "/w/quiz", icon: "quiz", label: "nav.quiz" },
         { to: "/w/profile", icon: "user", label: "nav.myProfile" },
@@ -242,7 +247,7 @@ function navFor(role: AccountRole | null): NavItem[] {
 function BottomBar() {
   const { t, lang, has } = useI18n();
   const { account } = useSession();
-  const items = navFor(account?.role ?? null);
+  const items = navFor(account?.role ?? null, quizPending(account));
   return (
     <div className="bottom">
       <p className="principle" role="note">

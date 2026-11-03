@@ -52,8 +52,9 @@ Generated from `slides_outline.src.md` by `make report`; numbers come from `expe
 11. **Offline first.** Outbox → ordered, idempotent replay; client-side UUIDs; demo with network off.
 
 12. **Workers and customers.** Onboarding in 23 languages, phone + PIN login, itemised consent
-    (DPDP Act). Worker: adaptive self-check quiz (3 trades, built from official sources), request a
-    practical assessment, handle bookings. Customer: search, badges that say who checked what, booking
+    (DPDP Act). Worker: compulsory adaptive self-check quiz straight after registering (3 trades,
+    built from official sources; no pass mark, but nothing else opens until it is done), then profile,
+    practical assessment request, bookings. Customer: search, badges that say who checked what, booking
     that respects CEA reg. 31 (permit-only jobs). Simulation (labelled): the quiz needs
     {{quiz_cat_simulation:trades.electrician.scenarios.calibrated.adaptive.mean_items|.1f}} questions instead of 20. Quiz = self-check, never a badge.
 

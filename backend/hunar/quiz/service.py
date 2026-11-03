@@ -164,6 +164,29 @@ def review(s: Session, a: QuizAttempt) -> list[dict]:
     return out
 
 
+def finished_trades(s: Session, account_id: str) -> set[str]:
+    return set(s.exec(select(QuizAttempt.trade).where(QuizAttempt.account_id == account_id,
+                                                       QuizAttempt.status == "finished")).all())
+
+
+def gate(s: Session, account_id: str) -> dict:
+    """The quiz is compulsory for workers: the first one starts when they register, and until one is
+    finished they cannot save a profile, be listed or ask for an assessment. The app reads this to send
+    them back to the quiz (to the unfinished one, if any)."""
+    done = sorted(finished_trades(s, account_id))
+    open_ = s.exec(select(QuizAttempt).where(QuizAttempt.account_id == account_id,
+                                             QuizAttempt.status == "in_progress")
+                   .order_by(QuizAttempt.started_at.desc())).first()
+    return {"done": bool(done), "finished_trades": done,
+            "in_progress": {"attempt_id": open_.id, "trade": open_.trade} if open_ else None}
+
+
+def require_finished(s: Session, account_id: str, trade: str) -> None:
+    """A worker works in a trade only after finishing that trade's quiz (the result itself does not matter)."""
+    if trade not in finished_trades(s, account_id):
+        raise HTTPException(409, f"finish the {trade} quiz first")
+
+
 def latest_summary(s: Session, account_id: str, trade: str) -> dict | None:
     a = s.exec(select(QuizAttempt).where(QuizAttempt.account_id == account_id, QuizAttempt.trade == trade,
                                          QuizAttempt.status == "finished")

@@ -1,5 +1,6 @@
 """/api/auth: register, log in, consents, erasure. Only workers and customers can self-register;
-staff accounts (facilitator, assessor, admin) are created with `python -m hunar.accounts.cli`."""
+staff accounts (facilitator, assessor, admin) are created with `python -m hunar.accounts.cli`.
+A worker chooses a trade when registering, and the first quiz in that trade starts at once."""
 from __future__ import annotations
 
 import datetime as dt
@@ -14,6 +15,8 @@ from hunar.accounts.models import Account, AuthSession, Consent
 from hunar.accounts.notice import NOTICE_VERSION, purposes_for
 from hunar.api.db import get_session
 from hunar.audit import log as audit
+from hunar.quiz import bank as quiz_banks
+from hunar.quiz import service as quiz
 
 router = APIRouter(prefix="/api/auth", tags=["accounts"])
 DB = Depends(get_session)
@@ -30,6 +33,7 @@ class RegisterIn(BaseModel):
     language: str = "hi"
     is_adult: bool = Field(description="The person confirms they are 18 or older")
     consents: dict[str, bool] = Field(description="purpose -> granted, for every purpose shown in the notice")
+    trade: str | None = Field(default=None, description="Workers only: the trade of the quiz that starts at once")
     otp_challenge_id: str | None = None
     otp_code: str | None = None
 
@@ -80,9 +84,12 @@ def has_consent(s: Session, account_id: str, purpose: str) -> bool:
 
 
 def account_out(s: Session, acc: Account) -> dict:
-    return {"id": acc.id, "role": acc.role, "display_name": acc.display_name, "language": acc.language,
-            "phone_masked": mask_phone(acc.phone), "phone_verified": acc.phone_verified, "is_sample": acc.is_sample,
-            "consents": latest_consents(s, acc.id)}
+    out = {"id": acc.id, "role": acc.role, "display_name": acc.display_name, "language": acc.language,
+           "phone_masked": mask_phone(acc.phone), "phone_verified": acc.phone_verified, "is_sample": acc.is_sample,
+           "consents": latest_consents(s, acc.id)}
+    if acc.role == "worker":
+        out["quiz"] = quiz.gate(s, acc.id)
+    return out
 
 
 def mask_phone(phone: str) -> str:
@@ -134,6 +141,10 @@ def register(body: RegisterIn, s: Session = DB):
         raise HTTPException(422, f"these consents are needed to use Hunar: {', '.join(missing)}")
     if unknown := set(body.consents) - set(needed):
         raise HTTPException(422, f"unknown consent purposes for a {body.role}: {', '.join(sorted(unknown))}")
+    if body.role == "worker" and body.trade not in quiz_banks.trades():
+        raise HTTPException(422, f"choose your trade: one of {', '.join(quiz_banks.trades())}")
+    if body.role != "worker" and body.trade is not None:
+        raise HTTPException(422, "only workers choose a trade")
     verified = False
     if auth.otp_provider() is not None:
         auth.check_otp(s, body.otp_challenge_id, body.otp_code, phone, "register")
@@ -149,7 +160,11 @@ def register(body: RegisterIn, s: Session = DB):
         record_consent(s, acc, purpose, bool(body.consents.get(purpose)))
     s.commit()
     s.refresh(acc)
-    return {"token": auth.new_session(s, acc), "account": account_out(s, acc)}
+    out = {"token": auth.new_session(s, acc)}
+    if acc.role == "worker":  # the quiz is compulsory and comes straight after registering
+        attempt, item = quiz.start(s, acc, body.trade, acc.language)
+        out["quiz"] = {"attempt_id": attempt.id, "item": item}
+    return out | {"account": account_out(s, acc)}
 
 
 @router.post("/login")

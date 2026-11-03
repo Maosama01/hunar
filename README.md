@@ -35,9 +35,10 @@ spoken (optional speech to text; the facilitator checks the transcript). Hunar:
    raters; the result is pending.** How to run it: [docs/m4_study_walkthrough.md](docs/m4_study_walkthrough.md).
 8. **Workers and customers.** Onboarding in English and the 22 scheduled languages, phone + PIN login
    (SMS code ready to switch on), consent per purpose (DPDP Act 2023), and two kinds of user:
-   * *workers* (electrician, plumber, carpenter) take an **adaptive self-check quiz** built from
-     official sources, see a score range and topics to revise, request a practical assessment and
-     handle bookings;
+   * *workers* (electrician, plumber, carpenter) choose their trade when they register and take a
+     **compulsory adaptive self-check quiz** straight away (built from official sources; no pass or
+     fail, but nothing else opens until it is finished), see a score range and topics to revise, then
+     fill in their profile, request a practical assessment and handle bookings;
    * *customers* search by trade and PIN code and book a worker. The only "skill assessed" badge comes
      from an assessor's sign-off; electrical jobs that need a State permit (CEA Safety Regulations
      2023, reg. 31) can be booked only with a worker whose permit an admin has checked.

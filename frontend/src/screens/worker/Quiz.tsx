@@ -1,5 +1,7 @@
 // Adaptive self-check quiz: choose a trade, one question per screen, result with its uncertainty,
 // then a review with explanations. A self-check for the worker, never a certificate or a badge.
+// Compulsory for workers: the first one starts when they register, and until one is finished the app
+// shows only the quiz (see RequireQuiz in App.tsx).
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { api, ApiError, TRADES, type QuizItem, type QuizResult, type Trade, type TranslationStatus } from "../../api";
@@ -8,7 +10,7 @@ import { Icon, TRADE_ICON } from "../../components/Icon";
 import { Empty, ErrorBox, SpeakButton, useLoad } from "../../components/ui";
 import { useI18n } from "../../i18n";
 import { endonym, langInfo } from "../../i18n/languages";
-import { useSession } from "../../session";
+import { quizPending, updateAccount, useSession } from "../../session";
 import { useTrades } from "../../trades";
 import { clamp01, fmtDate } from "../../util";
 
@@ -34,16 +36,30 @@ export function QuizHome() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const consentOk = !!account?.consents.assessment;
+  const pending = quizPending(account);
+  const open = account?.quiz?.in_progress ?? null;
 
   useEffect(() => {
     if (trade || !banks.data) return;
-    const mine = profile.data?.trade;
+    const mine = profile.data?.trade ?? open?.trade;
     if (mine && banks.data[mine]) setTrade(mine);
     else {
       const first = TRADES.find((x) => banks.data![x]);
       if (first) setTrade(first);
     }
-  }, [banks.data, profile.data, trade]);
+  }, [banks.data, profile.data, trade, open?.trade]);
+
+  const agree = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      updateAccount(await api.setConsent("assessment", true));
+    } catch (e) {
+      setError(e);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const start = async () => {
     if (!trade) return;
@@ -64,6 +80,17 @@ export function QuizHome() {
   return (
     <div className="stack">
       <h1>{t("quiz.title")}</h1>
+      {pending && (
+        <Notice kind="info">
+          <strong className="block">{t("quiz.requiredFirst")}</strong>
+          {t("quiz.requiredWhy")}
+        </Notice>
+      )}
+      {pending && open && (
+        <Link to={`/w/quiz/${open.attempt_id}`} className="btn btn-primary btn-block btn-big">
+          {t("quiz.continueFirst")}
+        </Link>
+      )}
       <section className="card stack-s">
         <p>{intro}</p>
         <p>
@@ -75,7 +102,12 @@ export function QuizHome() {
 
       {!consentOk && (
         <Notice kind="warn">
-          {t("quiz.needConsent")} <Link to="/w/privacy">{t("nav.privacy")}</Link>
+          <span className="block">
+            {t("quiz.needConsent")} <Link to="/w/privacy">{t("nav.privacy")}</Link>
+          </span>
+          <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void agree()}>
+            {t("quiz.agreeAndStart")}
+          </button>
         </Notice>
       )}
 
@@ -148,7 +180,9 @@ export function QuizRun() {
   const { id = "" } = useParams();
   const { t, pickL } = useI18n();
   const location = useLocation();
-  const initial = (location.state as { item?: QuizItem } | null)?.item ?? null;
+  const { account } = useSession();
+  const navState = location.state as { item?: QuizItem; welcome?: boolean } | null;
+  const initial = navState?.item ?? null;
   const [item, setItem] = useState<QuizItem | null>(initial);
   const [result, setResult] = useState<QuizResult | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
@@ -165,6 +199,7 @@ export function QuizRun() {
       if (r.done) {
         setResult(r.result);
         setItem(null);
+        refreshAccount();
       } else setItem((cur) => (cur?.id === r.item.id ? cur : r.item));
     } catch (e) {
       setLoadError(e);
@@ -195,6 +230,7 @@ export function QuizRun() {
       if (r.done) {
         setResult(r.result);
         setItem(null);
+        refreshAccount();
       } else {
         setRapid(r.rapid_warning);
         setItem(r.item);
@@ -215,6 +251,11 @@ export function QuizRun() {
   const [nosTitle, nosLang] = pickL(item.nos_title);
   return (
     <div className="stack quiz">
+      {navState?.welcome && item.position === 1 && (
+        <Notice kind="ok" role="status">
+          {t("quiz.welcomeFirst", { name: account?.display_name ?? "" })}
+        </Notice>
+      )}
       <div className="quiz-progress">
         <div className="row between small">
           <span>{t("quiz.progress", { n: item.position, max: item.max_items })}</span>
@@ -275,6 +316,11 @@ export function QuizRun() {
   );
 }
 
+/** A finished quiz lifts the gate: reload the account so the other worker screens open. */
+function refreshAccount() {
+  void api.me().then(updateAccount).catch(() => undefined);
+}
+
 // ---- Result ----------------------------------------------------------------------------------------
 
 function RangeBar({ lo, hi, mid }: { lo: number; hi: number; mid: number }) {
@@ -302,6 +348,9 @@ export function QuizResultView({ result }: { result: QuizResult }) {
   const hi = Math.round(result.expected_percent_interval90[1]);
   const headline = t("quiz.resultLine", { lo, hi });
   const draft = result.bank.status.trim().toUpperCase().startsWith("DRAFT");
+  // After the first quiz the next step is the profile (trade, PIN code); a practical assessment needs it.
+  const profile = useLoad(() => api.myProfile(), []);
+  const noProfile = profile.data === null;
   return (
     <div className="stack">
       <div className="row wrap gap-s">
@@ -355,9 +404,15 @@ export function QuizResultView({ result }: { result: QuizResult }) {
 
       <Notice kind="info">{apiText("quiz.note", result.note)}</Notice>
 
-      <Link to="/w/assess" className="btn btn-primary btn-block btn-big">
-        <Icon name="clipboard" /> {t("quiz.requestPractical")}
-      </Link>
+      {noProfile ? (
+        <Link to="/w/profile" state={{ welcome: true }} className="btn btn-primary btn-block btn-big">
+          <Icon name="user" /> {t("quiz.nextProfile")}
+        </Link>
+      ) : (
+        <Link to="/w/assess" className="btn btn-primary btn-block btn-big">
+          <Icon name="clipboard" /> {t("quiz.requestPractical")}
+        </Link>
+      )}
       <Link to={`/w/quiz/${result.attempt_id}/review`} className="btn btn-block">
         <Icon name="book" /> {t("quiz.review")}
       </Link>

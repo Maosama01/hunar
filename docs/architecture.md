@@ -95,7 +95,7 @@ action, subject, payload, prev_hash, hash). `AppliedOp` (offline idempotency). `
 
 | Role | Created by | Can |
 |---|---|---|
-| worker | self-registration (18+, consent per purpose) | profile, quiz, assessment requests, accept/decline bookings |
+| worker | self-registration (18+, consent per purpose, trade) | the compulsory quiz first (it starts at registration); after one is finished: profile, more quizzes, assessment requests, accept/decline bookings |
 | customer | self-registration | search, book, cancel, rate |
 | facilitator | `make staff` on the server | capture declarations, checklists and photos (offline outbox) |
 | assessor | `make staff` | everything a facilitator can, plus pack confirmation, decisions, sign-off, assessment requests |

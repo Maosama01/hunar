@@ -3,7 +3,7 @@ import json
 
 from conftest import make_account
 from sqlmodel import Session
-from test_accounts import register
+from test_accounts import finish_quiz, register
 
 from hunar.api import db
 from hunar.api.models import Assessment, Worker
@@ -17,7 +17,8 @@ def bearer(token):
 
 
 def worker_with_profile(client, phone="9876501234", trade="electrician", pincode="302017", **kw):
-    r = register(client, phone=phone, **kw).json()
+    r = register(client, phone=phone, trade=trade, **kw).json()
+    finish_quiz(client, r["token"])
     profile = {"trade": trade, "years_experience": 8, "pincode": pincode, "district": "Jaipur", "languages": ["hi"],
                "bio": "House wiring", "permit_status": "self_declared", "permit_state": "Rajasthan"}
     assert client.put("/api/me/profile", json=profile, headers=bearer(r["token"])).status_code == 200
@@ -37,6 +38,7 @@ def test_profile_visible_only_with_consent_and_search(client):
     wid, _ = worker_with_profile(client)
     hidden = register(client, phone="9876500000", consents={"account": True, "contact_share": True,
                                                             "assessment": True, "profile_display": False}).json()
+    finish_quiz(client, hidden["token"])
     client.put("/api/me/profile", json={"trade": "electrician", "years_experience": 2, "pincode": "302001"},
                headers=bearer(hidden["token"]))
     found = client.get("/api/market/workers", params={"trade": "electrician", "pincode": "302001"}).json()
@@ -141,8 +143,9 @@ def test_erasure_cancels_bookings(client):
 
 
 def test_granting_profile_consent_makes_existing_profile_visible(client):
-    r = register(client, consents={"account": True, "contact_share": True, "assessment": True,
-                                   "profile_display": False}).json()
+    r = register(client, trade="plumber", consents={"account": True, "contact_share": True, "assessment": True,
+                                                    "profile_display": False}).json()
+    finish_quiz(client, r["token"])
     client.put("/api/me/profile", json={"trade": "plumber", "years_experience": 3, "pincode": "302017"},
                headers=bearer(r["token"]))
     assert client.get(f"/api/market/workers/{r['account']['id']}").status_code == 404
@@ -158,8 +161,9 @@ def test_update_language_and_name(client):
 
 
 def test_admin_lists_hidden_profiles_with_masked_phones(client):
-    r = register(client, consents={"account": True, "contact_share": True, "assessment": True,
-                                   "profile_display": False}).json()
+    r = register(client, trade="carpenter", consents={"account": True, "contact_share": True, "assessment": True,
+                                                      "profile_display": False}).json()
+    finish_quiz(client, r["token"])
     client.put("/api/me/profile", json={"trade": "carpenter", "years_experience": 3, "pincode": "302017"},
                headers=bearer(r["token"]))
     _, admin = make_account(role="admin", phone="9000000002")

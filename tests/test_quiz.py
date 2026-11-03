@@ -3,12 +3,16 @@ import random
 
 import numpy as np
 import pytest
-from test_accounts import register
-from test_market import bearer, worker_with_profile
+from conftest import make_account
+from sqlmodel import Session, select
+from test_accounts import finish_quiz, register
+from test_market import bearer, booking, customer, worker_with_profile
 
+from hunar.api import db
 from hunar.paths import DATA
 from hunar.quiz import bank as banks
 from hunar.quiz import engine
+from hunar.quiz.models import QuizAttempt
 
 # ---- engine maths -------------------------------------------------------------------------------
 
@@ -132,9 +136,16 @@ def _right_choice(item):
 
 
 def test_quiz_needs_assessment_consent(client):
-    tok = register(client, consents={"account": True, "contact_share": True}).json()["token"]
+    # Required for workers since the quiz became compulsory, so registration refuses to go without it ...
+    assert register(client, consents={"account": True, "contact_share": True}).status_code == 422
+    # ... and an older worker account without it is sent to give it before the quiz.
+    _, tok = make_account(role="worker", phone="9876500002")
+    assert client.get("/api/auth/me", headers=bearer(tok)).json()["quiz"]["done"] is False
     r = client.post("/api/quiz/attempts", json={"trade": "electrician"}, headers=bearer(tok))
     assert r.status_code == 409
+    assert client.post("/api/auth/consents", json={"purpose": "assessment", "granted": True},
+                       headers=bearer(tok)).status_code == 200
+    assert client.post("/api/quiz/attempts", json={"trade": "electrician"}, headers=bearer(tok)).status_code == 200
 
 
 def test_quiz_flow_scoring_and_review(client):
@@ -192,9 +203,68 @@ def test_quiz_results_go_to_assessors_not_customers(client):
     assert "theta" not in json.dumps(client.get(f"/api/market/workers/{wid}").json())
     client.post("/api/assessment-requests", json={}, headers=bearer(tok))
     req = client.get("/api/assessment-requests").json()[0]  # assessor view
-    assert req["quiz"]["attempts_finished"] == 1
-    client.post("/api/auth/consents", json={"purpose": "assessment", "granted": False}, headers=bearer(tok))
-    assert client.get("/api/quiz/attempts", headers=bearer(tok)).json() == []
+    assert req["quiz"]["attempts_finished"] == 2  # the one taken at registration, then this one
+    # The quiz is part of every worker account: stopping it means erasing the account, which deletes the answers.
+    assert client.post("/api/auth/consents", json={"purpose": "assessment", "granted": False},
+                       headers=bearer(tok)).status_code == 409
+    client.delete("/api/auth/me", headers=bearer(tok))
+    with Session(db.engine()) as s:
+        assert s.exec(select(QuizAttempt).where(QuizAttempt.account_id == wid)).all() == []
+
+
+# ---- the quiz is compulsory for workers and comes straight after registering --------------------
+
+
+def test_worker_registration_needs_a_trade_and_starts_the_quiz(client):
+    assert register(client, trade=None).status_code == 422
+    assert register(client, trade="welder").status_code == 422
+    assert register(client, phone="9988776655", role="customer", trade="plumber").status_code == 422
+    config = client.get("/api/auth/config").json()
+    assert config["purposes"]["worker"]["assessment"]["required"] is True
+    r = register(client, trade="plumber").json()
+    first = r["quiz"]
+    assert first["item"]["position"] == 1 and first["item"]["language"] == "hi"
+    assert r["account"]["quiz"] == {"done": False, "finished_trades": [],
+                                    "in_progress": {"attempt_id": first["attempt_id"], "trade": "plumber"}}
+    login = client.post("/api/auth/login", json={"phone": "9876501234", "pin": "482913"}).json()
+    assert login["account"]["quiz"]["in_progress"]["attempt_id"] == first["attempt_id"]  # comes back to it
+    assert "quiz" not in customer_account(client)
+
+
+def customer_account(client):
+    tok = customer(client)
+    return client.get("/api/auth/me", headers=bearer(tok)).json()
+
+
+def test_nothing_else_until_the_quiz_is_finished(client):
+    tok = register(client).json()["token"]
+    profile = {"trade": "electrician", "years_experience": 4, "pincode": "302017"}
+    r = client.put("/api/me/profile", json=profile, headers=bearer(tok))
+    assert r.status_code == 409 and "quiz" in r.json()["detail"]
+    assert client.post("/api/assessment-requests", json={}, headers=bearer(tok)).status_code == 409
+    finish_quiz(client, tok)  # "don't know" throughout: the result does not matter, finishing does
+    gate = client.get("/api/auth/me", headers=bearer(tok)).json()["quiz"]
+    assert gate == {"done": True, "finished_trades": ["electrician"], "in_progress": None}
+    assert client.put("/api/me/profile", json=profile, headers=bearer(tok)).status_code == 200
+    assert client.post("/api/assessment-requests", json={}, headers=bearer(tok)).status_code == 200
+    # A new trade needs that trade's quiz first.
+    assert client.put("/api/me/profile", json={**profile, "trade": "plumber"}, headers=bearer(tok)).status_code == 409
+    finish_quiz(client, tok, trade="plumber")
+    assert client.put("/api/me/profile", json={**profile, "trade": "plumber"}, headers=bearer(tok)).status_code == 200
+
+
+def test_workers_without_a_finished_quiz_are_not_listed_or_bookable(client):
+    wid, _ = worker_with_profile(client)
+    ct = customer(client)
+    assert [w["account_id"] for w in client.get("/api/market/workers").json()] == [wid]
+    with Session(db.engine()) as s:  # an older profile saved before the quiz was compulsory
+        for a in s.exec(select(QuizAttempt).where(QuizAttempt.account_id == wid)):
+            a.status = "in_progress"
+            s.add(a)
+        s.commit()
+    assert client.get("/api/market/workers").json() == []
+    assert client.get(f"/api/market/workers/{wid}").status_code == 404
+    assert client.post("/api/bookings", json=booking(wid), headers=bearer(ct)).status_code == 404
 
 
 # ---- calibration (simulated responses, tests only) --------------------------------------------

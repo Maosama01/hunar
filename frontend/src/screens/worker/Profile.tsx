@@ -36,6 +36,10 @@ export function WorkerProfile() {
   const [error, setError] = useState<unknown>(null);
   const [saved, setSaved] = useState(false);
 
+  // Each trade needs its quiz first (the server refuses the save otherwise).
+  const quizzed = account?.quiz?.finished_trades ?? [];
+  const needsQuiz = !!form.trade && !!account?.quiz && !quizzed.includes(form.trade);
+
   const fill = (p: MyProfile) =>
     setForm({
       trade: p.trade,
@@ -50,12 +54,14 @@ export function WorkerProfile() {
 
   useEffect(() => {
     if (prof.data) fill(prof.data);
+    else if (prof.data === null && quizzed[0]) setForm((f) => (f.trade ? f : { ...f, trade: quizzed[0] }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prof.data]);
 
   const years = Number(form.years);
   const yearsOk = form.years !== "" && Number.isInteger(years) && years >= 0 && years <= 60;
   const pinOk = PINCODE.test(form.pincode);
-  const ok = !!form.trade && yearsOk && pinOk;
+  const ok = !!form.trade && yearsOk && pinOk && !needsQuiz;
   const checked = prof.data?.permit_status === "document_checked";
   const tradeChangeResetsPermit = checked && form.trade !== prof.data?.trade;
 
@@ -144,6 +150,12 @@ export function WorkerProfile() {
           </div>
           {touched && !form.trade && <p className="hint warn-text">{t("wprofile.tradeRequired")}</p>}
         </fieldset>
+        {needsQuiz && (
+          <Notice kind="warn">
+            {t("wprofile.quizFirst", { trade: trades ? pick(trades[form.trade!]?.name) : t(`trade.${form.trade!}`) })}{" "}
+            <Link to="/w/quiz">{t("wprofile.takeQuiz")}</Link>
+          </Notice>
+        )}
         {tradeChangeResetsPermit && <Notice kind="warn">{t("wprofile.tradeResetsPermit")}</Notice>}
 
         <div className="two-col">
@@ -234,7 +246,7 @@ export function WorkerProfile() {
             {t("wprofile.saved")}
           </Notice>
         )}
-        <button type="submit" className="btn btn-primary btn-block btn-big" disabled={busy}>
+        <button type="submit" className="btn btn-primary btn-block btn-big" disabled={busy || needsQuiz}>
           {busy ? t("common.wait") : t("wprofile.save")}
         </button>
       </form>

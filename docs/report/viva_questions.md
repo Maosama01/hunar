@@ -163,3 +163,13 @@ hash-chained audit log under that account. Assessor accounts cannot self-registe
 need a permit under CEA regulation 31 cannot be booked without it. We do not claim identity
 verification: there is no Aadhaar or permit-register check yet.
 
+
+**24. Why must every worker take the quiz right after registering, if it is not a test?**
+Because it is the one step that tells us, and the worker, what they know before anyone else is
+involved. A worker chooses a trade while registering and the first quiz starts with the account; until
+one is finished the app shows only the quiz and privacy settings, and the server refuses a profile, a
+listing, a booking or an assessment request. Finishing is what counts: there is no pass mark, and
+"don't know" is always allowed, so nobody is shut out for a low score. The assessor sees the result as
+context. Because the quiz processes the worker's answers, consent to it is required for workers, and
+withdrawing it means erasing the account. The open risk is rushed answers from workers who only want
+to get through; those are flagged and not scored, and their share has to be checked on real data.

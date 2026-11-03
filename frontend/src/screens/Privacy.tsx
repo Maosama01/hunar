@@ -86,10 +86,18 @@ export function PrivacyScreen() {
               <strong>{t("consent.withdraw")}</strong> {tx.withdraw}
             </p>
             <SpeakButton small text={`${tx.title}. ${tx.why}`} lang={tx.lang} />
-            {spec.required ? (
+            {spec.required && on ? (
               <p className="small">
                 <Icon name="lock" size={16} /> {t("privacy.requiredOn")}
               </p>
+            ) : spec.required ? (
+              // Off only for accounts made before this purpose became required (the worker quiz).
+              <div className="row wrap gap-s">
+                <p className="small grow">{t("privacy.requiredOff")}</p>
+                <button type="button" className="btn btn-primary" disabled={busy === key} onClick={() => void setConsent(key, true)}>
+                  {t("privacy.turnOn")}
+                </button>
+              </div>
             ) : confirmOff === key ? (
               <Notice kind="warn" role="alert">
                 <p>{t("privacy.confirmOff", { what: tx.withdraw })}</p>

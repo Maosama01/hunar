@@ -12,8 +12,23 @@ WORKER_CONSENTS = {"account": True, "contact_share": True, "assessment": True, "
 
 def register(client, phone="9876501234", role="worker", pin="482913", **kw):
     body = {"phone": phone, "pin": pin, "role": role, "display_name": "Ramesh", "language": "hi", "is_adult": True,
-            "consents": WORKER_CONSENTS if role == "worker" else {"account": True, "contact_share": True}, **kw}
+            "consents": WORKER_CONSENTS if role == "worker" else {"account": True, "contact_share": True},
+            **({"trade": "electrician"} if role == "worker" else {}), **kw}
     return client.post("/api/auth/register", json=body, headers={"Authorization": ""})
+
+
+def finish_quiz(client, token, trade=None, choice=None):
+    """Answer a worker's quiz to the end ("don't know" by default): the open one, or a new one in `trade`."""
+    h = {"Authorization": f"Bearer {token}"}
+    if trade:
+        aid = client.post("/api/quiz/attempts", json={"trade": trade}, headers=h).json()["attempt_id"]
+    else:
+        aid = client.get("/api/auth/me", headers=h).json()["quiz"]["in_progress"]["attempt_id"]
+    state = client.get(f"/api/quiz/attempts/{aid}", headers=h).json()
+    while not state["done"]:
+        state = client.post(f"/api/quiz/attempts/{aid}/answers", headers=h,
+                            json={"item_id": state["item"]["id"], "choice": choice, "seconds": 30}).json()
+    return state["result"]
 
 
 @pytest.mark.parametrize("raw, want", [("9876501234", "+919876501234"), ("+91 98765-01234", "+919876501234"),

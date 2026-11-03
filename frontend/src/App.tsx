@@ -28,7 +28,7 @@ import { Tasks } from "./screens/Tasks";
 import { AssessRequestScreen } from "./screens/worker/AssessRequest";
 import { WorkerProfile } from "./screens/worker/Profile";
 import { QuizHome, QuizReview, QuizRun } from "./screens/worker/Quiz";
-import { getSession, homePath, STAFF_ROLES, updateAccount, useSession } from "./session";
+import { getSession, homePath, quizPending, STAFF_ROLES, updateAccount, useSession } from "./session";
 import { isConnected } from "./status";
 import { startSyncLoop } from "./sync";
 
@@ -41,6 +41,14 @@ function RequireRole({ roles }: { roles?: AccountRole[] }) {
     return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
   }
   if (roles && !roles.includes(account.role)) return <Navigate to={homePath(account)} replace />;
+  return <Outlet />;
+}
+
+/** The quiz is compulsory for workers: until one is finished, these screens send them back to it.
+ * The server refuses the same actions (profile, listing, assessment request). */
+function RequireQuiz() {
+  const { account } = useSession();
+  if (quizPending(account)) return <Navigate to={homePath(account)} replace />;
   return <Outlet />;
 }
 
@@ -77,9 +85,11 @@ export function App() {
               <Route path="quiz" element={<QuizHome />} />
               <Route path="quiz/:id" element={<QuizRun />} />
               <Route path="quiz/:id/review" element={<QuizReview />} />
-              <Route path="profile" element={<WorkerProfile />} />
-              <Route path="assess" element={<AssessRequestScreen />} />
-              <Route path="bookings" element={<BookingsScreen />} />
+              <Route element={<RequireQuiz />}>
+                <Route path="profile" element={<WorkerProfile />} />
+                <Route path="assess" element={<AssessRequestScreen />} />
+                <Route path="bookings" element={<BookingsScreen />} />
+              </Route>
               <Route path="privacy" element={<PrivacyScreen />} />
             </Route>
 

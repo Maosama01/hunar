@@ -4,6 +4,9 @@ Badge rule (project rule 5): a customer sees "skill assessed" only when an asses
 assessor account, signed off an assessment of this worker with the outcome "recommend for
 certification". Quiz results are never shown to customers. Each badge says exactly what was checked,
 by whom and when; none of them is a government certificate or licence.
+
+Listing rule: customers find and book only workers who finished the quiz for their trade (the quiz is
+compulsory for workers). Whether they did, and how well, is not shown.
 """
 from __future__ import annotations
 
@@ -20,6 +23,8 @@ from hunar.audit import log as audit
 from hunar.market import trades
 from hunar.market.models import AssessmentRequest, Booking, WorkerProfile
 from hunar.paths import DATA
+from hunar.quiz.models import QuizAttempt
+from hunar.quiz.service import finished_trades
 
 TRANSITIONS = {  # (status, action) -> (new status, who may do it)
     ("requested", "accept"): ("accepted", "worker"),
@@ -81,14 +86,21 @@ def public_profile(s: Session, acc: Account, p: WorkerProfile) -> dict:
             "is_sample": acc.is_sample}
 
 
+def listed(s: Session, acc: Account, p: WorkerProfile) -> bool:
+    """Customers can see and book this worker: profile shown, account not erased, quiz finished."""
+    return p.visible and acc.erased_at is None and p.trade in finished_trades(s, acc.id)
+
+
 def search(s: Session, trade: str | None, pincode: str | None, assessed_only: bool, permit_only: bool,
            limit: int = 30) -> list[dict]:
     rows = s.exec(select(WorkerProfile, Account).where(WorkerProfile.account_id == Account.id,
                                                        WorkerProfile.visible == True,  # noqa: E712
                                                        Account.erased_at == None))  # noqa: E711
+    quizzed = {(a, t) for a, t in s.exec(select(QuizAttempt.account_id, QuizAttempt.trade)
+                                         .where(QuizAttempt.status == "finished"))}
     out = []
     for p, acc in rows:
-        if trade and p.trade != trade:
+        if (trade and p.trade != trade) or (acc.id, p.trade) not in quizzed:
             continue
         if pincode and p.pincode[:2] != pincode[:2]:
             continue  # different postal circle: too far away
@@ -111,7 +123,7 @@ def create_booking(s: Session, customer: Account, worker_id: str, job_type: str,
                    preferred_date: dt.date, slot: str) -> Booking:
     worker = s.get(Account, worker_id)
     p = s.get(WorkerProfile, worker_id)
-    if worker is None or worker.erased_at is not None or p is None or not p.visible:
+    if worker is None or p is None or not listed(s, worker, p):
         raise HTTPException(404, "this worker is not available")
     if worker.id == customer.id:
         raise HTTPException(422, "you cannot book yourself")

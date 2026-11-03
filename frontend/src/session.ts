@@ -86,9 +86,16 @@ export function useSession(): SessionState {
   return useSyncExternalStore(subscribeSession, getSession, getSession);
 }
 
-/** Where each role starts. */
+/** A worker who has not finished a quiz yet: the app shows only the quiz (and privacy, settings). */
+export function quizPending(acc: Account | null | undefined): boolean {
+  return acc?.role === "worker" && !!acc.quiz && !acc.quiz.done;
+}
+
+/** Where each role starts. A worker who has not finished the compulsory quiz goes back into it. */
 export function homePath(acc: Account | null | undefined): string {
   if (!acc) return "/welcome";
+  const open = acc.quiz?.in_progress;
+  if (quizPending(acc) && open) return `/w/quiz/${open.attempt_id}`;
   if (acc.role === "worker") return "/w/quiz";
   if (acc.role === "customer") return "/c/find";
   return "/staff";

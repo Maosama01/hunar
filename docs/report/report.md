@@ -384,11 +384,21 @@ PIN is stored as scrypt over an HMAC with a server-side pepper and a per-account
 PIN alone could be brute-forced from a leaked database; five wrong PINs lock the account for 15
 minutes. An SMS one-time code can be switched on with a configuration setting once a gateway is
 available. Consent follows the DPDP Act 2023 [66]: one consent per purpose (account, assessment,
-profile display, contact sharing), each listing its data items; withdrawal is one action and triggers
-hiding or erasure; only adults register; audit entries name accounts by id, never by phone or name;
+profile display, contact sharing), each listing its data items and saying whether it is required
+(assessment is required for workers, because every worker takes the quiz); withdrawal is one action
+and triggers hiding or erasure; only adults register; audit entries name accounts by id, never by phone or name;
 and a phone number is shown to the other party only after a booking is accepted. Staff accounts
 (facilitator, assessor, admin) are created on the server, and every assessor-side endpoint, including
 offline sync, now uses the logged-in account as the actor instead of a name sent by the client.
+
+**The quiz comes first.** The quiz is compulsory for workers. A worker chooses a trade while
+registering, and creating the account starts the first quiz in that trade. Until one quiz is finished,
+the app shows only the quiz and the privacy settings. The server enforces the same rule: it refuses a
+profile, a customer listing, a booking or an assessment request. Changing to another trade needs that
+trade's quiz first. Finishing is what counts, not the score: there is no pass mark, so the rule asks
+every worker to take part without turning the quiz into a test of ability. One side effect cannot be
+measured yet: workers who only want to get through may answer faster. Rapid answers are flagged and
+not scored, and their share is a number to check once real attempts exist.
 
 **The self-check quiz.** Each trade has a bank of multiple-choice questions written from official
 sources: the trade's qualification file and its performance criteria (CSDCI Assistant Electrician,
@@ -476,9 +486,11 @@ confidence and the reasons behind it, level descriptors, and the accept/override
 
 **Screens for workers and customers.** First use starts with a language picker (each language in its
 own script, with an honest "mostly English for now" until its translation exists), then the choice
-between "I am a worker" and "I want to hire a worker", the itemised consent screen, and registration
-with a phone number and PIN. Workers get bottom navigation for the quiz, their profile, assessment
-requests, bookings and privacy; customers for finding a worker, bookings and privacy; staff keep the
+between "I am a worker" and "I want to hire a worker", (for workers) the trade, the itemised consent
+screen, and registration with a phone number and PIN. A new worker lands on the first quiz question;
+after the quiz, the next step offered is the profile. Workers then get bottom navigation for the quiz,
+their profile, assessment requests, bookings and privacy (only the quiz and privacy before the first
+quiz is finished); customers for finding a worker, bookings and privacy; staff keep the
 assessor screens, plus assessment requests and (for admins) permit checks. Every screen was exercised
 in a browser at 375 px width, including Urdu in right-to-left layout.
 

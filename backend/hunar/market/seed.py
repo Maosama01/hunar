@@ -14,10 +14,15 @@ Test logins (local demo only; all use PIN 482913):
 The signed-off assessment for SAMPLE Sunita is made through the normal service functions (assessor
 decisions with reasons, then sign-off by the SAMPLE assessor account), on synthetic data, so the
 demo can show what a customer sees after a real sign-off.
+
+Workers are listed only after finishing the quiz, so each SAMPLE worker gets one finished quiz, taken
+through the normal quiz service with answers simulated from the quiz's own model. These are synthetic
+answers; calibration ignores them because the accounts are is_sample.
 """
 from __future__ import annotations
 
 import datetime as dt
+import random
 
 from sqlmodel import Session, select
 
@@ -28,6 +33,9 @@ from hunar.accounts.routes import record_consent
 from hunar.api import services as svc
 from hunar.api.models import Worker
 from hunar.market.models import WorkerProfile
+from hunar.quiz import bank as banks
+from hunar.quiz import engine as irt
+from hunar.quiz import service as quiz
 from hunar.rubric import engine as rubric
 
 SAMPLE_PIN = "482913"
@@ -87,15 +95,34 @@ def _signed_off_sample(s: Session, assessor: Account) -> str:
     return p.recommendation
 
 
+def _sample_quiz(s: Session, acc: Account, trade: str, ability: float) -> None:
+    """SAMPLE DATA: one finished quiz with answers simulated at a fixed ability (not real answers)."""
+    rng = random.Random(f"sample-quiz:{acc.display_name}")
+    bank, b = banks.load(trade), banks.params(trade)["b"]
+    a, item = quiz.start(s, acc, trade, acc.language)
+    while True:
+        it = bank.item(item["id"])
+        shown = quiz.order(a, it.id, len(it.options))
+        right = rng.random() < irt.p_correct(ability, b[it.id])
+        choice = shown.index(it.answer) if right else next(i for i, k in enumerate(shown) if k != it.answer)
+        out = quiz.answer(s, a, it.id, choice, 30.0)
+        if out["done"]:
+            return
+        item = out["item"]
+
+
 def seed_accounts() -> None:
     with Session(svc_engine()) as s:
         made = {name: _account(s, role, phone, name, lang) for role, phone, name, lang, _ in ACCOUNTS}
         admin, assessor = made["SAMPLE Admin"], made["SAMPLE Assessor"]
-        for role, _phone, name, _lang, prof in ACCOUNTS:
-            if role != "worker" or s.get(WorkerProfile, made[name].id):
+        for k, (role, _phone, name, _lang, prof) in enumerate(ACCOUNTS):
+            if role != "worker":
                 continue
-            s.add(WorkerProfile(account_id=made[name].id, visible=True, **prof))
-            s.commit()
+            if not quiz.finished_trades(s, made[name].id):
+                _sample_quiz(s, made[name], prof["trade"], ability=0.3 * k)
+            if not s.get(WorkerProfile, made[name].id):
+                s.add(WorkerProfile(account_id=made[name].id, visible=True, **prof))
+                s.commit()
         ramesh = s.get(WorkerProfile, made["SAMPLE Ramesh"].id)
         if ramesh.worker_id is None and s.get(Worker, "sample-worker-1"):
             ramesh.worker_id = "sample-worker-1"
