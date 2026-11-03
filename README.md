@@ -81,6 +81,8 @@ Demo logins (SAMPLE accounts, local only) are listed at the top of
 [backend/hunar/market/seed.py](backend/hunar/market/seed.py). Staff accounts are made on the server:
 `make staff ROLE=assessor PHONE=98xxxxxxxx NAME="..."`.
 
+Local settings and keys (Bhashini, PIN pepper) go in `.env` (copy `.env.example`; git ignores it).
+
 Optional extras: `make voice` (spoken declarations with faster-whisper; about 500 MB model on first
 use) and `make vision` (YOLO inference once the detector is trained).
 
@@ -105,7 +107,7 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | Accounts, consent, roles | Done: phone + PIN (salted, peppered scrypt; lockout), OTP-ready, itemised DPDP consent, erasure; staff endpoints need a staff login | Real; SMS gateway not configured |
 | Worker quiz (3 trades) | Done: adaptive Rasch quiz, 40 / 24 / 24 questions from official sources, review with sources | Questions are **DRAFT** (expert review pending); difficulties **uncalibrated** until about 100 real attempts per trade |
 | Booking and badges | Done: search, booking lifecycle, ratings, assessment requests, permit rule (CEA reg. 31), badges only from assessor sign-off | Real; permit check is manual (no State register API) |
-| 23 languages | UI and quiz support 23 languages with fallback, RTL and read-aloud; Bhashini client and `make translate` | Only English and Hindi written so far (Hindi with AI help, native-speaker review pending); Bhashini **not yet run** (needs credentials); machine translations will need review |
+| 23 languages | UI and quiz support 23 languages with fallback, RTL and read-aloud; Bhashini client and `make translate` | Only English and Hindi written so far (Hindi with AI help, native-speaker review pending); Bhashini **not yet run** (needs credentials: [docs/bhashini_setup.md](docs/bhashini_setup.md)); machine translations will need review |
 | Voice input | Done: record on the declaration screen, faster-whisper `small` on CPU, transcript must be read back before saving; audio never stored | Checked on **synthetic** text-to-speech audio only; not yet tried with real workers' voices |
 
 ## Results

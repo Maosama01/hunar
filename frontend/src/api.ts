@@ -305,6 +305,7 @@ export interface Health {
   status: string;
   detector: { available: boolean; reason?: string; note?: string };
   speech?: { available: boolean; reason?: string; model?: string; note?: string };
+  bhashini?: { configured: boolean };
   mapper: string;
   principle: string;
 }

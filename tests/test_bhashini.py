@@ -103,3 +103,37 @@ def test_quiz_translation_files_are_complete_items_only(tmp_path, monkeypatch):
     doc = json.loads((tmp_path / "i18n" / "x.bn.json").read_text())
     assert doc["meta"]["reviewed"] is False and doc["items"]["x-1"]["options"] == ["<bn>A", "<bn>B"]
     assert "1/1 items" in lines[0]
+
+
+def _check_script():
+    spec = importlib.util.spec_from_file_location("bhashini_check", ROOT / "scripts" / "bhashini_check.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_check_names_missing_variables_without_printing_values(monkeypatch, capsys):
+    chk = _check_script()
+    monkeypatch.setenv("BHASHINI_USER_ID", "secret-user")
+    monkeypatch.delenv("BHASHINI_API_KEY", raising=False)
+    monkeypatch.delenv("BHASHINI_PIPELINE_ID", raising=False)
+    assert chk.main([]) == 1
+    out = capsys.readouterr().out
+    assert "BHASHINI_API_KEY" in out and "BHASHINI_PIPELINE_ID" in out and "secret-user" not in out
+
+
+def test_check_runs_translation_tts_and_language_sweep(monkeypatch, capsys):
+    chk = _check_script()
+    for k in chk.VARS:
+        monkeypatch.setenv(k, "x-secret")
+
+    def fake_translate(source, tgt):
+        if tgt == "sat":
+            raise ValueError("pair not supported")
+        return f"<{tgt}>"
+
+    monkeypatch.setattr(chk.Bhashini, "from_env", classmethod(lambda cls: client(FakeBhashini(fake_translate))))
+    assert chk.main(["--all"]) == 0
+    out = capsys.readouterr().out
+    assert "translation en -> hi: <hi>" in out and "WAV" in out and "x-secret" not in out
+    assert "sat  FAIL" in out and f"{len(bhashini.LANGS) - 3} of {len(bhashini.LANGS) - 2}" in out

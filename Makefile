@@ -1,6 +1,8 @@
 # Hunar: one command entry points. Run `make help` for the list.
 UV := $(shell command -v uv 2>/dev/null || echo $(HOME)/Library/Python/3.13/bin/uv)
-PY := $(UV) run python
+# Local settings and secrets (Bhashini keys, PIN pepper) go in .env, which git ignores; see .env.example.
+ENV := $(if $(wildcard .env),--env-file .env,)
+PY := $(UV) run $(ENV) python
 NPM := npm --prefix frontend
 
 DL ?= $(HOME)/Downloads
@@ -8,7 +10,7 @@ CSV ?= data/study/items.csv
 
 .PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean \
         vision voice eval-voice import-detector ppe-split notebook design-sim study-items bench \
-        quiz-sim quiz-calibrate translate staff
+        quiz-sim quiz-calibrate translate staff bhashini-check
 
 help:
 	@echo "setup    install Python 3.11 env (uv) and frontend packages"
@@ -30,7 +32,8 @@ help:
 	@echo "notebook   regenerate the Colab notebook (embeds hunar/evidence/ppe_split.py)"
 	@echo "quiz-sim   quiz design check: SIMULATION OF THE METHOD -> experiments/quiz_cat_simulation.json"
 	@echo "quiz-calibrate  re-estimate quiz difficulties from real answers (RESULT PENDING until enough)"
-	@echo "translate  machine-translate UI + quiz into 22 languages with Bhashini (needs BHASHINI_* env)"
+	@echo "bhashini-check  test the Bhashini credentials in .env with one translation and one voice clip"
+	@echo "translate  machine-translate UI + quiz into 22 languages with Bhashini (needs BHASHINI_* in .env)"
 	@echo "staff      create a staff account: make staff ROLE=assessor PHONE=98xxxxxxxx NAME='...'"
 	@echo "bench      CPU speed + memory per photo, declaration and second of audio -> experiments/bench_cpu.json"
 
@@ -74,14 +77,14 @@ seed:
 	$(PY) -m hunar.api.seed
 
 api:
-	$(UV) run uvicorn hunar.api.main:app --reload --port 8000
+	$(UV) run $(ENV) uvicorn hunar.api.main:app --reload --port 8000
 
 web:
 	$(NPM) run dev
 
 demo: seed
 	@echo "Starting API on :8000 and web app on :5173 (Ctrl+C stops both)"
-	$(UV) run uvicorn hunar.api.main:app --port 8000 & $(NPM) run dev; kill %1
+	$(UV) run $(ENV) uvicorn hunar.api.main:app --port 8000 & $(NPM) run dev; kill %1
 
 report:
 	$(PY) scripts/build_report.py
@@ -133,8 +136,11 @@ quiz-sim:
 quiz-calibrate:
 	$(PY) -m hunar.quiz.calibrate
 
+bhashini-check:
+	$(PY) scripts/bhashini_check.py $(ARGS)
+
 translate:
-	$(PY) scripts/translate.py
+	$(PY) scripts/translate.py $(ARGS)
 
 staff:
 	$(PY) -m hunar.accounts.cli create --role "$(ROLE)" --phone "$(PHONE)" --name "$(NAME)"

@@ -79,6 +79,67 @@ export class WebSpeechTts implements TtsProvider {
   }
 }
 
+/**
+ * Bhashini text to speech through our own API (/api/tts keeps the keys on the server). Falls back to the
+ * device's voices when the server cannot speak a language or is unreachable. Clips are kept in memory
+ * for the session, and the server caches them on disk.
+ */
+export class ServerTts implements TtsProvider {
+  readonly name = "bhashini";
+  private audio: HTMLAudioElement | null = null;
+  private clips = new Map<string, string>();
+  private failed = new Set<string>();
+
+  constructor(
+    private readonly url: string,
+    private readonly fallback: TtsProvider,
+  ) {}
+
+  canSpeak(lang: string): boolean {
+    return !this.failed.has(lang) || this.fallback.canSpeak(lang);
+  }
+
+  async speak(text: string, lang: string): Promise<void> {
+    if (!text.trim()) return;
+    this.stop();
+    if (this.failed.has(lang)) return this.fallback.speak(text, lang);
+    const key = `${lang}|${text}`;
+    let src = this.clips.get(key);
+    if (!src) {
+      try {
+        const res = await fetch(this.url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: text.slice(0, 600), language: lang }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        src = URL.createObjectURL(await res.blob());
+        this.clips.set(key, src);
+      } catch {
+        this.failed.add(lang); // e.g. a language the Bhashini pipeline does not voice
+        return this.fallback.speak(text, lang);
+      }
+    }
+    const audio = new Audio(src);
+    this.audio = audio;
+    await new Promise<void>((resolve) => {
+      audio.onended = () => resolve();
+      audio.onerror = () => resolve();
+      audio.play().catch(() => resolve());
+    });
+  }
+
+  stop(): void {
+    this.audio?.pause();
+    this.audio = null;
+    this.fallback.stop();
+  }
+
+  subscribe(cb: () => void): () => void {
+    return this.fallback.subscribe(cb);
+  }
+}
+
 let provider: TtsProvider = new WebSpeechTts();
 let version = 0;
 const providerListeners = new Set<() => void>();
@@ -138,4 +199,14 @@ export function useTts(lang: string) {
     setSpeaking(false);
   }, []);
   return { available, speaking, speak: say, stop };
+}
+
+/** Switch to Bhashini voices when the server says it is configured; otherwise keep the device's voices. */
+export function enableServerTtsIfConfigured(healthUrl: string, ttsUrl: string): void {
+  void fetch(healthUrl)
+    .then((r) => (r.ok ? r.json() : null))
+    .then((h: { bhashini?: { configured?: boolean } } | null) => {
+      if (h?.bhashini?.configured) setTtsProvider(new ServerTts(ttsUrl, new WebSpeechTts()));
+    })
+    .catch(() => undefined);
 }
