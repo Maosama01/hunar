@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createDeclaration } from "../actions";
 import { errorText } from "../api";
 import { ErrorText, Notice } from "../components/common";
+import { VoiceInput } from "../components/VoiceInput";
 import { useI18n } from "../i18n";
 import { actorName, useSettings } from "../settings";
 
@@ -27,6 +28,9 @@ export function Declare() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
+  // A transcript is an AI draft: the facilitator must read it back to the worker before saving.
+  const [usedVoice, setUsedVoice] = useState(false);
+  const [readBack, setReadBack] = useState(false);
 
   const codeOk = code.trim().length >= 1 && code.trim().length <= 32;
   const textOk = text.trim().length >= 3;
@@ -35,7 +39,7 @@ export function Declare() {
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setTouched(true);
-    if (!codeOk || !textOk || nameWarning) return;
+    if (!codeOk || !textOk || nameWarning || (usedVoice && !readBack)) return;
     setBusy(true);
     setError(null);
     try {
@@ -110,12 +114,21 @@ export function Declare() {
           </span>
         </label>
         {touched && !textOk && <Notice kind="error">{t("declare.tooShort")}</Notice>}
-        <button type="button" className="btn" disabled aria-describedby="voice-note">
-          🎤 {t("declare.voice")}
-        </button>
-        <span id="voice-note" className="hint">
-          {t("declare.voiceNote")}
-        </span>
+        <VoiceInput
+          language={language}
+          onText={(spoken) => {
+            setText((prev) => (prev.trim() ? `${prev.trim()}\n${spoken}` : spoken));
+            setUsedVoice(true);
+            setReadBack(false);
+          }}
+        />
+        {usedVoice && (
+          <label className="check">
+            <input type="checkbox" checked={readBack} onChange={(e) => setReadBack(e.target.checked)} />
+            <span>{t("voice.readBack")}</span>
+          </label>
+        )}
+        {touched && usedVoice && !readBack && <Notice kind="error">{t("voice.readBackRequired")}</Notice>}
       </section>
 
       <ErrorText error={error} />

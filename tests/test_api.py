@@ -3,29 +3,11 @@ import base64
 import cv2
 import numpy as np
 import pytest
-from fastapi.testclient import TestClient
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlmodel import Session, text
 
-from hunar.api import db, services
+from hunar.api import db
 from hunar.api.models import AuditEntry
-
-
-@pytest.fixture
-def client(tmp_path, monkeypatch):
-    monkeypatch.setenv("HUNAR_DB", f"sqlite:///{tmp_path / 'test.db'}")
-    monkeypatch.setenv("HUNAR_MAPPER", "tfidf")
-    monkeypatch.setattr(services, "UPLOADS", tmp_path / "uploads")
-    monkeypatch.setattr("hunar.api.services.DATA", tmp_path)
-    monkeypatch.setattr("hunar.api.main.DATA", tmp_path)
-    db.reset_engine()
-    services.mapper.cache_clear()
-    from hunar.api.main import app
-
-    with TestClient(app) as c:
-        yield c
-    db.reset_engine()
-    services.mapper.cache_clear()
 
 
 def jpeg(seed: int) -> bytes:

@@ -1,0 +1,400 @@
+{
+  "experiment": "m4_design_simulation",
+  "simulation_of_method": true,
+  "data_kind": "synthetic",
+  "warning": "SIMULATION OF THE METHOD, NOT A RESULT: artificial ratings from an assumed model, used to size the study. Says nothing about whether the rubric helps real assessors.",
+  "assumptions": {
+    "item_true_level_shares": [
+      0.15,
+      0.3,
+      0.35,
+      0.2
+    ],
+    "rater_bias_sd_over_noise_sd": 0.5,
+    "population_alpha_unassisted": 0.5,
+    "scenarios_population_alpha_assisted": {
+      "no_effect": 0.5,
+      "plus_010": 0.6,
+      "plus_020": 0.7,
+      "plus_030": 0.8
+    },
+    "calibration": "sigma set so a 20,000-item, 5-rater simulated study has the stated alpha"
+  },
+  "method": "paired item bootstrap of Krippendorff's ordinal alpha (assisted minus unassisted), 95% percentile CI; detected = lower bound > 0, as in hunar.study.analyse.diff_alpha",
+  "reps_per_cell": 500,
+  "bootstrap_resamples": 1000,
+  "not_modelled": [
+    "memory of items between sessions",
+    "rater drift",
+    "uneven item difficulty",
+    "missing ratings"
+  ],
+  "command": "python -m hunar.study.design_sim",
+  "created": "2026-11-03T21:57:51",
+  "scenarios": {
+    "no_effect": {
+      "population_alpha_unassisted": 0.5,
+      "population_alpha_assisted": 0.5,
+      "sigma_unassisted": 0.7233,
+      "sigma_assisted": 0.7233,
+      "cells": [
+        {
+          "raters": 3,
+          "items": 20,
+          "detected_share": 0.034,
+          "median_diff_ci_width": 0.552,
+          "median_alpha_ci_halfwidth_unassisted": 0.25,
+          "mean_estimated_diff": 0.003
+        },
+        {
+          "raters": 3,
+          "items": 25,
+          "detected_share": 0.016,
+          "median_diff_ci_width": 0.477,
+          "median_alpha_ci_halfwidth_unassisted": 0.221,
+          "mean_estimated_diff": -0.003
+        },
+        {
+          "raters": 3,
+          "items": 30,
+          "detected_share": 0.022,
+          "median_diff_ci_width": 0.432,
+          "median_alpha_ci_halfwidth_unassisted": 0.199,
+          "mean_estimated_diff": -0.002
+        },
+        {
+          "raters": 4,
+          "items": 20,
+          "detected_share": 0.032,
+          "median_diff_ci_width": 0.428,
+          "median_alpha_ci_halfwidth_unassisted": 0.215,
+          "mean_estimated_diff": -0.012
+        },
+        {
+          "raters": 4,
+          "items": 25,
+          "detected_share": 0.018,
+          "median_diff_ci_width": 0.38,
+          "median_alpha_ci_halfwidth_unassisted": 0.192,
+          "mean_estimated_diff": 0.002
+        },
+        {
+          "raters": 4,
+          "items": 30,
+          "detected_share": 0.034,
+          "median_diff_ci_width": 0.352,
+          "median_alpha_ci_halfwidth_unassisted": 0.175,
+          "mean_estimated_diff": -0.0
+        },
+        {
+          "raters": 5,
+          "items": 20,
+          "detected_share": 0.02,
+          "median_diff_ci_width": 0.369,
+          "median_alpha_ci_halfwidth_unassisted": 0.199,
+          "mean_estimated_diff": 0.003
+        },
+        {
+          "raters": 5,
+          "items": 25,
+          "detected_share": 0.024,
+          "median_diff_ci_width": 0.328,
+          "median_alpha_ci_halfwidth_unassisted": 0.177,
+          "mean_estimated_diff": -0.006
+        },
+        {
+          "raters": 5,
+          "items": 30,
+          "detected_share": 0.03,
+          "median_diff_ci_width": 0.305,
+          "median_alpha_ci_halfwidth_unassisted": 0.162,
+          "mean_estimated_diff": -0.001
+        }
+      ],
+      "detected_share_by_design": {
+        "3x20": 0.034,
+        "3x25": 0.016,
+        "3x30": 0.022,
+        "4x20": 0.032,
+        "4x25": 0.018,
+        "4x30": 0.034,
+        "5x20": 0.02,
+        "5x25": 0.024,
+        "5x30": 0.03
+      }
+    },
+    "plus_010": {
+      "population_alpha_unassisted": 0.5,
+      "population_alpha_assisted": 0.6,
+      "sigma_unassisted": 0.7233,
+      "sigma_assisted": 0.5857,
+      "cells": [
+        {
+          "raters": 3,
+          "items": 20,
+          "detected_share": 0.136,
+          "median_diff_ci_width": 0.499,
+          "median_alpha_ci_halfwidth_unassisted": 0.248,
+          "mean_estimated_diff": 0.1
+        },
+        {
+          "raters": 3,
+          "items": 25,
+          "detected_share": 0.142,
+          "median_diff_ci_width": 0.444,
+          "median_alpha_ci_halfwidth_unassisted": 0.218,
+          "mean_estimated_diff": 0.091
+        },
+        {
+          "raters": 3,
+          "items": 30,
+          "detected_share": 0.178,
+          "median_diff_ci_width": 0.413,
+          "median_alpha_ci_halfwidth_unassisted": 0.199,
+          "mean_estimated_diff": 0.1
+        },
+        {
+          "raters": 4,
+          "items": 20,
+          "detected_share": 0.184,
+          "median_diff_ci_width": 0.397,
+          "median_alpha_ci_halfwidth_unassisted": 0.215,
+          "mean_estimated_diff": 0.1
+        },
+        {
+          "raters": 4,
+          "items": 25,
+          "detected_share": 0.166,
+          "median_diff_ci_width": 0.361,
+          "median_alpha_ci_halfwidth_unassisted": 0.192,
+          "mean_estimated_diff": 0.091
+        },
+        {
+          "raters": 4,
+          "items": 30,
+          "detected_share": 0.216,
+          "median_diff_ci_width": 0.328,
+          "median_alpha_ci_halfwidth_unassisted": 0.176,
+          "mean_estimated_diff": 0.094
+        },
+        {
+          "raters": 5,
+          "items": 20,
+          "detected_share": 0.24,
+          "median_diff_ci_width": 0.338,
+          "median_alpha_ci_halfwidth_unassisted": 0.197,
+          "mean_estimated_diff": 0.099
+        },
+        {
+          "raters": 5,
+          "items": 25,
+          "detected_share": 0.212,
+          "median_diff_ci_width": 0.309,
+          "median_alpha_ci_halfwidth_unassisted": 0.177,
+          "mean_estimated_diff": 0.097
+        },
+        {
+          "raters": 5,
+          "items": 30,
+          "detected_share": 0.27,
+          "median_diff_ci_width": 0.277,
+          "median_alpha_ci_halfwidth_unassisted": 0.16,
+          "mean_estimated_diff": 0.095
+        }
+      ],
+      "detected_share_by_design": {
+        "3x20": 0.136,
+        "3x25": 0.142,
+        "3x30": 0.178,
+        "4x20": 0.184,
+        "4x25": 0.166,
+        "4x30": 0.216,
+        "5x20": 0.24,
+        "5x25": 0.212,
+        "5x30": 0.27
+      }
+    },
+    "plus_020": {
+      "population_alpha_unassisted": 0.5,
+      "population_alpha_assisted": 0.7,
+      "sigma_unassisted": 0.7233,
+      "sigma_assisted": 0.4623,
+      "cells": [
+        {
+          "raters": 3,
+          "items": 20,
+          "detected_share": 0.354,
+          "median_diff_ci_width": 0.481,
+          "median_alpha_ci_halfwidth_unassisted": 0.248,
+          "mean_estimated_diff": 0.185
+        },
+        {
+          "raters": 3,
+          "items": 25,
+          "detected_share": 0.43,
+          "median_diff_ci_width": 0.426,
+          "median_alpha_ci_halfwidth_unassisted": 0.219,
+          "mean_estimated_diff": 0.194
+        },
+        {
+          "raters": 3,
+          "items": 30,
+          "detected_share": 0.548,
+          "median_diff_ci_width": 0.386,
+          "median_alpha_ci_halfwidth_unassisted": 0.198,
+          "mean_estimated_diff": 0.193
+        },
+        {
+          "raters": 4,
+          "items": 20,
+          "detected_share": 0.498,
+          "median_diff_ci_width": 0.389,
+          "median_alpha_ci_halfwidth_unassisted": 0.217,
+          "mean_estimated_diff": 0.188
+        },
+        {
+          "raters": 4,
+          "items": 25,
+          "detected_share": 0.598,
+          "median_diff_ci_width": 0.346,
+          "median_alpha_ci_halfwidth_unassisted": 0.193,
+          "mean_estimated_diff": 0.184
+        },
+        {
+          "raters": 4,
+          "items": 30,
+          "detected_share": 0.692,
+          "median_diff_ci_width": 0.31,
+          "median_alpha_ci_halfwidth_unassisted": 0.174,
+          "mean_estimated_diff": 0.186
+        },
+        {
+          "raters": 5,
+          "items": 20,
+          "detected_share": 0.6,
+          "median_diff_ci_width": 0.337,
+          "median_alpha_ci_halfwidth_unassisted": 0.2,
+          "mean_estimated_diff": 0.18
+        },
+        {
+          "raters": 5,
+          "items": 25,
+          "detected_share": 0.75,
+          "median_diff_ci_width": 0.294,
+          "median_alpha_ci_halfwidth_unassisted": 0.176,
+          "mean_estimated_diff": 0.191
+        },
+        {
+          "raters": 5,
+          "items": 30,
+          "detected_share": 0.794,
+          "median_diff_ci_width": 0.272,
+          "median_alpha_ci_halfwidth_unassisted": 0.161,
+          "mean_estimated_diff": 0.185
+        }
+      ],
+      "detected_share_by_design": {
+        "3x20": 0.354,
+        "3x25": 0.43,
+        "3x30": 0.548,
+        "4x20": 0.498,
+        "4x25": 0.598,
+        "4x30": 0.692,
+        "5x20": 0.6,
+        "5x25": 0.75,
+        "5x30": 0.794
+      }
+    },
+    "plus_030": {
+      "population_alpha_unassisted": 0.5,
+      "population_alpha_assisted": 0.8,
+      "sigma_unassisted": 0.7233,
+      "sigma_assisted": 0.3567,
+      "cells": [
+        {
+          "raters": 3,
+          "items": 20,
+          "detected_share": 0.714,
+          "median_diff_ci_width": 0.473,
+          "median_alpha_ci_halfwidth_unassisted": 0.246,
+          "mean_estimated_diff": 0.28
+        },
+        {
+          "raters": 3,
+          "items": 25,
+          "detected_share": 0.842,
+          "median_diff_ci_width": 0.418,
+          "median_alpha_ci_halfwidth_unassisted": 0.221,
+          "mean_estimated_diff": 0.285
+        },
+        {
+          "raters": 3,
+          "items": 30,
+          "detected_share": 0.912,
+          "median_diff_ci_width": 0.382,
+          "median_alpha_ci_halfwidth_unassisted": 0.201,
+          "mean_estimated_diff": 0.291
+        },
+        {
+          "raters": 4,
+          "items": 20,
+          "detected_share": 0.894,
+          "median_diff_ci_width": 0.387,
+          "median_alpha_ci_halfwidth_unassisted": 0.215,
+          "mean_estimated_diff": 0.283
+        },
+        {
+          "raters": 4,
+          "items": 25,
+          "detected_share": 0.954,
+          "median_diff_ci_width": 0.347,
+          "median_alpha_ci_halfwidth_unassisted": 0.194,
+          "mean_estimated_diff": 0.294
+        },
+        {
+          "raters": 4,
+          "items": 30,
+          "detected_share": 0.972,
+          "median_diff_ci_width": 0.311,
+          "median_alpha_ci_halfwidth_unassisted": 0.174,
+          "mean_estimated_diff": 0.281
+        },
+        {
+          "raters": 5,
+          "items": 20,
+          "detected_share": 0.946,
+          "median_diff_ci_width": 0.328,
+          "median_alpha_ci_halfwidth_unassisted": 0.196,
+          "mean_estimated_diff": 0.277
+        },
+        {
+          "raters": 5,
+          "items": 25,
+          "detected_share": 0.964,
+          "median_diff_ci_width": 0.3,
+          "median_alpha_ci_halfwidth_unassisted": 0.176,
+          "mean_estimated_diff": 0.278
+        },
+        {
+          "raters": 5,
+          "items": 30,
+          "detected_share": 0.996,
+          "median_diff_ci_width": 0.271,
+          "median_alpha_ci_halfwidth_unassisted": 0.16,
+          "mean_estimated_diff": 0.28
+        }
+      ],
+      "detected_share_by_design": {
+        "3x20": 0.714,
+        "3x25": 0.842,
+        "3x30": 0.912,
+        "4x20": 0.894,
+        "4x25": 0.954,
+        "4x30": 0.972,
+        "5x20": 0.946,
+        "5x25": 0.964,
+        "5x30": 0.996
+      }
+    }
+  }
+}

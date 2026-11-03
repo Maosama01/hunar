@@ -437,6 +437,13 @@ K. Sechidis, G. Tsoumakas, and I. Vlahavas, "On the stratification of multi-labe
 - Verified: https://api.crossref.org/works?query.bibliographic=On+the+stratification+of+multi-label+data (Crossref record: title, authors Sechidis/Tsoumakas/Vlahavas, LNCS, pp. 145–158, 2011), checked 3 Nov 2026.
 - Relevance: Iterative stratification, which Hunar adapts to groups of near-identical video frames to re-split the PPE dataset so every class appears in every split.
 
+## 17. Speech recognition software
+
+**[64] `systran_fasterwhisper`**
+SYSTRAN, "faster-whisper: Faster Whisper transcription with CTranslate2," version 1.2.1, software, GitHub repository. [Online]. Available: https://github.com/SYSTRAN/faster-whisper (MIT license).
+- Verified: https://github.com/SYSTRAN/faster-whisper (owner SYSTRAN, MIT license, "a reimplementation of OpenAI's Whisper model using CTranslate2"; the repository gives no formal citation), checked 3 Nov 2026. Version from the installed package metadata.
+- Relevance: The speech-recognition library behind Hunar's optional spoken declarations (Whisper `small`, CPU, int8). The model itself is [57].
+
 ---
 
 ## UNVERIFIED — [CITATION NEEDED]

@@ -29,7 +29,9 @@ Generated from `slides_outline.src.md` by `make report`; numbers come from `expe
    baselines collapse on Devanagari (TF-IDF top-1 0.25,
    chance 0.20); multilingual MiniLM 0.42; the exploratory
    hybrid reaches top-3 0.92 overall. Caveat on the slide:
-   synthetic declarations, wide CIs, real set pending.
+   synthetic declarations, wide CIs, real set pending. One line on voice: spoken declarations work, but
+   on synthetic speech Hindi word error rate is 0.43, so the facilitator reads every
+   transcript back.
 
 8. **M3 rubric engine.** One rubric criterion on screen: NOS/PC links, four anchored levels, critical
    flag. Pre-score rules in four bullets (checklist drives level, never suggests 3, photos are reasons,
@@ -51,7 +53,10 @@ Generated from `slides_outline.src.md` by `make report`; numbers come from `expe
 
 12. **Honest status and next steps.** What is real, what is synthetic, what is pending (real
     declarations, detector training, rubric review by a certified assessor, the assessor-agreement
-    study with 3 to 5 raters). Ask the panel for help finding assessors.
+    study). Figure `m4_design_power.png`, labelled SIMULATION OF THE METHOD: 3 raters x 20 items
+    catch a large improvement (alpha 0.50 to 0.80) in
+    71% of simulated studies, so
+    we aim for 4 to 5 raters and 30 items. Ask the panel for help finding assessors.
 
 **Backup slides:** architecture diagram, data model, metric definitions (top-k, MRR, Fleiss' kappa,
 Krippendorff's alpha), the study protocol, limitations list.

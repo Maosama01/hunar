@@ -28,6 +28,18 @@ n = 150 declarations (English 50, Hindi (Devanagari) 50, Hinglish 50), 5 qualifi
 | LaBSE | 0.46 / 0.72 / 0.64 | 0.48 / 0.74 / 0.66 | 0.38 / 0.78 / 0.60 |
 | TF-IDF + MiniLM hybrid (exploratory, post hoc) | 0.72 / 0.96 / 0.84 | 0.44 / 0.88 / 0.67 | 0.62 / 0.92 / 0.77 |
 
+### M1 voice input on SYNTHETIC speech (pipeline check, not real workers)
+
+> **SYNTHETIC SPEECH: AI-written declarations read aloud by macOS text-to-speech voices, not recordings of workers. Clean synthetic audio is an optimistic bound; this checks the pipeline.**
+
+150 AI-written declarations read by macOS text-to-speech, transcribed with faster-whisper small (CPU, int8), then mapped with Multilingual MiniLM-L12 (primary). Transcription took 0.61 s per second of audio on this laptop (arm64; not a controlled benchmark). Error rates count words or characters wrong per reference word or character; digits are not spelled out. Source: `experiments/m1_voice_synthetic.json`.
+
+| Language | n | Word error rate | Character error rate | Top-1 typed | Top-1 spoken | Top-1 changed (right to wrong / wrong to right) |
+|---|---|---|---|---|---|---|
+| English | 50 | 0.05 | 0.02 | 0.64 [0.50, 0.78] | 0.52 [0.38, 0.66] | 11 (8 / 2) |
+| Hindi (Devanagari) | 50 | 0.43 | 0.19 | 0.42 [0.28, 0.56] | 0.28 [0.16, 0.42] | 28 (12 / 5) |
+| Hinglish | 50 | n/a (script) | n/a (script) | 0.46 [0.32, 0.60] | 0.26 [0.14, 0.38] | 25 (14 / 4) |
+
 ### M2 evidence reuse detection (perceptual hashing)
 
 Real photos from the public PPE dataset (CC BY 4.0, test split); reuse is simulated by image transformations. Not photos from our own assessments. The test split had 1935 images but only 407 distinct ones after grouping near-identical frames; 162 stored ('gallery') photos, 245 fresh photos, 9 reuse transformations. Threshold rule: max recall s.t. false-flag rate on fresh dev photos <= 0.05; reported on the held-out half. Source: `experiments/m2_hashing.json`.
@@ -89,3 +101,21 @@ Test images with a near-duplicate (<= 4 bits) in train, re-split: 0.
 ### M4 inter-assessor consistency study
 
 RESULT PENDING: no real rater scores yet. Rater mode is built; the study needs 3 to 5 real assessors and 20 to 30 consented evidence photos.
+
+### M4 study design (SIMULATION OF THE METHOD, not a result)
+
+> **SIMULATION OF THE METHOD, NOT A RESULT: artificial ratings from an assumed model, used to size the study. Says nothing about whether the rubric helps real assessors.**
+
+Share of 500 simulated studies per cell in which the 95% CI of the assisted-minus-unassisted Krippendorff alpha excludes 0, assuming alpha 0.50 without the rubric. The no-effect row checks the method: it should stay near 0.025. Source: `experiments/m4_design_simulation.json`; figure `docs/figures/m4_design_power.png`.
+
+| Raters | Items | with rubric 0.50 | with rubric 0.60 | with rubric 0.70 | with rubric 0.80 |
+|---|---|---|---|---|---|
+| 3 | 20 | 0.03 | 0.14 | 0.35 | 0.71 |
+| 3 | 25 | 0.02 | 0.14 | 0.43 | 0.84 |
+| 3 | 30 | 0.02 | 0.18 | 0.55 | 0.91 |
+| 4 | 20 | 0.03 | 0.18 | 0.50 | 0.89 |
+| 4 | 25 | 0.02 | 0.17 | 0.60 | 0.95 |
+| 4 | 30 | 0.03 | 0.22 | 0.69 | 0.97 |
+| 5 | 20 | 0.02 | 0.24 | 0.60 | 0.95 |
+| 5 | 25 | 0.02 | 0.21 | 0.75 | 0.96 |
+| 5 | 30 | 0.03 | 0.27 | 0.79 | 1.00 |

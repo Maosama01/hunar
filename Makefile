@@ -4,9 +4,10 @@ PY := $(UV) run python
 NPM := npm --prefix frontend
 
 DL ?= $(HOME)/Downloads
+CSV ?= data/study/items.csv
 
 .PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean \
-        vision import-detector ppe-split notebook
+        vision voice eval-voice import-detector ppe-split notebook design-sim study-items
 
 help:
 	@echo "setup    install Python 3.11 env (uv) and frontend packages"
@@ -19,6 +20,10 @@ help:
 	@echo "demo     seed, then start the API (:8000) and the web app (:5173)"
 	@echo "report   build docs/report/Hunar_Report.docx from the Markdown draft"
 	@echo "vision   install YOLO (ultralytics) for detector inference on the laptop"
+	@echo "voice    install faster-whisper for spoken declarations"
+	@echo "eval-voice  voice pipeline check on SYNTHETIC text-to-speech audio (macOS) -> experiments/"
+	@echo "design-sim  M4 study sizing: SIMULATION OF THE METHOD -> experiments/m4_design_simulation.json"
+	@echo "study-items load consented study photos for rater mode (CSV=data/study/items.csv)"
 	@echo "import-detector  bring Colab results back (newest m2_detector*.json, best*.pt in DL=~/Downloads)"
 	@echo "ppe-split  class balance of published vs re-split PPE data -> experiments/m2_ppe_split.json"
 	@echo "notebook   regenerate the Colab notebook (embeds hunar/evidence/ppe_split.py)"
@@ -75,8 +80,22 @@ demo: seed
 report:
 	$(PY) scripts/build_report.py
 
+# --inexact keeps the other optional extra installed.
 vision:
-	$(UV) sync --extra vision
+	$(UV) sync --extra vision --inexact
+
+voice:
+	$(UV) sync --extra voice --inexact
+
+eval-voice:
+	$(PY) -m hunar.speech.evaluate
+	$(PY) scripts/build_results_table.py
+
+design-sim:
+	$(PY) -m hunar.study.design_sim
+
+study-items:
+	$(PY) -m hunar.study.items "$(CSV)"
 
 # Newest matching downloads (browsers rename repeats to "name (1).ext").
 DET_JSON = $(shell ls -t "$(DL)"/m2_detector*.json 2>/dev/null | head -1)
@@ -96,3 +115,4 @@ notebook:
 
 clean:
 	rm -rf .pytest_cache .ruff_cache frontend/dist data/hunar.db
+

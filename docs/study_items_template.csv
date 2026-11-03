@@ -1,0 +1,3 @@
+item_id,photo,task_id,criterion_id,consent_ref,ticked
+E01,photos/E01.jpg,t1_safe_isolation,c1_ppe,CF-001,ppe_gloves
+E02,photos/E02.jpg,t2_switchboard_wiring,c2_termination,CF-002,

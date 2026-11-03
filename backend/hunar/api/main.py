@@ -23,6 +23,7 @@ from hunar.evidence import detector
 from hunar.paths import DATA
 from hunar.rubric import engine
 from hunar.schemas import MappingResult
+from hunar.speech import transcribe as speech
 
 
 @asynccontextmanager
@@ -114,8 +115,8 @@ class RatingIn(BaseModel):
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "detector": detector.status(), "mapper": svc.mapper().matcher.name,
-            "principle": "AI suggests, the assessor decides."}
+    return {"status": "ok", "detector": detector.status(), "speech": speech.status(),
+            "mapper": svc.mapper().matcher.name, "principle": "AI suggests, the assessor decides."}
 
 
 @app.get("/api/packs")
@@ -136,6 +137,22 @@ def pack(nqr_id: int):
 @app.post("/api/map", response_model=MappingResult)
 def map_declaration(body: MapIn):
     return svc.mapper().map(body.text)
+
+
+@app.post("/api/transcribe")
+def transcribe(language: Literal["hi", "en"] | None = Form(None), file: UploadFile = File(...)):
+    """Draft transcript of a spoken declaration. The audio is not stored."""
+    if not speech.available():
+        raise HTTPException(503, "voice input is not installed on this server (make voice); please type instead")
+    data = file.file.read(speech.MAX_BYTES + 1)
+    if not data:
+        raise HTTPException(422, "empty audio")
+    if len(data) > speech.MAX_BYTES:
+        raise HTTPException(413, "recording too long; please record a shorter part")
+    try:
+        return speech.transcribe_bytes(data, language, file.filename or "")
+    except Exception as e:  # undecodable audio, or the model could not be downloaded while offline
+        raise HTTPException(422, f"could not transcribe the recording: {type(e).__name__}") from e
 
 
 @app.get("/api/rubrics")

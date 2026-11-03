@@ -12,7 +12,8 @@ Development and Entrepreneurship.
 
 ## What it does
 
-An informally trained electrician describes their work in English, Hindi or Hinglish. Hunar:
+An informally trained electrician describes their work in English, Hindi or Hinglish, typed or
+spoken (optional speech to text; the facilitator checks the transcript). Hunar:
 
 1. **M1 Qualification pack mapper.** Matches the declaration to the closest NSQF qualification
    packs, using performance criteria parsed from the official qualification files on nqr.gov.in.
@@ -31,7 +32,7 @@ An informally trained electrician describes their work in English, Hindi or Hing
    connection returns.
 7. **M4 Consistency study.** Rater mode collects scores with and without the rubric, and the
    analysis computes Fleiss' kappa, ordinal Krippendorff's alpha and bootstrap CIs. **It needs real
-   raters; the result is pending.**
+   raters; the result is pending.** How to run it: [docs/m4_study_walkthrough.md](docs/m4_study_walkthrough.md).
 
 ```mermaid
 flowchart LR
@@ -65,6 +66,9 @@ make eval       # M1 + M2 evaluations -> experiments/*.json -> results tables be
 make demo       # seed the SAMPLE worker, start the API on :8000 and the web app on :5173
 ```
 
+Optional extras: `make voice` (spoken declarations with faster-whisper; about 500 MB model on first
+use) and `make vision` (YOLO inference once the detector is trained).
+
 API docs: http://localhost:8000/docs. The sample worker and every screen built from it carry a
 **SAMPLE DATA** label.
 
@@ -81,8 +85,9 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | M3 rubric engine | Done, 6 tasks, unit tests | Rubric descriptors drafted by the team with AI help; need review by a certified assessor |
 | Backend API + audit log + sync | Done, tested | Real |
 | PWA frontend + offline queue | Done: all screens, EN/HI, offline outbox; exercised in a browser at phone width incl. offline replay | Real; not yet tried on a physical phone |
-| M4 rater mode + analysis | Built and tested on simulated data inside tests only | **RESULT PENDING**: no real raters yet |
-| Voice input | Not started | Planned later phase (faster-whisper) |
+| M4 rater mode + analysis | Built; photo import for the study (`make study-items`); step-by-step guide for the team | **RESULT PENDING**: no real raters yet |
+| M4 study sizing | Simulation of the method under stated assumptions | **Simulation, not a result**; used only to choose the number of raters and items |
+| Voice input | Done: record on the declaration screen, faster-whisper `small` on CPU, transcript must be read back before saving; audio never stored | Checked on **synthetic** text-to-speech audio only; not yet tried with real workers' voices |
 
 ## Results
 
@@ -116,6 +121,18 @@ n = 150 declarations (English 50, Hindi (Devanagari) 50, Hinglish 50), 5 qualifi
 | Multilingual MiniLM-L12 (primary) | 0.64 / 0.90 / 0.77 | 0.42 / 0.88 / 0.66 | 0.46 / 0.78 / 0.66 |
 | LaBSE | 0.46 / 0.72 / 0.64 | 0.48 / 0.74 / 0.66 | 0.38 / 0.78 / 0.60 |
 | TF-IDF + MiniLM hybrid (exploratory, post hoc) | 0.72 / 0.96 / 0.84 | 0.44 / 0.88 / 0.67 | 0.62 / 0.92 / 0.77 |
+
+### M1 voice input on SYNTHETIC speech (pipeline check, not real workers)
+
+> **SYNTHETIC SPEECH: AI-written declarations read aloud by macOS text-to-speech voices, not recordings of workers. Clean synthetic audio is an optimistic bound; this checks the pipeline.**
+
+150 AI-written declarations read by macOS text-to-speech, transcribed with faster-whisper small (CPU, int8), then mapped with Multilingual MiniLM-L12 (primary). Transcription took 0.61 s per second of audio on this laptop (arm64; not a controlled benchmark). Error rates count words or characters wrong per reference word or character; digits are not spelled out. Source: `experiments/m1_voice_synthetic.json`.
+
+| Language | n | Word error rate | Character error rate | Top-1 typed | Top-1 spoken | Top-1 changed (right to wrong / wrong to right) |
+|---|---|---|---|---|---|---|
+| English | 50 | 0.05 | 0.02 | 0.64 [0.50, 0.78] | 0.52 [0.38, 0.66] | 11 (8 / 2) |
+| Hindi (Devanagari) | 50 | 0.43 | 0.19 | 0.42 [0.28, 0.56] | 0.28 [0.16, 0.42] | 28 (12 / 5) |
+| Hinglish | 50 | n/a (script) | n/a (script) | 0.46 [0.32, 0.60] | 0.26 [0.14, 0.38] | 25 (14 / 4) |
 
 ### M2 evidence reuse detection (perceptual hashing)
 
@@ -179,6 +196,24 @@ Test images with a near-duplicate (<= 4 bits) in train, re-split: 0.
 
 RESULT PENDING: no real rater scores yet. Rater mode is built; the study needs 3 to 5 real assessors and 20 to 30 consented evidence photos.
 
+### M4 study design (SIMULATION OF THE METHOD, not a result)
+
+> **SIMULATION OF THE METHOD, NOT A RESULT: artificial ratings from an assumed model, used to size the study. Says nothing about whether the rubric helps real assessors.**
+
+Share of 500 simulated studies per cell in which the 95% CI of the assisted-minus-unassisted Krippendorff alpha excludes 0, assuming alpha 0.50 without the rubric. The no-effect row checks the method: it should stay near 0.025. Source: `experiments/m4_design_simulation.json`; figure `docs/figures/m4_design_power.png`.
+
+| Raters | Items | with rubric 0.50 | with rubric 0.60 | with rubric 0.70 | with rubric 0.80 |
+|---|---|---|---|---|---|
+| 3 | 20 | 0.03 | 0.14 | 0.35 | 0.71 |
+| 3 | 25 | 0.02 | 0.14 | 0.43 | 0.84 |
+| 3 | 30 | 0.02 | 0.18 | 0.55 | 0.91 |
+| 4 | 20 | 0.03 | 0.18 | 0.50 | 0.89 |
+| 4 | 25 | 0.02 | 0.17 | 0.60 | 0.95 |
+| 4 | 30 | 0.03 | 0.22 | 0.69 | 0.97 |
+| 5 | 20 | 0.02 | 0.24 | 0.60 | 0.95 |
+| 5 | 25 | 0.02 | 0.21 | 0.75 | 0.96 |
+| 5 | 30 | 0.03 | 0.27 | 0.79 | 1.00 |
+
 <!-- RESULTS:END -->
 
 Figures: [docs/figures/](docs/figures/).
@@ -192,7 +227,8 @@ backend/hunar/
   evidence/   M2: face blur, perceptual hashing, YOLO detector wrapper, hashing evaluation
   rubric/     M3: engine + tasks/*.yaml (one rubric per practical task)
   audit/      hash-chained audit log
-  study/      M4 agreement analysis
+  speech/     spoken declarations: faster-whisper transcription + synthetic-speech pipeline check
+  study/      M4 agreement analysis, study photo import, study-size simulation
 frontend/     React + Vite PWA (Dexie offline outbox, English / Hindi)
 data/
   qp_sources.json      which NQR qualifications we use and where they come from
@@ -202,7 +238,8 @@ data/
   synthetic/           SYNTHETIC declarations and sample images, always labelled
 notebooks/   m2_train_yolo_colab.ipynb, m1_error_analysis.ipynb
 experiments/ results as JSON (+ per-item predictions)
-docs/        DATA.md, architecture.md, consent_form.md, labelling_guidelines.md, report/
+docs/        DATA.md, architecture.md, consent_form.md, labelling_guidelines.md, report/,
+             m2_colab_walkthrough.md, m4_study_walkthrough.md
 scripts/     data download, labelling tool, results table, report build
 tests/       pytest suite
 ```

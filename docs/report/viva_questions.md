@@ -1,4 +1,4 @@
-# Viva preparation: 20 likely questions with answers
+# Viva preparation: 21 likely questions with answers
 
 Generated from `viva_questions.src.md` by `make report`. Every number comes from `experiments/` or the
 parsed data; if a result is pending, say so plainly.
@@ -113,8 +113,31 @@ A within-subject study: 3 to 5 real assessors (not the rubric authors) score 20 
 evidence items unassisted and, at least a week later, assisted, in a random but reproducible order.
 We compare Fleiss' kappa and ordinal Krippendorff's alpha with bootstrap CIs and bootstrap the
 assisted-minus-unassisted difference. Result: pending, because we need real assessors.
+*Is that enough people?* Only for a large effect. We simulated our own analysis under stated
+assumptions (a simulation of the method, not a result): if the rubric raised alpha from 0.50 to 0.80,
+3 raters on 20 items would show it in
+71% of simulated studies, and 5
+raters on 30 items in 99.6%; a rise
+to 0.60 would mostly go unseen
+(27% even with 5 x 30). So we aim
+for 4 to 5 raters and 30 items, and we will report the interval, not just "better" or "worse". With
+no real effect the simulated studies wrongly "found" one in about
+2% of cases, close to the
+nominal 2.5 %, which checks the method itself.
 
 **20. What would you do with more time?**
 Write and cross-label the real declaration set; train the detector; get the rubrics reviewed by a
-certified assessor; run the agreement study; add spoken declarations (Whisper) and on-device face
-blurring; extend to more trades by parsing more NQR files.
+certified assessor; run the agreement study; test voice input with real workers' speech; add
+on-device face blurring; extend to more trades by parsing more NQR files.
+
+**21. Can a worker speak instead of type? How good is it?**
+Yes, optionally (`make voice`). The facilitator records the worker; faster-whisper `small` transcribes
+on the laptop CPU; the audio is deleted at once; the text is only a draft, and the declaration cannot
+be saved until the facilitator ticks that they read it back to the worker. We have only tested it on
+**synthetic** speech (macOS text-to-speech reading our synthetic declarations): word error rate
+0.05 in English but 0.43 in Hindi, and top-1 mapping fell in every
+language (Hindi 0.42 → 0.28) while top-3 barely
+moved. Even English, with almost no word errors, lost top-1 accuracy: punctuation, capitals and
+number format changed the sentence units and tokens the model sees, which told us the mapper's top-1
+margins are thin.
+Real workers on a noisy site will do worse; testing with consenting workers is a next step.

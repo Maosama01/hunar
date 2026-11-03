@@ -20,6 +20,13 @@ the network switched off (step 6).
 | 4:10 | Offline | Switch Wi-Fi off, add a checklist tick, show the queued-ops counter, switch on, Sync now | "Field sites have poor connectivity. Actions queue on the device and replay in order exactly once." |
 | 4:40 | Results slide / README | Show the per-language chart and the RESULT PENDING rows | "Our numbers so far are on synthetic declarations and public photos. The assessor-agreement study needs real assessors, and that is our next phase." |
 
+**Optional voice step (30 s, only if time allows).** Needs `make voice` beforehand and one warm-up
+recording before the panel arrives, because the first transcription loads the speech model. On
+*New declaration*, choose Hindi, press *Record the worker speaking*, say one or two sentences about
+wiring work, press *Stop*. Say: "Speech becomes a draft, with mistakes, especially in Hindi. The
+facilitator must read it back to the worker and tick this box before saving. The audio is never
+stored." Do not save it.
+
 **If something fails:** the API docs page (http://localhost:8000/docs) can demonstrate
 `/api/map`, `/api/assessments/sample-assessment-1/prescores`, `/profile` and `/api/audit/verify`
 directly.

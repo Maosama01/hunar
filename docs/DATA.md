@@ -45,6 +45,15 @@ and `PSS/N1336` (we use the module summary codes).
 | `data/labels/declarations.csv` | Team-written, team-labelled declarations (English, Hindi, Hinglish) | **Empty: to be written by the team** following `docs/labelling_guidelines.md` |
 | `data/synthetic/declarations_synthetic.csv` | Declarations written by an AI assistant to exercise the pipeline | **SYNTHETIC.** Not real workers. Used only as a pipeline check. |
 
+### Synthetic speech (voice input check)
+
+`make eval-voice` reads the synthetic declarations aloud with the text-to-speech voices built into
+macOS (`say`: Lekha, hi_IN, for Hindi; Rishi, en_IN, for English and Roman-script Hinglish) and
+writes the audio to `data/raw/voice_tts/` (gitignored, regenerated on demand). **SYNTHETIC: no
+human voices.** Transcripts and metrics go to `experiments/m1_voice_*` with `"data_kind":
+"synthetic"`. Real recordings of workers are never stored: the app sends audio once for
+transcription and deletes it at once.
+
 ## 3. Evidence images (M2)
 
 ### Public PPE dataset
@@ -82,5 +91,13 @@ team **with written consent** and labelled in Label Studio/CVAT/Roboflow. Not co
 
 ## 4. Rater study (M4)
 
-Real rater scores are stored in `data/study/` (created by the app's rater mode). Not collected yet:
-**RESULT PENDING**.
+| What | Where | Committed? |
+|---|---|---|
+| Consented study photos and the item list (`items.csv`, template in `docs/study_items_template.csv`) | `data/study/` | No (gitignored) |
+| Face-blurred, metadata-free copies loaded by `make study-items` | `data/uploads/study/` | No (gitignored) |
+| Rater scores (pseudonymous rater IDs) | app database `data/hunar.db` | No (gitignored) |
+| Analysis results | `experiments/m4_consistency.json`, `docs/figures/m4_agreement.png` | Yes |
+| Study-size simulation (**SIMULATION OF THE METHOD**, artificial ratings) | `experiments/m4_design_simulation.json` | Yes |
+
+Real rater scores have not been collected yet: **RESULT PENDING**. Procedure:
+`docs/m4_study_walkthrough.md`.

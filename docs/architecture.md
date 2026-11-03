@@ -11,9 +11,11 @@ flowchart TB
   end
   SY -->|POST /api/sync| API
   UI -->|GET when online| API
+  UI -->|POST /api/transcribe<br/>optional, online only| API
   subgraph Server["FastAPI backend (CPU laptop)"]
     API[REST API] --> SVC[Services]
     SVC --> M1[M1 mapper<br/>sentence-transformers]
+    API --> ASR[Speech to text<br/>faster-whisper, audio not kept]
     SVC --> M2[M2 evidence<br/>face blur, pHash, YOLOv8n]
     SVC --> M3[M3 rubric engine<br/>YAML rubrics]
     SVC --> AU[Audit log<br/>SHA-256 chain]
@@ -34,6 +36,12 @@ sequenceDiagram
   actor A as Assessor
   participant App as PWA
   participant S as API
+  opt spoken declaration (online)
+    F->>App: record the worker
+    App->>S: audio → /api/transcribe
+    S-->>App: draft transcript (audio deleted)
+    F->>App: read back to the worker, correct, tick "read back"
+  end
   F->>App: worker code + declaration (any language)
   App->>S: assessment.create (queued if offline)
   S->>S: M1 ranks packs, stores evidence + gaps

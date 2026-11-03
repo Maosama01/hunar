@@ -123,3 +123,5 @@
 [62] R. Rambharose, "Exploring the role of artificial intelligence (AI) in recognition of prior learning: Opportunities for transforming adult learning and assessment," *Journal of Vocational, Adult and Continuing Education and Training*, vol. 8, no. 1, 2025, doi: 10.14426/jovacet.v8i1.506.
 
 [63] K. Sechidis, G. Tsoumakas, and I. Vlahavas, "On the stratification of multi-label data," in *Machine Learning and Knowledge Discovery in Databases (ECML PKDD 2011)* (Lecture Notes in Computer Science), 2011, pp. 145–158, doi: 10.1007/978-3-642-23808-6_10.
+
+[64] SYSTRAN, "faster-whisper: Faster Whisper transcription with CTranslate2," version 1.2.1, software, GitHub repository. [Online]. Available: https://github.com/SYSTRAN/faster-whisper (MIT license).

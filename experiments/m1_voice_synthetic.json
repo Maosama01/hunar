@@ -1,0 +1,177 @@
+{
+  "experiment": "m1_voice",
+  "data_kind": "synthetic",
+  "warning": "SYNTHETIC SPEECH: AI-written declarations read aloud by macOS text-to-speech voices, not recordings of workers. Clean synthetic audio is an optimistic bound; this checks the pipeline.",
+  "dataset": "data/synthetic/declarations_synthetic.csv",
+  "n_items": 150,
+  "asr": {
+    "engine": "faster-whisper",
+    "version": "1.2.1",
+    "model": "small",
+    "device": "cpu",
+    "compute_type": "int8",
+    "beam_size": 5,
+    "vad_filter": true
+  },
+  "tts": {
+    "engine": "macOS say",
+    "voices": {
+      "en": "Rishi",
+      "hi": "Lekha",
+      "hinglish": "Rishi"
+    },
+    "macos": "27.2"
+  },
+  "mapper": "minilm",
+  "machine": "arm64",
+  "speed": {
+    "audio_seconds": 1602.8,
+    "transcription_seconds": 971.6,
+    "real_time_factor": 0.606,
+    "note": "includes the one-off model load; not a controlled benchmark (other programs may share the CPU)"
+  },
+  "by_language": {
+    "en": {
+      "n": 50,
+      "voice": "Rishi",
+      "asr_language": "en",
+      "mapping_typed": {
+        "n": 50,
+        "top1_acc": 0.64,
+        "top1_acc_ci95": [
+          0.5,
+          0.78
+        ],
+        "top3_acc": 0.9,
+        "top3_acc_ci95": [
+          0.82,
+          0.98
+        ],
+        "mrr": 0.772,
+        "mrr_ci95": [
+          0.685,
+          0.8563
+        ]
+      },
+      "mapping_spoken": {
+        "n": 50,
+        "top1_acc": 0.52,
+        "top1_acc_ci95": [
+          0.38,
+          0.66
+        ],
+        "top3_acc": 0.88,
+        "top3_acc_ci95": [
+          0.78,
+          0.96
+        ],
+        "mrr": 0.697,
+        "mrr_ci95": [
+          0.6027,
+          0.788
+        ]
+      },
+      "top1_changed_by_transcription": 11,
+      "top1_right_to_wrong": 8,
+      "top1_wrong_to_right": 2,
+      "corpus_wer": 0.0523,
+      "corpus_cer": 0.0198
+    },
+    "hi": {
+      "n": 50,
+      "voice": "Lekha",
+      "asr_language": "hi",
+      "mapping_typed": {
+        "n": 50,
+        "top1_acc": 0.42,
+        "top1_acc_ci95": [
+          0.28,
+          0.56
+        ],
+        "top3_acc": 0.88,
+        "top3_acc_ci95": [
+          0.78,
+          0.96
+        ],
+        "mrr": 0.659,
+        "mrr_ci95": [
+          0.5746,
+          0.745
+        ]
+      },
+      "mapping_spoken": {
+        "n": 50,
+        "top1_acc": 0.28,
+        "top1_acc_ci95": [
+          0.16,
+          0.42
+        ],
+        "top3_acc": 0.84,
+        "top3_acc_ci95": [
+          0.74,
+          0.94
+        ],
+        "mrr": 0.5517,
+        "mrr_ci95": [
+          0.4733,
+          0.6377
+        ]
+      },
+      "top1_changed_by_transcription": 28,
+      "top1_right_to_wrong": 12,
+      "top1_wrong_to_right": 5,
+      "corpus_wer": 0.4264,
+      "corpus_cer": 0.1854
+    },
+    "hinglish": {
+      "n": 50,
+      "voice": "Rishi",
+      "asr_language": "hi",
+      "mapping_typed": {
+        "n": 50,
+        "top1_acc": 0.46,
+        "top1_acc_ci95": [
+          0.32,
+          0.6
+        ],
+        "top3_acc": 0.78,
+        "top3_acc_ci95": [
+          0.66,
+          0.88
+        ],
+        "mrr": 0.6553,
+        "mrr_ci95": [
+          0.564,
+          0.7457
+        ]
+      },
+      "mapping_spoken": {
+        "n": 50,
+        "top1_acc": 0.26,
+        "top1_acc_ci95": [
+          0.14,
+          0.38
+        ],
+        "top3_acc": 0.76,
+        "top3_acc_ci95": [
+          0.64,
+          0.88
+        ],
+        "mrr": 0.525,
+        "mrr_ci95": [
+          0.4403,
+          0.609
+        ]
+      },
+      "top1_changed_by_transcription": 25,
+      "top1_right_to_wrong": 14,
+      "top1_wrong_to_right": 4,
+      "error_rate_note": "not computed: Roman-script reference vs Devanagari transcript"
+    }
+  },
+  "transcripts": "cached in data/raw/voice_tts/transcripts.json; speed figures are from the run that made them",
+  "normalisation": "NFC, lower case, punctuation removed; digits are not spelled out (\"8\" vs \"eight\" counts as an error)",
+  "command": "python -m hunar.speech.evaluate",
+  "git_commit": "84d34b2",
+  "created": "2026-11-03T22:08:17"
+}

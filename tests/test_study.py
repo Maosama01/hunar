@@ -1,9 +1,11 @@
-"""Checks of the M4 analysis maths on SIMULATED ratings. Simulation lives only in these tests;
-it is never written to experiments/ or presented as a study result."""
+"""Checks of the M4 analysis maths on SIMULATED ratings. Simulated ratings appear only in these tests
+and in the clearly labelled design simulation (hunar.study.design_sim); they never reach the study
+result, experiments/m4_consistency.json."""
 import numpy as np
 import pandas as pd
 import pytest
 
+from hunar.study import design_sim as ds
 from hunar.study.analyse import alpha, analyse, fleiss, matrix, pairwise
 
 
@@ -54,3 +56,40 @@ def test_sample_items_are_excluded_and_difference_reported():
     assert res["conditions"]["assisted"]["n_items"] == 30
     d = res["difference"]
     assert d["items_in_both"] == 30 and d["alpha_assisted_minus_unassisted"] > 0
+
+
+# ---- fast statistics used by the design simulation ---------------------------------------------
+
+
+@pytest.mark.parametrize("seed", range(5))
+def test_fast_alpha_and_kappa_match_reference_packages(seed):
+    rng = np.random.default_rng(seed)
+    truth = rng.integers(0, 4, 25)
+    ratings = np.clip(truth[:, None] + rng.integers(-1, 2, (25, 2 + seed % 4)), 0, 3)
+    m = pd.DataFrame(ratings, columns=[f"R{k}" for k in range(ratings.shape[1])])
+    assert ds.alpha_ordinal(ratings) == pytest.approx(alpha(m), abs=1e-9)
+    assert ds.fleiss_kappa_counts(ds.category_counts(ratings)) == pytest.approx(fleiss(m), abs=1e-9)
+
+
+def test_bootstrap_weights_equal_duplicated_items():
+    rng = np.random.default_rng(3)
+    ratings = rng.integers(0, 4, (10, 3))
+    w = np.array([[2, 0, 1, 1, 0, 3, 1, 0, 1, 1]])
+    dup = np.repeat(ratings, w[0], axis=0)
+    assert ds.alpha_ordinal_weighted(ds.category_counts(ratings), w)[0] == pytest.approx(ds.alpha_ordinal(dup))
+
+
+def test_identical_ratings_give_alpha_one():
+    assert ds.alpha_ordinal(np.full((6, 3), 2)) == 1.0
+
+
+def test_calibration_hits_target_alpha():
+    sigma = ds.calibrate(0.6, iters=25)
+    assert ds.population_alpha(sigma, n_items=20000) == pytest.approx(0.6, abs=0.01)
+
+
+def test_no_effect_scenario_rarely_detects():
+    rng = np.random.default_rng(0)
+    s = ds.calibrate(0.5, iters=25)
+    cell = ds.run_cell(4, 25, s, s, reps=150, n_boot=300, rng=rng)
+    assert cell["detected_share"] <= 0.08  # one-sided 2.5 % nominal; small reps

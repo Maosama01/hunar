@@ -277,6 +277,14 @@ export type OpKind =
   | "evidence.add"
   | "decision.add";
 
+export interface Transcript {
+  text: string;
+  language: string;
+  duration_s: number;
+  model: string;
+  note: string;
+}
+
 export interface SyncOpIn {
   op_id: string;
   kind: OpKind;
@@ -293,6 +301,7 @@ export interface SyncResult {
 export interface Health {
   status: string;
   detector: { available: boolean; reason?: string; note?: string };
+  speech?: { available: boolean; reason?: string; model?: string; note?: string };
   mapper: string;
   principle: string;
 }
@@ -372,10 +381,11 @@ async function request<T>(method: string, path: string, body?: unknown, opts: Re
   const timer = window.setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 15000);
   let res: Response;
   try {
+    const form = body instanceof FormData;
     res = await fetch(apiUrl(path), {
       method,
-      headers: body === undefined ? undefined : { "Content-Type": "application/json" },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      headers: body === undefined || form ? undefined : { "Content-Type": "application/json" },
+      body: body === undefined ? undefined : form ? body : JSON.stringify(body),
       signal: ctrl.signal,
       cache: "no-store",
     });
@@ -435,4 +445,12 @@ export const api = {
   studyItems: (params: { rater_id: string; condition: Condition; include_sample: boolean }) =>
     get<StudyItem[]>(`/api/study/items?${q(params)}`),
   addRating: (body: RatingIn) => post<unknown>("/api/study/ratings", body),
+  /** Draft transcript of a recording; the server does not keep the audio. The first call loads the model. */
+  transcribe: (audio: Blob, language: Lang) => {
+    const form = new FormData();
+    const ext = audio.type.includes("mp4") ? "m4a" : audio.type.includes("ogg") ? "ogg" : "webm";
+    form.append("file", audio, `declaration.${ext}`);
+    form.append("language", language);
+    return post<Transcript>("/api/transcribe", form, { timeoutMs: 180000 });
+  },
 };

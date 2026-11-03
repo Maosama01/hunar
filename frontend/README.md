@@ -119,14 +119,17 @@ user action ──> Dexie (IndexedDB) ──> outbox (ordered by seq) ──> PO
 
 * Mapping, pre scores and the competency profile are computed only on the server; offline the app
   shows the last copy it saw and says when it may be out of date.
-* An *accept* decision does not carry the level the assessor saw (the API recomputes it), which is
-  why Accept is disabled while prescore-affecting changes are queued.
-* Rating uploads have no idempotency key in the API: if a rating reaches the server but the reply is
-  lost, a later retry stores it twice.
+* An *accept* decision carries the level the assessor saw (`expected_level`); the API refuses it
+  (409) if its own suggestion has changed meanwhile. Accept is also disabled while
+  prescore-affecting changes are queued.
+* Each rating has a client-generated `client_id`, so a retried upload is stored once.
 * No authentication: the role and name are chosen on the device, as the project brief allows.
-* Voice input is a placeholder (disabled button).
+* Voice input (`src/components/VoiceInput.tsx`) needs the server, a browser with `MediaRecorder` and
+  microphone access, which browsers only grant on `https://` or `localhost`. Offline or without
+  `make voice` on the server, the button is disabled with a note. The transcript is a draft; saving
+  needs the "read back to the worker" tick. Audio is sent once and not stored.
 * On-device face blurring (MediaPipe) was not implemented; blurring happens on the server only.
-* The audit view shows at most 1000 entries (the API has `limit` but no paging).
+* The audit view shows at most 1000 entries (the API can page with `before_seq`, the screen does not).
 * Service workers need `https://` or `localhost`; over plain HTTP on a LAN the app works online
   and keeps its IndexedDB queue, but cannot start without a connection.
 

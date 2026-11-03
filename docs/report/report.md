@@ -43,9 +43,13 @@ hybrid of the two reaches {{m1_mapper_synthetic:methods.hybrid.overall.top3_acc|
 overall. On real photographs from a public PPE dataset with simulated reuse, perceptual hashing caught
 every recompressed or resized copy at a false-alarm rate of
 {{m2_hashing:hashes.phash.test.false_flag_rate_fresh|.3f}} on unrelated photos, but missed cropped, rotated
-and bordered copies. The central claim of the problem statement, improved agreement between
-assessors, needs a study with real assessors; Hunar includes the rater mode and analysis for it, and
-that result is **pending**.
+and bordered copies. Spoken declarations are supported: on synthetic text-to-speech audio, Whisper
+`small` made few errors in English (word error rate {{m1_voice_synthetic:by_language.en.corpus_wer|.2f}}) but many in
+Hindi ({{m1_voice_synthetic:by_language.hi.corpus_wer|.2f}}), so the facilitator must read every transcript back to the
+worker. The central claim of the problem statement, improved agreement between assessors, needs a
+study with real assessors; Hunar includes the rater mode, photo import and analysis for it, and that
+result is **pending**. A simulation of the method shows that the planned study (3 to 5 raters, 20 to
+30 items) can detect only a large improvement.
 
 # 1. Introduction
 
@@ -97,7 +101,9 @@ where it would replace human judgement.
    safety-critical blocking rule.
 4. An evidence-integrity evaluation of perceptual hashing on real photographs.
 5. An offline-first application with an append-only, hash-chained audit trail.
-6. A ready-to-run protocol, rater mode and analysis for measuring inter-assessor agreement.
+6. A ready-to-run protocol, rater mode, photo import and analysis for measuring inter-assessor
+   agreement, sized with a simulation of the method.
+7. Optional spoken declarations with a read-back safeguard, checked end to end on synthetic speech.
 
 # 2. Literature review
 
@@ -156,7 +162,8 @@ Interpretability should be evaluated against the task it supports [53].
 **Audit and offline operation.** Tamper-evident logging with hash chains dates back to Schneier and
 Kelsey [54], with efficient structures later proposed by Crosby and Wallach [55]. Local-first software
 argues for keeping data usable on the device without a connection [56]. Whisper offers multilingual
-speech recognition for a later voice-declaration feature [57].
+speech recognition trained on large amounts of weakly supervised web audio [57]; Hunar uses it through
+the faster-whisper reimplementation [64] for optional spoken declarations.
 
 # 3. Problem definition
 
@@ -178,7 +185,8 @@ blurred before storage; works offline; runs on CPU; the vision model reports pre
 
 **Evaluation questions.**
 *Q1.* How accurately does the mapper rank the correct pack (top-1, top-3, MRR), and is it equally
-good in all three languages? *Q2.* How reliably does perceptual hashing flag reused evidence without
+good in all three languages? *Q1b.* How much do speech-recognition errors change the mapping when
+the declaration is spoken (pipeline check on synthetic speech)? *Q2.* How reliably does perceptual hashing flag reused evidence without
 false alarms? *Q3.* How well does the detector find PPE (mAP50, mAP50-95)? *Q4.* Do assessors agree
 more with the rubric and pre scores than without them?
 
@@ -228,6 +236,21 @@ tool and guidelines for the real set are in the repository (`docs/labelling_guid
 with 95 % bootstrap confidence intervals over declarations [46]. Ties (for example all-zero scores
 from a lexical baseline on Devanagari text) are scored as the expected value under a random order of
 the tied packs, so a baseline cannot gain credit from the order in which packs are listed.
+
+**Spoken declarations.** Many workers find it easier to speak than to type. The facilitator can
+record the worker on the declaration screen; the audio is sent once to the server, transcribed with
+Whisper `small` [57] through faster-whisper [64] on the CPU (8-bit weights, voice-activity
+filtering, language set from the worker's preferred language), and deleted at once. The transcript
+is only a draft: it appears in the text box, and the declaration cannot be saved until the
+facilitator confirms that they read it back to the worker and corrected it. The mapper only ever
+sees the checked text. To check the pipeline without recording anyone, each synthetic declaration
+was read aloud by a macOS text-to-speech voice (Hindi: *Lekha*; English and Roman-script Hinglish:
+*Rishi*, an Indian English voice, which read Hinglish far more intelligibly than *Lekha* in a spot
+check), transcribed with the app's settings, and mapped with MiniLM. We report word and character
+error rates (English and Hindi; for Hinglish the reference is Roman script while Whisper writes
+Hindi speech in Devanagari, so an error rate would mostly count the script change) and the mapper's
+accuracy on the transcripts next to the same declarations typed. Clean synthetic speech is far easier
+than a worker speaking on a noisy site, so these figures are an optimistic bound.
 
 ## 4.3 M3: rubrics and pre scores
 
@@ -302,7 +325,24 @@ per rater and condition but reproducible. Agreement is measured per condition wi
 [41], ordinal Krippendorff's alpha [43], [44] and pairwise exact and within-one agreement, with
 bootstrap CIs over items [46], and the assisted-minus-unassisted difference in alpha is
 bootstrapped over items rated in both conditions. The analysis code is tested on simulated data
-inside the test suite only; **no simulated result is reported**.
+inside the test suite. Consented photos are loaded with a checked import (`make study-items`) that
+refuses rows without a consent-form number, blurs faces, strips photo metadata, computes the
+assisted-condition pre score with the app's rubric engine and logs each item; the team's procedure
+is in `docs/m4_study_walkthrough.md`.
+
+**Sizing the study (simulation of the method, not a result).** To choose the number of raters and
+items, we simulated the planned analysis under stated assumptions: true item levels drawn from a
+fixed distribution, raters who differ by a personal bias and by random noise, and noise set so that
+a very large study would have an ordinal alpha of
+{{m4_design_simulation:scenarios.no_effect.population_alpha_unassisted|.2f}} without the rubric and
+{{m4_design_simulation:scenarios.no_effect.population_alpha_assisted|.2f}} (no effect),
+{{m4_design_simulation:scenarios.plus_010.population_alpha_assisted|.2f}},
+{{m4_design_simulation:scenarios.plus_020.population_alpha_assisted|.2f}} or
+{{m4_design_simulation:scenarios.plus_030.population_alpha_assisted|.2f}} with it. For each design
+(3 to 5 raters, 20 to 30 items) we ran {{m4_design_simulation:reps_per_cell}} simulated studies through the
+same paired item bootstrap and counted how often the 95 % interval of the improvement excluded zero.
+These are artificial ratings; they say nothing about whether the rubric helps, only how precise a
+study of a given size can be.
 
 ## 4.6 Where the tool supports and where it does not replace human judgement
 
@@ -323,6 +363,7 @@ The ML modules sit behind service interfaces, so models can be swapped without t
 ```
 Device (PWA, offline)                       Server (CPU laptop)
  React screens EN/HI ──► Dexie outbox ──► /api/sync ──► services ──► M1 mapper (sentence-transformers)
+ voice recording ─────────────────────────► /api/transcribe ──► faster-whisper (audio not kept)
         │                (ordered, idempotent)        │          ├─► M2 face blur, pHash, YOLOv8n
         └──────── GET when online ───────────────────►│          ├─► M3 rubric engine (YAML)
                                                        │          └─► audit log (SHA-256 chain)
@@ -334,14 +375,15 @@ Device (PWA, offline)                       Server (CPU laptop)
 get client-generated UUIDs, so later operations can refer to them before they reach the server. The
 sync endpoint applies operations in order, records each operation id so a replay is ignored, and
 stops at the first rejected operation so dependent operations are not applied out of order. Mapping
-needs the server, so a declaration typed offline is matched after sync.
+needs the server, so a declaration typed offline is matched after sync. Speech recognition also
+needs the server; offline, the record button is disabled with a note asking the facilitator to type.
 
 **Audit trail.** Each audit entry stores the SHA-256 of the previous entry; editing any past entry
 breaks the chain, which `/api/audit/verify` detects, and SQLite triggers refuse UPDATE and DELETE on
 the table. A test shows that even an attacker who drops the trigger and edits an entry is detected.
 
 **Interfaces.** The React PWA (TypeScript, Vite, Dexie) has these screens: worker/facilitator
-declaration with explained mapping; practical tasks with checklist and consented photo capture;
+declaration (typed or recorded) with explained mapping; practical tasks with checklist and consented photo capture;
 assessor scoring with anchors, pre scores, reasons and accept/override; competency profile and
 sign-off; admin audit view with chain verification; rater mode for the study; and a sync-queue view.
 The interface is in English and Hindi, and sample data is badged "SAMPLE DATA" everywhere. The full
@@ -400,6 +442,30 @@ also shows that TF-IDF gives every pack a score of zero for most Devanagari decl
 synthetic declarations were written by a model rather than by workers, so these numbers say that the
 pipeline works and where it is weak, not how it will perform in the field.
 
+**Q1b, spoken declarations (synthetic speech).** On clean text-to-speech audio, Whisper `small`
+transcribed English almost perfectly (word error rate {{m1_voice_synthetic:by_language.en.corpus_wer|.2f}}) but Hindi poorly
+(word error rate {{m1_voice_synthetic:by_language.hi.corpus_wer|.2f}}, character error rate {{m1_voice_synthetic:by_language.hi.corpus_cer|.2f}}). In the Hindi
+transcripts we read, many errors swap aspirated and unaspirated consonants (काम → खाम, धूल → दूल) or
+dental and retroflex ones (टाइट → ताएद), or drop vowel signs (पैनल → पनल), so words the multilingual
+model knows come out as non-words; occasionally a whole sentence is missing. Top-1
+mapping accuracy fell in every language (English {{m1_voice_synthetic:by_language.en.mapping_typed.top1_acc|.2f}} →
+{{m1_voice_synthetic:by_language.en.mapping_spoken.top1_acc|.2f}}, Hindi {{m1_voice_synthetic:by_language.hi.mapping_typed.top1_acc|.2f}} →
+{{m1_voice_synthetic:by_language.hi.mapping_spoken.top1_acc|.2f}}, Hinglish {{m1_voice_synthetic:by_language.hinglish.mapping_typed.top1_acc|.2f}} →
+{{m1_voice_synthetic:by_language.hinglish.mapping_spoken.top1_acc|.2f}}), while top-3 accuracy hardly moved (Hindi
+{{m1_voice_synthetic:by_language.hi.mapping_typed.top3_acc|.2f}} → {{m1_voice_synthetic:by_language.hi.mapping_spoken.top3_acc|.2f}}). The English drop is the
+surprising part. In the English declarations whose top pack changed, the transcripts differ mostly in
+punctuation, capitals and number format (a colon becomes a comma, "DIN" becomes "din", "three"
+becomes "3"); even a transcript with no word errors changed the top pack. Some of these changes move
+sentence boundaries (a full stop becomes a comma, or the reverse), which changes the units the mapper
+averages over; others only change the tokens the embedding model sees. Either is enough to change
+the top pack. One real domain error recurred: the
+Indian English voice's "wire" was heard as "via". The changes went both ways
+({{m1_voice_synthetic:by_language.en.top1_right_to_wrong}} right to wrong and {{m1_voice_synthetic:by_language.en.top1_wrong_to_right}} wrong to right in English),
+which shows how close the scores of neighbouring packs are: the top-1 choice is fragile whether the
+declaration is typed or spoken, and the assessor's confirmation step matters. Two consequences follow:
+the read-back step is essential for Hindi, and the mapper should be made less sensitive to surface
+form, for example by normalising punctuation, case and numbers before matching. All of this is on synthetic speech; real speech will be harder.
+
 **Q2, reuse detection.** At an operating point with very few false alarms, pHash reliably catches
 re-submission of the same photo after recompression or resizing, which is the most likely form of
 casual reuse (for example a photo forwarded through a messaging app). It does not catch deliberate
@@ -421,7 +487,21 @@ near-duplicate leakage before any number from it is trusted.
 *Figure 7. Confusion matrix of the diagnostic first run on the published splits (clean test set).
 All true helmets fall in "background" because the training split contained no helmet boxes.*
 
-**Q4, assessor agreement** is pending (Section 8).
+**Q4, assessor agreement** is pending until real assessors take part. The design simulation (Table
+"M4 study design" above and Figure 8) shows what the planned study can and cannot show. If the rubric
+raised alpha from 0.50 to 0.80, a study with 3 raters and 20 items would detect it in
+{{m4_design_simulation:scenarios.plus_030.detected_share_by_design.3x20|.0%}} of simulated studies and one with 5 raters
+and 30 items in {{m4_design_simulation:scenarios.plus_030.detected_share_by_design.5x30|.1%}}; a rise to 0.60 would
+mostly go unseen ({{m4_design_simulation:scenarios.plus_010.detected_share_by_design.5x30|.0%}} even with 5 raters and
+30 items). With no real effect, about {{m4_design_simulation:scenarios.no_effect.detected_share_by_design.4x25|.0%}} of
+simulated studies wrongly showed one, close to the nominal 2.5 %, which checks the analysis itself.
+We therefore aim for 4 to 5 raters and 30 items and will report the interval of the difference, not
+just its sign.
+
+![M4 design simulation (simulation of the method, not a result)](../figures/m4_design_power.png)
+
+*Figure 8. SIMULATION OF THE METHOD, not a result: share of simulated studies of each size whose
+95 % interval for the improvement in Krippendorff's alpha excludes zero, for three assumed effects.*
 
 # 7. Limitations
 
@@ -443,6 +523,13 @@ All true helmets fall in "background" because the training split contained no he
   (tools, Indian domestic settings) are in it yet.
 * **Assessor agreement is unmeasured.** This is the outcome the problem statement cares most about,
   and it requires real assessors and consented photos.
+* **Study sizing rests on assumptions.** The design simulation assumes a distribution of item levels,
+  normally distributed rater bias and noise, and no memory of items between sessions. Real raters may
+  agree more or less than assumed; the simulation guides the size of the study, nothing more.
+* **Voice input is checked only on synthetic speech.** Text-to-speech audio is clean, evenly paced
+  and free of background noise; real workers on site speak faster, mix languages and have regional
+  accents. Even on clean audio, Whisper `small` makes many errors in Hindi. Recognition also needs
+  the server, so it does not work offline.
 * **Theory component.** NSQF assessment also includes theory and viva marks; Hunar supports only the
   practical component.
 
@@ -465,11 +552,11 @@ All true helmets fall in "background" because the training split contained no he
 | Phase | Goal | Status |
 |---|---|---|
 | 0 | Setup, schemas, official data | Done |
-| 1 | M1 mapper, baselines, evaluation | Done on synthetic data; real labelled set pending |
+| 1 | M1 mapper, baselines, evaluation | Done on synthetic data; real labelled set pending; optional voice input added and checked on synthetic speech |
 | 2 | M3 rubric engine, backend API, audit log | Done |
 | 3 | M2 evidence checker | Hashing and blurring done; detector run 1 diagnostic; run 2 on the re-split data pending |
 | 4 | Frontend and offline sync | Done; full flow and offline replay exercised in a browser at phone width |
-| 5 | M4 study | Rater mode and analysis done; data collection pending |
+| 5 | M4 study | Rater mode, photo import and analysis done; study sized by simulation; data collection pending |
 | 6 | Report and viva preparation | This draft |
 
 Next steps, in order:
@@ -477,8 +564,9 @@ Next steps, in order:
 1. The team writes and cross-labels about 150 real declarations, reporting labelling agreement.
 2. Run the detector notebook again on the re-split data (run 2); report per-class mAP.
 3. Review the rubrics with a certified assessor; collect consented photos of practice tasks.
-4. Run the assessor-agreement study with 3 to 5 assessors.
-5. Add spoken declarations with Whisper-based speech recognition [57] and on-device face blurring.
+4. Run the assessor-agreement study, aiming for 4 to 5 assessors and 30 items (Section 4.5).
+5. Try voice input with consenting workers' real speech; if Hindi errors stay frequent, test a larger
+   or Hindi-specialised speech model. Add on-device face blurring.
 6. Extend to more trades by running the same parser on more NQR qualification files.
 
 # References
