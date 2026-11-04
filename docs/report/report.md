@@ -485,8 +485,10 @@ Electrician); the assessor sees the matched sentences and confirms the correct q
 
 ![Scoring screen: explainable pre score](../figures/app_scoring.png)
 
-*Figure 3. One criterion on the assessor's scoring screen: safety flag, suggested level with
-confidence and the reasons behind it, level descriptors, and the accept/override controls.*
+*Figure 3. One criterion on the assessor's scoring screen: safety flag, a level strip (dashed: the
+tool's suggestion; red underline: the levels that block a positive result on a safety criterion),
+suggested level with confidence and the reasons behind it, level descriptors, and the
+accept/override controls. The screen shows one practical task at a time.*
 
 **Screens for workers and customers.** First use starts with a language picker (each language in its
 own script, with an honest "mostly English for now" until its translation exists), then the choice
@@ -498,15 +500,18 @@ quiz is finished); customers for finding a worker, bookings and privacy; staff k
 assessor screens, plus assessment requests and (for admins) permit checks. Every screen was exercised
 in a browser at 375 px width, including Urdu in right-to-left layout.
 
-![Onboarding: language, role, consent](../figures/app_onboarding.png)
+![Onboarding: language, trade, consent](../figures/app_onboarding.png)
 
-*Figure 3b. Onboarding: language picker, role choice, and consent per purpose with the data each uses.*
+*Figure 3b. Onboarding: language picker; a worker's trade, with the note that the compulsory quiz
+starts as soon as the account exists; and consent per purpose with the data each uses (the skill quiz
+is required for workers).*
 
 ![Worker quiz](../figures/app_worker_quiz.png)
 
-*Figure 3c. Worker quiz: one question per screen with read-aloud; the result as a range with
-per-NOS bars (test account, answers given by a script); Urdu layout with a question shown in Hindi
-because its translation is missing.*
+*Figure 3c. Worker quiz: the first question, right after registering (until a quiz is finished only
+the quiz and privacy are open); the result as a range with per-NOS bars (test account, answers given
+by a script at reading pace); Urdu layout with a question shown in Hindi because its translation is
+missing.*
 
 ![Customer search and booking](../figures/app_customer.png)
 
