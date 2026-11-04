@@ -5,6 +5,7 @@ import base64
 import hashlib
 import json
 import os
+import threading
 import uuid
 from functools import lru_cache
 from pathlib import Path
@@ -24,11 +25,25 @@ from hunar.schemas import MappingResult
 UPLOADS = Path(os.environ.get("HUNAR_UPLOADS", DATA / "uploads"))
 
 
-@lru_cache(maxsize=1)
-def mapper() -> QPMapper:
+def mapper_name() -> str:
     # MiniLM is the pre-registered primary model (the only one that handles Devanagari);
     # set HUNAR_MAPPER=tfidf for fast tests or HUNAR_MAPPER=hybrid to try the exploratory hybrid.
-    return QPMapper(os.environ.get("HUNAR_MAPPER", "minilm"))
+    return os.environ.get("HUNAR_MAPPER", "minilm")
+
+
+_mapper_lock = threading.Lock()
+
+
+@lru_cache(maxsize=1)
+def _load_mapper() -> QPMapper:
+    return QPMapper(mapper_name())
+
+
+def mapper() -> QPMapper:
+    """The mapper, loaded once. lru_cache alone lets several first requests each load the model at the
+    same time; a dozen parallel MiniLM loads at startup stalled the whole server."""
+    with _mapper_lock:
+        return _load_mapper()
 
 
 def get_or_404(session: Session, model, key):

@@ -126,9 +126,10 @@ class RatingIn(BaseModel):
 
 @app.get("/api/health")
 def health():
+    # Polled often by every open app: it must stay cheap and never load a model.
     return {"status": "ok", "detector": detector.status(), "speech": speech.status(),
             "bhashini": {"configured": bhashini.Bhashini.from_env() is not None},
-            "mapper": svc.mapper().matcher.name, "principle": "AI suggests, the assessor decides."}
+            "mapper": svc.mapper_name(), "principle": "AI suggests, the assessor decides."}
 
 
 @app.get("/api/packs")

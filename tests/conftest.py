@@ -26,7 +26,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.delenv("HUNAR_OTP_PROVIDER", raising=False)
     auth._pepper.cache_clear()
     db.reset_engine()
-    services.mapper.cache_clear()
+    services._load_mapper.cache_clear()
     from hunar.api.main import app
 
     with TestClient(app) as c:
@@ -34,7 +34,7 @@ def client(tmp_path, monkeypatch):
         c.headers["Authorization"] = f"Bearer {make_account(role='assessor', phone='9000000001')[1]}"
         yield c
     db.reset_engine()
-    services.mapper.cache_clear()
+    services._load_mapper.cache_clear()
     auth._pepper.cache_clear()
 
 
