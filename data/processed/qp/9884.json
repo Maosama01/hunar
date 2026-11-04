@@ -18,7 +18,7 @@
   "nos": [
     {
       "code": "FFS/N2206",
-      "title": "Prepare the",
+      "title": "Prepare the worksite for on-site operations",
       "core": true,
       "nsqf_level": 4.0,
       "hours": null,
@@ -41,7 +41,7 @@
         {
           "id": "FFS/N2206.PC4",
           "code": "PC4",
-          "text": "ensure daily filling and timely submission of job cards to the supervisor Prepare the worksite for recce and take measurements"
+          "text": "ensure daily filling and timely submission of job cards to the supervisor"
         },
         {
           "id": "FFS/N2206.PC5",
@@ -66,7 +66,7 @@
         {
           "id": "FFS/N2206.PC9",
           "code": "PC9",
-          "text": "prepare the measurement sheet and handover to the supervisor in-time Perform loading and unloading operations"
+          "text": "prepare the measurement sheet and handover to the supervisor in-time"
         },
         {
           "id": "FFS/N2206.PC10",
@@ -86,7 +86,12 @@
         {
           "id": "FFS/N2206.PC13",
           "code": "PC13",
-          "text": "ensure proper arrangement of the handling equipment for loading and unloading of the materials at the specified location Segregate and store the materials, tools, and equipment"
+          "text": "ensure proper arrangement of the handling equipment for loading and unloading of the materials at the specified location"
+        },
+        {
+          "id": "FFS/N2206.PC14",
+          "code": "PC14",
+          "text": "assist in the Quality Checking (QC) process of the materials before loading and unloading"
         },
         {
           "id": "FFS/N2206.PC15",
@@ -106,7 +111,7 @@
         {
           "id": "FFS/N2206.PC18",
           "code": "PC18",
-          "text": "maintain proper records of materials, tools, and equipment for each workday and update the supervisor Prepare the worksite for fabrication, assembly, and installation purposes"
+          "text": "maintain proper records of materials, tools, and equipment for each workday and update the supervisor"
         },
         {
           "id": "FFS/N2206.PC19",
@@ -138,7 +143,7 @@
     },
     {
       "code": "FFS/N2207",
-      "title": "Assist in the",
+      "title": "Assist in the fabrication of the products at the worksite",
       "core": true,
       "nsqf_level": 4.0,
       "hours": null,
@@ -156,7 +161,7 @@
         {
           "id": "FFS/N2207.PC3",
           "code": "PC3",
-          "text": "select the correct materials to comply with drawings and specifications Set out, measure, and mark the timber and timber-based materials"
+          "text": "select the correct materials to comply with drawings and specifications"
         },
         {
           "id": "FFS/N2207.PC4",
@@ -167,6 +172,11 @@
           "id": "FFS/N2207.PC5",
           "code": "PC5",
           "text": "assist in identifying different members of the products as per the given specifications"
+        },
+        {
+          "id": "FFS/N2207.PC6",
+          "code": "PC6",
+          "text": "assist in preparing the part list of products with the supervisor"
         },
         {
           "id": "FFS/N2207.PC7",
@@ -181,7 +191,7 @@
         {
           "id": "FFS/N2207.PC9",
           "code": "PC9",
-          "text": "use appropriate calculations and formulae to confirm the accuracy Form joints and prepare members of the product for assembly"
+          "text": "use appropriate calculations and formulae to confirm the accuracy"
         },
         {
           "id": "FFS/N2207.PC10",
@@ -228,7 +238,7 @@
     },
     {
       "code": "FFS/N2208",
-      "title": "Assist in the",
+      "title": "Assist in the assembly, finishing, and installation of the products at the worksite",
       "core": true,
       "nsqf_level": 4.0,
       "hours": null,
@@ -256,7 +266,12 @@
         {
           "id": "FFS/N2208.PC5",
           "code": "PC5",
-          "text": "assist in knocking down the existing cabinets, fixtures, and other fittings on the worksite as per the directions from the supervisor Assist in finishing the surface of the product"
+          "text": "assist in knocking down the existing cabinets, fixtures, and other fittings on the worksite as per the directions from the supervisor"
+        },
+        {
+          "id": "FFS/N2208.PC6",
+          "code": "PC6",
+          "text": "attach members neatly using appropriate fasteners or/ add adhesives as applicable"
         },
         {
           "id": "FFS/N2208.PC7",
@@ -266,7 +281,7 @@
         {
           "id": "FFS/N2208.PC8",
           "code": "PC8",
-          "text": "use the appropriate wood fillers and sanding papers to finish the product to a specified standard as per the supervisor’s instruction Assist in installation of the product and its handover"
+          "text": "use the appropriate wood fillers and sanding papers to finish the product to a specified standard as per the supervisor’s instruction"
         },
         {
           "id": "FFS/N2208.PC9",
@@ -303,7 +318,7 @@
     },
     {
       "code": "FFS/N8201",
-      "title": "Follow health,",
+      "title": "Follow health, safety, and greening practices at the worksite",
       "core": false,
       "nsqf_level": 3.0,
       "hours": null,
@@ -316,12 +331,12 @@
         {
           "id": "FFS/N8201.PC2",
           "code": "PC2",
-          "text": "identify and report poor organizational practices concerning hygiene, food handling, cleaning 1`"
+          "text": "identify and report poor organizational practices concerning hygiene, food handling, cleaning"
         },
         {
           "id": "FFS/N8201.PC3",
           "code": "PC3",
-          "text": "ensure that the trash cans or waste collection points are cleared every day Follow health and safety procedures"
+          "text": "ensure that the trash cans or waste collection points are cleared every day"
         },
         {
           "id": "FFS/N8201.PC4",
@@ -331,12 +346,17 @@
         {
           "id": "FFS/N8201.PC5",
           "code": "PC5",
-          "text": "use emergency equipment following manufacturers' specifications as per requirement Maintain personal hygiene"
+          "text": "use emergency equipment following manufacturers' specifications as per requirement"
         },
         {
           "id": "FFS/N8201.PC6",
           "code": "PC6",
-          "text": "follow the dress code of the worksite Follow precautionary measures to avoid work hazards"
+          "text": "follow the dress code of the worksite"
+        },
+        {
+          "id": "FFS/N8201.PC7",
+          "code": "PC7",
+          "text": "Wash hands regularly using suggested materials such as soap, one-use disposable tissue, warm water, etc."
         },
         {
           "id": "FFS/N8201.PC8",
@@ -361,7 +381,7 @@
         {
           "id": "FFS/N8201.PC12",
           "code": "PC12",
-          "text": "undertake correct ways while lifting or movement of the heavy material from one place to another Ensure material conservation and optimization of resources"
+          "text": "undertake correct ways while lifting or movement of the heavy material from one place to another"
         },
         {
           "id": "FFS/N8201.PC13",
@@ -387,89 +407,174 @@
       "knowledge_items": []
     },
     {
-      "code": "9884/NOS5",
-      "title": "DGT/VSQ/N0102: Employability Skills (60 Hours) PC6. practice the 21st Century Skills such as Self- Awareness, Behaviour Skills, time management, critical and adaptive thinking, problem-solving, creative thinking, social and cultural awareness, emotional awareness, learning to learn for continuous learning etc. in personal and professional life Basic English Skills PC7. use basic English for everyday conversation in different contexts, in person and over the telephone PC8. read and understand routine information, notes, instructions, mails, letters etc. written in English PC9. write short messages, notes, letters, e-mails etc. in English Career Development & Goal Setting PC10. understand the difference between job and career PC11. prepare a career development plan with short- and long- term goals, based on aptitude Communication Skills PC12. follow verbal and non-verbal communication etiquette and active listening techniques in various settings PC13. work collaboratively with others in a team Diversity & Inclusion PC14. communicate and behave appropriately with all genders and PwD PC15. escalate any issues related to sexual harassment at workplace according to POSH Act Financial and Legal Literacy PC16. select financial institutions, products and services as per requirement PC17. carry out offline and online financial transactions, safely and securely PC18. identify common components of salary and compute income, expenses, taxes, investments etc PC19. identify relevant rights and laws and use legal aids to fight against legal exploitation Essential Digital Skills PC20. operate digital devices and carry out basic internet operations securely and safely PC21. use e- mail and social media platforms and virtual collaboration tools to work effectively",
-      "core": null,
-      "nsqf_level": null,
+      "code": "DGT/VSQ/N0102",
+      "title": "Employability Skills (60 Hours)",
+      "core": false,
+      "nsqf_level": 4.0,
       "hours": null,
       "performance_criteria": [
         {
-          "id": "9884/NOS5.PC1",
+          "id": "DGT/VSQ/N0102.PC1",
           "code": "PC1",
           "text": "identify employability skills required for jobs in various industries"
         },
         {
-          "id": "9884/NOS5.PC2",
+          "id": "DGT/VSQ/N0102.PC2",
           "code": "PC2",
-          "text": "identify and explore learning and employability portals Constitutional values – Citizenship"
+          "text": "identify and explore learning and employability portals"
         },
         {
-          "id": "9884/NOS5.PC3",
+          "id": "DGT/VSQ/N0102.PC3",
           "code": "PC3",
           "text": "recognize the significance of constitutional values, including civic rights and duties, citizenship, responsibility towards society etc. and personal values and ethics such as honesty, integrity, caring and respecting others, etc."
         },
         {
-          "id": "9884/NOS5.PC4",
+          "id": "DGT/VSQ/N0102.PC4",
           "code": "PC4",
-          "text": "follow environmentally sustainable practices Becoming a Professional in the 21st Century"
+          "text": "follow environmentally sustainable practices"
         },
         {
-          "id": "9884/NOS5.PC5",
+          "id": "DGT/VSQ/N0102.PC5",
           "code": "PC5",
-          "text": "recognize the significance of 21st Century Skills for employment Entrepreneurship"
+          "text": "recognize the significance of 21st Century Skills for employment"
         },
         {
-          "id": "9884/NOS5.PC23",
+          "id": "DGT/VSQ/N0102.PC6",
+          "code": "PC6",
+          "text": "practice the 21st Century Skills such as Self- Awareness, Behaviour Skills, time management, critical and adaptive thinking, problem-solving, creative thinking, social and cultural awareness, emotional awareness, learning to learn for continuous learning etc. in personal and professional life"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC7",
+          "code": "PC7",
+          "text": "use basic English for everyday conversation in different contexts, in person and over the telephone"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC8",
+          "code": "PC8",
+          "text": "read and understand routine information, notes, instructions, mails, letters etc. written in English"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC9",
+          "code": "PC9",
+          "text": "write short messages, notes, letters, e-mails etc. in English"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC10",
+          "code": "PC10",
+          "text": "understand the difference between job and career"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC11",
+          "code": "PC11",
+          "text": "prepare a career development plan with short- and long- term goals, based on aptitude"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC12",
+          "code": "PC12",
+          "text": "follow verbal and non-verbal communication etiquette and active listening techniques in various settings"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC13",
+          "code": "PC13",
+          "text": "work collaboratively with others in a team"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC14",
+          "code": "PC14",
+          "text": "communicate and behave appropriately with all genders and PwD"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC15",
+          "code": "PC15",
+          "text": "escalate any issues related to sexual harassment at workplace according to POSH Act"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC16",
+          "code": "PC16",
+          "text": "select financial institutions, products and services as per requirement"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC17",
+          "code": "PC17",
+          "text": "carry out offline and online financial transactions, safely and securely"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC18",
+          "code": "PC18",
+          "text": "identify common components of salary and compute income, expenses, taxes, investments etc"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC19",
+          "code": "PC19",
+          "text": "identify relevant rights and laws and use legal aids to fight against legal exploitation"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC20",
+          "code": "PC20",
+          "text": "operate digital devices and carry out basic internet operations securely and safely"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC21",
+          "code": "PC21",
+          "text": "use e- mail and social media platforms and virtual collaboration tools to work effectively"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC22",
+          "code": "PC22",
+          "text": "use basic features of word processor, spreadsheets, and presentations"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC23",
           "code": "PC23",
           "text": "identify different types of Entrepreneurship and Enterprises and assess opportunities for potential business through research"
         },
         {
-          "id": "9884/NOS5.PC24",
+          "id": "DGT/VSQ/N0102.PC24",
           "code": "PC24",
           "text": "develop a business plan and a work model, considering the 4Ps of Marketing Product, Price, Place and Promotion"
         },
         {
-          "id": "9884/NOS5.PC25",
+          "id": "DGT/VSQ/N0102.PC25",
           "code": "PC25",
-          "text": "identify sources of funding, anticipate, and mitigate any financial/ legal hurdles for the potential business opportunity Customer Service"
+          "text": "identify sources of funding, anticipate, and mitigate any financial/ legal hurdles for the potential business opportunity"
         },
         {
-          "id": "9884/NOS5.PC26",
+          "id": "DGT/VSQ/N0102.PC26",
           "code": "PC26",
           "text": "identify different types of customers"
         },
         {
-          "id": "9884/NOS5.PC27",
+          "id": "DGT/VSQ/N0102.PC27",
           "code": "PC27",
           "text": "identify and respond to customer requests and needs in a professional manner."
         },
         {
-          "id": "9884/NOS5.PC28",
+          "id": "DGT/VSQ/N0102.PC28",
           "code": "PC28",
-          "text": "follow appropriate hygiene and grooming standards Getting ready for apprenticeship & Jobs"
+          "text": "follow appropriate hygiene and grooming standards"
         },
         {
-          "id": "9884/NOS5.PC29",
+          "id": "DGT/VSQ/N0102.PC29",
           "code": "PC29",
           "text": "create a professional Curriculum vitae (Résumé)"
         },
         {
-          "id": "9884/NOS5.PC30",
+          "id": "DGT/VSQ/N0102.PC30",
           "code": "PC30",
           "text": "search for suitable jobs using reliable offline and online sources such as Employment exchange, recruitment agencies, newspapers etc. and job portals, respectively"
         },
         {
-          "id": "9884/NOS5.PC31",
+          "id": "DGT/VSQ/N0102.PC31",
           "code": "PC31",
           "text": "apply to identified job openings using offline /online methods as per requirement"
         },
         {
-          "id": "9884/NOS5.PC32",
+          "id": "DGT/VSQ/N0102.PC32",
           "code": "PC32",
           "text": "answer questions politely, with clarity and confidence, during recruitment and selection"
         },
         {
-          "id": "9884/NOS5.PC33",
+          "id": "DGT/VSQ/N0102.PC33",
           "code": "PC33",
           "text": "identify apprenticeship opportunities and register for it as per guidelines and requirements"
         }

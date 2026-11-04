@@ -210,3 +210,19 @@ def test_write_endpoints_return_full_rows(client):
     rid = client.get("/api/assessment-requests").json()[0]["id"]
     started = client.post(f"/api/assessment-requests/{rid}/start").json()
     assert started["request"]["status"] == "started"
+
+
+def test_practical_assessment_only_for_trades_with_practical_tasks(client):
+    listed = client.get("/api/trades").json()
+    assert listed["electrician"]["practical_assessment"] is True
+    assert listed["plumber"]["practical_assessment"] is False and listed["carpenter"]["practical_assessment"] is False
+    _, pt = worker_with_profile(client, phone="9876500011", trade="plumber")
+    r = client.post("/api/assessment-requests", json={"declaration_text": "Das saal se plumbing"}, headers=bearer(pt))
+    assert r.status_code == 409 and "electricians only" in r.json()["detail"]
+    with Session(db.engine()) as s:  # a plumber's request made before the rule must not be started either
+        from hunar.market.models import AssessmentRequest
+
+        acc_id = client.get("/api/auth/me", headers=bearer(pt)).json()["id"]
+        s.add(AssessmentRequest(id="old-plumber-request", account_id=acc_id, trade="plumber", pincode="302017"))
+        s.commit()
+    assert client.post("/api/assessment-requests/old-plumber-request/start").status_code == 409

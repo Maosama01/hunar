@@ -9,6 +9,7 @@ import { VoiceInput } from "../../components/VoiceInput";
 import { ErrorBox, SpeakButton, useLoad } from "../../components/ui";
 import { useI18n, type Key } from "../../i18n";
 import { useSession } from "../../session";
+import { useTrades } from "../../trades";
 import { fmtDate, todayIso } from "../../util";
 
 const STATUS_KEY: Record<AssessmentRequest["status"], Key> = {
@@ -18,8 +19,9 @@ const STATUS_KEY: Record<AssessmentRequest["status"], Key> = {
 };
 
 export function AssessRequestScreen() {
-  const { t, lang, langOf } = useI18n();
+  const { t, lang, langOf, pick } = useI18n();
   const { account } = useSession();
+  const { trades } = useTrades();
   const reqs = useLoad(() => api.assessmentRequests(), []);
   const prof = useLoad(() => api.myProfile(), []);
   const [text, setText] = useState("");
@@ -32,6 +34,9 @@ export function AssessRequestScreen() {
 
   const consentOk = !!account?.consents.assessment;
   const open = reqs.data?.find((r) => r.status === "open");
+  // Only trades with practical tasks can be assessed (electricians so far); the server refuses others.
+  const myTrade = prof.data ? trades?.[prof.data.trade] : undefined;
+  const noPractical = myTrade?.practical_assessment === false;
   const textOk = text.trim().length >= 10;
 
   const submit = async (e: FormEvent) => {
@@ -105,6 +110,8 @@ export function AssessRequestScreen() {
         <Notice kind="warn">
           {t("assess.needProfile")} <Link to="/w/profile">{t("nav.myProfile")}</Link>
         </Notice>
+      ) : noPractical ? (
+        <Notice kind="info">{t("assess.notForTrade", { trade: pick(myTrade!.name) })}</Notice>
       ) : open ? (
         <Notice kind="info">{t("assess.alreadyOpen")}</Notice>
       ) : (

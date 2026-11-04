@@ -95,7 +95,7 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 
 | Part | Status | Real or mocked |
 |---|---|---|
-| QP parsing | Done: 5 official packs, 27 NOS, 344 PCs | Real official PDFs; human check of every PC pending |
+| QP parsing | Done: 5 official packs for M1 (27 NOS, 345 PCs) and 2 trade packs for the quiz (13 NOS, 264 PCs) | Real official PDFs; human check of every PC pending |
 | M1 mapper + baselines + evaluation | Done | Evaluated on a **synthetic** set only; team-written set pending |
 | M1 labelling tool + guidelines | Done | Team has not written declarations yet |
 | M2 reuse hashing | Done and evaluated | Real public photos, simulated reuse |
@@ -108,7 +108,7 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | M4 study sizing | Simulation of the method under stated assumptions | **Simulation, not a result**; used only to choose the number of raters and items |
 | Accounts, consent, roles | Done: phone + PIN (salted, peppered scrypt; lockout), OTP-ready, itemised DPDP consent, erasure; staff endpoints need a staff login | Real; SMS gateway not configured |
 | Worker quiz (3 trades) | Done: adaptive Rasch quiz, 40 / 24 / 24 questions from official sources, review with sources | Questions are **DRAFT** (expert review pending); difficulties **uncalibrated** until about 100 real attempts per trade |
-| Booking and badges | Done: search, booking lifecycle, ratings, assessment requests, permit rule (CEA reg. 31), badges only from assessor sign-off | Real; permit check is manual (no State register API) |
+| Booking and badges | Done: search, booking lifecycle, ratings, assessment requests, permit rule (CEA reg. 31), badges only from assessor sign-off | Real; permit check is manual (no State register API); practical assessments for electricians only (no plumber or carpenter rubric tasks yet) |
 | 23 languages | UI and quiz support 23 languages with fallback, RTL and read-aloud; Bhashini client and `make translate` | Only English and Hindi written so far (Hindi with AI help, native-speaker review pending); Bhashini **not yet run** (needs credentials: [docs/bhashini_setup.md](docs/bhashini_setup.md)); machine translations will need review |
 | Voice input | Done: record on the declaration screen, faster-whisper `small` on CPU, transcript must be read back before saving; audio never stored | Checked on **synthetic** text-to-speech audio only; not yet tried with real workers' voices |
 
@@ -130,19 +130,19 @@ n = 150 declarations (English 50, Hindi (Devanagari) 50, Hinglish 50), 5 qualifi
 | Method | Top-1 | Top-3 | MRR |
 |---|---|---|---|
 | Keyword overlap (baseline) | 0.489 [0.42, 0.56] | 0.808 [0.76, 0.85] | 0.673 [0.63, 0.72] |
-| TF-IDF (baseline) | 0.536 [0.47, 0.60] | 0.815 [0.77, 0.86] | 0.697 [0.65, 0.74] |
-| Multilingual MiniLM-L12 (primary) | 0.507 [0.43, 0.59] | 0.853 [0.79, 0.91] | 0.695 [0.64, 0.75] |
-| LaBSE | 0.440 [0.35, 0.52] | 0.747 [0.67, 0.82] | 0.631 [0.57, 0.69] |
-| TF-IDF + MiniLM hybrid (exploratory, post hoc) | 0.593 [0.51, 0.67] | 0.920 [0.87, 0.96] | 0.761 [0.72, 0.81] |
+| TF-IDF (baseline) | 0.543 [0.47, 0.61] | 0.815 [0.77, 0.86] | 0.702 [0.66, 0.75] |
+| Multilingual MiniLM-L12 (primary) | 0.507 [0.43, 0.59] | 0.853 [0.80, 0.91] | 0.695 [0.64, 0.75] |
+| LaBSE | 0.440 [0.35, 0.52] | 0.740 [0.67, 0.81] | 0.630 [0.57, 0.69] |
+| TF-IDF + MiniLM hybrid (exploratory, post hoc) | 0.593 [0.51, 0.67] | 0.920 [0.87, 0.96] | 0.761 [0.71, 0.81] |
 
 **By language (fairness analysis): top-1 / top-3 / MRR**
 
 | Method | English | Hindi (Devanagari) | Hinglish |
 |---|---|---|---|
 | Keyword overlap (baseline) | 0.64 / 0.90 / 0.78 | 0.23 / 0.62 / 0.48 | 0.60 / 0.90 / 0.76 |
-| TF-IDF (baseline) | 0.72 / 0.92 / 0.82 | 0.25 / 0.62 / 0.49 | 0.64 / 0.90 / 0.78 |
+| TF-IDF (baseline) | 0.72 / 0.92 / 0.83 | 0.25 / 0.62 / 0.49 | 0.66 / 0.90 / 0.79 |
 | Multilingual MiniLM-L12 (primary) | 0.64 / 0.90 / 0.77 | 0.42 / 0.88 / 0.66 | 0.46 / 0.78 / 0.66 |
-| LaBSE | 0.46 / 0.72 / 0.64 | 0.48 / 0.74 / 0.66 | 0.38 / 0.78 / 0.60 |
+| LaBSE | 0.46 / 0.70 / 0.64 | 0.48 / 0.74 / 0.66 | 0.38 / 0.78 / 0.60 |
 | TF-IDF + MiniLM hybrid (exploratory, post hoc) | 0.72 / 0.96 / 0.84 | 0.44 / 0.88 / 0.67 | 0.62 / 0.92 / 0.77 |
 
 ### M1 voice input on SYNTHETIC speech (pipeline check, not real workers)

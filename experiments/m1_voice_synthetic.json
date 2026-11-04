@@ -47,10 +47,10 @@
           0.82,
           0.98
         ],
-        "mrr": 0.772,
+        "mrr": 0.773,
         "mrr_ci95": [
-          0.685,
-          0.8563
+          0.6863,
+          0.855
         ]
       },
       "mapping_spoken": {
@@ -93,10 +93,10 @@
           0.78,
           0.96
         ],
-        "mrr": 0.659,
+        "mrr": 0.658,
         "mrr_ci95": [
-          0.5746,
-          0.745
+          0.5697,
+          0.7433
         ]
       },
       "mapping_spoken": {
@@ -106,15 +106,15 @@
           0.16,
           0.42
         ],
-        "top3_acc": 0.84,
+        "top3_acc": 0.8,
         "top3_acc_ci95": [
-          0.74,
-          0.94
+          0.7,
+          0.9
         ],
-        "mrr": 0.5517,
+        "mrr": 0.5493,
         "mrr_ci95": [
-          0.4733,
-          0.6377
+          0.4693,
+          0.634
         ]
       },
       "top1_changed_by_transcription": 28,
@@ -142,7 +142,7 @@
         "mrr": 0.6553,
         "mrr_ci95": [
           0.564,
-          0.7457
+          0.7463
         ]
       },
       "mapping_spoken": {
@@ -172,6 +172,6 @@
   "transcripts": "cached in data/raw/voice_tts/transcripts.json; speed figures are from the run that made them",
   "normalisation": "NFC, lower case, punctuation removed; digits are not spelled out (\"8\" vs \"eight\" counts as an error)",
   "command": "python -m hunar.speech.evaluate",
-  "git_commit": "84d34b2",
-  "created": "2026-11-03T22:08:17"
+  "git_commit": "b254533",
+  "created": "2026-11-04T16:30:07"
 }

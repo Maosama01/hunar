@@ -257,3 +257,5 @@ All questions are **DRAFT** until a certified assessor or ITI instructor reviews
   register or QR code). Until then an admin checks the document by eye.
 - Get the question banks reviewed by an ITI instructor and an RPL assessor, and collect about 100 real
   attempts per trade before calibrating.
+- Write practical rubric tasks for plumbers and carpenters, linked to their qualification files' NOS,
+  and have an assessor of each trade review them. Until then only electricians can be assessed.

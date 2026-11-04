@@ -6,6 +6,15 @@ The QF template has two tables we need:
 * "Annexure: Detailed Assessment Criteria": NOS name in the first column and one
   performance criterion (PC1., PC2., ...) per row, with wrapped lines continuing on later rows.
 
+Layouts seen in the official files and handled here: a NOS name or code that wraps onto extra rows of
+the module table (FFSC); a criteria table that continues on the next page without its name column,
+so PCs and outcome headings move into the first column (WMPSC, FFSC); outcome headings ("Install
+sanitary fixtures ...") that carry their own marks and must not be glued onto the criterion above (they
+are kept only as a hint for naming a block whose NOS name is not printed); two criteria printed in
+one cell ("PC19. ... PC20. ..."); and the first row of a table continued on a new page, which
+pdfplumber sometimes leaves out of the table, so criteria printed above a page's table are read from
+the page text.
+
 Usage:  python -m hunar.mapper.qp_parser            (parses every pack in data/qp_sources.json)
 """
 from __future__ import annotations
@@ -48,6 +57,26 @@ def _num(s: str) -> float | None:
         return None
 
 
+def _summary_records(table: list[list[str | None]]) -> list[list[str]]:
+    """Numbered rows of a module table, with names and codes that wrap onto the following unnumbered
+    rows joined back (column by column). Rows with marks or totals never count as a continuation."""
+    records: list[list[str]] = []
+    for row in table:
+        raw = [_clean(c) for c in row]
+        cells = [c for c in raw if c]
+        if not cells:
+            continue
+        if re.fullmatch(r"\d+\.?", cells[0]):
+            records.append(raw)
+        elif records and not raw[0] and not any(re.search(r"\d", c) and NUM_RE.fullmatch(c) for c in cells) \
+                and not any("total" in c.lower() for c in cells):
+            rec = records[-1]
+            for k, c in enumerate(raw[: len(rec)]):
+                if c:
+                    rec[k] = f"{rec[k]} {c}".strip()
+    return records
+
+
 def parse_module_summary(pdf: pdfplumber.PDF) -> list[dict]:
     """Rows of the Section 2 NOS table: name, code, core, level, hours."""
     texts = [p.extract_text() or "" for p in pdf.pages]
@@ -56,12 +85,12 @@ def parse_module_summary(pdf: pdfplumber.PDF) -> list[dict]:
     rows = []
     for pi in range(start, end + 1):
         for table in pdf.pages[pi].extract_tables():
-            for row in table:
-                cells = [c for c in row if c not in (None, "")]
-                if len(cells) < 4 or not re.fullmatch(r"\d+\.?", _clean(cells[0])):
+            for rec in _summary_records(table):
+                cells = [c for c in rec if c]
+                if len(cells) < 4:
                     continue
-                name, code_raw = _clean(cells[1]), cells[2]
-                if not re.search(r"\d", code_raw or ""):
+                name, code_raw = cells[1], cells[2]
+                if not CODE_RE.search(code_raw):  # bridge modules and on-the-job training have no NOS code
                     continue
                 rest = [_clean(c) for c in cells[3:]]
                 core = None
@@ -77,6 +106,47 @@ TOTAL_RE = re.compile(r"^(nos\s+|grand\s+)?total\b", re.I)
 HEADER_CELLS = {"", "marks", "marks (%)", "outcomes", "theory", "practical", "project", "viva", "viva marks"}
 
 
+def _pc_events(text: str) -> list[tuple]:
+    """('pc', n, text) for each criterion in a cell; one cell sometimes holds two ("PC19. ... PC20. ...")."""
+    out = []
+    for part in re.split(r"\s(?=PC\s*\d+\s*[.:)]\s)", text):
+        m = PC_RE.match(part)
+        out.append(("pc", int(m.group(1)), m.group(2)))
+    return out
+
+
+MARKS_TAIL = re.compile(r"(?:\s+(?:-|\d+(?:\.\d+)?)){1,4}\s*$")  # up to four mark columns at a line's end
+
+
+def _orphan_rows(page, tables) -> list[tuple]:
+    """Criteria printed above the first table on a page (a row continuing the previous page's table
+    that table detection missed), with their wrapped lines; outcome headings and page headers skipped."""
+    top = min(t.bbox[1] for t in tables)
+    if top < 5:
+        return []
+    pcs = [w for w in page.crop((0, 0, page.width, top)).extract_words() if re.match(r"PC\s*\d", w["text"])]
+    if not pcs:
+        return []
+    # Read from the criteria column: NOS name fragments to its left share the same text lines.
+    left = min(w["x0"] for w in pcs) - 1
+    events: list[tuple] = []
+    started = False
+    for line in (page.crop((left, 0, page.width, top)).extract_text() or "").splitlines():
+        line = _clean(line)
+        if NUM_RE.fullmatch(line):  # the marks of a wrapped criterion, printed on a line of their own
+            continue
+        body = MARKS_TAIL.sub("", line)
+        if PC_RE.match(body):
+            events.extend(_pc_events(body))
+            started = True
+        elif started and body:
+            if re.search(r"\d", line[len(body):]):  # a heading with its own marks ends the criterion
+                started = False
+            else:
+                events.append(("text", body, False, False))
+    return events
+
+
 def _is_header_row(cells: list[str]) -> bool:
     if any(c.startswith(("NOS/Module Name", "Assessment Criteria", "Assessment outcomes", "S. No")) for c in cells):
         return True
@@ -87,7 +157,11 @@ def _events(pdf: pdfplumber.PDF, start: int, end: int) -> list[tuple]:
     """Flatten the annexure tables into ('name'|'pc'|'text'|'total', ...) events in reading order."""
     events: list[tuple] = []
     for pi in range(start, end):
-        for table in pdf.pages[pi].extract_tables():
+        page = pdf.pages[pi]
+        found = page.find_tables()
+        if found:
+            events.extend(_orphan_rows(page, found))
+        for table in (t.extract() for t in found):
             for row in table:
                 if not row:
                     continue
@@ -96,14 +170,18 @@ def _events(pdf: pdfplumber.PDF, start: int, end: int) -> list[tuple]:
                 if _is_header_row([first, *rest]):
                     continue
                 has_total = any(TOTAL_RE.match(c) for c in [first, *rest])
+                marks = [c for c in rest if NUM_RE.fullmatch(c)]
+                has_marks, digit_marks = bool(marks), any(re.search(r"\d", c) for c in marks)
+                texts = [c for c in rest if not (TOTAL_RE.match(c) or NUM_RE.fullmatch(c))]
                 if first and not TOTAL_RE.match(first):
-                    events.append(("name", re.sub(r"^\d+\.\s*", "", first)))
-                has_marks = any(NUM_RE.fullmatch(c) for c in rest)
-                for c in rest:
-                    if TOTAL_RE.match(c) or NUM_RE.fullmatch(c):
-                        continue
-                    m = PC_RE.match(c)
-                    events.append(("pc", int(m.group(1)), m.group(2)) if m else ("text", c, has_marks))
+                    if PC_RE.match(first):  # table continued on a new page without its name column
+                        events.extend(_pc_events(first))
+                    elif not texts and digit_marks:  # ... so an outcome heading moved into the first column
+                        events.append(("heading", first))
+                    else:
+                        events.append(("name", re.sub(r"^\d+\.\s*", "", first)))
+                for c in texts:
+                    events.extend(_pc_events(c) if PC_RE.match(c) else [("text", c, has_marks, digit_marks)])
                 if has_total:
                     events.append(("total",))
     return events
@@ -124,12 +202,12 @@ def parse_assessment_criteria(pdf: pdfplumber.PDF) -> list[dict]:
     events = _events(pdf, start, end)
     pc_mode = any(e[0] == "pc" for e in events)
     blocks: list[dict] = []
-    cur = {"names": [], "pcs": []}
+    cur = {"names": [], "pcs": [], "hints": []}
     for e in events:
         if e[0] == "total":
             if cur["pcs"]:
                 blocks.append(cur)
-            cur = {"names": [], "pcs": []}
+            cur = {"names": [], "pcs": [], "hints": []}
         elif e[0] == "name":
             cur["names"].append((e[1], len(cur["pcs"])))
         elif e[0] == "pc":
@@ -138,10 +216,15 @@ def parse_assessment_criteria(pdf: pdfplumber.PDF) -> list[dict]:
                 # are the heading of the new block.
                 n = len(cur["pcs"])
                 carry = [x for x in cur["names"] if x[1] == n]
+                hints = [x for x in cur["hints"] if x[1] == n]
                 cur["names"] = [x for x in cur["names"] if x[1] != n]
+                cur["hints"] = [x for x in cur["hints"] if x[1] != n]
                 blocks.append(cur)
-                cur = {"names": [(t, 0) for t, _ in carry], "pcs": []}
+                cur = {"names": [(t, 0) for t, _ in carry], "pcs": [], "hints": [(t, 0) for t, _ in hints]}
             cur["pcs"].append({"code": f"PC{e[1]}", "text": e[2]})
+        elif e[0] == "heading" or (pc_mode and e[3]):
+            # An outcome heading with its own marks, not part of a criterion; kept only as a naming hint.
+            cur["hints"].append((e[1], len(cur["pcs"])))
         elif pc_mode or not e[2]:  # continuation of the previous criterion
             if cur["pcs"]:
                 cur["pcs"][-1]["text"] = f"{cur['pcs'][-1]['text']} {e[1]}"
@@ -153,6 +236,7 @@ def parse_assessment_criteria(pdf: pdfplumber.PDF) -> list[dict]:
     unique, seen = [], set()
     for b in blocks:
         b["title"] = " ".join(t for t, _ in b.pop("names"))
+        b["hint"] = " ".join(t for t, _ in b.pop("hints"))
         # A row split across a page break is sometimes printed on both pages.
         b["pcs"] = [p for i, p in enumerate(b["pcs"]) if i == 0 or p != b["pcs"][i - 1]]
         key = tuple(_norm(p["text"]) for p in b["pcs"])
@@ -176,8 +260,10 @@ def _assign_titles(blocks: list[dict], summary: list[dict]) -> list[dict | None]
         return [None] * len(blocks)
     score = np.zeros((len(blocks), len(summary)))
     for i, b in enumerate(blocks):
-        bt = _tokens(b["title"])
-        flat = re.sub(r"\s+", "", b["title"])
+        # Some files print no NOS name for a block: fall back to its outcome headings and criteria.
+        name = b["title"] or " ".join([b.get("hint", ""), *(p["text"] for p in b["pcs"])])
+        bt = _tokens(name)
+        flat = re.sub(r"\s+", "", name)
         for j, row in enumerate(summary):
             if "/" in (row["code"] or "") and row["code"] in flat:
                 score[i, j] = 2.0

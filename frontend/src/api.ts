@@ -624,10 +624,12 @@ export interface QualificationRef {
 export interface TradeInfo {
   name: Bi;
   qualification: QualificationRef | null;
+  /** Whether the assessor flow has practical tasks for this trade (electricians only so far). */
+  practical_assessment: boolean;
   jobs: Record<string, Job>;
 }
 
-export type TradesOut = Record<string, TradeInfo> & { _permit_note?: string };
+export type TradesOut = Record<string, TradeInfo> & { _permit_note?: string; _practical_note?: string };
 
 export type PermitStatus = "none" | "self_declared" | "document_checked";
 

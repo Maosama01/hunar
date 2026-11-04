@@ -366,6 +366,8 @@ export function QuizResultView({ result }: { result: QuizResult }) {
   // After the first quiz the next step is the profile (trade, PIN code); a practical assessment needs it.
   const profile = useLoad(() => api.myProfile(), []);
   const noProfile = profile.data === null;
+  const { trades } = useTrades();
+  const practical = trades?.[result.trade]?.practical_assessment !== false;
 
   const retake = async () => {
     setBusy(true);
@@ -448,9 +450,11 @@ export function QuizResultView({ result }: { result: QuizResult }) {
           <Icon name="user" /> {t("quiz.nextProfile")}
         </Link>
       ) : (
-        <Link to="/w/assess" className="btn btn-primary btn-block btn-big">
-          <Icon name="clipboard" /> {t("quiz.requestPractical")}
-        </Link>
+        practical && (
+          <Link to="/w/assess" className="btn btn-primary btn-block btn-big">
+            <Icon name="clipboard" /> {t("quiz.requestPractical")}
+          </Link>
+        )
       )}
       <Link to={`/w/quiz/${result.attempt_id}/review`} className="btn btn-block">
         <Icon name="book" /> {t("quiz.review")}

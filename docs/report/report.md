@@ -226,7 +226,7 @@ criteria have been spot-checked by us against the PDFs; a complete human check i
 ## 4.2 M1: qualification-pack mapper
 
 The declaration is split into sentences (and long run-on sentences into clauses). A similarity
-function gives a matrix between declaration units and all 344 performance criteria. The aggregation
+function gives a matrix between declaration units and all 345 performance criteria. The aggregation
 was fixed **before** any evaluation: the score of a pack is the mean, over declaration units, of the
 best similarity to any *core* PC of that pack. A declaration is partial, so we measure how well a pack
 explains what the worker said, not how much of the pack they mentioned. For explanations, each PC
@@ -371,6 +371,10 @@ been weak: a CAG audit of PMKVY found reused photos and missing geotags. Hunar's
 says exactly what was checked: "practical skills assessed by an assessor against <qualification> on
 <date>, not a government certificate". It appears only when an assessor, logged in with an assessor
 account, signs off a positive recommendation through the M3 flow. The quiz never produces a badge.
+Practical assessments, and so this badge, exist only for electricians: the M1 packs and the M3 rubric
+tasks cover domestic electrical work. A plumber or carpenter takes the quiz and can be booked, but the
+server refuses their assessment requests until rubric tasks for their trade are written and reviewed;
+otherwise an electrician's tasks would be scored and the badge would name an electrical qualification.
 
 **Who may do electrical work.** Regulation 31 of the CEA Safety Regulations 2023 [65] allows
 installation work, including repairs and alterations, only by a State-licensed contractor and a permit
@@ -672,8 +676,13 @@ questions, adaptive against fixed-length quiz, for three trades and three assume
   have not yet been reviewed by an assessor or ITI instructor; difficulties are estimates until about
   100 real attempts per trade exist. The quiz is unsupervised, so it cannot tell who answered.
 * **Trade qualification files.** The carpenter file's NQR validity ended on 31 Aug 2026 and no current
-  worker-level domestic carpentry qualification was found; parts of the plumber and carpenter files
-  parsed with gaps and need a human check.
+  worker-level domestic carpentry qualification was found. The parser now handles the layouts that
+  first caused gaps in the plumber and carpenter files (wrapped names, tables continued across pages,
+  rows printed above a table, headings glued onto criteria), but every criterion still needs a human
+  check against the PDF.
+* **Practical assessment for one trade only.** Plumbers and carpenters can take the quiz and be
+  booked, but cannot be assessed or earn the "skill assessed" badge until practical rubric tasks for
+  their trades exist and an assessor reviews them.
 * **No identity or permit verification service.** Hunar does not check Aadhaar or a State permit
   register; an admin checks the permit document by eye, and badges say exactly that.
 * **Languages.** The Bhashini client follows the documented API but has not been run against the live

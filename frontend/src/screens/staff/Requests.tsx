@@ -87,9 +87,13 @@ function RequestCard({ r }: { r: AssessmentRequest }) {
       </div>
       {r.quiz ? <QuizContext q={r.quiz} /> : <p className="small muted">{t("requests.noQuiz")}</p>}
       <ErrorBox error={error} />
-      <button type="button" className="btn btn-primary btn-block" disabled={busy} onClick={() => void start()}>
-        {busy ? t("common.wait") : t("requests.start")}
-      </button>
+      {trades?.[r.trade]?.practical_assessment === false ? (
+        <Notice kind="warn">{t("requests.notForTrade")}</Notice>
+      ) : (
+        <button type="button" className="btn btn-primary btn-block" disabled={busy} onClick={() => void start()}>
+          {busy ? t("common.wait") : t("requests.start")}
+        </button>
+      )}
     </li>
   );
 }

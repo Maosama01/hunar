@@ -10,7 +10,7 @@ the network switched off (step 6).
 | Time | Screen | What to do | What to say |
 |---|---|---|---|
 | 0:00 | Home | Point at the banner and the SAMPLE DATA badge | "Hunar supports an RPL assessor. AI suggests, the assessor decides. Everything you see is sample data." |
-| 0:20 | Declaration (SAMPLE-W001) | Open the sample assessment's mapping | "The worker described their work in Hinglish. The mapper compares each sentence with the 344 official performance criteria parsed from nqr.gov.in." |
+| 0:20 | Declaration (SAMPLE-W001) | Open the sample assessment's mapping | "The worker described their work in Hinglish. The mapper compares each sentence with the 345 official performance criteria parsed from nqr.gov.in." |
 | 0:50 | Mapping detail | Show the matched sentence → criterion pairs and the skill gaps | "Here it ranked *Industrial Electrician* first. That is a known weakness we measured: Hinglish is the weakest language for this model, and big qualifications attract matches. The assessor sees why and corrects it." |
 | 1:20 | Assessor: confirm pack | Choose Assistant Electrician; show that a reason is required when it differs from the top suggestion | "The human choice and the reason go into the audit log." |
 | 1:40 | Practical tasks | Task 1 (safe isolation): show the checklist with safety shoes and lock/tag not ticked; Task 2: show the sample photo with the faces-blurred count and detector status | "Photos need written consent and faces are blurred before storage. The detector is not trained yet, so the app honestly says photo check unavailable." |

@@ -36,7 +36,7 @@
         {
           "id": "PSS/N2509.PC3",
           "code": "PC3",
-          "text": "use and maintain appropriate tools and equipment in accordance with the tasks \\Tools and equipment: e.g. insulated hand tools; drills; hacksaw; hand tools; testing equipment; insulation testers; crimping tools; wires and cables of various colours and sizes; heat shrink sleeving and flexible conduit; terminals and connectors; electrical tape; etc. Prepare work area for installation To be competent, the user/ individual on the job must be able to:"
+          "text": "use and maintain appropriate tools and equipment in accordance with the tasks \\Tools and equipment: e.g. insulated hand tools; drills; hacksaw; hand tools; testing equipment; insulation testers; crimping tools; wires and cables of various colours and sizes; heat shrink sleeving and flexible conduit; terminals and connectors; electrical tape; etc. To be competent, the user/ individual on the job must be able to:"
         },
         {
           "id": "PSS/N2509.PC4",
@@ -71,7 +71,7 @@
         {
           "id": "PSS/N2509.PC10",
           "code": "PC10",
-          "text": "inform all affected parties of the intended work plan in advance prior to disconnecting power supply line Install single or three phase meters To be competent, the user/individual on the job must be able to:"
+          "text": "inform all affected parties of the intended work plan in advance prior to disconnecting power supply line To be competent, the user/individual on the job must be able to:"
         },
         {
           "id": "PSS/N2509.PC11",
@@ -106,7 +106,7 @@
         {
           "id": "PSS/N2509.PC17",
           "code": "PC17",
-          "text": "identify and escalate unresolved problems to appropriate authority for rectifications Remove and replacing a single or a three phase meter To be competent, the user/individual on the job must be able to:"
+          "text": "identify and escalate unresolved problems to appropriate authority for rectifications To be competent, the user/individual on the job must be able to:"
         },
         {
           "id": "PSS/N2509.PC18",
@@ -126,7 +126,7 @@
         {
           "id": "PSS/N2509.PC21",
           "code": "PC21",
-          "text": "check that any replaced or repaired equipment is working properly, and customer’s problems are resolved efficiently NOSTotal Prepare for installation of smart meter To be competent, the user/ individual on the job must be able to:"
+          "text": "check that any replaced or repaired equipment is working properly, and customer’s problems are resolved efficiently To be competent, the user/ individual on the job must be able to:"
         }
       ],
       "knowledge_items": []
@@ -156,7 +156,7 @@
         {
           "id": "PSS/N2508.PC4",
           "code": "PC4",
-          "text": "confirm the availability of required tools, equipment, materials, hardware and software for installing smart meter Install smart meter To be competent, the user/ individual on the job must be able to:"
+          "text": "confirm the availability of required tools, equipment, materials, hardware and software for installing smart meter To be competent, the user/ individual on the job must be able to:"
         },
         {
           "id": "PSS/N2508.PC5",
@@ -181,7 +181,7 @@
         {
           "id": "PSS/N2508.PC9",
           "code": "PC9",
-          "text": "enter the IP address as provided through the HES for enabling networking capabilities of the smart meter Commission smart meter To be competent, the user/individual on the job must be able to:"
+          "text": "enter the IP address as provided through the HES for enabling networking capabilities of the smart meter To be competent, the user/individual on the job must be able to:"
         },
         {
           "id": "PSS/N2508.PC10",
@@ -226,7 +226,7 @@
         {
           "id": "PSS/N2508.PC18",
           "code": "PC18",
-          "text": "clear the worksite to ensure no hazardous and waste materials are present NOSTotal Follow workplace health and safety practices To be competent, the user/individual on the job must be able to:"
+          "text": "clear the worksite to ensure no hazardous and waste materials are present To be competent, the user/individual on the job must be able to:"
         }
       ],
       "knowledge_items": []
@@ -296,7 +296,7 @@
         {
           "id": "PSS/N1331.PC12",
           "code": "PC12",
-          "text": "inform the relevant authorities about any abnormal situation/behavior of any equipment/system without delay Follow fire safety practices To be competent, the user/ individual on the job must be able to:"
+          "text": "inform the relevant authorities about any abnormal situation/behavior of any equipment/system without delay To be competent, the user/ individual on the job must be able to:"
         },
         {
           "id": "PSS/N1331.PC13",
@@ -311,7 +311,7 @@
         {
           "id": "PSS/N1331.PC15",
           "code": "PC15",
-          "text": "use good housekeeping practices at all times to avoid accidental fire Follow emergencies, rescue and first-aid procedures To be competent, the user/ individual on the job must be able to:"
+          "text": "use good housekeeping practices at all times to avoid accidental fire To be competent, the user/ individual on the job must be able to:"
         },
         {
           "id": "PSS/N1331.PC16",

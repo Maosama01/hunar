@@ -12,7 +12,7 @@ not judge workmanship from photos, and does not replace the theory/viva part of 
 **2. Where did the qualification packs come from? Did you make them up?**
 From the official qualification files on nqr.gov.in. `scripts/fetch_qps.py` downloads them and records
 URL, date and SHA-256 in `data/processed/qp_manifest.json`; `hunar.mapper.qp_parser` extracts
-27 NOS and 344 performance criteria. A test checks that every rubric criterion
+27 NOS and 345 performance criteria. A test checks that every rubric criterion
 points to a PC that exists in the parsed official pack.
 
 **3. Why Assistant Electrician (CSDCI, NSQF 3)?**
@@ -31,7 +31,7 @@ It needs no training data (we have none yet), it can explain which part of the d
 which criterion, and it produces a gap list the assessor can probe.
 
 **6. Your embedding model is not better than TF-IDF overall. Why use it?**
-On the synthetic set TF-IDF top-1 is 0.536 and MiniLM
+On the synthetic set TF-IDF top-1 is 0.543 and MiniLM
 0.507; the CIs overlap. But TF-IDF falls to near chance on
 Hindi in Devanagari (top-1 0.25, chance 0.20) and MiniLM
 does not (0.42). Excluding Hindi-script users would

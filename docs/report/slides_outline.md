@@ -19,7 +19,7 @@ Generated from `slides_outline.src.md` by `make report`; numbers come from `expe
    One line per module.
 
 5. **Real data, not stubs.** Five official qualification files parsed: 27 NOS,
-   344 performance criteria, each with source URL, date and SHA-256. Show one parsed
+   345 performance criteria, each with source URL, date and SHA-256. Show one parsed
    PC next to the PDF row. Mention the quirks we found in the official files.
 
 6. **M1 mapper: how it explains itself.** Screenshot: ranked packs, matched sentence → PC with

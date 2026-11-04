@@ -46,7 +46,7 @@
         {
           "id": "PSC/N0130.PC5",
           "code": "PC5",
-          "text": "Ensure that the tool includes necessary safety features to prevent injuries during use. Read and interpret the plumbing drawing"
+          "text": "Ensure that the tool includes necessary safety features to prevent injuries during use."
         },
         {
           "id": "PSC/N0130.PC6",
@@ -62,6 +62,11 @@
           "id": "PSC/N0130.PC8",
           "code": "PC8",
           "text": "Interpret the position of the fixtures and their accessories for supply and drainage systems"
+        },
+        {
+          "id": "PSC/N0130.PC9",
+          "code": "PC9",
+          "text": "Understand hot & cold-water piping lay out in the building."
         },
         {
           "id": "PSC/N0130.PC10",
@@ -86,7 +91,7 @@
         {
           "id": "PSC/N0130.PC14",
           "code": "PC14",
-          "text": "Check the drainage system for proper venting, position of traps & anti siphonage to prevent breaking of water seals Prepare for work"
+          "text": "Check the drainage system for proper venting, position of traps & anti siphonage to prevent breaking of water seals"
         },
         {
           "id": "PSC/N0130.PC15",
@@ -151,7 +156,12 @@
         {
           "id": "PSC/N0131.PC5",
           "code": "PC5",
-          "text": "measure and mark dimensions for installation of the pipes and fittings base on site condition making allowances for finale finishing Cut, prepare, and assemble various types of pipes"
+          "text": "measure and mark dimensions for installation of the pipes and fittings base on site condition making allowances for finale finishing"
+        },
+        {
+          "id": "PSC/N0131.PC6",
+          "code": "PC6",
+          "text": "Cut various types of pipes to the required length."
         },
         {
           "id": "PSC/N0131.PC7",
@@ -181,7 +191,7 @@
         {
           "id": "PSC/N0131.PC12",
           "code": "PC12",
-          "text": "Report any issues/ difficulties that may arise. Carry out the corrective actions"
+          "text": "Report any issues/ difficulties that may arise."
         },
         {
           "id": "PSC/N0131.PC13",
@@ -206,7 +216,7 @@
         {
           "id": "PSC/N0131.PC17",
           "code": "PC17",
-          "text": "finish the cut area of the wall after installing pipes and other water supply components post-installation activities"
+          "text": "finish the cut area of the wall after installing pipes and other water supply components"
         },
         {
           "id": "PSC/N0131.PC18",
@@ -249,6 +259,11 @@
           "text": "use plumbing project plans to determine the location of various drainage components and the route of the water drainage piping and traps"
         },
         {
+          "id": "PSC/N0132.PC3",
+          "code": "PC3",
+          "text": "calculate quantity, dimensions and type of materials required from design drawings/specifications"
+        },
+        {
           "id": "PSC/N0132.PC4",
           "code": "PC4",
           "text": "construct chambers to accommodate drainage systems"
@@ -261,7 +276,7 @@
         {
           "id": "PSC/N0132.PC6",
           "code": "PC6",
-          "text": "check if the area is prepared for laying the pipes for underground, above ground and overhead piping systems Perform installation of drainage systems"
+          "text": "check if the area is prepared for laying the pipes for underground, above ground and overhead piping systems"
         },
         {
           "id": "PSC/N0132.PC7",
@@ -286,12 +301,17 @@
         {
           "id": "PSC/N0132.PC11",
           "code": "PC11",
-          "text": "install pipework for water and sewage treatment plant Post-installation activities"
+          "text": "install pipework for water and sewage treatment plant"
         },
         {
           "id": "PSC/N0132.PC12",
           "code": "PC12",
-          "text": "test the installations for proper functioning PC13. repair faulty drainage pipes and traps"
+          "text": "test the installations for proper functioning"
+        },
+        {
+          "id": "PSC/N0132.PC13",
+          "code": "PC13",
+          "text": "repair faulty drainage pipes and traps"
         },
         {
           "id": "PSC/N0132.PC14",
@@ -334,6 +354,11 @@
           "text": "Plan the correct fixtures requirement, parts, and support material provided in the packing with the manufacturer’s list or order form."
         },
         {
+          "id": "PSC/N0133.PC2",
+          "code": "PC2",
+          "text": "select the size, type, and quantity of fixture and trim for specific applications according to the given specifications"
+        },
+        {
           "id": "PSC/N0133.PC3",
           "code": "PC3",
           "text": "locate and mark the position of fixtures and fixture supports in structures"
@@ -341,7 +366,7 @@
         {
           "id": "PSC/N0133.PC4",
           "code": "PC4",
-          "text": "Ensure fixtures are level and securely fastened. Tighten connections without over- tightening, which can damage the fittings. Install sanitary fixtures, support, and related accessories"
+          "text": "Ensure fixtures are level and securely fastened. Tighten connections without over- tightening, which can damage the fittings."
         },
         {
           "id": "PSC/N0133.PC5",
@@ -381,7 +406,7 @@
         {
           "id": "PSC/N0133.PC12",
           "code": "PC12",
-          "text": "Perform Installation of smart sensors and automated systems to monitor and control water flow, temperature, and energy usage in real-time. Perform post-Installation activities"
+          "text": "Perform Installation of smart sensors and automated systems to monitor and control water flow, temperature, and energy usage in real-time."
         },
         {
           "id": "PSC/N0133.PC13",
@@ -422,6 +447,121 @@
           "id": "PSC/N0142.PC1",
           "code": "PC1",
           "text": "Detect root cause for problem"
+        },
+        {
+          "id": "PSC/N0142.PC2",
+          "code": "PC2",
+          "text": "detect blockages and damage in pipes, fitting and fixtures"
+        },
+        {
+          "id": "PSC/N0142.PC3",
+          "code": "PC3",
+          "text": "detect reason for low flow low pressure"
+        },
+        {
+          "id": "PSC/N0142.PC4",
+          "code": "PC4",
+          "text": "Replace faulty pipe fitting & parts"
+        },
+        {
+          "id": "PSC/N0142.PC5",
+          "code": "PC5",
+          "text": "remove air lock and blockages in the pipes that are installed"
+        },
+        {
+          "id": "PSC/N0142.PC6",
+          "code": "PC6",
+          "text": "repair and maintain water supply tanks and valves"
+        },
+        {
+          "id": "PSC/N0142.PC7",
+          "code": "PC7",
+          "text": "unclog drains and drain’s strainer baskets"
+        },
+        {
+          "id": "PSC/N0142.PC8",
+          "code": "PC8",
+          "text": "repair broken sewer, dripping faucets and fixtures that are not working properly"
+        },
+        {
+          "id": "PSC/N0142.PC9",
+          "code": "PC9",
+          "text": "resolve leakages, loosening and jamming of fittings"
+        },
+        {
+          "id": "PSC/N0142.PC10",
+          "code": "PC10",
+          "text": "implement measures to reduce noise in pipes and fixtures"
+        },
+        {
+          "id": "PSC/N0142.PC11",
+          "code": "PC11",
+          "text": "inspect and maintain the septic systems on a timely basis"
+        },
+        {
+          "id": "PSC/N0142.PC12",
+          "code": "PC12",
+          "text": "perform basic services for appliances such as water heaters, washing machines and dishwashers etc."
+        },
+        {
+          "id": "PSC/N0142.PC13",
+          "code": "PC13",
+          "text": "clean up spills quickly after the task has been completed"
+        },
+        {
+          "id": "PSC/N0142.PC14",
+          "code": "PC14",
+          "text": "empty waste containers as per organizational procedures"
+        },
+        {
+          "id": "PSC/N0142.PC15",
+          "code": "PC15",
+          "text": "discard oily rags and flammable materials as per industry practices"
+        },
+        {
+          "id": "PSC/N0142.PC16",
+          "code": "PC16",
+          "text": "record daily logs in a specified format for activities such as maintenance and installation"
+        },
+        {
+          "id": "PSC/N0142.PC17",
+          "code": "PC17",
+          "text": "guide customers on proper care and maintenance of plumbing systems"
+        },
+        {
+          "id": "PSC/N0142.PC18",
+          "code": "PC18",
+          "text": "Minimize water usage by using water-efficient fixtures and appliances."
+        },
+        {
+          "id": "PSC/N0142.PC19",
+          "code": "PC19",
+          "text": "Apply water leak prevention techniques"
+        },
+        {
+          "id": "PSC/N0142.PC20",
+          "code": "PC20",
+          "text": "Use low toxicity and environment friendly materials"
+        },
+        {
+          "id": "PSC/N0142.PC21",
+          "code": "PC21",
+          "text": "Maintain optimal water pressure to prevent waste and damage to the system."
+        },
+        {
+          "id": "PSC/N0142.PC22",
+          "code": "PC22",
+          "text": "Perform Insulation on pipes carrying hot water to minimize energy loss and improve efficiency."
+        },
+        {
+          "id": "PSC/N0142.PC23",
+          "code": "PC23",
+          "text": "Use locally sourced materials and prefabricated components to reduce transportation energy, and choose products with a lower carbon footprint."
+        },
+        {
+          "id": "PSC/N0142.PC24",
+          "code": "PC24",
+          "text": "Ensure that the plumbing system complies with relevant green building standards like LEED (Leadership in Energy and Environmental Design) or Green Building Certification."
         }
       ],
       "knowledge_items": []
@@ -481,7 +621,7 @@
         {
           "id": "PSC/N0136.PC10",
           "code": "PC10",
-          "text": "dispose waste materials and used PPE according to regulations and codes of practice Follow hygiene and sanitation practices"
+          "text": "dispose waste materials and used PPE according to regulations and codes of practice"
         },
         {
           "id": "PSC/N0136.PC11",
@@ -496,12 +636,27 @@
         {
           "id": "PSC/N0136.PC13",
           "code": "PC13",
-          "text": "report hygiene and sanitation issues to appropriate authority Use tools, equipment and materials safely"
+          "text": "report hygiene and sanitation issues to appropriate authority"
         },
         {
           "id": "PSC/N0136.PC14",
           "code": "PC14",
-          "text": "check that the tools, equipment and materials are in good condition and as per industry standards before use PC15. use power tools and machinery that are grounded PC16. replace or repair split or loose tools before use PC17. store and transport various plumbing materials safely Deal with emergencies"
+          "text": "check that the tools, equipment and materials are in good condition and as per industry standards before use"
+        },
+        {
+          "id": "PSC/N0136.PC15",
+          "code": "PC15",
+          "text": "use power tools and machinery that are grounded"
+        },
+        {
+          "id": "PSC/N0136.PC16",
+          "code": "PC16",
+          "text": "replace or repair split or loose tools before use"
+        },
+        {
+          "id": "PSC/N0136.PC17",
+          "code": "PC17",
+          "text": "store and transport various plumbing materials safely"
         },
         {
           "id": "PSC/N0136.PC18",
@@ -511,7 +666,12 @@
         {
           "id": "PSC/N0136.PC19",
           "code": "PC19",
-          "text": "use a fire extinguisher correctly PC20. use safe methods to free a person from electrocution"
+          "text": "use a fire extinguisher correctly"
+        },
+        {
+          "id": "PSC/N0136.PC20",
+          "code": "PC20",
+          "text": "use safe methods to free a person from electrocution"
         },
         {
           "id": "PSC/N0136.PC21",
@@ -528,6 +688,96 @@
       "nsqf_level": 4.0,
       "hours": null,
       "performance_criteria": [
+        {
+          "id": "DGT/VSQ/N0102.PC1",
+          "code": "PC1",
+          "text": "understand the significance of employability skills in meeting the job requirements"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC2",
+          "code": "PC2",
+          "text": "identify constitutional values, civic rights, duties, personal values and ethics and environmentally sustainable practices"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC3",
+          "code": "PC3",
+          "text": "explain 21st Century Skills such as Self- Awareness, Behavior Skills, Positive attitude, self-motivation, problem-solving, creative thinking, time management, social and cultural awareness, emotional awareness, continuous learning mindset etc."
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC4",
+          "code": "PC4",
+          "text": "speak with others using some basic English phrases or sentences"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC5",
+          "code": "PC5",
+          "text": "follow good manners while communicating with others"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC6",
+          "code": "PC6",
+          "text": "work with others in a team"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC7",
+          "code": "PC7",
+          "text": "communicate and behave appropriately with all genders and PwD"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC8",
+          "code": "PC8",
+          "text": "report any issues related to sexual harassment"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC9",
+          "code": "PC9",
+          "text": "use various financial products and services safely and securely"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC10",
+          "code": "PC10",
+          "text": "calculate income, expenses, savings etc."
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC11",
+          "code": "PC11",
+          "text": "approach the concerned authorities for any exploitation as per legal rights and laws"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC12",
+          "code": "PC12",
+          "text": "operate digital devices and use its features and applications securely and safely"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC13",
+          "code": "PC13",
+          "text": "use internet and social media platforms securely and safely"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC14",
+          "code": "PC14",
+          "text": "identify and assess opportunities for potential business"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC15",
+          "code": "PC15",
+          "text": "identify sources for arranging money and associated financial and legal challenges"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC16",
+          "code": "PC16",
+          "text": "identify different types of customers"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC17",
+          "code": "PC17",
+          "text": "identify customer needs and address them appropriately"
+        },
+        {
+          "id": "DGT/VSQ/N0102.PC18",
+          "code": "PC18",
+          "text": "follow appropriate hygiene and grooming standards"
+        },
         {
           "id": "DGT/VSQ/N0102.PC19",
           "code": "PC19",
@@ -591,7 +841,7 @@
         {
           "id": "PSC/N0183.PC8",
           "code": "PC8",
-          "text": "identify the different types of cutting and sealing devices. perform measurement and cutting of insulation materials."
+          "text": "identify the different types of cutting and sealing devices."
         },
         {
           "id": "PSC/N0183.PC9",
@@ -621,7 +871,7 @@
         {
           "id": "PSC/N0183.PC14",
           "code": "PC14",
-          "text": "identify the correct measurement of material with required instruments. Perform installation of insulation materials."
+          "text": "identify the correct measurement of material with required instruments."
         },
         {
           "id": "PSC/N0183.PC15",

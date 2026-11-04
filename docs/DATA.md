@@ -37,9 +37,15 @@ on the NQR page as of 28 Oct 2026; they are still listed on NQR and are used onl
 | carpenter | 9884 | Assistant Carpenter (FFSC) | QG-04-WC-00828-2023-V2-FFSC | 4 | 31/08/2026 (lapsed) |
 
 No worker-level domestic carpentry qualification on NQR was current on 3 Nov 2026, so the lapsed
-FFSC file is used as the closest official standard and the app labels it as lapsed. Parsing gaps to
-fix by hand: PSC/N0142 (plumber) came out with one performance criterion, the carpenter NOS titles are
-truncated, and the carpenter file's Employability Skills NOS lost its code.
+FFSC file is used as the closest official standard and the app labels it as lapsed. The first parse
+had gaps: PSC/N0142 (plumber) came out with one performance criterion, the carpenter NOS titles were
+truncated and its Employability Skills NOS lost its code. The parser now handles the layouts behind
+them (names and codes wrapped onto extra rows, tables continued on a new page without the name column,
+a row printed above a page's table, two criteria in one cell, outcome headings glued onto a criterion),
+and `tests/test_qp_parser.py` checks that every NOS has its code and PC1..PCn without gaps. Plumber:
+8 NOS, 161 PCs; carpenter: 5 NOS, 103 PCs. The same fixes removed glued-on headings from about 20
+criteria in three M1 distractor packs and recovered one missing criterion (ELE/N6322 PC11), so the
+five M1 packs now hold 345 PCs; the target pack 13772 did not change, and the M1 evaluation was re-run.
 
 Parsing status: parsed automatically from the PDFs (`parse_method: pdf_auto`) and spot-checked
 against the PDFs by the AI assistant. **A human check of every performance criterion is still

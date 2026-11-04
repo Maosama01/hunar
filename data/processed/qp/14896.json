@@ -124,6 +124,11 @@
           "text": "Conduct basic continuity and insulation resistance tests to verify proper connections."
         },
         {
+          "id": "ELE/N6322.PC11",
+          "code": "PC11",
+          "text": "Adhere to local electrical codes, industry standards, and safety protocols throughout the wiring process."
+        },
+        {
           "id": "ELE/N6322.PC12",
           "code": "PC12",
           "text": "Dispose of wire scraps, insulation cuttings, and unused materials in designated waste bins."
@@ -131,7 +136,7 @@
         {
           "id": "ELE/N6322.PC13",
           "code": "PC13",
-          "text": "Return all tools, equipment, and unused consumables to the storage area at the end of the work shift. Reporting and Troubleshooting"
+          "text": "Return all tools, equipment, and unused consumables to the storage area at the end of the work shift."
         },
         {
           "id": "ELE/N6322.PC14",
@@ -156,7 +161,7 @@
         {
           "id": "ELE/N6322.PC18",
           "code": "PC18",
-          "text": "Seek feedback from the quality inspection team and implement corrective actions as required. Workplace Ethics, Safety, and Environmental Responsibility"
+          "text": "Seek feedback from the quality inspection team and implement corrective actions as required."
         },
         {
           "id": "ELE/N6322.PC19",
@@ -191,17 +196,17 @@
         {
           "id": "DGT/VSQ/N0101.PC1",
           "code": "PC1",
-          "text": "understand the significance of employability skills in meeting the job requirements Constitutional values – Citizenship"
+          "text": "understand the significance of employability skills in meeting the job requirements"
         },
         {
           "id": "DGT/VSQ/N0101.PC2",
           "code": "PC2",
-          "text": "identify constitutional values, civic rights, duties, personal values and ethics and environmentally sustainable practices Becoming a Professional in the 21st Century"
+          "text": "identify constitutional values, civic rights, duties, personal values and ethics and environmentally sustainable practices"
         },
         {
           "id": "DGT/VSQ/N0101.PC3",
           "code": "PC3",
-          "text": "explain 21st Century Skills such as Self Awareness, Behavior Skills, Positive attitude, self- motivation, problem-solving, creative thinking, time management, social and cultural awareness, emotional awareness, continuous learning mindset etc. Basic English Skills"
+          "text": "explain 21st Century Skills such as Self Awareness, Behavior Skills, Positive attitude, self- motivation, problem-solving, creative thinking, time management, social and cultural awareness, emotional awareness, continuous learning mindset etc."
         },
         {
           "id": "DGT/VSQ/N0101.PC4",
@@ -216,7 +221,7 @@
         {
           "id": "DGT/VSQ/N0101.PC6",
           "code": "PC6",
-          "text": "work with others in a team Diversity & Inclusion"
+          "text": "work with others in a team"
         },
         {
           "id": "DGT/VSQ/N0101.PC7",
@@ -226,7 +231,7 @@
         {
           "id": "DGT/VSQ/N0101.PC8",
           "code": "PC8",
-          "text": "report any issues related to sexual harassment Financial & Legal Literacy"
+          "text": "report any issues related to sexual harassment"
         },
         {
           "id": "DGT/VSQ/N0101.PC9",
@@ -241,7 +246,7 @@
         {
           "id": "DGT/VSQ/N0101.PC11",
           "code": "PC11",
-          "text": "approach the concerned authorities for any exploitation as per legal rights and laws Essential Digital Skills"
+          "text": "approach the concerned authorities for any exploitation as per legal rights and laws"
         },
         {
           "id": "DGT/VSQ/N0101.PC12",
@@ -251,7 +256,7 @@
         {
           "id": "DGT/VSQ/N0101.PC13",
           "code": "PC13",
-          "text": "use internet and social media platforms securely and safely Entrepreneurship"
+          "text": "use internet and social media platforms securely and safely"
         },
         {
           "id": "DGT/VSQ/N0101.PC14",
@@ -261,7 +266,7 @@
         {
           "id": "DGT/VSQ/N0101.PC15",
           "code": "PC15",
-          "text": "identify sources for arranging money and associated financial and legal challenges Customer Service"
+          "text": "identify sources for arranging money and associated financial and legal challenges"
         },
         {
           "id": "DGT/VSQ/N0101.PC16",
@@ -276,7 +281,7 @@
         {
           "id": "DGT/VSQ/N0101.PC18",
           "code": "PC18",
-          "text": "follow appropriate hygiene and grooming standards Getting ready for apprenticeship & jobs"
+          "text": "follow appropriate hygiene and grooming standards"
         },
         {
           "id": "DGT/VSQ/N0101.PC19",

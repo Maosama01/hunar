@@ -66,7 +66,9 @@ class PermitIn(BaseModel):
 @router.get("/api/trades")
 def list_trades():
     return {k: {"name": v["name"], "qualification": service.qualification_title(v["qualification_nqr_id"]),
-                "jobs": v["jobs"]} for k, v in trades.TRADES.items()} | {"_permit_note": trades.PERMIT_NOTE}
+                "practical_assessment": v["practical_assessment"], "jobs": v["jobs"]}
+            for k, v in trades.TRADES.items()} | {"_permit_note": trades.PERMIT_NOTE,
+                                                 "_practical_note": trades.PRACTICAL_NOTE}
 
 
 # ---- worker's own profile -------------------------------------------------------------------------
@@ -172,6 +174,8 @@ def request_assessment(body: RequestIn, acc: Account = WORKER, s: Session = DB):
     p = s.get(WorkerProfile, acc.id)
     if p is None:
         raise HTTPException(409, "fill in your profile (trade and PIN code) first")
+    if not trades.has_practical(p.trade):
+        raise HTTPException(409, trades.PRACTICAL_NOTE)
     quiz.require_counted(s, acc.id, p.trade)
     if s.exec(select(AssessmentRequest).where(AssessmentRequest.account_id == acc.id,
                                               AssessmentRequest.status == "open")).first():
@@ -204,6 +208,8 @@ def start_assessment(rid: str, acc: Account = ASSESSOR, s: Session = DB):
     r = s.get(AssessmentRequest, rid)
     if r is None or r.status != "open":
         raise HTTPException(404, "open request not found")
+    if not trades.has_practical(r.trade):  # e.g. a request made before this rule
+        raise HTTPException(409, trades.PRACTICAL_NOTE)
     p = s.get(WorkerProfile, r.account_id)
     worker_acc = s.get(Account, r.account_id)
     if p is None or worker_acc is None or worker_acc.erased_at is not None:
