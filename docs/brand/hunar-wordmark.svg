@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -150 549 150" role="img" aria-label="hunar">
+  <!-- Monoline geometric lowercase: x-height 100, ascender 150, stroke 22, round ends. -->
+  <g fill="none" stroke="#1E2A78" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 -139 V-11 M11 -50 A39 39 0 0 1 89 -50 V-11"/>
+    <path transform="translate(122 0)" d="M11 -89 V-50 A39 39 0 0 0 89 -50 M89 -89 V-11"/>
+    <path transform="translate(244 0)" d="M11 -89 V-11 M11 -50 A39 39 0 0 1 89 -50 V-11"/>
+    <path transform="translate(362 0)" d="M89 -89 V-11 M89 -50 A39 39 0 1 1 11 -50 A39 39 0 1 1 89 -50"/>
+    <path transform="translate(484 0)" d="M11 -89 V-11 M11 -50 A39 39 0 0 1 50 -89 H54"/>
+  </g>
+</svg>

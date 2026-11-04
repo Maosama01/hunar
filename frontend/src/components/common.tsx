@@ -72,12 +72,17 @@ export function PresenceNote() {
   return <Notice kind="info">📷 {t("common.presenceOnly")}</Notice>;
 }
 
+/** Loading state: a shimmer in the shape of the content, with the text for screen readers. */
 export function Loading() {
   const { t } = useI18n();
   return (
-    <p className="muted" role="status">
-      {t("common.loading")}
-    </p>
+    <div className="skeleton" role="status" aria-live="polite">
+      <span className="sr-only">{t("common.loading")}</span>
+      <div className="sk sk-title" aria-hidden="true" />
+      <div className="sk sk-block" aria-hidden="true" />
+      <div className="sk" aria-hidden="true" style={{ width: "80%" }} />
+      <div className="sk" aria-hidden="true" style={{ width: "60%" }} />
+    </div>
   );
 }
 

@@ -13,7 +13,7 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       injectRegister: false, // registered in src/main.tsx via virtual:pwa-register
-      includeAssets: ["icon.svg", "icon-192.png", "icon-512.png", "apple-touch-icon.png"],
+      includeAssets: ["icon.svg", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "apple-touch-icon.png", "lockup.svg", "mark-white.svg"],
       manifest: {
         name: "Hunar: skills and work for electricians, plumbers and carpenters",
         short_name: "Hunar",
@@ -23,12 +23,12 @@ export default defineConfig({
         start_url: "/",
         scope: "/",
         display: "standalone",
-        background_color: "#ffffff",
-        theme_color: "#0b5d4b",
+        background_color: "#f4f5fa",
+        theme_color: "#1E2A78",
         icons: [
           { src: "icon-192.png", sizes: "192x192", type: "image/png" },
           { src: "icon-512.png", sizes: "512x512", type: "image/png" },
-          { src: "icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+          { src: "icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
           { src: "icon.svg", sizes: "any", type: "image/svg+xml" },
         ],
       },

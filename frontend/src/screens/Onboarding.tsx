@@ -110,6 +110,7 @@ export function Onboarding() {
   if (step === "lang") {
     body = (
       <>
+        <Lockup />
         <h1>{t("onb.chooseLang")}</h1>
         {lang !== "en" && <p className="muted" lang="en">{enText("onb.chooseLang")}</p>}
         <LanguageGrid />
@@ -121,6 +122,7 @@ export function Onboarding() {
   } else if (step === "role") {
     body = (
       <>
+        <Lockup />
         <h1>{t("onb.whoAreYou")}</h1>
         {ended === "erased" && <Notice kind="ok">{t("privacy.erased")}</Notice>}
         <div className="role-cards">
@@ -360,6 +362,16 @@ export function Onboarding() {
         </Link>
       </div>
       <div className="onb-body stack">{body}</div>
+    </div>
+  );
+}
+
+/** The Hunar lockup (docs/brand) on the first screens, where there is no app header yet. */
+export function Lockup() {
+  const { t } = useI18n();
+  return (
+    <div className="onb-brand">
+      <img src="/lockup.svg" alt={t("app.name")} height={44} />
     </div>
   );
 }

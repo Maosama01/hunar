@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Hunar">
+  <!-- Full-bleed for PWA "maskable" icons: the H stays inside the 40% safe circle. -->
+  <rect width="1024" height="1024" fill="#1E2A78"/>
+  <rect x="340" y="432" width="344" height="160" fill="#F4A51C"/>
+  <rect x="232" y="256" width="120" height="512" rx="28" fill="#FFFFFF"/>
+  <rect x="672" y="256" width="120" height="512" rx="28" fill="#FFFFFF"/>
+  <rect x="444" y="476" width="136" height="72" rx="36" fill="#1E2A78"/>
+  <rect x="408" y="458" width="12" height="108" rx="6" fill="#1E2A78"/>
+  <rect x="604" y="458" width="12" height="108" rx="6" fill="#1E2A78"/>
+</svg>

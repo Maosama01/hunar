@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Hunar">
+  <!-- One colour (stamps, print, embroidery): bubble and tick marks are holes. Change the fill to recolour. -->
+  <g fill="#1E2A78">
+    <rect x="232" y="256" width="120" height="512" rx="28"/>
+    <rect x="672" y="256" width="120" height="512" rx="28"/>
+    <path fill-rule="evenodd" d="M340 432 H684 V592 H340 Z
+      M480 476 H544 A36 36 0 0 1 544 548 H480 A36 36 0 0 1 480 476 Z
+      M414 458 A6 6 0 0 1 420 464 V560 A6 6 0 0 1 408 560 V464 A6 6 0 0 1 414 458 Z
+      M610 458 A6 6 0 0 1 616 464 V560 A6 6 0 0 1 604 560 V464 A6 6 0 0 1 610 458 Z"/>
+  </g>
+</svg>

@@ -56,7 +56,7 @@ function Brand() {
   const { account } = useSession();
   return (
     <Link to={homePath(account)} className="brand" aria-label={t("header.home")}>
-      <img src="/icon.svg" alt="" width={28} height={28} />
+      <img src="/mark-white.svg" alt="" width={26} height={26} />
       <span>{t("app.name")}</span>
     </Link>
   );
@@ -100,18 +100,24 @@ function StaffHeader() {
         <LangButton />
         <SettingsButton />
       </div>
+      {/* The strip only grows when something needs attention: queued changes, a sync in progress or a
+          server that cannot be reached. With nothing waiting it just says who is signed in. */}
       <div className="header-row header-sub">
-        <Link to="/queue" className={`queue-chip ${queued ? "has" : ""}`} aria-label={t("header.queuedAria", { n: queued })}>
-          ⇅ {t("header.queued", { n: queued })}
-        </Link>
-        <button
-          type="button"
-          className="btn btn-small"
-          onClick={() => void manualSync()}
-          disabled={status.syncing || !status.online}
-        >
-          {status.syncing ? t("header.syncing") : t("header.syncNow")}
-        </button>
+        {(queued > 0 || status.syncing) && (
+          <Link to="/queue" className={`queue-chip ${queued ? "has" : ""}`} aria-label={t("header.queuedAria", { n: queued })}>
+            <Icon name="refresh" size={16} /> {t("header.queued", { n: queued })}
+          </Link>
+        )}
+        {(queued > 0 || status.syncing || status.reachable === false) && (
+          <button
+            type="button"
+            className="btn btn-small"
+            onClick={() => void manualSync()}
+            disabled={status.syncing || !status.online}
+          >
+            {status.syncing ? t("header.syncing") : t("header.syncNow")}
+          </button>
+        )}
         {account && (
           <span className="who" title={status.lastSyncAt ? t("header.lastSync", { time: fmtTime(status.lastSyncAt, lang) }) : undefined}>
             {account.display_name} · {t(`roles.${account.role}` as Key)}

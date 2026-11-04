@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { decide } from "../actions";
 import { errorText, type Criterion, type PreScore, type Rubrics, type Task } from "../api";
-import { CriticalBadge, Loading, Notice, PendingBadge, PresenceNote } from "../components/common";
+import { Bar, CriticalBadge, Loading, Notice, PendingBadge, PresenceNote } from "../components/common";
+import { Icon } from "../components/Icon";
 import { PackConfirm } from "../components/PackConfirm";
 import { decisionKey, tryRefreshAssessment, useRubrics, type AssessmentView, type DecisionView } from "../data";
 import { useI18n, type Key } from "../i18n";
@@ -29,6 +31,30 @@ function DecisionLine({ d, rubrics }: { d: DecisionView | undefined; rubrics: Ru
         {t("score.by", { action: t(`score.action.${d.action}` as Key), who: d.assessor })} · {fmtTime(d.created_at, lang)}
       </div>
       {d.reason && <div>{t("score.reasonGiven", { reason: d.reason })}</div>}
+    </div>
+  );
+}
+
+/** The four levels at a glance: dashed = suggested by the tool, filled = decided by the assessor.
+ * On a safety criterion the two lowest levels carry a red underline (they block a positive result). */
+function LevelStrip({ suggested, decided, critical }: { suggested: number | null; decided: number | null; critical: boolean }) {
+  const { t } = useI18n();
+  const none = t("score.levelNone");
+  return (
+    <div
+      className="level-strip"
+      role="img"
+      aria-label={t("score.levelStripAria", { s: suggested ?? none, d: decided ?? none })}
+    >
+      {LEVELS.map((l) => (
+        <span
+          key={l}
+          aria-hidden="true"
+          className={`${suggested === l ? "is-suggested" : ""} ${decided === l ? "is-decided" : ""} ${critical && l < 2 ? "is-critical-floor" : ""}`}
+        >
+          {l}
+        </span>
+      ))}
     </div>
   );
 }
@@ -89,6 +115,7 @@ function CriterionCard({
           <span className="small muted">{t("score.weight", { w: cr.weight })}</span>
         </div>
         <h4>{pick(cr.text)}</h4>
+        <LevelStrip suggested={suggested} decided={d?.level ?? null} critical={cr.critical} />
         {cr.critical && <p className="small warn-text">{t("score.criticalNote")}</p>}
       </header>
 
@@ -144,7 +171,7 @@ function CriterionCard({
       </div>
 
       {!frozen && (
-        <div className="row wrap gap">
+        <div className="decide-actions">
           <button
             type="button"
             className="btn btn-primary"
@@ -204,7 +231,7 @@ function CriterionCard({
 }
 
 export function Scoring() {
-  const { t, pick, lang } = useI18n();
+  const { t, lang } = useI18n();
   const { view } = useAssessmentCtx();
   const rubrics = useRubrics();
   const connected = isConnected(useStatus());
@@ -235,9 +262,13 @@ export function Scoring() {
           <Notice kind="info">{t("score.confirmFirst")}</Notice>
         ) : (
           <>
-            <p>
-              <strong>{t("score.progress", { d: decided, t: total })}</strong>
-            </p>
+            <div>
+              <div className="progress-head">
+                <strong>{t("score.progress", { d: decided, t: total })}</strong>
+                <span className="small muted">{Math.round((decided / Math.max(1, total)) * 100)}%</span>
+              </div>
+              <Bar value={total ? decided / total : 0} label={t("score.progress", { d: decided, t: total })} tone={decided === total ? "ok" : "brand"} />
+            </div>
             {prescores && snap?.prescores_at && (
               <p className="hint">{t("score.prescoresAt", { time: fmtTime(snap.prescores_at, lang) })}</p>
             )}
@@ -245,29 +276,110 @@ export function Scoring() {
             {stale && <Notice kind="warn">{t("score.prescoresStale", { n: view.prescoreAffectingPending })}</Notice>}
             {!connected && prescores && <Notice kind="info">{t("common.offlineCopy")}</Notice>}
             <PresenceNote />
-            {rubrics.tasks.map((task) => (
-              <details key={task.task_id} className="task-group" open>
-                <summary>
-                  <strong>{pick(task.title)}</strong>
-                </summary>
-                <div className="stack-s">
-                  {task.criteria.map((cr) => (
-                    <CriterionCard
-                      key={cr.id}
-                      task={task}
-                      cr={cr}
-                      pre={preByKey.get(decisionKey(task.task_id, cr.id))}
-                      view={view}
-                      rubrics={rubrics}
-                      acceptBlocked={acceptBlocked}
-                    />
-                  ))}
-                </div>
-              </details>
-            ))}
+            <TaskStepper view={view} rubrics={rubrics} preByKey={preByKey} acceptBlocked={acceptBlocked} />
           </>
         )}
       </section>
     </div>
+  );
+}
+
+/** One practical task at a time. The rail shows every task with its progress; the assessor moves
+ * through them in order or jumps to any one. Opens on the first task that still has undecided
+ * criteria, and ends on the profile (sign off) once the last task is done. */
+function TaskStepper({
+  view,
+  rubrics,
+  preByKey,
+  acceptBlocked,
+}: {
+  view: AssessmentView;
+  rubrics: Rubrics;
+  preByKey: Map<string, PreScore>;
+  acceptBlocked: boolean;
+}) {
+  const { t, pick } = useI18n();
+  const tasks = rubrics.tasks;
+  const counts = useMemo(
+    () =>
+      tasks.map((task) => ({
+        done: task.criteria.filter((cr) => view.decisions[decisionKey(task.task_id, cr.id)] !== undefined).length,
+        total: task.criteria.length,
+      })),
+    [tasks, view.decisions],
+  );
+  const firstOpen = Math.max(0, counts.findIndex((c) => c.done < c.total));
+  const [idx, setIdx] = useState(firstOpen);
+  const i = Math.min(idx, tasks.length - 1);
+  const task = tasks[i];
+  if (!task) return null;
+  const go = (n: number) => {
+    setIdx(n);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const last = i === tasks.length - 1;
+
+  return (
+    <>
+      <div className="task-rail" role="tablist" aria-label={t("score.tasksAria")}>
+        {tasks.map((tk, n) => {
+          const c = counts[n];
+          const complete = c.total > 0 && c.done === c.total;
+          return (
+            <button
+              key={tk.task_id}
+              type="button"
+              role="tab"
+              aria-selected={n === i}
+              className={`task-pill ${n === i ? "is-active" : ""} ${complete ? "is-done" : ""}`}
+              onClick={() => go(n)}
+            >
+              <span className="task-n" aria-hidden="true">
+                {complete ? "✓" : n + 1}
+              </span>
+              <span className="task-t">{pick(tk.title)}</span>
+              <span className="sr-only">{t("score.taskDecided", { d: c.done, t: c.total })}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <section className="card task-head" role="tabpanel" aria-label={pick(task.title)}>
+        <div className="grow">
+          <span className="task-kicker">{t("score.taskOf", { n: i + 1, t: tasks.length })}</span>
+          <h3>{pick(task.title)}</h3>
+        </div>
+        <span className={`badge ${counts[i].done === counts[i].total ? "badge-signed" : ""}`}>
+          {t("score.taskDecided", { d: counts[i].done, t: counts[i].total })}
+        </span>
+      </section>
+
+      {task.criteria.map((cr) => (
+        <CriterionCard
+          key={cr.id}
+          task={task}
+          cr={cr}
+          pre={preByKey.get(decisionKey(task.task_id, cr.id))}
+          view={view}
+          rubrics={rubrics}
+          acceptBlocked={acceptBlocked}
+        />
+      ))}
+
+      <div className="task-nav">
+        <button type="button" className="btn" disabled={i === 0} onClick={() => go(i - 1)}>
+          <Icon name="chevron" className="flip" size={20} /> {t("score.prevTask")}
+        </button>
+        {last ? (
+          <Link to="../profile" relative="route" className="btn btn-primary">
+            {t("score.toProfile")}
+          </Link>
+        ) : (
+          <button type="button" className="btn btn-primary" onClick={() => go(i + 1)}>
+            {t("score.nextTask")} <Icon name="chevron" className="flip-rtl" size={20} />
+          </button>
+        )}
+      </div>
+    </>
   );
 }

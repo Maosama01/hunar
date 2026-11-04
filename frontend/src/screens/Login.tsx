@@ -5,6 +5,7 @@ import { normalisePhone, PhoneInput, PinInput } from "../components/AuthInputs";
 import { Notice } from "../components/common";
 import { Icon } from "../components/Icon";
 import { TranslationBanner } from "../components/Layout";
+import { Lockup } from "./Onboarding";
 import { ErrorBox, useLoad } from "../components/ui";
 import { useQueueCounts } from "../data";
 import { hasChosenLanguage, useI18n } from "../i18n";
@@ -67,6 +68,7 @@ export function Login() {
         </Link>
       </div>
       <form className="onb-body stack" onSubmit={(e) => void submit(e)} noValidate>
+        <Lockup />
         <h1>{staff ? t("login.staffTitle") : t("login.title")}</h1>
         {staff && <p className="muted">{t("login.staffNote")}</p>}
         {session.ended === "expired" && (
