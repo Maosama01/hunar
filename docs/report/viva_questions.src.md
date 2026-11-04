@@ -175,3 +175,13 @@ withdrawing it means erasing the account. A compulsory quiz invites tapping thro
 only if at least half of its answers came slower than reading time (its response-time effort, Wise and
 Kong 2005); otherwise the worker is asked to take it again. The one-half line is our choice and has to
 be checked on real attempts.
+
+**25. How do you assess plumbers and carpenters if the M1 mapper only knows electrical packs?**
+Each assessment carries a trade and is scored only on that trade's practical tasks: six for
+electricians, four for plumbers (Plumber - General, NQR 12957) and four for carpenters (Assistant
+Carpenter, NQR 9884). The M1 suggestions are skipped for plumbers and carpenters, because comparing a
+plumber's words with electrical packs means nothing; the assessor confirms the trade's own file. Every
+criterion is linked to NOS and PC codes in that file, and the pass rules come from the file: 70 %
+overall, and for the carpenter file also 70 % in each NOS. The plumber and carpenter tasks are drafts
+written with AI help, marked DRAFT on screen, and need review by an assessor of each trade before real
+use; the carpenter file's NQR validity has also ended, which the badge says.

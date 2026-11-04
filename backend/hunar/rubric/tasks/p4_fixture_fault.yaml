@@ -1,0 +1,70 @@
+task_id: p4_fixture_fault
+trade: plumber
+qualification_nqr_id: 12957
+review: {en: "DRAFT written with AI help from the official Plumber - General qualification file (NQR 12957); not yet reviewed by a plumbing assessor or ITI instructor.", hi: "आधिकारिक प्लंबर - जनरल योग्यता फ़ाइल (NQR 12957) से AI की मदद से लिखा गया ड्राफ़्ट; अभी किसी प्लंबिंग मूल्यांकनकर्ता या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Find and fix a leaking tap or fixture, then hand over"
+  hi: "टपकता नल या फ़िक्सचर ढूँढ़कर ठीक करना, फिर ग्राहक को सौंपना"
+instructions:
+  en: "A tap, cistern or basin connection is leaking. Find the cause, shut off the water, replace the faulty part (washer, cartridge or connector), refit the fixture level and secure without over-tightening, test it, clean up and explain to the customer what was done."
+  hi: "कोई नल, फ़्लश टंकी या बेसिन का कनेक्शन टपक रहा है। कारण ढूँढ़ें, पानी बंद करें, ख़राब पुर्ज़ा बदलें (वॉशर, कार्ट्रिज या कनेक्टर), फ़िक्सचर को समतल और मज़बूती से लगाएँ पर ज़रूरत से ज़्यादा न कसें, जाँच करें, सफ़ाई करें और ग्राहक को बताएँ कि क्या किया।"
+photos:
+  - {id: p1, en: "The faulty part next to the new one", hi: "ख़राब पुर्ज़ा और नया पुर्ज़ा साथ में"}
+  - {id: p2, en: "The repaired fixture with the water on", hi: "पानी चालू होने पर ठीक किया हुआ फ़िक्सचर"}
+checklist:
+  - {id: cause_found, en: "Cause of the leak found and explained before opening the fixture", hi: "फ़िक्सचर खोलने से पहले लीकेज का कारण ढूँढ़ा और बताया"}
+  - {id: isolated_first, en: "Water shut off at the nearest valve before opening the fixture", hi: "फ़िक्सचर खोलने से पहले पास के वाल्व से पानी बंद किया"}
+  - {id: part_matched, en: "Faulty part replaced with a matching one", hi: "ख़राब पुर्ज़ा मेल खाते पुर्ज़े से बदला"}
+  - {id: refitted_secure, en: "Fixture refitted level and secure, not over-tightened", hi: "फ़िक्सचर समतल और मज़बूती से लगाया, ज़रूरत से ज़्यादा नहीं कसा"}
+  - {id: tested_no_leak, en: "Tested with the water on: no leak, and the tap opens and closes smoothly", hi: "पानी चालू करके जाँचा: कोई लीकेज नहीं, नल आसानी से खुलता-बंद होता है"}
+  - {id: spills_cleaned, en: "Spills wiped and old parts disposed of", hi: "गिरा पानी पोंछा और पुराने पुर्ज़े फेंके"}
+  - {id: customer_told, en: "Customer told what was done and how to look after the fixture", hi: "ग्राहक को बताया कि क्या किया और फ़िक्सचर की देखभाल कैसे करें"}
+criteria:
+  - id: c1_diagnose
+    nos: PSC/N0142
+    pc_refs: [PSC/N0142.PC1, PSC/N0142.PC2]
+    weight: 2
+    critical: false
+    text: {en: "Finds the cause of the fault", hi: "ख़राबी का कारण ढूँढ़ना"}
+    checklist: [cause_found]
+    levels:
+      0: "Replaces parts at random without looking for the cause."
+      1: "Finds where it leaks but not why."
+      2: "Finds the cause (worn washer, cracked connector, loose joint) before opening the fixture."
+      3: "As 2, and checks for a second cause such as high pressure or a damaged seat."
+  - id: c2_repair
+    nos: PSC/N0142
+    pc_refs: [PSC/N0142.PC4, PSC/N0142.PC8, PSC/N0133.PC4]
+    weight: 2
+    critical: false
+    text: {en: "Shuts off the water, replaces the part and refits the fixture", hi: "पानी बंद करना, पुर्ज़ा बदलना और फ़िक्सचर दोबारा लगाना"}
+    checklist: [isolated_first, part_matched, refitted_secure]
+    levels:
+      0: "Opens the fixture under pressure, or fits a part that does not match."
+      1: "Repair done, but the fixture is left loose, crooked or over-tightened."
+      2: "Water shut off first; matching part fitted; fixture level and secure without over-tightening."
+      3: "As 2, and checks the other worn parts of the fixture while it is open."
+  - id: c3_test
+    nos: PSC/N0142
+    pc_refs: [PSC/N0142.PC19, PSC/N0133.PC14]
+    weight: 2
+    critical: true
+    text: {en: "Tests the repair and leaves no leak", hi: "मरम्मत की जाँच और कोई लीकेज न छोड़ना"}
+    checklist: [tested_no_leak]
+    levels:
+      0: "Does not test, or leaves it leaking."
+      1: "Tests briefly; a slow drip or stiff operation remains."
+      2: "Tests with the water on: no leak and the fixture works smoothly."
+      3: "As 2, and checks the joints again after a few minutes of use."
+  - id: c4_handover
+    nos: PSC/N0142
+    pc_refs: [PSC/N0142.PC13, PSC/N0142.PC17, PSC/N0133.PC17]
+    weight: 1
+    critical: false
+    text: {en: "Cleans up and explains the repair and care to the customer", hi: "सफ़ाई करना और ग्राहक को मरम्मत व देखभाल समझाना"}
+    checklist: [spills_cleaned, customer_told]
+    levels:
+      0: "Leaves water and old parts behind and says nothing."
+      1: "Cleans up or explains, but not both."
+      2: "Wipes spills, disposes of old parts and tells the customer what was done and how to care for it."
+      3: "As 2, and gives the warranty card or receipt for new parts."

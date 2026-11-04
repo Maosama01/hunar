@@ -278,6 +278,17 @@ anchored scales [48]. Hindi translations are provided for titles, instructions a
 The level descriptors were drafted by the team with AI assistance and **must be reviewed by a
 certified assessor** before real use.
 
+For the two-sided extension (section 4.6) the same format was used for four plumber tasks against
+Plumber - General (NQR 12957): safe preparation and water shut-off, cutting and joining a supply pipe
+with a leak check, a trap and waste pipe with the right fall, and repairing a leaking fixture. There
+are also four carpenter tasks against Assistant Carpenter (NQR 9884): bench and power-tool safety,
+measuring and cutting to a drawing, a frame joint, and fitting hinges and a lock. Every criterion is
+linked to NOS and PC codes in that trade's parsed file, which a test checks. These eight tasks are
+**DRAFTS written with AI help**, say so on screen, and need review by an assessor of each trade. An
+assessment carries its trade and uses only that trade's tasks. The pass rules come from each
+qualification file: 70 % aggregate for all three, and for the carpenter file also 70 % in each NOS
+covered by the tasks.
+
 Pre-score rules are deliberately simple and shown to the assessor:
 
 * checklist items observed by the assessor drive the level: none ticked gives 0, some give 1, all give 2;
@@ -288,11 +299,11 @@ Pre-score rules are deliberately simple and shown to the assessor:
 * the self-declaration is shown as context only and never raises a level;
 * with no observed evidence the engine makes no suggestion.
 
-Aggregation: criterion score = level / 3; NOS and overall scores are weighted means; the default pass
-mark is the official **70 % aggregate** stated in the Assistant Electrician qualification file; any
-critical criterion below level 2 blocks a positive recommendation. All of this is covered by unit
-tests, including the edge cases (all zeros, exactly at the pass mark, missing scores, invalid levels,
-weights).
+Aggregation: criterion score = level / 3; NOS and overall scores are weighted means; the pass mark is
+the official **70 % aggregate** stated in each qualification file, plus the carpenter file's 70 % per
+NOS; any critical criterion below level 2 blocks a positive recommendation. All of this is covered by
+unit tests, including the edge cases (all zeros, exactly at the pass mark, one NOS below its pass mark,
+missing scores, invalid levels, weights).
 
 ## 4.4 M2: evidence checker
 
@@ -371,10 +382,11 @@ been weak: a CAG audit of PMKVY found reused photos and missing geotags. Hunar's
 says exactly what was checked: "practical skills assessed by an assessor against <qualification> on
 <date>, not a government certificate". It appears only when an assessor, logged in with an assessor
 account, signs off a positive recommendation through the M3 flow. The quiz never produces a badge.
-Practical assessments, and so this badge, exist only for electricians: the M1 packs and the M3 rubric
-tasks cover domestic electrical work. A plumber or carpenter takes the quiz and can be booked, but the
-server refuses their assessment requests until rubric tasks for their trade are written and reviewed;
-otherwise an electrician's tasks would be scored and the badge would name an electrical qualification.
+An assessment is scored only on its own trade's practical tasks and against its own trade's
+qualification file. The M1 pack suggestions are electrical, so a plumber's or carpenter's assessment
+skips them and the assessor confirms that trade's file. Without this, an electrician's tasks would be
+scored and the badge would name an electrical qualification. A trade with no rubric tasks cannot ask
+for a practical assessment at all.
 
 **Who may do electrical work.** Regulation 31 of the CEA Safety Regulations 2023 [65] allows
 installation work, including repairs and alterations, only by a State-licensed contractor and a permit
@@ -680,9 +692,9 @@ questions, adaptive against fixed-length quiz, for three trades and three assume
   first caused gaps in the plumber and carpenter files (wrapped names, tables continued across pages,
   rows printed above a table, headings glued onto criteria), but every criterion still needs a human
   check against the PDF.
-* **Practical assessment for one trade only.** Plumbers and carpenters can take the quiz and be
-  booked, but cannot be assessed or earn the "skill assessed" badge until practical rubric tasks for
-  their trades exist and an assessor reviews them.
+* **Plumber and carpenter rubrics are AI drafts.** Their eight practical tasks were written with AI
+  help from the official files and have not been reviewed by a plumbing or carpentry assessor; until
+  then their pre scores and profiles carry a DRAFT note. The carpenter file's NQR validity has ended.
 * **No identity or permit verification service.** Hunar does not check Aadhaar or a State permit
   register; an admin checks the permit document by eye, and badges say exactly that.
 * **Languages.** The Bhashini client follows the documented API but has not been run against the live

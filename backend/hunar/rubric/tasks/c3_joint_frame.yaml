@@ -1,0 +1,70 @@
+task_id: c3_joint_frame
+trade: carpenter
+qualification_nqr_id: 9884
+review: {en: "DRAFT written with AI help from the official Assistant Carpenter qualification file (NQR 9884, validity ended 31 Aug 2026); not yet reviewed by a carpentry assessor or ITI instructor.", hi: "आधिकारिक असिस्टेंट कारपेंटर योग्यता फ़ाइल (NQR 9884, वैधता 31 अगस्त 2026 को समाप्त) से AI की मदद से लिखा गया ड्राफ़्ट; अभी किसी बढ़ईगीरी मूल्यांकनकर्ता या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Make a joint and assemble a square, rigid frame"
+  hi: "जोड़ बनाना और एक समकोण, मज़बूत फ़्रेम जोड़ना"
+instructions:
+  en: "From the marked parts, cut a simple frame joint (for example a halving or a mortise and tenon), dry-fit it, then glue and fasten it, and check the frame is square, flat and rigid."
+  hi: "निशान लगे पुर्ज़ों से फ़्रेम का एक सरल जोड़ काटें (जैसे हाफ़-लैप या चूल-खाँचा), पहले बिना गोंद के मिलाकर देखें, फिर गोंद और कील/पेंच से जोड़ें, और जाँचें कि फ़्रेम समकोण, समतल और मज़बूत है।"
+photos:
+  - {id: p1, en: "Joint dry-fitted before gluing", hi: "गोंद लगाने से पहले बिना गोंद मिलाया गया जोड़"}
+  - {id: p2, en: "Finished frame with a square or tape across the diagonals", hi: "पूरा फ़्रेम, स्क्वायर या टेप से विकर्ण नापते हुए"}
+checklist:
+  - {id: chisel_safe, en: "Chisel and saw used with hands behind the cutting edge; work clamped", hi: "छेनी और आरी चलाते समय हाथ धार के पीछे; लकड़ी क्लैंप की"}
+  - {id: joint_cut, en: "Joint cut to the marked lines", hi: "जोड़ निशान वाली लाइनों पर काटा"}
+  - {id: dry_fit, en: "Dry-fitted before gluing: tight without forcing", hi: "गोंद से पहले मिलाकर देखा: बिना ज़ोर लगाए कसा हुआ"}
+  - {id: no_gaps, en: "Joint closes with no visible gaps", hi: "जोड़ बिना दिखने वाली दरार के बंद होता है"}
+  - {id: fasteners_right, en: "Suitable glue and fasteners used, with pilot holes where needed", hi: "सही गोंद और कील/पेंच इस्तेमाल किए, ज़रूरत पर पायलट छेद किया"}
+  - {id: square_checked, en: "Frame checked square (equal diagonals) and flat", hi: "फ़्रेम समकोण (बराबर विकर्ण) और समतल जाँचा"}
+  - {id: rigid, en: "Frame stays rigid when pressed at the corners", hi: "कोनों पर दबाने से फ़्रेम मज़बूत रहता है"}
+criteria:
+  - id: c1_tools_safely
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC10]
+    weight: 2
+    critical: true
+    text: {en: "Uses chisel and saw safely", hi: "छेनी और आरी का सुरक्षित उपयोग"}
+    checklist: [chisel_safe]
+    levels:
+      0: "Chisels or saws towards the body or a hand, or works on unclamped pieces."
+      1: "Mostly safe, but hands sometimes in front of the edge or the work not clamped."
+      2: "Work clamped and both hands behind the cutting edge throughout."
+      3: "As 2, and keeps edges sharp and covered when not in use."
+  - id: c2_joint
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC7]
+    weight: 2
+    critical: false
+    text: {en: "Cuts an accurate joint with no gaps", hi: "बिना दरार का सटीक जोड़ काटना"}
+    checklist: [joint_cut, dry_fit, no_gaps]
+    levels:
+      0: "Joint does not fit or is forced together with splits."
+      1: "Joint fits but with visible gaps or loose."
+      2: "Joint cut to the lines, dry-fitted first, and closes tight with no visible gaps."
+      3: "As 2, with clean shoulders that need no filling."
+  - id: c3_fasten
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC3, FFS/N2208.PC6]
+    weight: 1
+    critical: false
+    text: {en: "Glues and fastens with suitable materials", hi: "सही सामग्री से गोंद लगाना और जोड़ना"}
+    checklist: [fasteners_right]
+    levels:
+      0: "Uses the wrong fasteners or splits the timber."
+      1: "Right fasteners, but no pilot holes where needed or glue left smeared."
+      2: "Suitable glue and fasteners, pilot holes where needed, excess glue wiped off."
+      3: "As 2, and chooses fasteners that will not show on the finished face."
+  - id: c4_check
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC14, FFS/N2208.PC14]
+    weight: 2
+    critical: false
+    text: {en: "Checks the frame is square, flat and rigid", hi: "फ़्रेम के समकोण, समतल और मज़बूत होने की जाँच"}
+    checklist: [square_checked, rigid]
+    levels:
+      0: "Does not check; the frame is out of square or loose."
+      1: "Checks, but leaves it out of square or not rigid."
+      2: "Checks diagonals and flatness, corrects before the glue sets, and the frame is rigid."
+      3: "As 2, and explains how the check was made."

@@ -66,7 +66,7 @@ class PermitIn(BaseModel):
 @router.get("/api/trades")
 def list_trades():
     return {k: {"name": v["name"], "qualification": service.qualification_title(v["qualification_nqr_id"]),
-                "practical_assessment": v["practical_assessment"], "jobs": v["jobs"]}
+                "practical_assessment": trades.has_practical(k), "jobs": v["jobs"]}
             for k, v in trades.TRADES.items()} | {"_permit_note": trades.PERMIT_NOTE,
                                                  "_practical_note": trades.PRACTICAL_NOTE}
 
@@ -219,7 +219,7 @@ def start_assessment(rid: str, acc: Account = ASSESSOR, s: Session = DB):
         p.worker_id = w.id
         s.add(p)
         s.commit()
-    a = svc.create_assessment(s, p.worker_id, r.declaration_text, auth.actor(acc))
+    a = svc.create_assessment(s, p.worker_id, r.declaration_text, auth.actor(acc), trade=r.trade)
     r.status, r.assessor_account_id, r.assessment_id = "started", acc.id, a.id
     s.add(r)
     audit.append(s, auth.actor(acc), "assessment.request_started", r.id, {"assessment_id": a.id}, commit=False)

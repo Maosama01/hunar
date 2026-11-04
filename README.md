@@ -101,14 +101,14 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | M2 reuse hashing | Done and evaluated | Real public photos, simulated reuse |
 | M2 face blur | Done (OpenCV Haar) | Not yet measured on real assessment photos |
 | M2 YOLOv8n detector | Run 1 done but only a diagnostic: the dataset's published splits are class-disjoint (no helmets in train, no gloves in test). Notebook now re-splits the data | **RESULT PENDING** for run 2; app reports "unavailable" until then |
-| M3 rubric engine | Done, 6 tasks, unit tests | Rubric descriptors drafted by the team with AI help; need review by a certified assessor |
+| M3 rubric engine | Done: 6 electrician tasks, plus 4 plumber and 4 carpenter tasks; pass rules from each qualification file; unit tests | Electrician descriptors drafted by the team with AI help; plumber and carpenter tasks are **DRAFT** (AI-written from the official files). All need review by a certified assessor of the trade |
 | Backend API + audit log + sync | Done, tested | Real |
 | PWA frontend + offline queue | Done: all screens, EN/HI, offline outbox; exercised in a browser at phone width incl. offline replay | Real; not yet tried on a physical phone |
 | M4 rater mode + analysis | Built; photo import for the study (`make study-items`); step-by-step guide for the team | **RESULT PENDING**: no real raters yet |
 | M4 study sizing | Simulation of the method under stated assumptions | **Simulation, not a result**; used only to choose the number of raters and items |
 | Accounts, consent, roles | Done: phone + PIN (salted, peppered scrypt; lockout), OTP-ready, itemised DPDP consent, erasure; staff endpoints need a staff login | Real; SMS gateway not configured |
 | Worker quiz (3 trades) | Done: adaptive Rasch quiz, 40 / 24 / 24 questions from official sources, review with sources | Questions are **DRAFT** (expert review pending); difficulties **uncalibrated** until about 100 real attempts per trade |
-| Booking and badges | Done: search, booking lifecycle, ratings, assessment requests, permit rule (CEA reg. 31), badges only from assessor sign-off | Real; permit check is manual (no State register API); practical assessments for electricians only (no plumber or carpenter rubric tasks yet) |
+| Booking and badges | Done: search, booking lifecycle, ratings, assessment requests, permit rule (CEA reg. 31), badges only from assessor sign-off | Real; permit check is manual (no State register API) |
 | 23 languages | UI and quiz support 23 languages with fallback, RTL and read-aloud; Bhashini client and `make translate` | Only English and Hindi written so far (Hindi with AI help, native-speaker review pending); Bhashini **not yet run** (needs credentials: [docs/bhashini_setup.md](docs/bhashini_setup.md)); machine translations will need review |
 | Voice input | Done: record on the declaration screen, faster-whisper `small` on CPU, transcript must be read back before saving; audio never stored | Checked on **synthetic** text-to-speech audio only; not yet tried with real workers' voices |
 

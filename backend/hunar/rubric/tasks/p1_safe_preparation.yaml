@@ -1,0 +1,73 @@
+task_id: p1_safe_preparation
+trade: plumber
+qualification_nqr_id: 12957
+review: {en: "DRAFT written with AI help from the official Plumber - General qualification file (NQR 12957); not yet reviewed by a plumbing assessor or ITI instructor.", hi: "आधिकारिक प्लंबर - जनरल योग्यता फ़ाइल (NQR 12957) से AI की मदद से लिखा गया ड्राफ़्ट; अभी किसी प्लंबिंग मूल्यांकनकर्ता या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Prepare safely: PPE, tools, water shut-off and a clear work area"
+  hi: "सुरक्षित तैयारी: PPE, औज़ार, पानी बंद करना और साफ़ कार्य-स्थल"
+instructions:
+  en: "Before opening any pipe or fixture, put on PPE, check the tools, shut off and drain the water at the work point, keep electrical points away from water, and make the area safe."
+  hi: "कोई भी पाइप या फ़िटिंग खोलने से पहले PPE पहनें, औज़ारों की जाँच करें, काम की जगह पर पानी बंद करके पाइप ख़ाली करें, बिजली के पॉइंट पानी से दूर रखें और जगह को सुरक्षित बनाएँ।"
+photos:
+  - {id: p1, en: "Worker at the work point wearing PPE (face is blurred automatically)", hi: "PPE पहने कार्यकर्ता काम की जगह पर (चेहरा अपने आप धुंधला होगा)"}
+  - {id: p2, en: "The closed stop valve and the tools laid out", hi: "बंद स्टॉप वाल्व और रखे हुए औज़ार"}
+checklist:
+  - {id: ppe_gloves, en: "Gloves worn", hi: "दस्ताने पहने"}
+  - {id: ppe_shoes, en: "Safety shoes worn", hi: "सेफ्टी जूते पहने"}
+  - {id: ppe_goggles, en: "Eye protection worn for cutting, drilling or chasing", hi: "काटने, ड्रिल करने या दीवार काटने के समय आँखों की सुरक्षा पहनी"}
+  - {id: water_off, en: "Water to the work point shut off at the nearest stop valve", hi: "काम की जगह का पानी पास के स्टॉप वाल्व से बंद किया"}
+  - {id: line_drained, en: "Line drained or pressure released before opening it", hi: "खोलने से पहले लाइन ख़ाली की या दबाव निकाला"}
+  - {id: elec_clear, en: "Electrical points, plugs and leads kept away from water", hi: "बिजली के पॉइंट, प्लग और तार पानी से दूर रखे"}
+  - {id: tools_checked, en: "Tools checked for damage before use; loose or split tools set aside", hi: "उपयोग से पहले औज़ारों की जाँच की; ढीले या टूटे औज़ार अलग रखे"}
+  - {id: power_tools_grounded, en: "Power tools earthed or double-insulated and leads undamaged", hi: "पावर टूल अर्थ किए हुए या डबल-इंसुलेटेड, तार सही हालत में"}
+  - {id: area_safe, en: "Floor kept dry and clear; signs or barricade placed where others could be hurt", hi: "फ़र्श सूखा और साफ़ रखा; जहाँ दूसरों को चोट लग सकती है वहाँ संकेत या बैरिकेड लगाया"}
+criteria:
+  - id: c1_ppe
+    nos: PSC/N0136
+    pc_refs: [PSC/N0136.PC2]
+    weight: 2
+    critical: true
+    text: {en: "Uses the PPE the task needs", hi: "काम के अनुसार PPE का उपयोग"}
+    checklist: [ppe_gloves, ppe_shoes, ppe_goggles]
+    cv_classes: [gloves, safety_shoes]
+    levels:
+      0: "No PPE worn."
+      1: "Some PPE worn, but gloves, shoes or eye protection missing when needed."
+      2: "Gloves and safety shoes worn throughout, and eye protection for cutting or drilling."
+      3: "All PPE worn correctly and checked for damage before use, without prompting."
+  - id: c2_isolate
+    nos: PSC/N0136
+    pc_refs: [PSC/N0136.PC1, PSC/N0136.PC4]
+    weight: 2
+    critical: true
+    text: {en: "Shuts off and drains the water and keeps electrical points away from water", hi: "पानी बंद करना, लाइन ख़ाली करना और बिजली के पॉइंट पानी से दूर रखना"}
+    checklist: [water_off, line_drained, elec_clear]
+    levels:
+      0: "Opens a pipe or fixture under pressure, or works with water near live electrical points."
+      1: "Shuts off the water but does not drain the line, or leaves electrical points exposed to water."
+      2: "Shuts off at the nearest stop valve, drains the line and keeps electrical points away from water."
+      3: "As 2, and tells the occupants before shutting off and checks no one turns the water back on."
+  - id: c3_tools
+    nos: PSC/N0136
+    pc_refs: [PSC/N0136.PC14, PSC/N0136.PC15, PSC/N0136.PC16]
+    weight: 1
+    critical: false
+    text: {en: "Checks tools before use and uses earthed power tools", hi: "उपयोग से पहले औज़ारों की जाँच और अर्थ किए हुए पावर टूल का उपयोग"}
+    checklist: [tools_checked, power_tools_grounded]
+    levels:
+      0: "Uses damaged tools or power tools with damaged leads."
+      1: "Looks at tools only when prompted."
+      2: "Checks hand and power tools before use and sets aside damaged ones."
+      3: "As 2, and replaces or reports damaged tools and keeps leads out of the way and dry."
+  - id: c4_area
+    nos: PSC/N0136
+    pc_refs: [PSC/N0136.PC9, PSC/N0130.PC19]
+    weight: 1
+    critical: false
+    text: {en: "Keeps the work area dry, clear and marked", hi: "कार्य-स्थल को सूखा, साफ़ और चिह्नित रखना"}
+    checklist: [area_safe]
+    levels:
+      0: "Leaves water, tools or debris where people can slip or trip."
+      1: "Clears the area only partly or only when prompted."
+      2: "Keeps the floor dry and clear and marks the area where others could be hurt."
+      3: "As 2, and keeps it that way throughout the job without prompting."

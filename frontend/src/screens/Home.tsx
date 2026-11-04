@@ -6,11 +6,13 @@ import { refreshAssessmentList, useAssessmentList } from "../data";
 import { useI18n, type Key } from "../i18n";
 import { useSession } from "../session";
 import { isConnected, useStatus } from "../status";
+import { useTrades } from "../trades";
 import { fmtTime } from "../util";
 
 /** Staff home: what this role can do, and the list of assessments. */
 export function Home() {
-  const { t, lang } = useI18n();
+  const { t, lang, pick } = useI18n();
+  const { trades } = useTrades();
   const { account } = useSession();
   const role = account?.role ?? null;
   const list = useAssessmentList();
@@ -93,6 +95,7 @@ export function Home() {
                   {r.notSynced && <PendingBadge label={t("common.notSynced")} />}
                 </div>
                 <div className="small muted">
+                  {r.trade && r.trade !== "electrician" && trades?.[r.trade] && `${pick(trades[r.trade].name)} · `}
                   {t(`home.status.${r.status === "signed_off" ? "signed_off" : "in_progress"}` as Key)} ·{" "}
                   {r.confirmed_nqr_id ? t("home.packConfirmed") : t("home.packNotConfirmed")} · {fmtTime(r.created_at, lang)}
                 </div>

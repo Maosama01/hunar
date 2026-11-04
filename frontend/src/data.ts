@@ -13,6 +13,7 @@ import {
   type PackSummary,
   type Rubrics,
   type Signoff,
+  type Task,
 } from "./api";
 import { cacheGet, cachePut, CACHE, db, type OutboxOp, type Snapshot } from "./db";
 import { isConnected } from "./status";
@@ -189,8 +190,15 @@ export interface EvidenceView {
   created_at: string;
 }
 
+/** The rubric tasks of one trade (an assessment scores only its own trade's tasks). */
+export function tradeTasks(rubrics: Rubrics, trade: string): Task[] {
+  return rubrics.tasks.filter((t) => (t.trade ?? "electrician") === trade);
+}
+
 export interface AssessmentView {
   id: string;
+  /** electrician (also every assessment created on this device), plumber or carpenter. */
+  trade: string;
   onServer: boolean;
   createPending: boolean;
   worker_id: string;
@@ -242,6 +250,7 @@ export async function loadAssessmentView(id: string): Promise<AssessmentView | n
   const d = snap?.detail;
   const view: AssessmentView = {
     id,
+    trade: d?.assessment.trade ?? "electrician",
     onServer: !!snap,
     createPending: ops.some((o) => o.kind === "assessment.create"),
     worker_id: d?.assessment.worker_id ?? local?.worker_id ?? "",

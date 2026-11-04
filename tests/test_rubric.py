@@ -1,34 +1,52 @@
 import pytest
 
 from hunar.mapper.mapper import load_packs
+from hunar.paths import DATA
 from hunar.rubric.engine import (
+    PASS_RULES,
     DeclarationMatch,
     Detection,
     aggregate,
     get_task,
     load_tasks,
+    pass_rules,
     prescore_task,
+    tasks_for,
 )
+from hunar.schemas import QualificationPack
+
+TRADES = ["electrician", "plumber", "carpenter"]
 
 
 def all_levels(level, tasks=None):
-    tasks = tasks or load_tasks()
+    tasks = tasks or tasks_for("electrician")
     return {(t.task_id, c.id): level for t in tasks for c in t.criteria}
 
 
 # ---- Rubric files ----------------------------------------------------------------------------
 
 
-def test_between_four_and_six_tasks_with_anchored_levels():
-    tasks = load_tasks()
+@pytest.mark.parametrize("trade", TRADES)
+def test_between_four_and_six_tasks_with_anchored_levels(trade):
+    tasks = tasks_for(trade)
     assert 4 <= len(tasks) <= 6
+    assert len({t.qualification_nqr_id for t in tasks}) == 1, "one qualification file per trade"
     for t in tasks:
-        assert t.title.hi and t.instructions.hi
+        assert t.title.hi and t.instructions.hi and t.review and t.review.hi
         assert any(c.critical for c in t.criteria), f"{t.task_id} has no safety-critical criterion"
+    if trade != "electrician":
+        assert all("DRAFT" in t.review.en for t in tasks), "AI-drafted rubrics must say so"
+
+
+def test_task_ids_are_unique_across_trades():
+    ids = [t.task_id for t in load_tasks()]
+    assert len(ids) == len(set(ids)) and {t.trade for t in load_tasks()} == set(TRADES)
 
 
 def test_every_pc_reference_exists_in_the_official_pack():
     packs = {p.nqr_id: p for p in load_packs()}
+    for nqr in (12957, 9884):  # the plumber and carpenter files are not M1 packs
+        packs[nqr] = QualificationPack.model_validate_json((DATA / "processed" / "qp" / f"{nqr}.json").read_text())
     for t in load_tasks():
         pc_ids = {pc.id for _, pc in packs[t.qualification_nqr_id].criteria()}
         nos_codes = {n.code for n in packs[t.qualification_nqr_id].nos}
@@ -107,7 +125,7 @@ def test_all_competent_recommends_for_assessor_review():
 def test_all_zero():
     p = aggregate(all_levels(0))
     assert p.overall == 0.0 and p.recommendation == "not_yet_competent"
-    assert len(p.critical_failures) == sum(c.critical for t in load_tasks() for c in t.criteria)
+    assert len(p.critical_failures) == sum(c.critical for t in tasks_for("electrician") for c in t.criteria)
 
 
 def test_exactly_at_pass_mark_passes():
@@ -163,3 +181,39 @@ def test_invalid_pass_mark_rejected(pm):
 def test_empty_input_rejected():
     with pytest.raises(ValueError):
         aggregate({})
+
+
+# ---- Pass rules from each qualification file ------------------------------------------------------
+
+
+def test_pass_rules_come_from_the_qualification_files():
+    assert pass_rules(13772) == (0.70, None) and pass_rules(12957) == (0.70, None)
+    assert pass_rules(9884) == (0.70, 0.70)  # the carpenter file also sets 70 % per NOS
+    assert set(PASS_RULES) == {t.qualification_nqr_id for t in load_tasks()}
+
+
+def _carpenter_levels(level, nos=None, nos_level=None):
+    tasks = tasks_for("carpenter")
+    return tasks, {(t.task_id, c.id): (nos_level if c.nos == nos else level) for t in tasks for c in t.criteria}
+
+
+def test_nos_pass_mark_blocks_when_one_nos_is_low():
+    tasks, levels = _carpenter_levels(3)
+    # Drop every criterion of the bench-setup NOS to level 2 (66.7 %): overall stays well above 70 %.
+    tasks, levels = _carpenter_levels(3, nos="FFS/N2206", nos_level=2)
+    p = aggregate(levels, tasks=list(tasks), pass_mark=0.70, nos_pass_mark=0.70)
+    assert p.overall > 0.9 and p.recommendation == "not_yet_competent"
+    assert "FFS/N2206" in p.explanation and p.nos_pass_mark == 0.70
+    assert aggregate(levels, tasks=list(tasks), pass_mark=0.70).recommendation == "recommend_for_certification"
+
+
+def test_nos_pass_mark_met_everywhere_recommends():
+    tasks, levels = _carpenter_levels(3)
+    p = aggregate(levels, tasks=list(tasks), pass_mark=0.70, nos_pass_mark=0.70)
+    assert p.recommendation == "recommend_for_certification" and "every NOS" in p.explanation
+
+
+@pytest.mark.parametrize("bad", [0.0, 1.2, -0.1])
+def test_invalid_nos_pass_mark_rejected(bad):
+    with pytest.raises(ValueError):
+        aggregate(all_levels(2), nos_pass_mark=bad)

@@ -27,6 +27,7 @@ class Worker(SQLModel, table=True):
 class Assessment(SQLModel, table=True):
     id: str = Field(default_factory=_uuid, primary_key=True)
     worker_id: str = Field(foreign_key="worker.id", index=True)
+    trade: str = "electrician"  # selects the rubric tasks and the qualification packs that apply
     declaration_text: str = ""
     mapping_json: str | None = None
     confirmed_nqr_id: int | None = None

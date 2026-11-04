@@ -1,0 +1,59 @@
+task_id: c1_safe_bench
+trade: carpenter
+qualification_nqr_id: 9884
+review: {en: "DRAFT written with AI help from the official Assistant Carpenter qualification file (NQR 9884, validity ended 31 Aug 2026); not yet reviewed by a carpentry assessor or ITI instructor.", hi: "आधिकारिक असिस्टेंट कारपेंटर योग्यता फ़ाइल (NQR 9884, वैधता 31 अगस्त 2026 को समाप्त) से AI की मदद से लिखा गया ड्राफ़्ट; अभी किसी बढ़ईगीरी मूल्यांकनकर्ता या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Prepare the workbench safely: PPE, tools and guards"
+  hi: "वर्कबेंच की सुरक्षित तैयारी: PPE, औज़ार और गार्ड"
+instructions:
+  en: "Before cutting, put on PPE, set up the workbench and clamp the work, check hand and power tools, make sure guards are in place and leads are safe, and keep the floor clear."
+  hi: "काटने से पहले PPE पहनें, वर्कबेंच तैयार करके लकड़ी को क्लैंप करें, हाथ के और पावर टूल की जाँच करें, गार्ड लगे हों और तार सुरक्षित हों, और फ़र्श साफ़ रखें।"
+photos:
+  - {id: p1, en: "Worker at the bench wearing PPE (face is blurred automatically)", hi: "PPE पहने कार्यकर्ता बेंच पर (चेहरा अपने आप धुंधला होगा)"}
+  - {id: p2, en: "Bench with the work clamped and the tools laid out", hi: "क्लैंप की हुई लकड़ी और रखे हुए औज़ारों के साथ बेंच"}
+checklist:
+  - {id: ppe_goggles, en: "Eye protection worn for sawing, drilling, planing or sanding", hi: "आरी, ड्रिल, रंदा या रेगमाल चलाते समय आँखों की सुरक्षा पहनी"}
+  - {id: ppe_mask, en: "Dust mask worn for sanding or cutting board", hi: "रेगमाल या बोर्ड काटते समय डस्ट मास्क पहना"}
+  - {id: ppe_shoes, en: "Safety shoes worn", hi: "सेफ्टी जूते पहने"}
+  - {id: tools_checked, en: "Hand tools sharp with firm handles; power tools and leads checked", hi: "हाथ के औज़ार धारदार और हत्थे मज़बूत; पावर टूल और तार जाँचे"}
+  - {id: guards_on, en: "Guards in place on power tools, and tools switched off when not cutting", hi: "पावर टूल पर गार्ड लगे, और काटते समय के अलावा टूल बंद रखे"}
+  - {id: bench_set, en: "Workbench set up and the work clamped firmly", hi: "वर्कबेंच तैयार और लकड़ी मज़बूती से क्लैंप की"}
+  - {id: floor_clear, en: "Floor clear of off-cuts, leads and trip hazards", hi: "फ़र्श पर कटे टुकड़े, तार या ठोकर लगने वाली चीज़ें नहीं"}
+criteria:
+  - id: c1_ppe
+    nos: FFS/N8201
+    pc_refs: [FFS/N8201.PC4, FFS/N8201.PC6]
+    weight: 2
+    critical: true
+    text: {en: "Uses the PPE the task needs", hi: "काम के अनुसार PPE का उपयोग"}
+    checklist: [ppe_goggles, ppe_mask, ppe_shoes]
+    cv_classes: [goggles]
+    levels:
+      0: "No PPE worn while cutting or sanding."
+      1: "Some PPE worn, but eye protection or the dust mask is missing when needed."
+      2: "Eye protection, dust mask and safety shoes worn whenever the work needs them."
+      3: "All PPE worn correctly and checked before use, without prompting."
+  - id: c2_power_tools
+    nos: FFS/N8201
+    pc_refs: [FFS/N8201.PC9, FFS/N8201.PC15, FFS/N2206.PC20]
+    weight: 2
+    critical: true
+    text: {en: "Checks tools and uses power tools with guards in place", hi: "औज़ारों की जाँच और गार्ड लगे पावर टूल का उपयोग"}
+    checklist: [tools_checked, guards_on]
+    levels:
+      0: "Uses a power tool with the guard removed or a damaged lead, or leaves it running."
+      1: "Guards in place but tools not checked, or tools left switched on between cuts."
+      2: "Checks tools and leads, keeps guards in place and switches tools off when not cutting."
+      3: "As 2, and unplugs tools before changing blades or bits."
+  - id: c3_bench
+    nos: FFS/N2206
+    pc_refs: [FFS/N2206.PC19, FFS/N2206.PC22]
+    weight: 1
+    critical: false
+    text: {en: "Sets up the bench and keeps the floor clear", hi: "बेंच तैयार करना और फ़र्श साफ़ रखना"}
+    checklist: [bench_set, floor_clear]
+    levels:
+      0: "Works on loose pieces with no clamping, on a cluttered floor."
+      1: "Bench set up, but work not clamped or the floor cluttered."
+      2: "Work clamped firmly on a set-up bench, floor clear of off-cuts and leads."
+      3: "As 2, and arranges tools in order of use."

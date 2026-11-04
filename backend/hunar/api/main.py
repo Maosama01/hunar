@@ -66,6 +66,7 @@ class WorkerIn(BaseModel):
 class AssessmentIn(BaseModel):
     id: str | None = None
     worker_id: str
+    trade: str = "electrician"
     declaration_text: str = ""
     actor: str = "facilitator"
 
@@ -132,16 +133,21 @@ def health():
             "mapper": svc.mapper_name(), "principle": "AI suggests, the assessor decides."}
 
 
+def _all_packs() -> list[tuple[str, object]]:
+    """(trade, pack): the M1 packs (electrical) and each other trade's own qualification file."""
+    return [("electrician", p) for p in svc.mapper().packs] + [(t, p) for t, p in svc.trade_packs().items()]
+
+
 @app.get("/api/packs")
 def packs():
     return [{"nqr_id": p.nqr_id, "title": p.title, "nsqf_level": p.nsqf_level, "sector": p.sector, "role": p.role,
-             "nqr_code": p.nqr_code, "n_nos": len(p.nos), "n_pcs": len(p.criteria()), "source": p.source}
-            for p in svc.mapper().packs]
+             "nqr_code": p.nqr_code, "n_nos": len(p.nos), "n_pcs": len(p.criteria()), "source": p.source,
+             "trade": trade} for trade, p in _all_packs()]
 
 
 @app.get("/api/packs/{nqr_id}")
 def pack(nqr_id: int):
-    for p in svc.mapper().packs:
+    for _, p in _all_packs():
         if p.nqr_id == nqr_id:
             return p
     raise HTTPException(404, "pack not found")
@@ -196,6 +202,7 @@ def tts(body: TtsIn, _acc: Account | None = Depends(auth.optional_account)):
 @app.get("/api/rubrics")
 def rubrics():
     return {"levels": engine.LEVEL_NAMES, "pass_mark": engine.DEFAULT_PASS_MARK,
+            "pass_rules": {str(k): {"aggregate": a, "nos": n} for k, (a, n) in engine.PASS_RULES.items()},
             "tasks": [t.model_dump() for t in engine.load_tasks()]}
 
 
@@ -214,7 +221,7 @@ def list_workers(_acc: Account = STAFF, s: Session = DB):
 
 @app.post("/api/assessments")
 def create_assessment(body: AssessmentIn, acc: Account = STAFF, s: Session = DB):
-    return svc.create_assessment(s, body.worker_id, body.declaration_text, auth.actor(acc), body.id)
+    return svc.create_assessment(s, body.worker_id, body.declaration_text, auth.actor(acc), body.id, trade=body.trade)
 
 
 @app.get("/api/assessments")
@@ -223,7 +230,7 @@ def list_assessments(_acc: Account = STAFF, s: Session = DB):
     for a in s.exec(select(Assessment).order_by(Assessment.created_at.desc())):
         w = s.get(Worker, a.worker_id)
         out.append({"id": a.id, "worker_code": w.code if w else None, "status": a.status, "is_sample": a.is_sample,
-                    "confirmed_nqr_id": a.confirmed_nqr_id, "created_at": a.created_at})
+                    "trade": a.trade, "confirmed_nqr_id": a.confirmed_nqr_id, "created_at": a.created_at})
     return out
 
 
@@ -341,7 +348,7 @@ def sync(body: SyncIn, acc: Account = STAFF, s: Session = DB):
                                       p.get("id")).model_dump(mode="json")
             elif op.kind == "assessment.create":
                 a = svc.create_assessment(s, p["worker_id"], p.get("declaration_text", ""),
-                                          p.get("actor", "facilitator"), p.get("id"))
+                                          p.get("actor", "facilitator"), p.get("id"), trade=p.get("trade", "electrician"))
                 r = {"id": a.id}
             elif op.kind == "pack.confirm":
                 a = svc.confirm_pack(s, svc.get_or_404(s, Assessment, p["assessment_id"]), int(p["nqr_id"]),

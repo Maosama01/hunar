@@ -85,7 +85,7 @@ def _signed_off_sample(s: Session, assessor: Account) -> str:
                               who, id="sample-assessment-2", is_sample=True)
     svc.confirm_pack(s, a, 13772, who, "sample data: target pack for the demo")
     k = 0
-    for task in rubric.load_tasks():
+    for task in rubric.tasks_for("electrician"):
         for cr in task.criteria:
             level = 3 if k % 2 else 2
             k += 1

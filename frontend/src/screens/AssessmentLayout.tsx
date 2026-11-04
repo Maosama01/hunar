@@ -5,6 +5,7 @@ import { tryRefreshAssessment, useAssessmentView, type AssessmentView } from "..
 import { useI18n } from "../i18n";
 import { useSettings } from "../settings";
 import { isConnected, useStatus } from "../status";
+import { useTrades } from "../trades";
 
 export interface AssessmentCtx {
   view: AssessmentView;
@@ -21,7 +22,8 @@ export function AssessmentIndex() {
 
 export function AssessmentLayout() {
   const { id = "" } = useParams();
-  const { t } = useI18n();
+  const { t, pick } = useI18n();
+  const { trades } = useTrades();
   const view = useAssessmentView(id);
   const connected = isConnected(useStatus());
 
@@ -50,6 +52,7 @@ export function AssessmentLayout() {
         <div className="row wrap gap-s">
           <h1 className="h-inline">{t("assess.worker", { code: view.worker_code })}</h1>
           <SampleBadge show={view.is_sample} />
+          {trades?.[view.trade] && <span className="badge">{pick(trades[view.trade].name)}</span>}
           {!view.onServer && <PendingBadge label={t("assess.notOnServer")} />}
           {view.signedOff && <span className="badge badge-signed">✔ {t("home.status.signed_off")}</span>}
         </div>

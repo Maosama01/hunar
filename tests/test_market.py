@@ -212,17 +212,84 @@ def test_write_endpoints_return_full_rows(client):
     assert started["request"]["status"] == "started"
 
 
-def test_practical_assessment_only_for_trades_with_practical_tasks(client):
+def test_practical_assessment_needs_rubric_tasks_for_the_trade(client, monkeypatch):
     listed = client.get("/api/trades").json()
-    assert listed["electrician"]["practical_assessment"] is True
-    assert listed["plumber"]["practical_assessment"] is False and listed["carpenter"]["practical_assessment"] is False
+    assert all(listed[k]["practical_assessment"] for k in ("electrician", "plumber", "carpenter"))
     _, pt = worker_with_profile(client, phone="9876500011", trade="plumber")
+    from hunar.rubric import engine
+
+    real = engine.tasks_for
+    monkeypatch.setattr(engine, "tasks_for", lambda trade: () if trade == "plumber" else real(trade))
     r = client.post("/api/assessment-requests", json={"declaration_text": "Das saal se plumbing"}, headers=bearer(pt))
-    assert r.status_code == 409 and "electricians only" in r.json()["detail"]
-    with Session(db.engine()) as s:  # a plumber's request made before the rule must not be started either
+    assert r.status_code == 409 and "not available for this trade" in r.json()["detail"]
+    with Session(db.engine()) as s:  # a request made while the trade still had tasks is not started either
         from hunar.market.models import AssessmentRequest
 
         acc_id = client.get("/api/auth/me", headers=bearer(pt)).json()["id"]
         s.add(AssessmentRequest(id="old-plumber-request", account_id=acc_id, trade="plumber", pincode="302017"))
         s.commit()
     assert client.post("/api/assessment-requests/old-plumber-request/start").status_code == 409
+
+
+def test_plumber_assessment_uses_plumber_tasks_and_qualification(client):
+    wid, pt = worker_with_profile(client, phone="9876500012", trade="plumber")
+    client.post("/api/assessment-requests", json={"declaration_text": "Main 10 saal se nal aur pipe ka kaam karta hoon"},
+                headers=bearer(pt))
+    rid = client.get("/api/assessment-requests").json()[0]["id"]
+    aid = client.post(f"/api/assessment-requests/{rid}/start").json()["assessment_id"]
+    detail = client.get(f"/api/assessments/{aid}").json()
+    assert detail["assessment"]["trade"] == "plumber" and detail["mapping"] is None  # M1 packs are electrical
+    assert client.post(f"/api/assessments/{aid}/confirm-pack", json={"nqr_id": 13772, "actor": "A"}).status_code == 400
+    assert client.post(f"/api/assessments/{aid}/confirm-pack", json={"nqr_id": 12957, "actor": "A"}).status_code == 200
+    assert client.put(f"/api/assessments/{aid}/checklist",
+                      json={"task_id": "t1_safe_isolation", "ticks": {"main_off": True}, "actor": "A"}).status_code == 422
+    assert client.put(f"/api/assessments/{aid}/checklist",
+                      json={"task_id": "p1_safe_preparation", "ticks": {"water_off": True}, "actor": "A"}).status_code == 200
+    pre = client.get(f"/api/assessments/{aid}/prescores").json()
+    assert pre and {p["task_id"][:2] for p in pre} == {"p1", "p2", "p3", "p4"}
+    tasks = [t for t in client.get("/api/rubrics").json()["tasks"] if t["trade"] == "plumber"]
+    for t in tasks:
+        for c in t["criteria"]:
+            r = client.post(f"/api/assessments/{aid}/decisions", json={
+                "task_id": t["task_id"], "criterion_id": c["id"], "action": "override", "level": 3,
+                "reason": "observed on the practice frame", "assessor": "A"})
+            assert r.status_code == 200, r.text
+    prof = client.get(f"/api/assessments/{aid}/profile").json()
+    assert prof["recommendation"] == "recommend_for_certification" and prof["pass_mark"] == 0.7
+    assert {n["nos"] for n in prof["nos"]} <= {"PSC/N0130", "PSC/N0131", "PSC/N0132", "PSC/N0133", "PSC/N0136",
+                                                "PSC/N0142"}
+    r = client.post(f"/api/assessments/{aid}/signoff", json={"agrees": True, "comment": "", "assessor": "A"})
+    assert r.status_code == 200, r.text
+    badge = client.get(f"/api/market/workers/{wid}").json()["badges"][0]
+    assert badge["kind"] == "skill_assessed" and badge["qualification"]["title"] == "Plumber - General"
+    packs = {p["nqr_id"]: p["trade"] for p in client.get("/api/packs").json()}
+    assert packs[12957] == "plumber" and packs[9884] == "carpenter" and packs[13772] == "electrician"
+
+
+def test_carpenter_profile_uses_the_nos_wise_pass_mark(client):
+    _, ct = worker_with_profile(client, phone="9876500013", trade="carpenter")
+    client.post("/api/assessment-requests", json={}, headers=bearer(ct))
+    rid = client.get("/api/assessment-requests").json()[0]["id"]
+    aid = client.post(f"/api/assessment-requests/{rid}/start").json()["assessment_id"]
+    prof = client.get(f"/api/assessments/{aid}/profile").json()
+    assert prof["nos_pass_mark"] == 0.7 and prof["recommendation"] == "incomplete"
+
+
+def test_init_db_adds_the_trade_column_to_an_older_database(tmp_path, monkeypatch):
+    from sqlalchemy import create_engine, text
+
+    url = f"sqlite:///{tmp_path / 'old.db'}"
+    with create_engine(url).begin() as c:  # the assessment table as it was before trades
+        c.execute(text("CREATE TABLE assessment (id VARCHAR PRIMARY KEY, worker_id VARCHAR, declaration_text VARCHAR, "
+                       "mapping_json VARCHAR, confirmed_nqr_id INTEGER, status VARCHAR, is_sample BOOLEAN, "
+                       "signoff_json VARCHAR, created_at DATETIME)"))
+        c.execute(text("INSERT INTO assessment (id, worker_id, status, is_sample) VALUES ('old', 'w', 'in_progress', 0)"))
+    monkeypatch.setenv("HUNAR_DB", url)
+    db.reset_engine()
+    try:
+        db.init_db()
+        db.init_db()  # running it again changes nothing
+        with Session(db.engine()) as s:
+            assert s.exec(text("SELECT trade FROM assessment WHERE id = 'old'")).one()[0] == "electrician"
+    finally:
+        db.reset_engine()

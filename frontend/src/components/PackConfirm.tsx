@@ -6,14 +6,17 @@ import { useI18n } from "../i18n";
 import { actorName, useSettings } from "../settings";
 import { Notice, PendingBadge } from "./common";
 
-/** Step 1 of scoring: the assessor confirms the qualification pack. The top suggestion is the
- * default; any other choice (or a choice before the mapping exists) needs a reason. */
+/** Step 1 of scoring: the assessor confirms the qualification pack. For electricians the top M1
+ * suggestion is the default and any other choice (or a choice before the mapping exists) needs a
+ * reason. Other trades have one qualification file, which is the default. */
 export function PackConfirm({ view }: { view: AssessmentView }) {
   const { t } = useI18n();
   const settings = useSettings();
   const packs = usePacks();
-  const ranking = view.mapping?.ranking ?? [];
-  const top = ranking[0]?.nqr_id ?? null;
+  const electrician = view.trade === "electrician";
+  const ranking = electrician ? (view.mapping?.ranking ?? []) : [];
+  const tradePacks = (packs ?? []).filter((p) => (p.trade ?? "electrician") === view.trade);
+  const top = electrician ? (ranking[0]?.nqr_id ?? null) : (tradePacks[0]?.nqr_id ?? null);
   const [editing, setEditing] = useState(false);
   const [choice, setChoice] = useState<number | null>(view.confirmed_nqr_id ?? top);
   const [reason, setReason] = useState("");
@@ -42,8 +45,8 @@ export function PackConfirm({ view }: { view: AssessmentView }) {
   }
 
   const sel = choice ?? top; // the mapping may arrive after the first render
-  const needsReason = top === null ? !!view.declaration_text : sel !== top;
-  const others = (packs ?? []).filter((p) => !ranking.some((r) => r.nqr_id === p.nqr_id));
+  const needsReason = top === null ? electrician && !!view.declaration_text : sel !== top;
+  const others = electrician ? tradePacks.filter((p) => !ranking.some((r) => r.nqr_id === p.nqr_id)) : [];
   const canSubmit = sel !== null && (!needsReason || reason.trim().length > 0) && !view.signedOff;
 
   const submit = async () => {
@@ -71,7 +74,7 @@ export function PackConfirm({ view }: { view: AssessmentView }) {
   return (
     <section className="card stack-s">
       <h3>{t("score.packStep")}</h3>
-      <p className="hint">{t("score.packHint")}</p>
+      <p className="hint">{t(electrician ? "score.packHint" : "score.packHintTrade")}</p>
       <fieldset className="stack-s">
         <legend className="sr-only">{t("score.packStep")}</legend>
         {ranking.slice(0, 3).map((r, i) =>
@@ -81,6 +84,7 @@ export function PackConfirm({ view }: { view: AssessmentView }) {
             `${i === 0 ? `${t("score.topSuggestion")} · ` : ""}${t("score.suggestionRank", { n: r.rank, score: r.score.toFixed(2) })}`,
           ),
         )}
+        {!electrician && tradePacks.map((p) => option(p.nqr_id, p.title, t("score.tradePack")))}
         {others.length > 0 && <p className="small muted">{t("score.otherPacks")}</p>}
         {others.map((p) => option(p.nqr_id, p.title, p.nsqf_level !== null ? t("mapping.nsqf", { level: p.nsqf_level }) : undefined))}
       </fieldset>

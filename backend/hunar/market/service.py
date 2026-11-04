@@ -61,9 +61,12 @@ def badges(s: Session, profile: WorkerProfile) -> list[dict]:
             so = json.loads(a.signoff_json or "{}")
             if so.get("assessor_outcome") == "recommend_for_certification" and str(so.get("assessor", "")).startswith(
                     "assessor:"):
+                note = "Practical assessment signed off by a Hunar assessor. Not a government certificate."
+                lapsed = next((v.get("qualification_note") for v in trades.TRADES.values()
+                               if v["qualification_nqr_id"] == a.confirmed_nqr_id), None)
                 out.append({"kind": "skill_assessed", "qualification": qualification_title(a.confirmed_nqr_id),
                             "assessment_id": a.id, "date": a.created_at.date().isoformat(),
-                            "note": "Practical assessment signed off by a Hunar assessor. Not a government certificate."})
+                            "note": f"{note} {lapsed}" if lapsed else note})
     if profile.permit_status == "document_checked":
         out.append({"kind": "permit_checked", "state": profile.permit_state,
                     "date": profile.permit_checked_at.date().isoformat() if profile.permit_checked_at else None,

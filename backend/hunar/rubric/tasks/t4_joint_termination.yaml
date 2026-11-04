@@ -1,5 +1,7 @@
 task_id: t4_joint_termination
+trade: electrician
 qualification_nqr_id: 13772
+review: {en: "Drafted by the team with AI help from the official qualification file; review by a certified electrical assessor pending.", hi: "टीम ने AI की मदद से आधिकारिक योग्यता फ़ाइल से तैयार किया; प्रमाणित इलेक्ट्रिकल मूल्यांकनकर्ता की समीक्षा बाकी है।"}
 title:
   en: "Make a straight-through joint and insulate it"
   hi: "स्ट्रेट-थ्रू जोड़ बनाना और इंसुलेट करना"

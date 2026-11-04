@@ -12,9 +12,11 @@ Rules (also shown to assessors in the UI):
   photos is flagged as a conflict for the assessor to resolve.
 * The self-declaration (M1) is reported as context only. Saying you can do something is not
   evidence that you did it, so it never raises a level.
-* Aggregation: criterion score = level / 3; NOS and overall scores are weighted means. The default
-  pass mark is the official 70 % aggregate (QF QG-03-CO-03951-2025-V2-CSDCI, Section 2). Any
-  critical (safety) criterion below level 2 blocks a positive recommendation.
+* Aggregation: criterion score = level / 3; NOS and overall scores are weighted means. The pass mark
+  comes from the qualification file the tasks belong to (PASS_RULES): 70 % aggregate for all three
+  trades, and for the carpenter file also 70 % in each NOS. Any critical (safety) criterion below
+  level 2 blocks a positive recommendation.
+* Each trade has its own tasks (Task.trade). An assessment uses only the tasks of its trade.
 """
 from __future__ import annotations
 
@@ -35,6 +37,17 @@ LEVEL_NAMES = {
 }
 DEFAULT_PASS_MARK = 0.70
 COMPETENT = 2
+# "Assessment - Minimum Qualifying Percentage" in Section 2 of each qualification file:
+# (aggregate at qualification level, NOS-wise or None when the file leaves it blank).
+PASS_RULES: dict[int, tuple[float, float | None]] = {
+    13772: (0.70, None),  # Assistant Electrician, QG-03-CO-03951-2025-V2-CSDCI
+    12957: (0.70, None),  # Plumber - General, QG-04-PL-03441-2024-V2-WMPS
+    9884: (0.70, 0.70),  # Assistant Carpenter, QG-04-WC-00828-2023-V2-FFSC
+}
+
+
+def pass_rules(nqr_id: int) -> tuple[float, float | None]:
+    return PASS_RULES.get(nqr_id, (DEFAULT_PASS_MARK, None))
 
 
 class Text(BaseModel):
@@ -83,7 +96,9 @@ class Criterion(BaseModel):
 
 class Task(BaseModel):
     task_id: str
+    trade: str = "electrician"
     qualification_nqr_id: int
+    review: Text | None = Field(default=None, description="Who wrote the rubric and what review is pending")
     title: Text
     instructions: Text
     photos: list[PhotoSpec]
@@ -102,6 +117,10 @@ class Task(BaseModel):
 def load_tasks() -> tuple[Task, ...]:
     return tuple(Task.model_validate(yaml.safe_load(p.read_text(encoding="utf-8")))
                  for p in sorted(RUBRICS.glob("*.yaml")))
+
+
+def tasks_for(trade: str) -> tuple[Task, ...]:
+    return tuple(t for t in load_tasks() if t.trade == trade)
 
 
 def get_task(task_id: str) -> Task:
@@ -228,6 +247,7 @@ class Gap(BaseModel):
 class Profile(BaseModel):
     overall: float | None
     pass_mark: float
+    nos_pass_mark: float | None = None
     nos: list[NOSResult]
     gaps: list[Gap]
     critical_failures: list[Gap]
@@ -238,14 +258,17 @@ class Profile(BaseModel):
 
 
 def aggregate(final_levels: dict[tuple[str, str], int | None], tasks: list[Task] | None = None,
-              pass_mark: float = DEFAULT_PASS_MARK) -> Profile:
+              pass_mark: float = DEFAULT_PASS_MARK, nos_pass_mark: float | None = None) -> Profile:
     """Aggregate final (assessor-confirmed) levels into an NSQF competency profile.
 
     `final_levels` maps (task_id, criterion_id) to 0..3, or None when not scored yet.
     Only tasks that appear in `final_levels` are included unless `tasks` is given.
+    `nos_pass_mark`, when the qualification file sets one, must be met by every NOS the tasks cover.
     """
     if not 0.0 < pass_mark <= 1.0:
         raise ValueError("pass_mark must be in (0, 1]")
+    if nos_pass_mark is not None and not 0.0 < nos_pass_mark <= 1.0:
+        raise ValueError("nos_pass_mark must be in (0, 1]")
     if tasks is None:
         used = {t for t, _ in final_levels}
         tasks = [t for t in load_tasks() if t.task_id in used]
@@ -288,12 +311,19 @@ def aggregate(final_levels: dict[tuple[str, str], int | None], tasks: list[Task]
         why = ("A critical safety criterion is below 'competent': "
                + "; ".join(f"{g.task_id}.{g.criterion_id}" for g in critical)
                + ". A positive recommendation is blocked whatever the overall score.")
-    elif overall is not None and overall + 1e-9 >= pass_mark:
-        rec = "recommend_for_certification"
-        why = f"Overall {overall:.0%} meets the pass mark of {pass_mark:.0%} and all critical criteria are competent."
-    else:
+    elif overall is None or overall + 1e-9 < pass_mark:
         rec = "not_yet_competent"
         why = f"Overall {overall:.0%} is below the pass mark of {pass_mark:.0%}."
-    return Profile(overall=overall, pass_mark=pass_mark, nos=nos, gaps=gaps, critical_failures=critical,
+    elif nos_pass_mark is not None and (low := [n for n in nos if n.score + 1e-9 < nos_pass_mark]):
+        rec = "not_yet_competent"
+        why = (f"Overall {overall:.0%} meets the pass mark, but the qualification file also needs "
+               f"{nos_pass_mark:.0%} in each NOS: " + "; ".join(f"{n.nos} {n.score:.0%}" for n in low) + ".")
+    else:
+        rec = "recommend_for_certification"
+        why = f"Overall {overall:.0%} meets the pass mark of {pass_mark:.0%}"
+        why += f" and every NOS meets {nos_pass_mark:.0%}" if nos_pass_mark is not None else ""
+        why += ", and all critical criteria are competent."
+    return Profile(overall=overall, pass_mark=pass_mark, nos_pass_mark=nos_pass_mark, nos=nos, gaps=gaps,
+                   critical_failures=critical,
                    unscored=unscored, recommendation=rec,
                    explanation=why + " This is a recommendation for the assessor, not a certificate.")

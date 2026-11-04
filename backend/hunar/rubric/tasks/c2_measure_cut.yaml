@@ -1,0 +1,70 @@
+task_id: c2_measure_cut
+trade: carpenter
+qualification_nqr_id: 9884
+review: {en: "DRAFT written with AI help from the official Assistant Carpenter qualification file (NQR 9884, validity ended 31 Aug 2026); not yet reviewed by a carpentry assessor or ITI instructor.", hi: "आधिकारिक असिस्टेंट कारपेंटर योग्यता फ़ाइल (NQR 9884, वैधता 31 अगस्त 2026 को समाप्त) से AI की मदद से लिखा गया ड्राफ़्ट; अभी किसी बढ़ईगीरी मूल्यांकनकर्ता या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Measure, mark and cut timber to size from a drawing"
+  hi: "ड्रॉइंग से लकड़ी नापना, निशान लगाना और साइज़ में काटना"
+instructions:
+  en: "From a simple drawing, list the parts, choose the timber, measure and mark the parts with a try square and marking gauge, cut on the waste side of the line, and plane the edges straight and square. The assessor sets the tolerance."
+  hi: "एक सरल ड्रॉइंग से पुर्ज़ों की सूची बनाएँ, लकड़ी चुनें, ट्राई स्क्वायर और मार्किंग गेज से नापकर निशान लगाएँ, लाइन के बेकार वाले हिस्से की तरफ़ काटें, और किनारों को रंदे से सीधा और समकोण बनाएँ। सहनशीलता (tolerance) मूल्यांकनकर्ता तय करेंगे।"
+photos:
+  - {id: p1, en: "Marked timber before cutting", hi: "काटने से पहले निशान लगी लकड़ी"}
+  - {id: p2, en: "Cut and planed parts next to the drawing", hi: "ड्रॉइंग के पास कटे और रंदा किए हुए पुर्ज़े"}
+checklist:
+  - {id: drawing_read, en: "Drawing read and the parts and sizes listed", hi: "ड्रॉइंग पढ़ी और पुर्ज़ों व साइज़ की सूची बनाई"}
+  - {id: timber_selected, en: "Timber chosen free of large knots, splits or warp", hi: "बड़ी गाँठ, दरार या टेढ़ेपन से मुक्त लकड़ी चुनी"}
+  - {id: marked_square, en: "Marked with try square and gauge; waste side shown", hi: "ट्राई स्क्वायर और गेज से निशान लगाया; बेकार वाला हिस्सा दिखाया"}
+  - {id: sizes_checked, en: "Sizes checked against the drawing before cutting", hi: "काटने से पहले साइज़ ड्रॉइंग से मिलाए"}
+  - {id: hands_clear, en: "Work clamped and hands kept clear of the cutting line", hi: "लकड़ी क्लैंप की और हाथ काटने की लाइन से दूर रखे"}
+  - {id: cut_to_line, en: "Cut on the waste side of the line, square and to size", hi: "लाइन के बेकार वाले हिस्से की तरफ़ सीधा और साइज़ में काटा"}
+  - {id: planed_square, en: "Edges planed straight and square", hi: "किनारे रंदे से सीधे और समकोण किए"}
+criteria:
+  - id: c1_drawing
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC2, FFS/N2207.PC3, FFS/N2207.PC4]
+    weight: 1
+    critical: false
+    text: {en: "Reads the drawing and chooses suitable timber", hi: "ड्रॉइंग पढ़ना और सही लकड़ी चुनना"}
+    checklist: [drawing_read, timber_selected]
+    levels:
+      0: "Starts cutting without reading the drawing, or uses timber with large defects."
+      1: "Reads the drawing but misses parts or sizes, or overlooks defects in the timber."
+      2: "Lists every part and size from the drawing and chooses sound timber."
+      3: "As 2, and plans the cutting to waste the least timber."
+  - id: c2_mark
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC7, FFS/N2207.PC9]
+    weight: 2
+    critical: false
+    text: {en: "Measures and marks accurately", hi: "सटीक नापना और निशान लगाना"}
+    checklist: [marked_square, sizes_checked]
+    levels:
+      0: "Marks freehand or with the wrong sizes."
+      1: "Marks with a square, but some sizes are off or the waste side is not shown."
+      2: "Marks every part square and to size, shows the waste side and checks against the drawing."
+      3: "As 2, and marks from one face and edge so all parts match."
+  - id: c3_cut_safely
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC10]
+    weight: 2
+    critical: true
+    text: {en: "Cuts to the line safely, with the work clamped and hands clear", hi: "लकड़ी क्लैंप करके और हाथ दूर रखकर लाइन पर सुरक्षित काटना"}
+    checklist: [hands_clear, cut_to_line]
+    levels:
+      0: "Holds the work by hand in the line of the cut, or cuts with no regard to the line."
+      1: "Cuts safely but off the line, or to size with hands near the blade."
+      2: "Work clamped, hands clear, and cuts on the waste side, square and within the tolerance."
+      3: "As 2, cleanly enough that little planing is needed."
+  - id: c4_plane
+    nos: FFS/N2207
+    pc_refs: [FFS/N2207.PC11, FFS/N2207.PC13]
+    weight: 1
+    critical: false
+    text: {en: "Planes and checks the parts", hi: "पुर्ज़ों पर रंदा करना और जाँचना"}
+    checklist: [planed_square]
+    levels:
+      0: "Leaves edges rough or out of square."
+      1: "Planes, but edges are not straight or not square."
+      2: "Edges straight and square, parts checked for damage."
+      3: "As 2, and planes with the grain to leave a clean surface."

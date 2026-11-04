@@ -5,7 +5,7 @@ import { errorText, type Criterion, type PreScore, type Rubrics, type Task } fro
 import { Bar, CriticalBadge, Loading, Notice, PendingBadge, PresenceNote } from "../components/common";
 import { Icon } from "../components/Icon";
 import { PackConfirm } from "../components/PackConfirm";
-import { decisionKey, tryRefreshAssessment, useRubrics, type AssessmentView, type DecisionView } from "../data";
+import { type AssessmentView, decisionKey, type DecisionView, tradeTasks, tryRefreshAssessment, useRubrics } from "../data";
 import { useI18n, type Key } from "../i18n";
 import { actorName, useSettings } from "../settings";
 import { isConnected, useStatus } from "../status";
@@ -246,7 +246,7 @@ export function Scoring() {
 
   const prescores = snap?.prescores;
   const preByKey = new Map((prescores ?? []).map((p) => [decisionKey(p.task_id, p.criterion_id), p]));
-  const total = rubrics.tasks.reduce((n, task) => n + task.criteria.length, 0);
+  const total = tradeTasks(rubrics, view.trade).reduce((n, task) => n + task.criteria.length, 0);
   const decided = Object.keys(view.decisions).length;
   const stale = view.prescoreAffectingPending > 0;
   const acceptBlocked = stale || !prescores;
@@ -299,7 +299,7 @@ function TaskStepper({
   acceptBlocked: boolean;
 }) {
   const { t, pick } = useI18n();
-  const tasks = rubrics.tasks;
+  const tasks = useMemo(() => tradeTasks(rubrics, view.trade), [rubrics, view.trade]);
   const counts = useMemo(
     () =>
       tasks.map((task) => ({
@@ -348,6 +348,7 @@ function TaskStepper({
         <div className="grow">
           <span className="task-kicker">{t("score.taskOf", { n: i + 1, t: tasks.length })}</span>
           <h3>{pick(task.title)}</h3>
+          {task.review && <p className="small muted">{pick(task.review)}</p>}
         </div>
         <span className={`badge ${counts[i].done === counts[i].total ? "badge-signed" : ""}`}>
           {t("score.taskDecided", { d: counts[i].done, t: counts[i].total })}

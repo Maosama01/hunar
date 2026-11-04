@@ -2,7 +2,7 @@ import { setTick } from "../actions";
 import type { Task } from "../api";
 import { Loading, PresenceNote } from "../components/common";
 import { PhotoSlot } from "../components/PhotoSlot";
-import { useRubrics, type AssessmentView } from "../data";
+import { tradeTasks, useRubrics, type AssessmentView } from "../data";
 import { useI18n } from "../i18n";
 import { actorName, useSettings } from "../settings";
 import { useAssessmentCtx } from "./AssessmentLayout";
@@ -28,6 +28,7 @@ function TaskCard({ task, view, open }: { task: Task; view: AssessmentView; open
         </div>
       </summary>
       <p>{pick(task.instructions)}</p>
+      {task.review && <p className="fine-print">{pick(task.review)}</p>}
 
       <h3>{t("tasks.checklist")}</h3>
       <ul className="plain checklist">
@@ -96,7 +97,7 @@ export function Tasks() {
       <PresenceNote />
       {rubrics === undefined && <Loading />}
       {rubrics === null && <p className="muted">{t("common.needsConnection")}</p>}
-      {rubrics?.tasks.map((task, i) => <TaskCard key={task.task_id} task={task} view={view} open={i === 0} />)}
+      {rubrics && tradeTasks(rubrics, view.trade).map((task, i) => <TaskCard key={task.task_id} task={task} view={view} open={i === 0} />)}
     </div>
   );
 }

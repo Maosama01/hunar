@@ -1,0 +1,83 @@
+task_id: p2_supply_pipe
+trade: plumber
+qualification_nqr_id: 12957
+review: {en: "DRAFT written with AI help from the official Plumber - General qualification file (NQR 12957); not yet reviewed by a plumbing assessor or ITI instructor.", hi: "आधिकारिक प्लंबर - जनरल योग्यता फ़ाइल (NQR 12957) से AI की मदद से लिखा गया ड्राफ़्ट; अभी किसी प्लंबिंग मूल्यांकनकर्ता या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Measure, cut and join a water supply pipe, then check it for leaks"
+  hi: "पानी की सप्लाई पाइप नापना, काटना और जोड़ना, फिर लीकेज की जाँच"
+instructions:
+  en: "On the practice frame, measure and mark a pipe run with one bend, cut the pipe square, prepare the ends, join it with fittings by the method that suits the pipe (threaded GI, or solvent-cemented CPVC/uPVC), clamp it, then fill it and check every joint."
+  hi: "अभ्यास फ़्रेम पर एक मोड़ वाली पाइप लाइन नापकर निशान लगाएँ, पाइप सीधा काटें, सिरे तैयार करें, पाइप के हिसाब से सही तरीक़े से फ़िटिंग लगाकर जोड़ें (GI में चूड़ी, या CPVC/uPVC में सॉल्वेंट सीमेंट), क्लैंप लगाएँ, फिर पानी भरकर हर जोड़ की जाँच करें।"
+photos:
+  - {id: p1, en: "Cut and prepared pipe ends before joining", hi: "जोड़ने से पहले कटे और तैयार पाइप के सिरे"}
+  - {id: p2, en: "Finished pipe run with clamps, filled with water", hi: "क्लैंप के साथ पूरी पाइप लाइन, पानी भरी हुई"}
+checklist:
+  - {id: measured, en: "Run measured and marked, allowing for the fittings", hi: "फ़िटिंग का हिसाब रखते हुए लाइन नापी और निशान लगाया"}
+  - {id: fittings_chosen, en: "Fittings chosen for the pipe type and size", hi: "पाइप के प्रकार और साइज़ के हिसाब से फ़िटिंग चुनी"}
+  - {id: cut_square, en: "Pipe cut square to the marked length", hi: "पाइप निशान वाली लंबाई पर सीधा काटा"}
+  - {id: ends_prepared, en: "Ends deburred or reamed; threads cut cleanly on GI", hi: "सिरों की बर (burr) हटाई या रीम किया; GI पर चूड़ी साफ़ काटी"}
+  - {id: joint_method, en: "Joint made the right way: PTFE tape or sealant on threads, or solvent cement with its setting time", hi: "जोड़ सही तरीक़े से बनाया: चूड़ी पर PTFE टेप या सीलेंट, या सॉल्वेंट सीमेंट और उसके सूखने का समय"}
+  - {id: clamped_aligned, en: "Pipe clamped at regular spacing, straight and level", hi: "पाइप बराबर दूरी पर क्लैंप किया, सीधा और समतल"}
+  - {id: no_leaks, en: "No leak at any joint after the water was turned on", hi: "पानी चालू करने के बाद किसी जोड़ पर लीकेज नहीं"}
+  - {id: cleaned_up, en: "Off-cuts cleared and tools cleaned and put away", hi: "कटे टुकड़े हटाए, औज़ार साफ़ करके रखे"}
+criteria:
+  - id: c1_measure
+    nos: PSC/N0131
+    pc_refs: [PSC/N0131.PC4, PSC/N0131.PC5]
+    weight: 1
+    critical: false
+    text: {en: "Measures the run and chooses suitable fittings", hi: "लाइन नापना और सही फ़िटिंग चुनना"}
+    checklist: [measured, fittings_chosen]
+    levels:
+      0: "Cuts without measuring, or uses fittings that do not suit the pipe."
+      1: "Measures, but forgets the allowance for fittings or picks a wrong fitting."
+      2: "Measures and marks the run with the allowance for fittings and picks fittings that suit the pipe."
+      3: "As 2, and plans the run to use the fewest joints and least material."
+  - id: c2_cut_prepare
+    nos: PSC/N0131
+    pc_refs: [PSC/N0131.PC6, PSC/N0131.PC7, PSC/N0131.PC9]
+    weight: 2
+    critical: false
+    text: {en: "Cuts the pipe square and prepares the ends", hi: "पाइप सीधा काटना और सिरे तैयार करना"}
+    checklist: [cut_square, ends_prepared]
+    levels:
+      0: "Cut is badly out of square or the wrong length; ends left rough."
+      1: "Cut is to length but not square, or burrs and rough threads are left."
+      2: "Cut is square and to length; ends deburred or reamed and threads clean."
+      3: "As 2, cleanly and quickly, with the right tool for each pipe type."
+  - id: c3_join
+    nos: PSC/N0131
+    pc_refs: [PSC/N0131.PC10, PSC/N0131.PC11, PSC/N0131.PC16]
+    weight: 2
+    critical: false
+    text: {en: "Joins and fixes the pipe by the right method", hi: "सही तरीक़े से पाइप जोड़ना और लगाना"}
+    checklist: [joint_method, clamped_aligned]
+    levels:
+      0: "Joint made with the wrong method or material, or pipe left unsupported."
+      1: "Joint method right but carelessly applied, or pipe clamped unevenly or out of line."
+      2: "Joints made by the right method for the pipe; pipe clamped at regular spacing, straight and level."
+      3: "As 2, neat enough to hand over without rework, and explains the method used."
+  - id: c4_leak_check
+    nos: PSC/N0131
+    pc_refs: [PSC/N0131.PC18, PSC/N0142.PC19]
+    weight: 2
+    critical: true
+    text: {en: "Checks the run under water pressure and leaves no leaks", hi: "पानी के दबाव में लाइन की जाँच और कोई लीकेज न छोड़ना"}
+    checklist: [no_leaks]
+    levels:
+      0: "Does not test, or leaves a leaking joint."
+      1: "Tests, but leaves a slow drip or does not check every joint."
+      2: "Fills the run and checks every joint; none leaks."
+      3: "As 2, and re-checks the joints after some minutes under pressure."
+  - id: c5_clean_up
+    nos: PSC/N0131
+    pc_refs: [PSC/N0131.PC20, PSC/N0131.PC21]
+    weight: 1
+    critical: false
+    text: {en: "Clears waste and looks after tools", hi: "कचरा हटाना और औज़ारों की देखभाल"}
+    checklist: [cleaned_up]
+    levels:
+      0: "Leaves off-cuts, solvent or tools lying about."
+      1: "Clears up only partly or when prompted."
+      2: "Clears off-cuts and waste, cleans the tools and puts them away."
+      3: "As 2, and separates reusable pipe pieces from waste."

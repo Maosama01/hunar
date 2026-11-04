@@ -1,0 +1,69 @@
+task_id: p3_drain_trap
+trade: plumber
+qualification_nqr_id: 12957
+review: {en: "DRAFT written with AI help from the official Plumber - General qualification file (NQR 12957); not yet reviewed by a plumbing assessor or ITI instructor.", hi: "आधिकारिक प्लंबर - जनरल योग्यता फ़ाइल (NQR 12957) से AI की मदद से लिखा गया ड्राफ़्ट; अभी किसी प्लंबिंग मूल्यांकनकर्ता या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Fit a trap and waste pipe with the right fall, then test the drain"
+  hi: "सही ढलान के साथ ट्रैप और वेस्ट पाइप लगाना, फिर नाली की जाँच"
+instructions:
+  en: "Connect a wash basin or sink waste to the drain through a trap: choose the trap and pipe, lay the pipe with a steady fall towards the drain, leave the cleanout accessible, then run water and check the trap keeps its water seal and nothing leaks."
+  hi: "वॉश बेसिन या सिंक के वेस्ट को ट्रैप के ज़रिए नाली से जोड़ें: ट्रैप और पाइप चुनें, पाइप को नाली की ओर लगातार ढलान से लगाएँ, क्लीनआउट खुला रखें, फिर पानी चलाकर जाँचें कि ट्रैप में पानी की सील बनी रहे और कहीं लीकेज न हो।"
+photos:
+  - {id: p1, en: "Trap and waste pipe fitted, showing the fall", hi: "लगा हुआ ट्रैप और वेस्ट पाइप, ढलान दिखाते हुए"}
+  - {id: p2, en: "Water running through the finished drain", hi: "पूरी नाली में बहता पानी"}
+checklist:
+  - {id: trap_selected, en: "Trap, pipe and fittings chosen for the fixture and drain", hi: "फ़िक्सचर और नाली के हिसाब से ट्रैप, पाइप और फ़िटिंग चुनी"}
+  - {id: fall_set, en: "Waste pipe laid with a steady fall towards the drain, no back-fall or sag", hi: "वेस्ट पाइप नाली की ओर लगातार ढलान से लगाया, उल्टा ढलान या झोल नहीं"}
+  - {id: trap_seal, en: "Trap still holds its water seal after the test (not siphoned dry)", hi: "जाँच के बाद भी ट्रैप में पानी की सील बनी रही (सूखा नहीं)"}
+  - {id: joints_tight, en: "No leak at any joint while water runs", hi: "पानी बहते समय किसी जोड़ पर लीकेज नहीं"}
+  - {id: flow_ok, en: "Water drains away freely", hi: "पानी आसानी से निकल जाता है"}
+  - {id: cleanout_access, en: "Cleanout or inspection opening left accessible and closed", hi: "क्लीनआउट या जाँच वाला मुँह पहुँच में और बंद रखा"}
+criteria:
+  - id: c1_select
+    nos: PSC/N0132
+    pc_refs: [PSC/N0132.PC1, PSC/N0132.PC5]
+    weight: 1
+    critical: false
+    text: {en: "Chooses the trap, pipe and fittings", hi: "ट्रैप, पाइप और फ़िटिंग चुनना"}
+    checklist: [trap_selected]
+    levels:
+      0: "Fits a fixture to the drain without a trap, or with parts that do not fit."
+      1: "Chooses a trap, but the size or type does not suit the fixture or drain."
+      2: "Chooses a trap, pipe and fittings that suit the fixture and the drain."
+      3: "As 2, and explains why that trap type suits this fixture."
+  - id: c2_fall
+    nos: PSC/N0132
+    pc_refs: [PSC/N0132.PC7, PSC/N0130.PC11]
+    weight: 2
+    critical: false
+    text: {en: "Lays the waste pipe with the right fall", hi: "वेस्ट पाइप को सही ढलान से लगाना"}
+    checklist: [fall_set]
+    levels:
+      0: "Pipe runs flat or uphill, so water stands in it."
+      1: "Pipe falls overall but sags or rises in places."
+      2: "Pipe falls steadily towards the drain along its whole length."
+      3: "As 2, and checks the fall with a level before fixing."
+  - id: c3_trap_seal
+    nos: PSC/N0130
+    pc_refs: [PSC/N0130.PC14]
+    weight: 2
+    critical: true
+    text: {en: "Keeps the trap's water seal so drain gases cannot enter the room", hi: "ट्रैप की पानी की सील बनाए रखना ताकि नाली की गैस कमरे में न आए"}
+    checklist: [trap_seal]
+    levels:
+      0: "No water seal: the trap is missing, wrongly fitted or siphons dry."
+      1: "Seal holds at rest but is lost when water runs."
+      2: "Trap keeps its water seal during and after the test."
+      3: "As 2, and checks venting or anti-siphon arrangements where the run needs them."
+  - id: c4_test
+    nos: PSC/N0132
+    pc_refs: [PSC/N0132.PC12, PSC/N0132.PC14]
+    weight: 2
+    critical: false
+    text: {en: "Tests the drain: free flow, no leaks, cleanout accessible", hi: "नाली की जाँच: आसान बहाव, कोई लीकेज नहीं, क्लीनआउट पहुँच में"}
+    checklist: [joints_tight, flow_ok, cleanout_access]
+    levels:
+      0: "Does not test, or leaves leaks or a blocked drain."
+      1: "Tests flow but leaves a drip, or covers the cleanout."
+      2: "Water drains freely, no joint leaks, and the cleanout is accessible and closed."
+      3: "As 2, and runs a full basin of water to check the run under load."

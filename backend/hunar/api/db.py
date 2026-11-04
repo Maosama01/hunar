@@ -20,6 +20,11 @@ AUDIT_TRIGGERS = [
 ]
 
 
+# Columns added after the first release. create_all() does not alter existing tables, so init_db adds
+# them to an older database (SQLite).
+ADDED_COLUMNS = [("assessment", "trade", "VARCHAR NOT NULL DEFAULT 'electrician'")]
+
+
 def db_url() -> str:
     return os.environ.get("HUNAR_DB", f"sqlite:///{DATA / 'hunar.db'}")
 
@@ -50,6 +55,10 @@ def init_db() -> None:
 
     SQLModel.metadata.create_all(engine())
     with Session(engine()) as s:
+        for table, column, ddl in ADDED_COLUMNS:
+            have = {row[1] for row in s.exec(text(f"PRAGMA table_info({table})"))}
+            if have and column not in have:
+                s.exec(text(f"ALTER TABLE {table} ADD COLUMN {column} {ddl}"))
         for t in AUDIT_TRIGGERS:
             s.exec(text(t))
         s.commit()

@@ -7,10 +7,9 @@ contractor), except replacing lamps, fans, fuses, switches, domestic appliances 
 fittings without altering the installation's capacity or character. Jobs outside that exception are
 marked needs_permit, and only workers whose permit an admin has checked can be booked for them.
 
-Practical assessments exist only where the assessor flow has practical tasks: the M1 packs and the M3
-rubric tasks cover domestic electricians. Plumbers and carpenters take the quiz and can be booked, but
-cannot ask for a practical assessment until their rubric tasks are written and reviewed; otherwise an
-electrician's tasks would be scored and the badge would name an electrical qualification.
+A trade has practical assessments when the rubric has tasks for it (hunar/rubric/tasks, Task.trade):
+the assessment then scores only that trade's tasks against that trade's qualification file. A trade
+without tasks takes the quiz and can be booked, but cannot ask for a practical assessment.
 """
 from __future__ import annotations
 
@@ -18,7 +17,6 @@ TRADES: dict[str, dict] = {
     "electrician": {
         "name": {"en": "Electrician", "hi": "इलेक्ट्रीशियन"},
         "qualification_nqr_id": 13772,
-        "practical_assessment": True,  # rubric tasks t1-t6 in hunar/rubric/tasks
         "jobs": {
             "replace_fitting": {"en": "Replace a lamp, fan, fuse, switch or fitting with the same type (no change to the wiring)",
                                 "hi": "बल्ब, पंखा, फ़्यूज़, स्विच या फ़िटिंग बदलना, उसी प्रकार का (वायरिंग में बदलाव नहीं)",
@@ -41,7 +39,6 @@ TRADES: dict[str, dict] = {
     "plumber": {
         "name": {"en": "Plumber", "hi": "प्लंबर"},
         "qualification_nqr_id": 12957,  # Plumber - General (WMPSC), data/qp_sources.json trade_packs
-        "practical_assessment": False,
         "jobs": {
             "tap_leak": {"en": "Repair a leaking tap, valve or joint", "hi": "टपकता नल, वाल्व या जोड़ ठीक करना",
                          "needs_permit": False},
@@ -57,7 +54,7 @@ TRADES: dict[str, dict] = {
     "carpenter": {
         "name": {"en": "Carpenter", "hi": "बढ़ई"},
         "qualification_nqr_id": 9884,  # Assistant Carpenter (FFSC); NQR validity ended 31/08/2026
-        "practical_assessment": False,
+        "qualification_note": "The NQR validity of this qualification file ended on 31 Aug 2026.",
         "jobs": {
             "furniture_repair": {"en": "Repair furniture", "hi": "फ़र्नीचर की मरम्मत", "needs_permit": False},
             "door_window": {"en": "Fit or repair a door, window or frame", "hi": "दरवाज़ा, खिड़की या चौखट लगाना या ठीक करना",
@@ -75,12 +72,13 @@ PERMIT_NOTE = ("This job needs a worker with a State electrical permit (CEA Safe
                "the wiring is exempt.")
 
 
-PRACTICAL_NOTE = ("Practical assessments are available for electricians only so far: the practical tasks for "
-                  "plumbers and carpenters are not written and reviewed yet.")
+PRACTICAL_NOTE = "Practical assessments are not available for this trade yet: its practical tasks are not written."
 
 
 def has_practical(trade: str) -> bool:
-    return bool(TRADES.get(trade, {}).get("practical_assessment"))
+    from hunar.rubric.engine import tasks_for
+
+    return trade in TRADES and bool(tasks_for(trade))
 
 
 def job(trade: str, job_id: str) -> dict:

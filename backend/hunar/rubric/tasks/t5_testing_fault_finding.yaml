@@ -1,5 +1,7 @@
 task_id: t5_testing_fault_finding
+trade: electrician
 qualification_nqr_id: 13772
+review: {en: "Drafted by the team with AI help from the official qualification file; review by a certified electrical assessor pending.", hi: "टीम ने AI की मदद से आधिकारिक योग्यता फ़ाइल से तैयार किया; प्रमाणित इलेक्ट्रिकल मूल्यांकनकर्ता की समीक्षा बाकी है।"}
 title:
   en: "Test a circuit and find a planted fault"
   hi: "सर्किट की जाँच करना और लगाया गया दोष ढूँढना"

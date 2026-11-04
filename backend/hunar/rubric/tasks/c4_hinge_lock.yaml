@@ -1,0 +1,70 @@
+task_id: c4_hinge_lock
+trade: carpenter
+qualification_nqr_id: 9884
+review: {en: "DRAFT written with AI help from the official Assistant Carpenter qualification file (NQR 9884, validity ended 31 Aug 2026); not yet reviewed by a carpentry assessor or ITI instructor.", hi: "आधिकारिक असिस्टेंट कारपेंटर योग्यता फ़ाइल (NQR 9884, वैधता 31 अगस्त 2026 को समाप्त) से AI की मदद से लिखा गया ड्राफ़्ट; अभी किसी बढ़ईगीरी मूल्यांकनकर्ता या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Fit hinges and a lock to a door or shutter, then finish and hand over"
+  hi: "दरवाज़े या शटर पर कब्ज़े और ताला लगाना, फिर फ़िनिश करके सौंपना"
+instructions:
+  en: "Fit hinges to a door or cabinet shutter and its frame, then a lock or latch: mark and cut the recesses, fix with the right screws, check the door swings freely and closes with an even gap, fill and sand the surface, and leave the area clean."
+  hi: "दरवाज़े या कैबिनेट शटर और उसकी चौखट पर कब्ज़े लगाएँ, फिर ताला या चिटकनी: खाँचों के निशान लगाकर काटें, सही पेंच से कसें, जाँचें कि दरवाज़ा आसानी से घूमे और चारों ओर बराबर जगह के साथ बंद हो, सतह भरकर रेगमाल करें, और जगह साफ़ छोड़ें।"
+photos:
+  - {id: p1, en: "Hinge recess cut, with the hinge leaf sitting flush", hi: "कटा हुआ कब्ज़े का खाँचा, पत्ती बराबर बैठी हुई"}
+  - {id: p2, en: "Finished door or shutter closed, showing the even gap", hi: "बंद दरवाज़ा या शटर, बराबर जगह दिखाते हुए"}
+checklist:
+  - {id: positions_marked, en: "Hinge and lock positions marked from the drawing or the usual positions", hi: "ड्रॉइंग या सामान्य जगह के हिसाब से कब्ज़े और ताले की जगह का निशान"}
+  - {id: recess_neat, en: "Recesses cut neatly to depth; hinge leaf flush", hi: "खाँचे सफ़ाई से सही गहराई तक काटे; कब्ज़े की पत्ती बराबर"}
+  - {id: screws_right, en: "Correct screw size, pilot holes drilled, screws fully driven", hi: "सही साइज़ के पेंच, पायलट छेद किए, पेंच पूरे कसे"}
+  - {id: swings_freely, en: "Door swings freely without binding and stays where it is left", hi: "दरवाज़ा बिना अटके आसानी से घूमता है और जहाँ छोड़ें वहीं रुकता है"}
+  - {id: even_gap, en: "Even gap all round; lock or latch engages smoothly", hi: "चारों ओर बराबर जगह; ताला या चिटकनी आसानी से लगती है"}
+  - {id: finished, en: "Surface filled and sanded smooth", hi: "सतह भरी और रेगमाल से चिकनी की"}
+  - {id: cleaned, en: "Product and area cleaned; waste disposed of", hi: "सामान और जगह साफ़ की; कचरा फेंका"}
+criteria:
+  - id: c1_recess
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC9, FFS/N2208.PC12]
+    weight: 2
+    critical: false
+    text: {en: "Marks and cuts hinge and lock recesses neatly", hi: "कब्ज़े और ताले के खाँचे सफ़ाई से निशान लगाकर काटना"}
+    checklist: [positions_marked, recess_neat]
+    levels:
+      0: "Fits hardware without recesses, or cuts them in the wrong place."
+      1: "Recesses in the right place but too deep, too shallow or ragged."
+      2: "Positions marked, recesses cut neatly to depth, hinge leaves flush."
+      3: "As 2, with recesses so tight the hardware needs no packing."
+  - id: c2_fix
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC3, FFS/N2208.PC11]
+    weight: 1
+    critical: false
+    text: {en: "Fixes the hardware with suitable screws", hi: "सही पेंचों से हार्डवेयर कसना"}
+    checklist: [screws_right]
+    levels:
+      0: "Wrong screws, or screws hammered in or left loose."
+      1: "Right screws, but no pilot holes or some screws not fully driven."
+      2: "Correct screws in pilot holes, all fully driven and the heads not damaged."
+      3: "As 2, with screw slots lined up neatly."
+  - id: c3_function
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC14, FFS/N2207.PC14]
+    weight: 2
+    critical: true
+    text: {en: "The door or shutter works safely: swings freely, closes evenly, locks", hi: "दरवाज़ा या शटर सुरक्षित चलता है: आसानी से घूमता है, बराबर बंद होता है, ताला लगता है"}
+    checklist: [swings_freely, even_gap]
+    levels:
+      0: "Door binds, sags or will not lock, so it is unsafe or insecure to hand over."
+      1: "Door works, but the gap is uneven or the lock is stiff."
+      2: "Door swings freely, stays where left, closes with an even gap and locks smoothly."
+      3: "As 2, and adjusts it after a few test openings without prompting."
+  - id: c4_finish
+    nos: FFS/N2208
+    pc_refs: [FFS/N2208.PC8, FFS/N2208.PC13]
+    weight: 1
+    critical: false
+    text: {en: "Finishes and cleans the product before handover", hi: "सौंपने से पहले सामान की फ़िनिशिंग और सफ़ाई"}
+    checklist: [finished, cleaned]
+    levels:
+      0: "Leaves marks, splinters, dust and off-cuts."
+      1: "Finishes or cleans, but not both."
+      2: "Surface filled and sanded smooth, product and area cleaned, waste disposed of."
+      3: "As 2, to a finish ready for polish or paint without more work."

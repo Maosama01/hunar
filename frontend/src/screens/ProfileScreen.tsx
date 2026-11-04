@@ -161,6 +161,7 @@ export function ProfileScreen() {
         )}
         <Bar value={p.overall} marker={p.pass_mark} tone={tone} label={`${t("profile.overall")} ${pct(p.overall)}`} />
         <p className="small">{t("profile.passMark", { p: pct(p.pass_mark) })}</p>
+        {p.nos_pass_mark != null && <p className="small">{t("profile.nosPassMark", { p: pct(p.nos_pass_mark) })}</p>}
         {p.unscored.length > 0 && (
           <p className="row wrap gap-s">
             <span className="warn-text">{t("profile.unscored", { n: p.unscored.length })}</span>
@@ -181,7 +182,7 @@ export function ProfileScreen() {
                 <code>{n.nos}</code>
                 <strong>{pct(n.score)}</strong>
               </div>
-              <Bar value={n.score} marker={p.pass_mark} label={`${n.nos} ${pct(n.score)}`} tone={n.score + 1e-9 >= p.pass_mark ? "ok" : "warn"} />
+              <Bar value={n.score} marker={p.nos_pass_mark ?? p.pass_mark} label={`${n.nos} ${pct(n.score)}`} tone={n.score + 1e-9 >= (p.nos_pass_mark ?? p.pass_mark) ? "ok" : "warn"} />
               <div className="small muted">{t("profile.nosLine", { n: n.criteria, b: n.below_competent })}</div>
             </li>
           ))}

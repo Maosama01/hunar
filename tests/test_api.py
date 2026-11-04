@@ -36,7 +36,7 @@ def test_full_flow_requires_human_decisions_and_signoff(client):
     assert client.post(f"/api/assessments/{aid}/confirm-pack", json={"nqr_id": 9530, "actor": "A1"}).status_code == 422
     assert client.post(f"/api/assessments/{aid}/confirm-pack", json={"nqr_id": 13772, "actor": "A1"}).status_code == 200
 
-    rub = client.get("/api/rubrics").json()["tasks"]
+    rub = [t for t in client.get("/api/rubrics").json()["tasks"] if t["trade"] == "electrician"]
     for t in rub:
         ticks = {c["id"]: True for c in t["checklist"]}
         assert client.put(f"/api/assessments/{aid}/checklist",
@@ -77,7 +77,7 @@ def test_full_flow_requires_human_decisions_and_signoff(client):
 def test_disagreeing_signoff_needs_outcome_and_reason(client):
     aid = new_assessment(client)
     client.post(f"/api/assessments/{aid}/confirm-pack", json={"nqr_id": 13772, "actor": "A1"})
-    for t in client.get("/api/rubrics").json()["tasks"]:
+    for t in [t for t in client.get("/api/rubrics").json()["tasks"] if t["trade"] == "electrician"]:
         for c in t["criteria"]:
             client.post(f"/api/assessments/{aid}/decisions",
                         json={"task_id": t["task_id"], "criterion_id": c["id"], "action": "override", "level": 3,

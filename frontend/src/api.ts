@@ -30,6 +30,8 @@ export interface Worker {
 export interface Assessment {
   id: string;
   worker_id: string;
+  /** Selects the rubric tasks and qualification packs; older cached copies lack it (electrician). */
+  trade?: string;
   declaration_text: string;
   confirmed_nqr_id: number | null;
   status: string; // in_progress | signed_off
@@ -40,6 +42,7 @@ export interface Assessment {
 export interface AssessmentRow {
   id: string;
   worker_code: string | null;
+  trade?: string;
   status: string;
   is_sample: boolean;
   confirmed_nqr_id: number | null;
@@ -155,6 +158,8 @@ export interface PackSummary {
   nqr_code: string | null;
   n_nos: number;
   n_pcs: number;
+  /** "electrician" for the M1 packs; plumber and carpenter for their own qualification files. */
+  trade?: string;
 }
 
 export interface LabelledItem {
@@ -178,7 +183,10 @@ export interface Criterion {
 
 export interface Task {
   task_id: string;
+  trade?: string;
   qualification_nqr_id: number;
+  /** Who wrote the rubric and which review is still pending. */
+  review?: Bi | null;
   title: Bi;
   instructions: Bi;
   photos: LabelledItem[];
@@ -189,6 +197,7 @@ export interface Task {
 export interface Rubrics {
   levels: Record<string, Bi>;
   pass_mark: number;
+  pass_rules?: Record<string, { aggregate: number; nos: number | null }>;
   tasks: Task[];
 }
 
@@ -220,6 +229,8 @@ export interface Gap {
 export interface Profile {
   overall: number | null;
   pass_mark: number;
+  /** Set when the qualification file also needs this score in every NOS (carpenter). */
+  nos_pass_mark?: number | null;
   nos: NOSResult[];
   gaps: Gap[];
   critical_failures: Gap[];

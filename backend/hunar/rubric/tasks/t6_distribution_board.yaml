@@ -1,5 +1,7 @@
 task_id: t6_distribution_board
+trade: electrician
 qualification_nqr_id: 13772
+review: {en: "Drafted by the team with AI help from the official qualification file; review by a certified electrical assessor pending.", hi: "टीम ने AI की मदद से आधिकारिक योग्यता फ़ाइल से तैयार किया; प्रमाणित इलेक्ट्रिकल मूल्यांकनकर्ता की समीक्षा बाकी है।"}
 title:
   en: "Assemble a small distribution board with MCBs"
   hi: "MCB के साथ छोटा डिस्ट्रीब्यूशन बोर्ड बनाना"

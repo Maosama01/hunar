@@ -20,7 +20,7 @@ from hunar.evidence import detector, hashing, privacy
 from hunar.mapper.mapper import QPMapper
 from hunar.paths import DATA
 from hunar.rubric import engine
-from hunar.schemas import MappingResult
+from hunar.schemas import MappingResult, QualificationPack
 
 UPLOADS = Path(os.environ.get("HUNAR_UPLOADS", DATA / "uploads"))
 
@@ -53,11 +53,36 @@ def get_or_404(session: Session, model, key):
     return obj
 
 
-def task_or_422(task_id: str) -> engine.Task:
+def task_or_422(task_id: str, a: Assessment | None = None) -> engine.Task:
     try:
-        return engine.get_task(task_id)
+        task = engine.get_task(task_id)
     except KeyError:
         raise HTTPException(422, f"unknown task {task_id}") from None
+    if a is not None and task.trade != a.trade:
+        raise HTTPException(422, f"task {task_id} belongs to the {task.trade} rubric, not to this {a.trade} assessment")
+    return task
+
+
+@lru_cache(maxsize=1)
+def trade_packs() -> dict[str, QualificationPack]:
+    """The official file of each trade outside M1 (plumber, carpenter), from data/processed/qp."""
+    from hunar import paths
+    from hunar.market.trades import TRADES
+
+    out = {}
+    for trade, spec in TRADES.items():
+        f = paths.DATA / "processed" / "qp" / f"{spec['qualification_nqr_id']}.json"  # not the uploads DATA
+        if trade != "electrician" and f.exists():
+            out[trade] = QualificationPack.model_validate_json(f.read_text())
+    return out
+
+
+def allowed_packs(a: Assessment) -> set[int]:
+    """Electricians: the M1 packs (the assessor confirms one of the suggestions). Other trades: their own
+    qualification file only, since the M1 packs are all electrical."""
+    if a.trade == "electrician":
+        return {p.nqr_id for p in mapper().packs}
+    return {t.qualification_nqr_id for t in engine.tasks_for(a.trade)}
 
 
 def require_open(a: Assessment) -> None:
@@ -81,17 +106,20 @@ def create_worker(s: Session, code: str, preferred_language: str, actor: str, id
 
 
 def create_assessment(s: Session, worker_id: str, declaration_text: str, actor: str, id: str | None = None,
-                      is_sample: bool = False) -> Assessment:
+                      is_sample: bool = False, trade: str = "electrician") -> Assessment:
     if id and (a := s.get(Assessment, id)):
         return a
     get_or_404(s, Worker, worker_id)
-    a = Assessment(id=id or str(uuid.uuid4()), worker_id=worker_id, declaration_text=declaration_text,
+    if not engine.tasks_for(trade):
+        raise HTTPException(422, f"no practical tasks for the trade {trade!r}")
+    a = Assessment(id=id or str(uuid.uuid4()), worker_id=worker_id, trade=trade, declaration_text=declaration_text,
                    is_sample=is_sample)
-    if declaration_text.strip():
+    if declaration_text.strip() and trade == "electrician":  # the M1 packs are electrical qualifications
         res = mapper().map(declaration_text)
         a.mapping_json = res.model_dump_json()
     s.add(a)
-    audit.append(s, actor, "assessment.created", a.id, {"worker_id": worker_id, "is_sample": is_sample}, commit=False)
+    audit.append(s, actor, "assessment.created", a.id, {"worker_id": worker_id, "trade": trade, "is_sample": is_sample},
+                 commit=False)
     if a.mapping_json:
         top = json.loads(a.mapping_json)["ranking"]
         audit.append(s, "system:mapper", "mapping.suggested", a.id,
@@ -103,8 +131,8 @@ def create_assessment(s: Session, worker_id: str, declaration_text: str, actor: 
 
 def confirm_pack(s: Session, a: Assessment, nqr_id: int, actor: str, reason: str | None) -> Assessment:
     require_open(a)
-    if nqr_id not in {p.nqr_id for p in mapper().packs}:
-        raise HTTPException(400, f"unknown qualification pack {nqr_id}")
+    if nqr_id not in allowed_packs(a):
+        raise HTTPException(400, f"qualification pack {nqr_id} does not apply to a {a.trade} assessment")
     suggested = json.loads(a.mapping_json)["ranking"][0]["nqr_id"] if a.mapping_json else None
     if suggested is not None and nqr_id != suggested and not (reason or "").strip():
         raise HTTPException(422, "choosing a pack other than the top suggestion needs a reason")
@@ -122,7 +150,7 @@ def confirm_pack(s: Session, a: Assessment, nqr_id: int, actor: str, reason: str
 
 def set_checklist(s: Session, a: Assessment, task_id: str, ticks: dict[str, bool], actor: str) -> dict[str, bool]:
     require_open(a)
-    task = task_or_422(task_id)
+    task = task_or_422(task_id, a)
     valid = {c.id for c in task.checklist}
     if bad := set(ticks) - valid:
         raise HTTPException(422, f"unknown checklist items for {task_id}: {sorted(bad)}")
@@ -152,7 +180,7 @@ def add_evidence(s: Session, a: Assessment, task_id: str, photo_id: str, data: b
     require_open(a)
     if not consent_confirmed:
         raise HTTPException(422, "written consent must be confirmed before a photo is stored")
-    task = task_or_422(task_id)
+    task = task_or_422(task_id, a)
     if photo_id not in {p.id for p in task.photos}:
         raise HTTPException(422, f"unknown photo slot {photo_id} for {task_id}")
     try:
@@ -267,7 +295,7 @@ def prescores(s: Session, a: Assessment) -> list[engine.PreScore]:
     evidence = evidence_for(s, a.id)
     decl = _declaration_matches(a)
     out = []
-    for task in engine.load_tasks():
+    for task in engine.tasks_for(a.trade):
         task_ev = [e for e in evidence if e.task_id == task.task_id]
         analysed = [e for e in task_ev if e.detections_json is not None]
         dets = None
@@ -289,7 +317,7 @@ def latest_decisions(s: Session, assessment_id: str) -> dict[tuple[str, str], De
 def decide(s: Session, a: Assessment, task_id: str, criterion_id: str, action: str, level: int | None,
            reason: str | None, assessor: str, expected_level: int | None = None) -> Decision:
     require_open(a)
-    task = task_or_422(task_id)
+    task = task_or_422(task_id, a)
     if criterion_id not in {c.id for c in task.criteria}:
         raise HTTPException(422, f"unknown criterion {criterion_id} in {task_id}")
     pre = next(p for p in prescores(s, a) if p.task_id == task_id and p.criterion_id == criterion_id)
@@ -320,11 +348,13 @@ def decide(s: Session, a: Assessment, task_id: str, criterion_id: str, action: s
 
 
 def profile(s: Session, a: Assessment, task_ids: list[str] | None = None) -> engine.Profile:
-    tasks = [t for t in engine.load_tasks() if not task_ids or t.task_id in task_ids]
+    tasks = [t for t in engine.tasks_for(a.trade) if not task_ids or t.task_id in task_ids]
     dec = latest_decisions(s, a.id)
     levels = {(t.task_id, c.id): (dec[(t.task_id, c.id)].final_level if (t.task_id, c.id) in dec else None)
               for t in tasks for c in t.criteria}
-    return engine.aggregate(levels, tasks=tasks)
+    pass_mark, nos_pass_mark = engine.pass_rules(tasks[0].qualification_nqr_id) if tasks else (engine.DEFAULT_PASS_MARK,
+                                                                                               None)
+    return engine.aggregate(levels, tasks=tasks, pass_mark=pass_mark, nos_pass_mark=nos_pass_mark)
 
 
 def signoff(s: Session, a: Assessment, assessor: str, agrees: bool, outcome: str | None, comment: str) -> Assessment:

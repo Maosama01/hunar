@@ -1,6 +1,7 @@
 import type { PackScore } from "../api";
 import { Bar, Notice } from "../components/common";
 import { useI18n } from "../i18n";
+import { useTrades } from "../trades";
 import { useAssessmentCtx } from "./AssessmentLayout";
 
 function PackCard({ pack, confirmed, open }: { pack: PackScore; confirmed: boolean; open: boolean }) {
@@ -73,7 +74,8 @@ function PackCard({ pack, confirmed, open }: { pack: PackScore; confirmed: boole
 }
 
 export function Mapping() {
-  const { t } = useI18n();
+  const { t, pick } = useI18n();
+  const { trades } = useTrades();
   const { view } = useAssessmentCtx();
   const m = view.mapping;
 
@@ -94,8 +96,10 @@ export function Mapping() {
           💾 {t("mapping.savedOffline")}
         </Notice>
       )}
-      {!m && view.declaration_text && view.onServer && !view.createPending && (
-        <Notice kind="info">{t("mapping.waiting")}</Notice>
+      {view.trade !== "electrician" ? (
+        <Notice kind="info">{t("mapping.otherTrade", { trade: trades ? pick(trades[view.trade]?.name) : view.trade })}</Notice>
+      ) : (
+        !m && view.declaration_text && view.onServer && !view.createPending && <Notice kind="info">{t("mapping.waiting")}</Notice>
       )}
 
       {m && (
