@@ -1,0 +1,125 @@
+task_id: fan2_parts
+trade: appliance_technician
+qualification_nqr_id: 14861
+review: {en: "DRAFT for the ceiling-fan video pilot, written with AI help. Service Technician - Home Appliances (NQR 14861) names no fan-specific criteria, so these tasks use its general diagnose-and-repair criteria. Not yet reviewed by an appliance technician or ITI instructor.", hi: "सीलिंग फ़ैन वीडियो पायलट के लिए AI की मदद से लिखा गया ड्राफ़्ट। सर्विस टेक्नीशियन - होम अप्लायंसेज़ (NQR 14861) में पंखे के लिए अलग मानदंड नहीं हैं, इसलिए ये कार्य उसके सामान्य जाँच और मरम्मत वाले मानदंडों से जुड़े हैं। अभी किसी अप्लायंस टेक्नीशियन या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Show and explain each part: capacitor, winding, bearings, regulator"
+  hi: "हर पुर्ज़ा दिखाकर समझाना: कैपेसिटर, वाइंडिंग, बेयरिंग, रेगुलेटर"
+instructions:
+  en: "The app asks for one short clip per part. Hold the part up to the camera and say what it is called, what it does, how it fails and how you test it. Discharge the capacitor before touching its terminals."
+  hi: "ऐप हर पुर्ज़े के लिए एक छोटी क्लिप माँगेगा। पुर्ज़ा कैमरे के सामने पकड़ें और बताएँ कि उसका नाम क्या है, वह क्या करता है, कैसे ख़राब होता है और आप उसकी जाँच कैसे करते हैं। कैपेसिटर के टर्मिनल छूने से पहले उसे डिस्चार्ज करें।"
+photos:
+  - {id: p1, en: "The opened fan with its parts laid out", hi: "खुला हुआ पंखा और उसके पुर्ज़े"}
+checklist:
+  - {id: cap_discharged, en: "Capacitor discharged before its terminals were touched", hi: "कैपेसिटर के टर्मिनल छूने से पहले उसे डिस्चार्ज किया"}
+clips:
+  - id: capacitor
+    part: {en: "Capacitor", hi: "कैपेसिटर"}
+    prompt: {en: "Hold up the capacitor. Say what it is called, what it does, how it fails and how you test it. Then type the meter reading and the value printed on it.", hi: "कैपेसिटर कैमरे के सामने पकड़ें। बताएँ कि इसका नाम क्या है, यह क्या करता है, कैसे ख़राब होता है और इसकी जाँच कैसे करते हैं। फिर मीटर की रीडिंग और इस पर छपी वैल्यू लिखें।"}
+    detect: [capacitor]
+    meter: {quantity: capacitance, unit: uF}
+    terms:
+      name: [capacitor, condenser, कैपेसिटर, कंडेनसर, कपैसिटर]
+      function: [start, starting, torque, phase, स्टार्ट, चालू, chalu, टॉर्क, फेज़, फेज, "ghumane mein", घुमाने]
+      failure: [slow, dheema, dheere, धीमा, धीरे, hum, push, dhakka, धक्का, bulge, phool, फूल, weak, kamzor, कमज़ोर, कमजोर, kharab, खराब, ख़राब]
+      test: [microfarad, mfd, uf, capacitance, meter, मीटर, multimeter, मल्टीमीटर, reading, रीडिंग, माइक्रोफैरड]
+  - id: winding
+    part: {en: "Stator winding (coil)", hi: "स्टेटर वाइंडिंग (कॉइल)"}
+    prompt: {en: "Show the winding. Say what it is called, what it does, how it fails and how you test it.", hi: "वाइंडिंग दिखाएँ। बताएँ कि इसका नाम क्या है, यह क्या करती है, कैसे ख़राब होती है और इसकी जाँच कैसे करते हैं।"}
+    detect: [copper coil, electric motor]
+    terms:
+      name: [winding, वाइंडिंग, coil, कॉइल, stator, स्टेटर]
+      function: [magnetic, चुंबकीय, chumbak, field, rotate, ghumata, घुमाता, motor, मोटर]
+      failure: [burnt, burn, jali, जली, जल, smell, badbu, बदबू, open, short, शॉर्ट, garam, गरम, heat]
+      test: [continuity, resistance, ohm, ओम, megger, मेगर, insulation, इंसुलेशन, meter, मीटर, multimeter, मल्टीमीटर]
+  - id: bearings
+    part: {en: "Bearings", hi: "बेयरिंग"}
+    prompt: {en: "Show the bearings. Say what they are called, what they do, how they fail and how you check them.", hi: "बेयरिंग दिखाएँ। बताएँ कि इनका नाम क्या है, ये क्या करती हैं, कैसे ख़राब होती हैं और इनकी जाँच कैसे करते हैं।"}
+    detect: [ball bearing]
+    terms:
+      name: [bearing, bearings, bairing, बेयरिंग, बियरिंग]
+      function: [smooth, aasani, आसानी, shaft, शाफ़्ट, शाफ्ट, friction, ghoomta, घूमता]
+      failure: [noise, aawaz, awaaz, आवाज़, आवाज, jam, जाम, play, dhila, ढीला, wobble, grease, ग्रीस]
+      test: [spin, ghuma, घुमा, haath, हाथ, check, चेक, sound, replace, badal, बदल, size, number, नंबर]
+  - id: regulator
+    part: {en: "Regulator", hi: "रेगुलेटर"}
+    prompt: {en: "Show the regulator. Say what it is called, what it does, how it fails and how you test it.", hi: "रेगुलेटर दिखाएँ। बताएँ कि इसका नाम क्या है, यह क्या करता है, कैसे ख़राब होता है और इसकी जाँच कैसे करते हैं।"}
+    detect: [fan regulator, electrical switch]
+    terms:
+      name: [regulator, रेगुलेटर]
+      function: [speed, स्पीड, raftar, रफ़्तार, रफ्तार, control, कंट्रोल, step, स्टेप, voltage, वोल्टेज]
+      failure: ["full speed", "same speed", "ek hi", "एक ही", burnt, जल, hum, "change nahi", "बदलती नहीं", "nahi badalti"]
+      test: [bypass, बायपास, direct, डायरेक्ट, seedha, सीधा, meter, मीटर]
+criteria:
+  - id: c1_cap_safe
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC47]
+    weight: 2
+    critical: true
+    text: {en: "Discharges the capacitor before touching its terminals", hi: "टर्मिनल छूने से पहले कैपेसिटर डिस्चार्ज करना"}
+    checklist: [cap_discharged]
+    levels:
+      0: "Touches the capacitor terminals without discharging it."
+      1: "Discharges it, but by shorting the terminals directly with a bare tool."
+      2: "Discharges it safely (through a resistor or an insulated tool) before handling."
+      3: "As 2, and checks with the meter that it is discharged."
+  - id: c2_cap_explain
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC37]
+    weight: 1
+    critical: false
+    text: {en: "Names the capacitor and explains what it does", hi: "कैपेसिटर का नाम और उसका काम बताना"}
+    clip: {id: capacitor, aspects: [name, function]}
+    levels:
+      0: "Cannot name the capacitor or say what it does."
+      1: "Names it but not its role, or the other way round."
+      2: "Names it and says it helps the motor start and run."
+      3: "As 2, and explains that a weak capacitor slows the fan or stops it starting."
+  - id: c3_cap_diagnose
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC34, ELE/N3112.PC36]
+    weight: 2
+    critical: false
+    text: {en: "Explains how the capacitor fails and tests it with a meter", hi: "कैपेसिटर कैसे ख़राब होता है बताना और मीटर से जाँचना"}
+    clip: {id: capacitor, aspects: [failure, test], meter: true}
+    levels:
+      0: "Does not test the capacitor."
+      1: "Names a symptom or tests it, but not both, or misreads the meter."
+      2: "Names the symptoms of a weak capacitor and measures its value against the one printed on it."
+      3: "As 2, and checks the case for bulging or leaks before measuring."
+  - id: c4_winding
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC37, ELE/N3112.PC36]
+    weight: 2
+    critical: false
+    text: {en: "Explains the winding and tests it", hi: "वाइंडिंग समझाना और उसकी जाँच करना"}
+    clip: {id: winding, aspects: [name, function, failure, test]}
+    levels:
+      0: "Cannot say what the winding does or how to test it."
+      1: "Explains it but does not test, or tests without knowing what the reading means."
+      2: "Explains it, names burnt or open winding as failures, and tests continuity and insulation to the body."
+      3: "As 2, and compares the main and starting winding readings."
+  - id: c5_bearings
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC37]
+    weight: 1
+    critical: false
+    text: {en: "Explains the bearings and checks them", hi: "बेयरिंग समझाना और उनकी जाँच करना"}
+    clip: {id: bearings, aspects: [name, function, failure, test]}
+    levels:
+      0: "Does not check the bearings."
+      1: "Checks by spinning but cannot say what a bad bearing sounds or feels like."
+      2: "Explains them, spins the shaft by hand and checks for noise, roughness and play."
+      3: "As 2, and reads the bearing number to order the same size."
+  - id: c6_regulator
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC37, ELE/N3112.PC34]
+    weight: 1
+    critical: false
+    text: {en: "Explains the regulator and tests it", hi: "रेगुलेटर समझाना और उसकी जाँच करना"}
+    clip: {id: regulator, aspects: [name, function, failure, test]}
+    levels:
+      0: "Does not consider the regulator as a cause."
+      1: "Explains it but does not test it."
+      2: "Explains it and tests it, for example by running the fan direct to see if the regulator is at fault."
+      3: "As 2, and checks every step of the regulator."

@@ -1,0 +1,65 @@
+task_id: fan4_reassemble_run
+trade: appliance_technician
+qualification_nqr_id: 14861
+review: {en: "DRAFT for the ceiling-fan video pilot, written with AI help. Service Technician - Home Appliances (NQR 14861) names no fan-specific criteria, so these tasks use its general diagnose-and-repair criteria. Not yet reviewed by an appliance technician or ITI instructor.", hi: "सीलिंग फ़ैन वीडियो पायलट के लिए AI की मदद से लिखा गया ड्राफ़्ट। सर्विस टेक्नीशियन - होम अप्लायंसेज़ (NQR 14861) में पंखे के लिए अलग मानदंड नहीं हैं, इसलिए ये कार्य उसके सामान्य जाँच और मरम्मत वाले मानदंडों से जुड़े हैं। अभी किसी अप्लायंस टेक्नीशियन या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Reassemble, secure, run at every speed and hand over"
+  hi: "दोबारा जोड़ना, मज़बूती से लगाना, हर स्पीड पर चलाना और सौंपना"
+instructions:
+  en: "Put the fan back together with every part and screw, fit the downrod bolt with its safety pin and tighten the blades, then run it at every regulator step on camera, and tell the customer how to look after it."
+  hi: "पंखे को हर पुर्ज़े और पेंच के साथ दोबारा जोड़ें, डाउनरॉड बोल्ट उसकी सेफ्टी पिन के साथ लगाएँ और ब्लेड कसें, फिर कैमरे पर रेगुलेटर के हर स्टेप पर चलाएँ, और ग्राहक को उसकी देखभाल बताएँ।"
+photos:
+  - {id: p1, en: "Downrod bolt with its safety pin fitted", hi: "सेफ्टी पिन के साथ लगा डाउनरॉड बोल्ट"}
+checklist:
+  - {id: all_parts_back, en: "Every part and screw back in place; nothing left over", hi: "हर पुर्ज़ा और पेंच वापस लगा; कुछ बचा नहीं"}
+  - {id: downrod_pinned, en: "Downrod bolt fitted with its safety (split) pin; blade screws tight", hi: "डाउनरॉड बोल्ट सेफ्टी (स्प्लिट) पिन के साथ लगा; ब्लेड के पेंच कसे"}
+  - {id: canopy_secure, en: "Canopy and hook secure; wiring joints insulated inside the canopy", hi: "कैनोपी और हुक मज़बूत; कैनोपी के अंदर तारों के जोड़ इंसुलेटेड"}
+  - {id: runs_all_speeds, en: "Runs and changes speed at every regulator step", hi: "रेगुलेटर के हर स्टेप पर चलता है और स्पीड बदलती है"}
+  - {id: no_wobble_noise, en: "No wobble or unusual noise", hi: "कोई हिलना या असामान्य आवाज़ नहीं"}
+  - {id: customer_told, en: "Customer told how to clean and look after the fan", hi: "ग्राहक को पंखे की सफ़ाई और देखभाल बताई"}
+  - {id: area_clean, en: "Work area cleaned; old parts and packing removed", hi: "काम की जगह साफ़ की; पुराने पुर्ज़े और पैकिंग हटाई"}
+clips:
+  - id: run_test
+    part: {en: "Run test", hi: "चलाकर जाँच"}
+    prompt: {en: "Switch the fan on and go through every regulator step. Say what you are checking at each step.", hi: "पंखा चालू करें और रेगुलेटर के हर स्टेप पर ले जाएँ। हर स्टेप पर बताएँ कि आप क्या जाँच रहे हैं।"}
+    detect: [ceiling fan, fan regulator]
+    terms:
+      test: [speed, स्पीड, step, स्टेप, noise, aawaz, आवाज़, आवाज, wobble, hil, हिल, balance, बैलेंस, regulator, रेगुलेटर, "chal raha", चल रहा]
+criteria:
+  - id: c1_secure
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC41, ELE/N3112.PC47]
+    weight: 2
+    critical: true
+    text: {en: "Reassembles completely and secures the fan so it cannot fall", hi: "पूरा दोबारा जोड़ना और पंखे को ऐसे लगाना कि वह गिर न सके"}
+    checklist: [all_parts_back, downrod_pinned, canopy_secure]
+    levels:
+      0: "Leaves out the downrod safety pin or a part, so the fan could fall or fail."
+      1: "Fan is secure but a screw is left over or a joint is uninsulated."
+      2: "Every part back, downrod bolt pinned, blades tight, joints insulated, canopy secure."
+      3: "As 2, and shows the customer the safety pin."
+  - id: c2_run
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC41, ELE/N3112.PC42]
+    weight: 2
+    critical: false
+    text: {en: "Runs it at every speed and checks it works properly", hi: "हर स्पीड पर चलाकर ठीक से काम करना जाँचना"}
+    checklist: [runs_all_speeds, no_wobble_noise]
+    clip: {id: run_test, aspects: [test]}
+    levels:
+      0: "Does not run the fan after repair."
+      1: "Runs it at one speed only, or leaves a wobble or noise."
+      2: "Runs it at every step; it changes speed with no wobble or unusual noise."
+      3: "As 2, and balances the blades if any wobble shows."
+  - id: c3_handover
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC43, ELE/N3112.PC49, ELE/N3101.PC8]
+    weight: 1
+    critical: false
+    text: {en: "Cleans up and explains care to the customer", hi: "सफ़ाई करना और ग्राहक को देखभाल समझाना"}
+    checklist: [customer_told, area_clean]
+    levels:
+      0: "Leaves the area dirty and says nothing."
+      1: "Cleans up or explains, but not both."
+      2: "Cleans the area and explains cleaning and care to the customer."
+      3: "As 2, and leaves a note of what was replaced."

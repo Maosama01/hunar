@@ -62,7 +62,7 @@
       "valid_till_on_nqr_page": "31/08/2026"
     }
   ],
-  "_note_trade_packs": "trade_packs are the official qualifications behind the plumber and carpenter quiz banks. They are not candidates for the M1 mapper, which uses `packs` only.",
+  "_note_trade_packs": "trade_packs are the official qualifications behind the plumber and carpenter quiz banks and rubrics, and the appliance qualification of the video-assessment pilot. They are not candidates for the M1 mapper, which uses `packs` only.",
   "trade_packs": [
     {
       "nqr_id": 12957,
@@ -90,6 +90,20 @@
       "pdf_url": "https://www.nqr.gov.in/qualification/file/Assistant%20Carpenter%20QFile%20English.pdf",
       "valid_till_on_nqr_page": "31/08/2026",
       "validity_note": "Validity on NQR ended 31/08/2026 (checked 3 Nov 2026); no current worker-level domestic carpentry qualification was found, so this is used as the closest standard and labelled as lapsed."
+    },
+    {
+      "nqr_id": 14861,
+      "role": "trade",
+      "trade": "appliance_technician",
+      "title": "Service Technician – Home Appliances",
+      "nqr_code": "QG-04-EH-044772025-V2-ESSCI",
+      "sector": "Electronics & HW",
+      "nsqf_level": 4,
+      "awarding_body": "Electronics Sector Skills Council of India (ESSCI)",
+      "page_url": "https://www.nqr.gov.in/qualifications/14861",
+      "pdf_url": "https://www.nqr.gov.in/qualification/file/QFile_Service%20Technician%20%E2%80%93%20Home%20Appliances.....pdf",
+      "valid_till_on_nqr_page": "07/10/2028",
+      "use_note": "Target of the video-assessment pilot (ceiling fan). Checked on NQR on 6 Nov 2026: NSQC 44, approved 07/10/2025. The older Field Technician - Other Home Appliances (NQR 2270) lapsed on 27/06/2025, so it is not used."
     }
   ]
 }

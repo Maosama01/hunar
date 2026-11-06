@@ -1,0 +1,77 @@
+task_id: fan3_fault
+trade: appliance_technician
+qualification_nqr_id: 14861
+review: {en: "DRAFT for the ceiling-fan video pilot, written with AI help. Service Technician - Home Appliances (NQR 14861) names no fan-specific criteria, so these tasks use its general diagnose-and-repair criteria. Not yet reviewed by an appliance technician or ITI instructor.", hi: "सीलिंग फ़ैन वीडियो पायलट के लिए AI की मदद से लिखा गया ड्राफ़्ट। सर्विस टेक्नीशियन - होम अप्लायंसेज़ (NQR 14861) में पंखे के लिए अलग मानदंड नहीं हैं, इसलिए ये कार्य उसके सामान्य जाँच और मरम्मत वाले मानदंडों से जुड़े हैं। अभी किसी अप्लायंस टेक्नीशियन या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Find and fix the planted fault"
+  hi: "लगाई गई ख़राबी ढूँढ़कर ठीक करना"
+instructions:
+  en: "The assessor has put one fault in the fan and written it on the assessment sheet. Find it with tests, show the faulty part on camera, say what was wrong and how you found it, replace or repair it, and tell the customer what you did and what it costs."
+  hi: "मूल्यांकनकर्ता ने पंखे में एक ख़राबी लगाई है और उसे मूल्यांकन शीट पर लिखा है। जाँच करके उसे ढूँढ़ें, ख़राब पुर्ज़ा कैमरे पर दिखाएँ, बताएँ कि क्या ख़राब था और आपने कैसे पता लगाया, उसे बदलें या ठीक करें, और ग्राहक को बताएँ कि आपने क्या किया और कितना ख़र्च होगा।"
+photos:
+  - {id: p1, en: "The faulty part next to the replacement", hi: "ख़राब पुर्ज़ा और नया पुर्ज़ा साथ में"}
+checklist:
+  - {id: basic_tests, en: "Basic tests done: supply, continuity, and the meter on the suspected part", hi: "बुनियादी जाँच की: सप्लाई, कंटिन्युटी, और संदिग्ध पुर्ज़े पर मीटर"}
+  - {id: fault_named, en: "Fault named matches the one the assessor planted", hi: "बताई गई ख़राबी वही है जो मूल्यांकनकर्ता ने लगाई थी"}
+  - {id: right_part, en: "Replacement matches the value or size printed on the old part", hi: "नया पुर्ज़ा पुराने पर छपी वैल्यू या साइज़ से मेल खाता है"}
+  - {id: isolated_during, en: "Fan kept isolated while working on it, checked before power-on", hi: "काम के दौरान पंखे की सप्लाई बंद रखी, चालू करने से पहले जाँचा"}
+  - {id: customer_informed, en: "Customer told the problem, the fix, the time and the cost, and agreed", hi: "ग्राहक को ख़राबी, मरम्मत, समय और ख़र्च बताया, और उसकी सहमति ली"}
+clips:
+  - id: fault
+    part: {en: "The faulty part", hi: "ख़राब पुर्ज़ा"}
+    prompt: {en: "Show the faulty part you found. Say what was wrong and how you tested it. Then type the meter reading and the value printed on the part, if it has one.", hi: "जो ख़राब पुर्ज़ा मिला उसे दिखाएँ। बताएँ कि क्या ख़राब था और आपने कैसे जाँचा। फिर मीटर की रीडिंग और पुर्ज़े पर छपी वैल्यू लिखें, अगर हो।"}
+    detect: [capacitor, copper coil, ball bearing, fan regulator]
+    meter: {quantity: reading, unit: as printed}
+    terms:
+      failure: [fault, फॉल्ट, kharab, खराब, ख़राब, kharabi, खराबी, ख़राबी, burnt, jal, जल, open, short, शॉर्ट, weak, kamzor, कमज़ोर, कमजोर, loose, dhila, ढीला, broken, toota, टूटा]
+      test: [meter, मीटर, multimeter, मल्टीमीटर, reading, रीडिंग, continuity, कंटिन्युटी, ohm, ओम, microfarad, mfd, uf, test, टेस्ट, check, चेक]
+criteria:
+  - id: c1_diagnose
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC34, ELE/N3112.PC36]
+    weight: 2
+    critical: false
+    text: {en: "Finds the planted fault with tests", hi: "जाँच करके लगाई गई ख़राबी ढूँढ़ना"}
+    checklist: [basic_tests, fault_named]
+    clip: {id: fault, aspects: [failure, test], meter: true}
+    levels:
+      0: "Does not find the fault, or guesses without testing."
+      1: "Finds the fault by trial and error, or tests without finding it."
+      2: "Uses basic tests to find the planted fault and explains how the reading showed it."
+      3: "As 2, and rules out the other likely causes in a sensible order."
+  - id: c2_repair
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC39]
+    weight: 2
+    critical: false
+    text: {en: "Repairs or replaces the faulty part correctly", hi: "ख़राब पुर्ज़ा सही तरीक़े से ठीक करना या बदलना"}
+    checklist: [right_part]
+    levels:
+      0: "Fits a part that does not match, or leaves the fault."
+      1: "Fixes the fault, but with loose or untidy connections."
+      2: "Fits a part that matches the printed value or size, with firm, insulated connections."
+      3: "As 2, and keeps the old part to show the customer."
+  - id: c3_safe_repair
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC35, ELE/N3112.PC47]
+    weight: 2
+    critical: true
+    text: {en: "Keeps the fan isolated while working and checks before power-on", hi: "काम के दौरान सप्लाई बंद रखना और चालू करने से पहले जाँचना"}
+    checklist: [isolated_during]
+    levels:
+      0: "Switches on with exposed connections or while hands are on the fan."
+      1: "Keeps it isolated but switches on without checking the connections."
+      2: "Keeps it isolated throughout and checks the connections before switching on."
+      3: "As 2, and warns others before switching on."
+  - id: c4_customer
+    nos: ELE/N3101
+    pc_refs: [ELE/N3101.PC8, ELE/N3101.PC9, ELE/N3101.PC10]
+    weight: 1
+    critical: false
+    text: {en: "Explains the problem, the fix and the cost, and gets agreement", hi: "ख़राबी, मरम्मत और ख़र्च समझाना और सहमति लेना"}
+    checklist: [customer_informed]
+    levels:
+      0: "Repairs without telling the customer anything."
+      1: "Tells the customer the cost but not the problem, or the other way round."
+      2: "Explains the problem, the fix, the time and the cost, and gets the customer's agreement first."
+      3: "As 2, and explains how to avoid the fault coming back."

@@ -1,0 +1,450 @@
+{
+  "nqr_id": 14861,
+  "nqr_code": "QG-04-EH-044772025-V2-ESSCI",
+  "title": "Service Technician – Home Appliances",
+  "sector": "Electronics & HW",
+  "nsqf_level": 4.0,
+  "awarding_body": "Electronics Sector Skills Council of India (ESSCI)",
+  "role": "trade",
+  "is_stub": false,
+  "parse_method": "pdf_auto",
+  "verification_note": "Parsed automatically from the official PDF. Spot-checked against the PDF by the AI assistant; HUMAN CHECK PENDING.",
+  "source": {
+    "pdf_url": "https://www.nqr.gov.in/qualification/file/QFile_Service%20Technician%20%E2%80%93%20Home%20Appliances.....pdf",
+    "page_url": "https://www.nqr.gov.in/qualifications/14861",
+    "downloaded_on": "2026-11-06",
+    "sha256": "683f9f6f84a652f2b3e3e7b73d21a6d88dfbe2a5690d475a9732f7d4e4dc0032"
+  },
+  "nos": [
+    {
+      "code": "ELE/N3101",
+      "title": "Engage with customer for service",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "ELE/N3101.PC1",
+          "code": "PC1",
+          "text": "Interact with customers to diagnose the issues, identifies and fixes minor faults or replaces modules, and recommends factory repair for major problems"
+        },
+        {
+          "id": "ELE/N3101.PC2",
+          "code": "PC2",
+          "text": "analyse the details of customer complaint registered at customer care or installation schedule"
+        },
+        {
+          "id": "ELE/N3101.PC3",
+          "code": "PC3",
+          "text": "connect with the customer to use mobile CRM apps and real-time service tracking system to interact professionally with customers and provide personalized support."
+        },
+        {
+          "id": "ELE/N3101.PC4",
+          "code": "PC4",
+          "text": "collect appropriate tools, parts, relevant reference sheets, manuals and documents"
+        },
+        {
+          "id": "ELE/N3101.PC5",
+          "code": "PC5",
+          "text": "visit the customer premises as per the scheduled date and time for service as per the requirement"
+        },
+        {
+          "id": "ELE/N3101.PC6",
+          "code": "PC6",
+          "text": "check about warranty status of appliance and annual maintenance contract"
+        },
+        {
+          "id": "ELE/N3101.PC7",
+          "code": "PC7",
+          "text": "gather detailed information pertaining to age of appliance, status of upkeep, symptoms and history of problems in the appliance"
+        },
+        {
+          "id": "ELE/N3101.PC8",
+          "code": "PC8",
+          "text": "provide information to the customer about the warranty and problem in detail along with the precautions to be taken in order to avoid recurrence of problem"
+        },
+        {
+          "id": "ELE/N3101.PC9",
+          "code": "PC9",
+          "text": "suggest possible solutions with the time required, costs involved and methodology for servicing"
+        },
+        {
+          "id": "ELE/N3101.PC10",
+          "code": "PC10",
+          "text": "seek customer’s approval on further action"
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "ELE/N3112",
+      "title": "Perform installation and repair of appliances",
+      "core": true,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "ELE/N3112.PC1",
+          "code": "PC1",
+          "text": "Integrate components and perform visual and functional inspections to ensure proper connectivity and alignment of parts such as control boards, sensors, motors, compressors (in inverter ACs), and drum assemblies (in automatic washing machines)."
+        },
+        {
+          "id": "ELE/N3112.PC2",
+          "code": "PC2",
+          "text": "visit customer location as scheduled and provide guidance to the customer for pre- installation requirement as per the appliance w.r.t structure, plug point, drainage, plumbing etc."
+        },
+        {
+          "id": "ELE/N3112.PC3",
+          "code": "PC3",
+          "text": "make measurements at the location identified and drill holes, if required, ensuring no internal wiring damage takes place"
+        },
+        {
+          "id": "ELE/N3112.PC4",
+          "code": "PC4",
+          "text": "remove the packaging from the appliance delivered at the customer location"
+        },
+        {
+          "id": "ELE/N3112.PC5",
+          "code": "PC5",
+          "text": "verify that the product matches the customer's order with all supporting accessories"
+        },
+        {
+          "id": "ELE/N3112.PC6",
+          "code": "PC6",
+          "text": "check the availability of all tools and fitments for the installation"
+        },
+        {
+          "id": "ELE/N3112.PC7",
+          "code": "PC7",
+          "text": "clear up the packaging material waste and dispose as per company’s norms"
+        },
+        {
+          "id": "ELE/N3112.PC8",
+          "code": "PC8",
+          "text": "seek customer’s input on placing/positioning the appliance near a plug point, in obstruction-free area, while maintaining the required distance from wall and floor"
+        },
+        {
+          "id": "ELE/N3112.PC9",
+          "code": "PC9",
+          "text": "perform steps to fit water-disposal beaker, handle, shelves, basket and side buckets"
+        },
+        {
+          "id": "ELE/N3112.PC10",
+          "code": "PC10",
+          "text": "connect the refrigerator to power supply and set cooling/freezer temperature knobs according to the season so as to demonstrate features/utility"
+        },
+        {
+          "id": "ELE/N3112.PC11",
+          "code": "PC11",
+          "text": "inform the customer about the precautions to be taken while using the refrigerator and heating of outside walls of the refrigerator"
+        },
+        {
+          "id": "ELE/N3112.PC12",
+          "code": "PC12",
+          "text": "verify thermostat settings are appropriate as per the requirement"
+        },
+        {
+          "id": "ELE/N3112.PC13",
+          "code": "PC13",
+          "text": "provide information to the customer about requirement of concealed drainage and electric conduits"
+        },
+        {
+          "id": "ELE/N3112.PC14",
+          "code": "PC14",
+          "text": "Install and repair smart home appliances using IoT integration, CMR mobile apps for setup, and advanced fault detection systems for efficient and accurate repairs."
+        },
+        {
+          "id": "ELE/N3112.PC15",
+          "code": "PC15",
+          "text": "place the outdoor unit at a suitable location and attach it firmly to wall/floor"
+        },
+        {
+          "id": "ELE/N3112.PC16",
+          "code": "PC16",
+          "text": "connect the indoor and the outdoor units using the field copper pipe of appropriate size"
+        },
+        {
+          "id": "ELE/N3112.PC17",
+          "code": "PC17",
+          "text": "fill in additional gas if the distance between the indoor and the outdoor units is more than recommended"
+        },
+        {
+          "id": "ELE/N3112.PC18",
+          "code": "PC18",
+          "text": "perform steps to make necessary power supply connections and align the inverter air conditioner as per the instructions manual"
+        },
+        {
+          "id": "ELE/N3112.PC19",
+          "code": "PC19",
+          "text": "remove all transport pins or anything lying in the drum of the automatic washing machine before starting the machine"
+        },
+        {
+          "id": "ELE/N3112.PC20",
+          "code": "PC20",
+          "text": "check the necessary plumbing installations required for water inlet and outlet"
+        },
+        {
+          "id": "ELE/N3112.PC21",
+          "code": "PC21",
+          "text": "connect the machine's drain hose with the sewage pipe to ensure proper drainage"
+        },
+        {
+          "id": "ELE/N3112.PC22",
+          "code": "PC22",
+          "text": "identify the water inlet valve in the household plumbing"
+        },
+        {
+          "id": "ELE/N3112.PC23",
+          "code": "PC23",
+          "text": "ensure that the valve is turned off while connecting the PVC hose water inlet of the automatic washing machine to the valve"
+        },
+        {
+          "id": "ELE/N3112.PC24",
+          "code": "PC24",
+          "text": "connect the waste water outlet from the automatic washing machine to the waste system such that the dirty water does not get siphoned back into the automatic washing machine"
+        },
+        {
+          "id": "ELE/N3112.PC25",
+          "code": "PC25",
+          "text": "perform steps to make inlet, outlet and power supply connections securely using the correct tools and equipment for installation"
+        },
+        {
+          "id": "ELE/N3112.PC26",
+          "code": "PC26",
+          "text": "operate and check that there are no leaks and the machine is in a safe and stable condition"
+        },
+        {
+          "id": "ELE/N3112.PC27",
+          "code": "PC27",
+          "text": "inform the customer about requirement of adequate water pressure at the inlet source"
+        },
+        {
+          "id": "ELE/N3112.PC28",
+          "code": "PC28",
+          "text": "mount the filter and ensure that the screws are fastened securely"
+        },
+        {
+          "id": "ELE/N3112.PC29",
+          "code": "PC29",
+          "text": "drain the inlet line before connecting it to the water purifier and connect the outlet pipe to the drain (if applicable)"
+        },
+        {
+          "id": "ELE/N3112.PC30",
+          "code": "PC30",
+          "text": "ensure that the filter is aligned as per instructions in the installation manual"
+        },
+        {
+          "id": "ELE/N3112.PC31",
+          "code": "PC31",
+          "text": "run the purifier to ensure there are no leaks and demonstrate the features/utility to the customer"
+        },
+        {
+          "id": "ELE/N3112.PC32",
+          "code": "PC32",
+          "text": "place a piece of cloth or towel under the unit in order to avoid any water spills on the floor"
+        },
+        {
+          "id": "ELE/N3112.PC33",
+          "code": "PC33",
+          "text": "explain maintenance procedures to be followed while using the water purifier"
+        },
+        {
+          "id": "ELE/N3112.PC34",
+          "code": "PC34",
+          "text": "diagnose the fault based on customer interaction, usage pattern and initial inspection"
+        },
+        {
+          "id": "ELE/N3112.PC35",
+          "code": "PC35",
+          "text": "unplug the appliance to carry out further inspection"
+        },
+        {
+          "id": "ELE/N3112.PC36",
+          "code": "PC36",
+          "text": "perform basic tests such as power supply inspection, volt ampere test and earth test power supply"
+        },
+        {
+          "id": "ELE/N3112.PC37",
+          "code": "PC37",
+          "text": "inspect every module of the unit separately if the fault is not identified through basic tests"
+        },
+        {
+          "id": "ELE/N3112.PC38",
+          "code": "PC38",
+          "text": "send it to factory for in-depth diagnosis if problem does not get identified at site"
+        },
+        {
+          "id": "ELE/N3112.PC39",
+          "code": "PC39",
+          "text": "repair/replace component at location, if the fault identified is due to damage of components"
+        },
+        {
+          "id": "ELE/N3112.PC40",
+          "code": "PC40",
+          "text": "schedule next appointment if the part can't be replaced on site"
+        },
+        {
+          "id": "ELE/N3112.PC41",
+          "code": "PC41",
+          "text": "reassemble the unit to check that all the modules of the unit are working as per specifications"
+        },
+        {
+          "id": "ELE/N3112.PC42",
+          "code": "PC42",
+          "text": "demonstrate functionality of the unit to the customer"
+        },
+        {
+          "id": "ELE/N3112.PC43",
+          "code": "PC43",
+          "text": "provide information to the customer about cleaning procedures and precautions to be taken in order to avoid recurrence of problem"
+        },
+        {
+          "id": "ELE/N3112.PC44",
+          "code": "PC44",
+          "text": "complete all documentation procedures for complaint closure"
+        },
+        {
+          "id": "ELE/N3112.PC45",
+          "code": "PC45",
+          "text": "collect necessary payments from the customer"
+        },
+        {
+          "id": "ELE/N3112.PC46",
+          "code": "PC46",
+          "text": "Follow workplace discipline, grooming, and ethical behaviour standards."
+        },
+        {
+          "id": "ELE/N3112.PC47",
+          "code": "PC47",
+          "text": "Use appropriate PPE and tools; follow safety procedures at the site."
+        },
+        {
+          "id": "ELE/N3112.PC48",
+          "code": "PC48",
+          "text": "Handle emergencies and report safety incidents as per protocol."
+        },
+        {
+          "id": "ELE/N3112.PC49",
+          "code": "PC49",
+          "text": "Work honestly, protect customer property, and ensure quality service."
+        }
+      ],
+      "knowledge_items": []
+    },
+    {
+      "code": "DGT/VSQ/N0101",
+      "title": "Employability Skills (30 hours)",
+      "core": false,
+      "nsqf_level": 4.0,
+      "hours": null,
+      "performance_criteria": [
+        {
+          "id": "DGT/VSQ/N0101.PC1",
+          "code": "PC1",
+          "text": "understand the significance of employability skills in meeting the job requirements"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC2",
+          "code": "PC2",
+          "text": "identify constitutional values, civic rights, duties, personal values and ethics and environmentally sustainable practices"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC3",
+          "code": "PC3",
+          "text": "explain 21st Century Skills such as Self Awareness, Behavior Skills, Positive attitude, self- motivation, problem-solving, creative thinking, time management, social and cultural awareness, emotional awareness, continuous learning mindset etc."
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC4",
+          "code": "PC4",
+          "text": "speak with others using some basic English phrases or sentences"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC5",
+          "code": "PC5",
+          "text": "follow good manners while communicating with others"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC6",
+          "code": "PC6",
+          "text": "work with others in a team"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC7",
+          "code": "PC7",
+          "text": "communicate and behave appropriately with all genders and PwD"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC8",
+          "code": "PC8",
+          "text": "report any issues related to sexual harassment"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC9",
+          "code": "PC9",
+          "text": "use various financial products and services safely and securely"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC10",
+          "code": "PC10",
+          "text": "calculate income, expenses, savings etc."
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC11",
+          "code": "PC11",
+          "text": "approach the concerned authorities for any exploitation as per legal rights and laws"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC12",
+          "code": "PC12",
+          "text": "operate digital devices and use its features and applications securely and safely"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC13",
+          "code": "PC13",
+          "text": "use internet and social media platforms securely and safely"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC14",
+          "code": "PC14",
+          "text": "identify and assess opportunities for potential business"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC15",
+          "code": "PC15",
+          "text": "identify sources for arranging money and associated financial and legal challenges"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC16",
+          "code": "PC16",
+          "text": "identify different types of customers"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC17",
+          "code": "PC17",
+          "text": "identify customer needs and address them appropriately"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC18",
+          "code": "PC18",
+          "text": "follow appropriate hygiene and grooming standards"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC19",
+          "code": "PC19",
+          "text": "create a basic biodata"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC20",
+          "code": "PC20",
+          "text": "search for suitable jobs and apply"
+        },
+        {
+          "id": "DGT/VSQ/N0101.PC21",
+          "code": "PC21",
+          "text": "identify and register apprenticeship opportunities as per requirement"
+        }
+      ],
+      "knowledge_items": []
+    }
+  ]
+}

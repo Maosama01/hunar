@@ -7,6 +7,7 @@ import io
 import json
 import random
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Literal
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
@@ -20,7 +21,16 @@ from hunar.accounts.models import Account
 from hunar.accounts.routes import router as accounts_router
 from hunar.api import services as svc
 from hunar.api.db import get_session, init_db
-from hunar.api.models import AppliedOp, Assessment, AuditEntry, EvidenceItem, StudyItem, StudyRating, Worker
+from hunar.api.models import (
+    AppliedOp,
+    Assessment,
+    AuditEntry,
+    EvidenceItem,
+    GuidedClip,
+    StudyItem,
+    StudyRating,
+    Worker,
+)
 from hunar.audit import log as audit
 from hunar.evidence import detector
 from hunar.market.routes import router as market_router
@@ -244,6 +254,7 @@ def get_assessment(aid: str, _acc: Account = STAFF, s: Session = DB):
         "mapping": json.loads(a.mapping_json) if a.mapping_json else None,
         "checklist": svc.checklist_for(s, aid),
         "evidence": [_evidence_out(e) for e in svc.evidence_for(s, aid)],
+        "clips": [_clip_out(c) for c in svc.clips_for(s, aid)],
         "decisions": [d.model_dump() for d in dec.values()],
         "signoff": json.loads(a.signoff_json) if a.signoff_json else None,
     }
@@ -274,6 +285,33 @@ async def add_evidence(aid: str, task_id: str = Form(...), photo_id: str = Form(
     a = svc.get_or_404(s, Assessment, aid)
     ev = svc.add_evidence(s, a, task_id, photo_id, await file.read(), consent_confirmed, auth.actor(acc))
     return _evidence_out(ev)
+
+
+def _clip_out(c: GuidedClip) -> dict:
+    d = c.model_dump(mode="json", exclude={"stored_path", "transcript_json", "found_json"})
+    d["transcript"] = json.loads(c.transcript_json)
+    d["found"] = json.loads(c.found_json)
+    d["video_url"] = f"/api/clips/{c.id}/video"
+    return d
+
+
+@app.post("/api/assessments/{aid}/clips")
+async def add_clip(aid: str, task_id: str = Form(...), clip_id: str = Form(...), consent_confirmed: bool = Form(False),
+                   language: str | None = Form(None), reading: float | None = Form(None),
+                   printed: float | None = Form(None), tolerance_pct: float | None = Form(None),
+                   file: UploadFile = File(...), acc: Account = STAFF, s: Session = DB):
+    """Video pilot: one guided clip. Needs a connection (clips are not queued offline: they are large)."""
+    a = svc.get_or_404(s, Assessment, aid)
+    c = svc.add_clip(s, a, task_id, clip_id, await file.read(), consent_confirmed, auth.actor(acc), language,
+                     reading, printed, tolerance_pct)
+    return _clip_out(c)
+
+
+@app.get("/api/clips/{cid}/video")
+def clip_video(cid: str, _acc: Account = STAFF, s: Session = DB):
+    c = svc.get_or_404(s, GuidedClip, cid)
+    p = Path(c.stored_path)
+    return FileResponse(p if p.is_absolute() else DATA / p, media_type="video/mp4")
 
 
 @app.get("/api/evidence/{eid}/image")

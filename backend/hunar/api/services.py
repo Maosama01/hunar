@@ -14,7 +14,7 @@ from fastapi import HTTPException
 from sqlalchemy import and_, delete, func, or_
 from sqlmodel import Session, select
 
-from hunar.api.models import Assessment, ChecklistTick, Decision, EvidenceItem, PhashBand, Worker
+from hunar.api.models import Assessment, ChecklistTick, Decision, EvidenceItem, GuidedClip, PhashBand, Worker
 from hunar.audit import log as audit
 from hunar.evidence import detector, hashing, privacy
 from hunar.mapper.mapper import QPMapper
@@ -65,15 +65,15 @@ def task_or_422(task_id: str, a: Assessment | None = None) -> engine.Task:
 
 @lru_cache(maxsize=1)
 def trade_packs() -> dict[str, QualificationPack]:
-    """The official file of each trade outside M1 (plumber, carpenter), from data/processed/qp."""
-    from hunar import paths
-    from hunar.market.trades import TRADES
+    """The official file of each trade outside M1 (plumber, carpenter, the appliance pilot): the
+    `trade_packs` of data/qp_sources.json, parsed in data/processed/qp."""
+    from hunar import paths  # not this module's DATA, which tests point at a temporary uploads folder
 
     out = {}
-    for trade, spec in TRADES.items():
-        f = paths.DATA / "processed" / "qp" / f"{spec['qualification_nqr_id']}.json"  # not the uploads DATA
-        if trade != "electrician" and f.exists():
-            out[trade] = QualificationPack.model_validate_json(f.read_text())
+    for spec in json.loads((paths.DATA / "qp_sources.json").read_text()).get("trade_packs", []):
+        f = paths.DATA / "processed" / "qp" / f"{spec['nqr_id']}.json"
+        if spec.get("trade") and f.exists():
+            out[spec["trade"]] = QualificationPack.model_validate_json(f.read_text())
     return out
 
 
@@ -267,6 +267,56 @@ def add_evidence_b64(s: Session, a: Assessment, payload: dict, actor: str) -> Ev
                         bool(payload.get("consent_confirmed")), actor)
 
 
+def add_clip(s: Session, a: Assessment, task_id: str, clip_id: str, data: bytes, consent_confirmed: bool,
+             actor: str, language: str | None = None, reading: float | None = None, printed: float | None = None,
+             tolerance_pct: float | None = None) -> GuidedClip:
+    """Store one guided clip (video pilot): faces blurred and sound removed before storage."""
+    from hunar.video import clips
+
+    require_open(a)
+    if not consent_confirmed:
+        raise HTTPException(422, "written consent must be confirmed before a clip is stored")
+    task = task_or_422(task_id, a)
+    prompt = next((c for c in task.clips if c.id == clip_id), None)
+    if prompt is None:
+        raise HTTPException(422, f"unknown clip {clip_id} for {task_id}")
+    path = UPLOADS / a.id / f"clip_{task_id}_{clip_id}_{uuid.uuid4().hex[:8]}.mp4"
+    try:
+        res = clips.process_clip(data, prompt, path, language, reading, printed, tolerance_pct)
+    except Exception as e:  # undecodable or too long: nothing is kept
+        path.unlink(missing_ok=True)
+        raise HTTPException(422, f"could not process the clip: {e}") from e
+    c = GuidedClip(assessment_id=a.id, task_id=task_id, clip_id=clip_id, stored_path=str(path.relative_to(DATA))
+                   if path.is_relative_to(DATA) else str(path), duration_s=res["duration_s"],
+                   frames_with_faces=res["frames_with_faces"], transcript_json=json.dumps(res["transcript"]),
+                   found_json=json.dumps(res["found"]), detector=res["detector"], part_seen=res["part_seen"],
+                   hand_on_part=res["hand_on_part"], meter_value=reading, printed_value=printed,
+                   tolerance_pct=tolerance_pct, meter_in_range=res["meter_in_range"], consent_confirmed=True)
+    s.add(c)
+    audit.append(s, actor, "clip.added", a.id, {"task_id": task_id, "clip_id": clip_id, "duration_s": c.duration_s,
+                                                 "aspects_found": sorted(res["found"]), "meter_in_range": c.meter_in_range},
+                 commit=False)
+    s.commit()
+    s.refresh(c)
+    return c
+
+
+def clips_for(s: Session, assessment_id: str) -> list[GuidedClip]:
+    return list(s.exec(select(GuidedClip).where(GuidedClip.assessment_id == assessment_id)
+                       .order_by(GuidedClip.created_at)))
+
+
+def _clip_evidence(s: Session, a: Assessment) -> dict[str, dict[str, engine.ClipEvidence]]:
+    """task_id -> clip_id -> what the latest clip of that prompt showed."""
+    out: dict[str, dict[str, engine.ClipEvidence]] = {}
+    for c in clips_for(s, a.id):  # oldest first, so the latest clip of a prompt wins
+        out.setdefault(c.task_id, {})[c.clip_id] = engine.ClipEvidence(
+            clip_id=c.clip_id, found={k: [tuple(h) for h in v] for k, v in json.loads(c.found_json).items()},
+            part_seen=c.part_seen, hand_on_part=c.hand_on_part, meter_value=c.meter_value,
+            meter_in_range=c.meter_in_range)
+    return out
+
+
 def evidence_for(s: Session, assessment_id: str) -> list[EvidenceItem]:
     return list(s.exec(select(EvidenceItem).where(EvidenceItem.assessment_id == assessment_id)))
 
@@ -294,6 +344,7 @@ def prescores(s: Session, a: Assessment) -> list[engine.PreScore]:
     ticks = checklist_for(s, a.id)
     evidence = evidence_for(s, a.id)
     decl = _declaration_matches(a)
+    clip_ev = _clip_evidence(s, a)
     out = []
     for task in engine.tasks_for(a.trade):
         task_ev = [e for e in evidence if e.task_id == task.task_id]
@@ -303,7 +354,8 @@ def prescores(s: Session, a: Assessment) -> list[engine.PreScore]:
             dets = [engine.Detection(**{k: d[k] for k in ("photo_id", "cls", "confidence")})
                     for e in analysed for d in json.loads(e.detections_json)]
         out += engine.prescore_task(task, ticks.get(task.task_id), dets, decl,
-                                    declaration_threshold=mapper().matcher.evidence_threshold)
+                                    declaration_threshold=mapper().matcher.evidence_threshold,
+                                    clips=clip_ev.get(task.task_id))
     return out
 
 

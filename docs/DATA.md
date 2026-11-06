@@ -28,13 +28,23 @@ The four distractors are neighbouring electrical jobs that share vocabulary (wir
 safety) so the mapper has to discriminate. Two distractors show a "valid till" date that has passed
 on the NQR page as of 28 Oct 2026; they are still listed on NQR and are used only as distractors.
 
-**Trade qualification files (quiz banks only; not candidates for the M1 mapper).** Listed under
-`trade_packs` in `data/qp_sources.json`, fetched and parsed by the same commands:
+**Trade qualification files (quiz banks, trade rubrics and the video pilot; not candidates for the M1
+mapper).** Listed under `trade_packs` in `data/qp_sources.json`, fetched and parsed by the same commands:
 
 | Trade | NQR id | Qualification | NQR code | NSQF | Valid till (NQR page) |
 |---|---|---|---|---|---|
 | plumber | 12957 | Plumber - General (WMPSC) | QG-04-PL-03441-2024-V2-WMPS | 4 | 17/12/2027 |
 | carpenter | 9884 | Assistant Carpenter (FFSC) | QG-04-WC-00828-2023-V2-FFSC | 4 | 31/08/2026 (lapsed) |
+| appliance_technician (video pilot) | 14861 | Service Technician – Home Appliances (ESSCI) | QG-04-EH-044772025-V2-ESSCI (as printed on NQR) | 4 | 07/10/2028 |
+
+**Appliance file for the ceiling-fan video pilot (checked 6 Nov 2026).** NQR 14861 is current (NSQC 44,
+approved 07/10/2025) and has two trade NOS: ELE/N3101 (engage with customer) and ELE/N3112 (install
+and repair appliances); 70 % aggregate pass mark, no NOS-wise mark. Its installation criteria name
+refrigerators, air conditioners, washing machines and water purifiers; **no current qualification we
+checked names ceiling fans** (not this file, not the five electrical packs). The older Field
+Technician – Other Home Appliances (NQR 2270) lapsed on 27/06/2025 and covers mixer-grinders and
+microwave ovens, not fans, so it is not used. The fan tasks therefore link to ELE/N3112's general
+diagnose-and-repair criteria (PC34–PC43, PC47) and ELE/N3101's customer criteria, and say so.
 
 No worker-level domestic carpentry qualification on NQR was current on 3 Nov 2026, so the lapsed
 FFSC file is used as the closest official standard and the app labels it as lapsed. The first parse

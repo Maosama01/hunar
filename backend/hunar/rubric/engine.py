@@ -12,6 +12,11 @@ Rules (also shown to assessors in the UI):
   photos is flagged as a conflict for the assessor to resolve.
 * The self-declaration (M1) is reported as context only. Saying you can do something is not
   evidence that you did it, so it never raises a level.
+* Guided clips (video pilot): for each part the worker shows and explains, the transcript is checked
+  for the terms of each aspect (name, function, failure, test) and, when a detector is configured,
+  the frames for the part and a hand on it. Explained and handled suggests 2, partly explained or
+  handled but silent suggests 1, neither suggests 0, never 3. Clip-only suggestions have low
+  confidence; with checklist ticks the checklist leads and a clip that shows nothing is a conflict.
 * Aggregation: criterion score = level / 3; NOS and overall scores are weighted means. The pass mark
   comes from the qualification file the tasks belong to (PASS_RULES): 70 % aggregate for all three
   trades, and for the carpenter file also 70 % in each NOS. Any critical (safety) criterion below
@@ -41,6 +46,7 @@ COMPETENT = 2
 # (aggregate at qualification level, NOS-wise or None when the file leaves it blank).
 PASS_RULES: dict[int, tuple[float, float | None]] = {
     13772: (0.70, None),  # Assistant Electrician, QG-03-CO-03951-2025-V2-CSDCI
+    14861: (0.70, None),  # Service Technician - Home Appliances, QG-04-EH-044772025-V2-ESSCI
     12957: (0.70, None),  # Plumber - General, QG-04-PL-03441-2024-V2-WMPS
     9884: (0.70, 0.70),  # Assistant Carpenter, QG-04-WC-00828-2023-V2-FFSC
 }
@@ -67,6 +73,49 @@ class PhotoSpec(BaseModel):
     hi: str
 
 
+ASPECTS = ("name", "function", "failure", "test")
+
+
+class MeterSpec(BaseModel):
+    quantity: str  # e.g. capacitance, resistance
+    unit: str  # as printed on the part, e.g. uF, ohm
+
+
+class ClipPrompt(BaseModel):
+    """One guided clip: the app asks the worker to show one part and explain it."""
+
+    id: str
+    part: Text
+    prompt: Text
+    detect: list[str] = Field(default_factory=list, description="Open-vocabulary labels for the frame check")
+    terms: dict[str, list[str]] = Field(description="aspect -> words that show it was explained (any script)")
+    meter: MeterSpec | None = None
+
+    @field_validator("terms")
+    @classmethod
+    def _known_aspects(cls, v: dict[str, list[str]]) -> dict[str, list[str]]:
+        if bad := set(v) - set(ASPECTS):
+            raise ValueError(f"unknown aspects {sorted(bad)}; use {ASPECTS}")
+        return v
+
+
+class ClipRef(BaseModel):
+    id: str
+    aspects: list[str]
+    meter: bool = False  # a reading outside the printed value caps the suggestion at 1
+
+
+class ClipEvidence(BaseModel):
+    """What the pipeline found in one guided clip (hunar.video.clips)."""
+
+    clip_id: str
+    found: dict[str, list[tuple[str, float]]] = Field(default_factory=dict, description="aspect -> (word, seconds)")
+    part_seen: bool | None = None  # None: frames not checked (no detector)
+    hand_on_part: bool | None = None
+    meter_value: float | None = None
+    meter_in_range: bool | None = None
+
+
 class Criterion(BaseModel):
     id: str
     nos: str
@@ -77,6 +126,7 @@ class Criterion(BaseModel):
     checklist: list[str] = Field(default_factory=list)
     cv_classes: list[str] = Field(default_factory=list, description="All must be present")
     cv_classes_any: list[str] = Field(default_factory=list, description="At least one must be present")
+    clip: ClipRef | None = None
     levels: dict[int, str]
 
     @field_validator("levels")
@@ -103,14 +153,24 @@ class Task(BaseModel):
     instructions: Text
     photos: list[PhotoSpec]
     checklist: list[ChecklistItem]
+    clips: list[ClipPrompt] = Field(default_factory=list)
     criteria: list[Criterion]
 
     def model_post_init(self, _ctx) -> None:
         ids = {c.id for c in self.checklist}
+        clips = {c.id: c for c in self.clips}
         for cr in self.criteria:
             missing = set(cr.checklist) - ids
             if missing:
                 raise ValueError(f"{self.task_id}.{cr.id}: unknown checklist items {missing}")
+            if cr.clip:
+                prompt = clips.get(cr.clip.id)
+                if prompt is None:
+                    raise ValueError(f"{self.task_id}.{cr.id}: unknown clip {cr.clip.id}")
+                if bad := set(cr.clip.aspects) - set(prompt.terms):
+                    raise ValueError(f"{self.task_id}.{cr.id}: clip {cr.clip.id} has no terms for {sorted(bad)}")
+                if cr.clip.meter and prompt.meter is None:
+                    raise ValueError(f"{self.task_id}.{cr.id}: clip {cr.clip.id} has no meter")
 
 
 @lru_cache(maxsize=1)
@@ -172,9 +232,49 @@ def _cv_status(cr: Criterion, detections: list[Detection] | None, min_conf: floa
     return (not missing and any_ok), reasons
 
 
+def _mmss(seconds: float) -> str:
+    s = int(round(seconds))
+    return f"{s // 60}:{s % 60:02d}"
+
+
+def clip_suggestion(cr: Criterion, ev: ClipEvidence) -> tuple[int, list[str]]:
+    """(suggested level 0..2, reasons) from one guided clip; never 3."""
+    ref = cr.clip
+    reasons = []
+    said = [a for a in ref.aspects if ev.found.get(a)]
+    for a in ref.aspects:
+        if hits := ev.found.get(a):
+            word, t = hits[0]
+            reasons.append(f'clip {ref.id}: {a} explained ("{word}" at {_mmss(t)})')
+        else:
+            reasons.append(f"clip {ref.id}: {a} not mentioned")
+    handled = ev.hand_on_part if ev.hand_on_part is not None else ev.part_seen
+    if handled is None:
+        reasons.append(f"clip {ref.id}: frames not checked for the part (no detector); watch the clip")
+    else:
+        reasons.append(f"clip {ref.id}: part {'shown' if ev.part_seen else 'not seen'} in the frames"
+                       + ("" if ev.hand_on_part is None else f", hand {'on it' if ev.hand_on_part else 'not on it'}"))
+    explained_all, explained_some = len(said) == len(ref.aspects), bool(said)
+    if explained_all and handled:
+        level = COMPETENT
+    elif explained_some or handled:
+        level = 1
+    else:
+        level = 0
+    if ref.meter:
+        if ev.meter_in_range is False:
+            level = min(level, 1)
+            reasons.append(f"clip {ref.id}: meter reading {ev.meter_value} is outside the value printed on the part")
+        elif ev.meter_in_range:
+            reasons.append(f"clip {ref.id}: meter reading {ev.meter_value} is within the value printed on the part")
+        else:
+            reasons.append(f"clip {ref.id}: no meter reading entered")
+    return level, reasons
+
+
 def prescore_criterion(task: Task, cr: Criterion, checklist: dict[str, bool] | None,
                        detections: list[Detection] | None, declaration: list[DeclarationMatch] | None,
-                       min_conf: float = 0.5) -> PreScore:
+                       min_conf: float = 0.5, clips: dict[str, ClipEvidence] | None = None) -> PreScore:
     reasons: list[str] = []
     level: int | None = None
     has_checklist = checklist is not None and bool(cr.checklist) and any(i in checklist for i in cr.checklist)
@@ -197,6 +297,17 @@ def prescore_criterion(task: Task, cr: Criterion, checklist: dict[str, bool] | N
             conflict = True
             reasons.append("conflict: checklist says done but photos do not show it; assessor to check")
 
+    clip_only = False
+    if cr.clip and clips and (ev := clips.get(cr.clip.id)):
+        clip_level, clip_reasons = clip_suggestion(cr, ev)
+        reasons += clip_reasons
+        if level is None:
+            level, clip_only = clip_level, True
+            reasons.append("suggested from the guided clip only: words and presence, workmanship not judged")
+        elif clip_level == 0 and level >= COMPETENT:
+            conflict = True
+            reasons.append("conflict: checklist says done but the clip shows neither the part nor an explanation")
+
     for m in sorted(declaration or [], key=lambda m: -m.similarity)[:1]:
         reasons.append(f'worker\'s declaration mentions this: "{m.sentence}" (similarity {m.similarity:.2f}); '
                        "context only, not scored")
@@ -204,7 +315,7 @@ def prescore_criterion(task: Task, cr: Criterion, checklist: dict[str, bool] | N
     if level is None:
         reasons.append("not enough observed evidence; assessor must score this criterion")
         confidence = "none"
-    elif conflict or not has_checklist:
+    elif conflict or not has_checklist or clip_only:
         confidence = "low"
     elif cv_present is True and level >= COMPETENT:
         confidence = "high"
@@ -216,12 +327,12 @@ def prescore_criterion(task: Task, cr: Criterion, checklist: dict[str, bool] | N
 
 def prescore_task(task: Task, checklist: dict[str, bool] | None = None, detections: list[Detection] | None = None,
                   declaration_pc_scores: dict[str, DeclarationMatch] | None = None,
-                  declaration_threshold: float = 0.5) -> list[PreScore]:
+                  declaration_threshold: float = 0.5, clips: dict[str, ClipEvidence] | None = None) -> list[PreScore]:
     out = []
     for cr in task.criteria:
         decl = [m for pc in cr.pc_refs if (m := (declaration_pc_scores or {}).get(pc))
                 and m.similarity >= declaration_threshold]
-        out.append(prescore_criterion(task, cr, checklist, detections, decl))
+        out.append(prescore_criterion(task, cr, checklist, detections, decl, clips=clips))
     return out
 
 

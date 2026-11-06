@@ -74,3 +74,15 @@ def transcribe_bytes(data: bytes, language: str | None = None, filename: str = "
         p = Path(d) / f"audio{suffix}"
         p.write_bytes(data)
         return transcribe_file(p, language)
+
+
+def transcribe_words(path: str | Path, language: str | None = None) -> dict:
+    """Transcript with word timings, for guided clips (hunar.video.clips): which word was said when."""
+    segments, info = _model().transcribe(str(path), language=language, beam_size=5, vad_filter=True,
+                                         condition_on_previous_text=False, word_timestamps=True)
+    words, texts = [], []
+    for s in segments:
+        texts.append(s.text.strip())
+        words += [{"word": w.word.strip(), "start": round(w.start, 2), "end": round(w.end, 2)} for w in s.words or []]
+    return {"text": " ".join(x for x in texts if x).strip(), "words": words, "language": info.language,
+            "duration_s": round(float(info.duration), 2), "model": f"faster-whisper-{MODEL}", "note": NOTE}

@@ -47,6 +47,29 @@ class ChecklistTick(SQLModel, table=True):
     updated_at: dt.datetime = Field(default_factory=_now)
 
 
+class GuidedClip(SQLModel, table=True):
+    """One guided clip (video pilot). Only a face-blurred, silent copy is stored; the transcript is a draft."""
+
+    id: str = Field(default_factory=_uuid, primary_key=True)
+    assessment_id: str = Field(foreign_key="assessment.id", index=True)
+    task_id: str
+    clip_id: str
+    stored_path: str
+    duration_s: float = 0.0
+    frames_with_faces: int = 0
+    transcript_json: str = "{}"
+    found_json: str = "{}"
+    detector: str = "none"
+    part_seen: bool | None = None
+    hand_on_part: bool | None = None
+    meter_value: float | None = None
+    printed_value: float | None = None
+    tolerance_pct: float | None = None
+    meter_in_range: bool | None = None
+    consent_confirmed: bool = False
+    created_at: dt.datetime = Field(default_factory=_now)
+
+
 class EvidenceItem(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     assessment_id: str = Field(foreign_key="assessment.id", index=True)

@@ -15,7 +15,7 @@ from hunar.rubric.engine import (
 )
 from hunar.schemas import QualificationPack
 
-TRADES = ["electrician", "plumber", "carpenter"]
+TRADES = ["electrician", "plumber", "carpenter", "appliance_technician"]
 
 
 def all_levels(level, tasks=None):
@@ -45,7 +45,7 @@ def test_task_ids_are_unique_across_trades():
 
 def test_every_pc_reference_exists_in_the_official_pack():
     packs = {p.nqr_id: p for p in load_packs()}
-    for nqr in (12957, 9884):  # the plumber and carpenter files are not M1 packs
+    for nqr in (12957, 9884, 14861):  # the plumber, carpenter and appliance files are not M1 packs
         packs[nqr] = QualificationPack.model_validate_json((DATA / "processed" / "qp" / f"{nqr}.json").read_text())
     for t in load_tasks():
         pc_ids = {pc.id for _, pc in packs[t.qualification_nqr_id].criteria()}

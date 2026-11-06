@@ -1,0 +1,65 @@
+task_id: fan1_safe_start
+trade: appliance_technician
+qualification_nqr_id: 14861
+review: {en: "DRAFT for the ceiling-fan video pilot, written with AI help. Service Technician - Home Appliances (NQR 14861) names no fan-specific criteria, so these tasks use its general diagnose-and-repair criteria. Not yet reviewed by an appliance technician or ITI instructor.", hi: "सीलिंग फ़ैन वीडियो पायलट के लिए AI की मदद से लिखा गया ड्राफ़्ट। सर्विस टेक्नीशियन - होम अप्लायंसेज़ (NQR 14861) में पंखे के लिए अलग मानदंड नहीं हैं, इसलिए ये कार्य उसके सामान्य जाँच और मरम्मत वाले मानदंडों से जुड़े हैं। अभी किसी अप्लायंस टेक्नीशियन या ITI प्रशिक्षक ने इसकी समीक्षा नहीं की है।"}
+title:
+  en: "Start safely: switch off, prove dead, PPE and a safe height"
+  hi: "सुरक्षित शुरुआत: सप्लाई बंद, करंट न होना साबित करना, PPE और ऊँचाई पर सुरक्षा"
+instructions:
+  en: "Before touching the fan, ask about the fault, switch off the supply and show it on camera, prove the fan's wires are dead with a tester, wear PPE, and take the fan down to a bench or use a stable ladder."
+  hi: "पंखे को छूने से पहले ख़राबी के बारे में पूछें, सप्लाई बंद करके कैमरे पर दिखाएँ, टेस्टर से साबित करें कि पंखे के तारों में करंट नहीं है, PPE पहनें, और पंखे को बेंच पर उतारें या मज़बूत सीढ़ी का उपयोग करें।"
+photos:
+  - {id: p1, en: "The switched-off MCB or switch (face is blurred automatically)", hi: "बंद किया हुआ MCB या स्विच (चेहरा अपने आप धुंधला होगा)"}
+checklist:
+  - {id: asked_history, en: "Asked what is wrong, since when, and the fan's age and upkeep", hi: "पूछा कि क्या ख़राबी है, कब से है, और पंखा कितना पुराना है व उसकी देखभाल कैसी रही"}
+  - {id: power_off, en: "Supply switched off at the MCB and the switch", hi: "MCB और स्विच से सप्लाई बंद की"}
+  - {id: shown_on_camera, en: "The switched-off supply shown on camera before opening anything", hi: "कुछ भी खोलने से पहले बंद सप्लाई कैमरे पर दिखाई"}
+  - {id: tested_dead, en: "Tester shows no voltage at the fan's wires", hi: "टेस्टर ने पंखे के तारों पर वोल्टेज न होना दिखाया"}
+  - {id: ppe_tools, en: "Insulated tools; safety shoes worn", hi: "इंसुलेटेड औज़ार; सेफ्टी जूते पहने"}
+  - {id: height_safe, en: "Fan taken down to a bench, or a stable ladder used with someone holding it", hi: "पंखा बेंच पर उतारा, या मज़बूत सीढ़ी किसी के पकड़े रहते इस्तेमाल की"}
+clips:
+  - id: isolation
+    part: {en: "Supply and tester", hi: "सप्लाई और टेस्टर"}
+    prompt: {en: "Show the switched-off MCB and switch, then touch the tester to the fan's wires and say what it shows.", hi: "बंद MCB और स्विच दिखाएँ, फिर पंखे के तारों पर टेस्टर लगाएँ और बताएँ कि वह क्या दिखा रहा है।"}
+    detect: [circuit breaker, voltage tester]
+    terms:
+      test: [tester, टेस्टर, "no current", "current nahi", करंट नहीं, "supply off", "supply band", सप्लाई बंद, mcb, एमसीबी, "switch off", स्विच बंद, dead]
+criteria:
+  - id: c1_history
+    nos: ELE/N3101
+    pc_refs: [ELE/N3101.PC7]
+    weight: 1
+    critical: false
+    text: {en: "Asks about the fault and the fan's history", hi: "ख़राबी और पंखे के इतिहास के बारे में पूछना"}
+    checklist: [asked_history]
+    levels:
+      0: "Starts work without asking what is wrong."
+      1: "Asks what is wrong but not since when or how the fan has been used."
+      2: "Asks the symptom, since when, the fan's age and upkeep."
+      3: "As 2, and checks the symptom by running the fan before switching off, if it is safe to."
+  - id: c2_isolate
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC35, ELE/N3112.PC47]
+    weight: 2
+    critical: true
+    text: {en: "Switches off, shows it, and proves the wires are dead", hi: "सप्लाई बंद करना, दिखाना, और तारों में करंट न होना साबित करना"}
+    checklist: [power_off, shown_on_camera, tested_dead]
+    clip: {id: isolation, aspects: [test]}
+    levels:
+      0: "Opens the fan or touches its wires with the supply on."
+      1: "Switches off but does not test, or does not show it on camera."
+      2: "Switches off at the MCB and switch, shows it, and proves the wires dead with a tester."
+      3: "As 2, and checks the tester on a live point first, and tags the MCB."
+  - id: c3_ppe_height
+    nos: ELE/N3112
+    pc_refs: [ELE/N3112.PC47]
+    weight: 2
+    critical: true
+    text: {en: "Uses PPE and works safely at height", hi: "PPE का उपयोग और ऊँचाई पर सुरक्षित काम"}
+    checklist: [ppe_tools, height_safe]
+    cv_classes: [safety_shoes]
+    levels:
+      0: "Stands on a chair or unstable support, or uses damaged tools."
+      1: "Uses a ladder or insulated tools, but not both safely."
+      2: "Insulated tools and safety shoes; fan taken down or a stable, held ladder used."
+      3: "As 2, and keeps the area below clear of people while working."

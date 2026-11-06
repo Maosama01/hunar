@@ -62,6 +62,15 @@
       "downloaded_on": "2026-11-03",
       "sha256": "368672d07dfadd56f4c5ba06ec4942180252024babf98007449e193d8be46ed1",
       "bytes": 778638
+    },
+    {
+      "nqr_id": 14861,
+      "title": "Service Technician – Home Appliances",
+      "source_url": "https://www.nqr.gov.in/qualification/file/QFile_Service%20Technician%20%E2%80%93%20Home%20Appliances.....pdf",
+      "page_url": "https://www.nqr.gov.in/qualifications/14861",
+      "downloaded_on": "2026-11-06",
+      "sha256": "683f9f6f84a652f2b3e3e7b73d21a6d88dfbe2a5690d475a9732f7d4e4dc0032",
+      "bytes": 1442701
     }
   ]
 }
