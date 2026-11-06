@@ -31,6 +31,23 @@ function useAuthedVideo(url: string): string | null {
   return obj;
 }
 
+const MAX_TIMES = 8;
+
+/** Seconds at which the frame check saw something, as buttons that jump the video there. */
+function FrameTimes({ label, times, seek }: { label: string; times: number[]; seek: (s: number) => void }) {
+  return (
+    <>
+      <strong>{label}</strong>{" "}
+      {times.slice(0, MAX_TIMES).map((s) => (
+        <button key={s} type="button" className="chip-link" onClick={() => seek(s)}>
+          {mmss(s)}
+        </button>
+      ))}
+      {times.length > MAX_TIMES && <span className="muted"> +{times.length - MAX_TIMES}</span>}
+    </>
+  );
+}
+
 /** A stored clip: the blurred, silent video, what was said for each aspect (click to jump), the meter check. */
 function ClipReview({ clip, prompt }: { clip: GuidedClipOut; prompt: ClipPrompt }) {
   const { t } = useI18n();
@@ -42,6 +59,9 @@ function ClipReview({ clip, prompt }: { clip: GuidedClipOut; prompt: ClipPrompt 
     void video.current.play().catch(() => undefined);
   };
   const aspects = ASPECTS.filter((a) => a in prompt.terms);
+  const frames = clip.frames ?? [];
+  const seenAt = frames.filter((f) => f.part !== null).map((f) => f.t);
+  const heldAt = frames.filter((f) => f.hand_on_part).map((f) => f.t);
   return (
     <div className="clip-review stack-s">
       {src ? <video ref={video} src={src} controls playsInline muted className="clip-video" /> : <p className="muted small">{t("common.loading")}</p>}
@@ -66,7 +86,17 @@ function ClipReview({ clip, prompt }: { clip: GuidedClipOut; prompt: ClipPrompt 
         {clip.part_seen === null ? (
           <li className="muted">{t("clips.framesNotChecked")}</li>
         ) : (
-          <li>{t(clip.part_seen ? "clips.partSeen" : "clips.partNotSeen")}</li>
+          <>
+            <li className={clip.part_seen ? "" : "warn-text"}>
+              {clip.part_seen ? <FrameTimes label={t("clips.partSeenAt")} times={seenAt} seek={seek} /> : t("clips.partNotSeen")}
+            </li>
+            {clip.part_seen && (
+              <li>
+                {clip.hand_on_part ? <FrameTimes label={t("clips.handOnAt")} times={heldAt} seek={seek} /> : t("clips.handNotOn")}
+              </li>
+            )}
+            <li className="muted">{t("clips.frameNote")}</li>
+          </>
         )}
         {prompt.meter && clip.meter_in_range !== null && (
           <li className={clip.meter_in_range ? "" : "warn-text"}>

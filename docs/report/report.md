@@ -467,13 +467,17 @@ are the capacitor, winding, bearings and regulator, plus a planted fault and a r
 clip the server blurs faces in every frame, removes the sound, stores only that copy, and transcribes
 the speech with word timings. It then looks for the words that show each aspect was explained (name,
 function, failure, test) in English, Hindi and Hinglish, and compares a meter reading the worker types
-with the value printed on the part. These become reasons for a suggested level, at most 2, with low
-confidence while no frame detector is configured; the assessor watches the marked moments and
-decides. The four fan tasks are drafts linked to Service Technician - Home Appliances (NQR 14861). No
+with the value printed on the part. An optional frame check prompts the open-vocabulary detector
+YOLOE [81] with the part's name and with "hand" on about one blurred frame a second, and lists the
+moments when the part was in view and when a hand box overlapped it. It shows presence and handling
+only, never workmanship. These become reasons for a suggested level, at most 2, with low confidence
+while the frame check is not set up (its weights are downloaded separately with `make clip-models`);
+the assessor watches the marked moments and decides. The four fan tasks are drafts linked to Service Technician - Home Appliances (NQR 14861). No
 current qualification we checked names ceiling fans, so they use that file's general
 diagnose-and-repair criteria. A test runs the whole pipeline on a synthetic clip (generated frames, a
-stand-in transcript). RESULT PENDING: speech accuracy per engine and detection accuracy on about 20
-consented team recordings.
+stand-in transcript); another runs the frame check with a stand-in model. RESULT PENDING: speech
+accuracy per engine, and frame-check precision and recall on hand-labelled frames from about 20
+consented team recordings (`make clip-frames`, then `make eval-clips`).
 
 # 5. System design
 
@@ -678,9 +682,9 @@ questions, adaptive against fixed-length quiz, for three trades and three assume
 
 * **No real worker data yet.** M1 results come from synthetic declarations written by an AI model;
   real performance will differ and is likely lower. The team-written set is the next step.
-* **Video pilot untried.** The guided-clip pipeline has run only on synthetic clips; no frame detector
-  or Indian-language speech engine is plugged in yet, and the fan tasks are drafts against a
-  qualification that names no fans.
+* **Video pilot untried.** The guided-clip pipeline has run only on synthetic clips; the frame check
+  is wired in but its model is neither downloaded nor measured, no Indian-language speech engine is
+  plugged in yet, and the fan tasks are drafts against a qualification that names no fans.
 * **Single trade, five qualifications.** Distractors are neighbouring electrical qualifications; with
   hundreds of packs on the NQR the task becomes harder.
 * **Parsing not fully human-checked.** Performance criteria were spot-checked, not checked one by

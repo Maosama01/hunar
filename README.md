@@ -86,7 +86,9 @@ Demo logins (SAMPLE accounts, local only) are listed at the top of
 Local settings and keys (Bhashini, PIN pepper) go in `.env` (copy `.env.example`; git ignores it).
 
 Optional extras: `make voice` (spoken declarations with faster-whisper; about 500 MB model on first
-use) and `make vision` (YOLO inference once the detector is trained).
+use), `make vision` (YOLO inference once the detector is trained) and `make clip-models` (video
+pilot frame check: downloads the YOLOE weights from Ultralytics' GitHub releases into `data/models/`
+and prepares the part and "hand" prompts; without them clips say "frames not checked").
 
 API docs: http://localhost:8000/docs. The sample worker and every screen built from it carry a
 **SAMPLE DATA** label.
@@ -111,7 +113,7 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | Booking and badges | Done: search, booking lifecycle, ratings, assessment requests, permit rule (CEA reg. 31), badges only from assessor sign-off | Real; permit check is manual (no State register API) |
 | 23 languages | UI and quiz support 23 languages with fallback, RTL and read-aloud; Bhashini client and `make translate` | Only English and Hindi written so far (Hindi with AI help, native-speaker review pending); Bhashini **not yet run** (needs credentials: [docs/bhashini_setup.md](docs/bhashini_setup.md)); machine translations will need review |
 | Voice input | Done: record on the declaration screen, faster-whisper `small` on CPU, transcript must be read back before saving; audio never stored | Checked on **synthetic** text-to-speech audio only; not yet tried with real workers' voices |
-| Video pilot (guided clips) | Built: 4 DRAFT ceiling-fan tasks (Service Technician – Home Appliances, NQR 14861), one short clip per part, faces blurred in every frame, sound removed, word-timed transcript, term and meter checks, suggestions with timestamps for the assessor | **RESULT PENDING**: no real clips yet; no frame detector or Indian-language speech engine plugged in; no current qualification names fans |
+| Video pilot (guided clips) | Built: 4 DRAFT ceiling-fan tasks (Service Technician – Home Appliances, NQR 14861), one short clip per part, faces blurred in every frame, sound removed, word-timed transcript, term and meter checks, suggestions with timestamps for the assessor | **RESULT PENDING**: no real clips yet; frame check (YOLOE prompted with the part and "hand") wired in but its model not downloaded or measured; no Indian-language speech engine plugged in; no current qualification names fans |
 
 ## Results
 
@@ -215,6 +217,10 @@ Test images with a near-duplicate (<= 4 bits) in train, re-split: 0.
 
 **Diagnostic first run on the published splits (not the detector result).** YOLOv8n, 50 epochs, ultralytics 8.3.228. Full test mAP50 0.530, clean test (1799 images) mAP50 0.397; per class on the clean test: helmet mAP50 0.000 | goggles mAP50 0.795. Helmet scores 0 because the published training split contains no helmet boxes; gloves cannot be scored because the published test split contains none; safety shoes had very few training boxes. Only the goggles figure measures what the model learned. Source: `experiments/m2_detector_run1_published_splits.json`; confusion matrix: `docs/figures/m2_run1_confusion_matrix.png`.
 
+
+### Video pilot: frame check on hand-labelled frames
+
+RESULT PENDING: no labelled frames yet. Record guided clips, run `make clip-frames`, label `data/labels/clip_frames.csv`, then `make eval-clips`.
 
 ### M4 inter-assessor consistency study
 

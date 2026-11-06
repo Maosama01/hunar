@@ -526,6 +526,12 @@ Bureau of Indian Standards, "IS 2065:1983 Code of practice for water supply in b
 - Verified: Text read 4 Nov 2026 (cl. 14.2).
 - Relevance: Pressure-test item in the plumber bank.
 
+**[81] `wang2025yoloe`**
+A. Wang, L. Liu, H. Chen, Z. Lin, J. Han, and G. Ding, "YOLOE: Real-time seeing anything," arXiv:2503.07465, 2025 (ICCV 2025 camera-ready version).
+- URL: https://arxiv.org/abs/2503.07465
+- Verified: arXiv API record read 6 Nov 2026 (title, six authors in this order, first submitted 10 Mar 2025, v2 17 Oct 2025, comment "ICCV 2025 Camera-ready Version"). Proceedings pages not checked, so the arXiv version is cited.
+- Relevance: Open-vocabulary detector prompted with a part's name and with "hand" for the video pilot's optional frame check (run through the Ultralytics library [30]).
+
 ---
 
 ## UNVERIFIED — [CITATION NEEDED]

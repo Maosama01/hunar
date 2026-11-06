@@ -60,6 +60,7 @@ class GuidedClip(SQLModel, table=True):
     transcript_json: str = "{}"
     found_json: str = "{}"
     detector: str = "none"
+    frames_json: str = "[]"  # per sampled frame: time, best part confidence, hand on the part
     part_seen: bool | None = None
     hand_on_part: bool | None = None
     meter_value: float | None = None

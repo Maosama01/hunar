@@ -157,3 +157,5 @@
 [79] Bureau of Indian Standards, "IS 5329:1983 Code of practice for sanitary pipe work above ground for buildings," 1983.
 
 [80] Bureau of Indian Standards, "IS 2065:1983 Code of practice for water supply in buildings," 1983.
+
+[81] A. Wang, L. Liu, H. Chen, Z. Lin, J. Han, and G. Ding, "YOLOE: Real-time seeing anything," arXiv:2503.07465, 2025 (ICCV 2025 camera-ready version).

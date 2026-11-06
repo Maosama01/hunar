@@ -288,8 +288,9 @@ async def add_evidence(aid: str, task_id: str = Form(...), photo_id: str = Form(
 
 
 def _clip_out(c: GuidedClip) -> dict:
-    d = c.model_dump(mode="json", exclude={"stored_path", "transcript_json", "found_json"})
+    d = c.model_dump(mode="json", exclude={"stored_path", "transcript_json", "found_json", "frames_json"})
     d["transcript"] = json.loads(c.transcript_json)
+    d["frames"] = json.loads(c.frames_json)
     d["found"] = json.loads(c.found_json)
     d["video_url"] = f"/api/clips/{c.id}/video"
     return d

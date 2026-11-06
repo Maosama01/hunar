@@ -6,8 +6,9 @@ For each upload:
    as Bhashini ASR or IndicConformer can replace it once measured on real clips);
 3. every frame is decoded, faces are blurred, and the clip is re-encoded as H.264 WITHOUT audio, at
    most MAX_WIDTH wide and MAX_FPS frames a second: only this blurred, silent copy is stored;
-4. about one frame a second is kept for the frame check (part and hand present), which runs only
-   when a detector is configured; without one the result says "not checked";
+4. about one frame a second is kept for the frame check (hunar.video.detect: is the part in frame,
+   is a hand on it), which runs only when the detector is set up; without it the result says "not
+   checked";
 5. each aspect's terms are searched in the transcript, and a meter reading typed by the worker is
    compared with the value printed on the part (the tolerance printed on it, or 10 % when none).
 The temporary folder is deleted before returning. Nothing here judges workmanship: the results are
@@ -99,7 +100,7 @@ def blur_and_encode(src: Path, dst: Path) -> dict:
         out = av.open(str(dst), mode="w")
         vout = None
         kept = with_faces = 0
-        samples: list[np.ndarray] = []
+        samples: list[tuple[float, np.ndarray]] = []
         next_sample = 0.0
         last_t = 0.0
         try:
@@ -130,7 +131,7 @@ def blur_and_encode(src: Path, dst: Path) -> dict:
                 t = float(frame.time) if frame.time is not None else kept / out_rate
                 last_t = t
                 if t >= next_sample:
-                    samples.append(blurred)
+                    samples.append((t, blurred))
                     next_sample = t + 1.0
                 if t > MAX_SECONDS:
                     raise ValueError(f"the clip is longer than {MAX_SECONDS} seconds")
@@ -143,23 +144,12 @@ def blur_and_encode(src: Path, dst: Path) -> dict:
     return {"frames": kept, "frames_with_faces": with_faces, "duration_s": round(last_t, 2), "samples": samples}
 
 
-class NoDetector:
-    """Default frame check: none configured, so presence is reported as not checked."""
-
-    name = "none"
-
-    def check(self, frames: list[np.ndarray], labels: list[str]) -> tuple[bool | None, bool | None]:
-        return None, None
-
-
-DETECTOR = NoDetector()
-
-
 def process_clip(data: bytes, prompt: ClipPrompt, out_path: Path, language: str | None = None,
                  reading: float | None = None, printed: float | None = None,
                  tolerance_pct: float | None = None) -> dict:
     """Run the whole pipeline on one upload; only the blurred, silent copy at `out_path` remains."""
     from hunar.speech import transcribe as tr
+    from hunar.video.detect import detector
 
     if len(data) > MAX_BYTES:
         raise ValueError(f"the clip is larger than {MAX_BYTES // (1024 * 1024)} MB")
@@ -172,14 +162,16 @@ def process_clip(data: bytes, prompt: ClipPrompt, out_path: Path, language: str 
         else:
             transcript = {"text": "", "words": [], "unavailable": "speech to text is not installed (make voice)"}
         video = blur_and_encode(src, out_path)
-    part_seen, hand_on_part = DETECTOR.check(video.pop("samples"), prompt.detect)
+    det = detector()
+    frame_check = det.check(video.pop("samples"), prompt.detect)
     return {
         **video,
         "transcript": transcript,
         "found": match_terms(transcript.get("words", []), prompt.terms),
-        "part_seen": part_seen,
-        "hand_on_part": hand_on_part,
-        "detector": DETECTOR.name,
+        "part_seen": frame_check["part_seen"],
+        "hand_on_part": frame_check["hand_on_part"],
+        "frames": frame_check["frames"],
+        "detector": det.name,
         "meter_in_range": meter_in_range(reading, printed, tolerance_pct) if prompt.meter else None,
         "note": NOTE,
     }

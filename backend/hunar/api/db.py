@@ -22,7 +22,8 @@ AUDIT_TRIGGERS = [
 
 # Columns added after the first release. create_all() does not alter existing tables, so init_db adds
 # them to an older database (SQLite).
-ADDED_COLUMNS = [("assessment", "trade", "VARCHAR NOT NULL DEFAULT 'electrician'")]
+ADDED_COLUMNS = [("assessment", "trade", "VARCHAR NOT NULL DEFAULT 'electrician'"),
+                 ("guidedclip", "frames_json", "VARCHAR NOT NULL DEFAULT '[]'")]
 
 
 def db_url() -> str:

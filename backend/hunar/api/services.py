@@ -289,7 +289,8 @@ def add_clip(s: Session, a: Assessment, task_id: str, clip_id: str, data: bytes,
     c = GuidedClip(assessment_id=a.id, task_id=task_id, clip_id=clip_id, stored_path=str(path.relative_to(DATA))
                    if path.is_relative_to(DATA) else str(path), duration_s=res["duration_s"],
                    frames_with_faces=res["frames_with_faces"], transcript_json=json.dumps(res["transcript"]),
-                   found_json=json.dumps(res["found"]), detector=res["detector"], part_seen=res["part_seen"],
+                   found_json=json.dumps(res["found"]), detector=res["detector"],
+                   frames_json=json.dumps(res["frames"]), part_seen=res["part_seen"],
                    hand_on_part=res["hand_on_part"], meter_value=reading, printed_value=printed,
                    tolerance_pct=tolerance_pct, meter_in_range=res["meter_in_range"], consent_confirmed=True)
     s.add(c)

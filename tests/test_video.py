@@ -10,7 +10,17 @@ from sqlmodel import Session, select
 from hunar.api import db
 from hunar.api.models import AuditEntry, GuidedClip
 from hunar.rubric.engine import ClipEvidence, get_task, prescore_criterion
+from hunar.video import detect
 from hunar.video.clips import match_terms, meter_in_range
+
+
+@pytest.fixture(autouse=True)
+def no_real_detector(monkeypatch):
+    """These tests never load model weights, even when `make clip-models` has been run here."""
+    monkeypatch.setenv("HUNAR_CLIP_DETECTOR", "none")
+    detect.detector.cache_clear()
+    yield
+    getattr(detect.detector, "cache_clear", lambda: None)()  # a test may have swapped in a stand-in
 
 FAN_PARTS = get_task("fan2_parts")
 
@@ -192,3 +202,87 @@ def test_fan_assessment_confirms_only_the_appliance_file(client):
     assert client.post(f"/api/assessments/{aid}/confirm-pack", json={"nqr_id": 14861, "actor": "A"}).status_code == 200
     packs = {p["nqr_id"]: p["trade"] for p in client.get("/api/packs").json()}
     assert packs[14861] == "appliance_technician"
+
+
+# ---- frame check (stand-in model; the real one needs `make clip-models`) ------------------------
+
+
+def test_boxes_overlap_only_when_they_share_area():
+    assert detect.overlaps((0, 0, 10, 10), (5, 5, 15, 15))
+    assert not detect.overlaps((0, 0, 10, 10), (10, 0, 20, 10))  # touching edges only
+    assert not detect.overlaps((0, 0, 10, 10), (20, 20, 30, 30))
+
+
+def test_summary_needs_the_hand_and_the_part_in_the_same_frame():
+    part = [("capacitor", 0.6, (100, 100, 200, 200))]
+    frames = [{"t": 0.0, "part": part, "hands": [(400, 400, 450, 450)]},  # part seen, hand elsewhere
+              {"t": 1.0, "part": [], "hands": [(110, 110, 150, 150)]}]  # hand where the part was, part gone
+    s = detect.summarise(frames)
+    assert s["part_seen"] is True and s["hand_on_part"] is False
+    frames.append({"t": 2.0, "part": part, "hands": [(150, 150, 260, 260)]})
+    s = detect.summarise(frames)
+    assert s["hand_on_part"] is True and s["frames"][2] == {"t": 2.0, "part": 0.6, "hand_on_part": True}
+    assert detect.summarise([])["part_seen"] is False
+
+
+class FakeBoxes:
+    def __init__(self, rows):
+        self.xyxy = _T([r[0] for r in rows])
+        self.cls = _T([r[1] for r in rows])
+        self.conf = _T([r[2] for r in rows])
+
+
+class _T(list):
+    def tolist(self):
+        return list(self)
+
+
+class FakeYoloe:
+    """Stands in for YOLOE: class 0 is the first label set, the last class is the hand."""
+
+    def __init__(self):
+        self.names = None
+
+    def set_classes(self, names, embeddings):
+        self.names = names
+
+    def predict(self, img, conf, verbose):
+        hand = len(self.names) - 1
+        return [type("R", (), {"boxes": FakeBoxes([((10, 10, 50, 50), 0, 0.7), ((30, 30, 80, 80), hand, 0.8)])})()]
+
+
+def test_yoloe_detector_wiring_with_a_stand_in_model():
+    import torch
+
+    d = object.__new__(detect.YoloeDetector)
+    d.model, d.conf, d.lock = FakeYoloe(), 0.25, __import__("threading").Lock()
+    d.labels, d.embeddings = ["capacitor", "hand", "copper coil"], torch.zeros(1, 3, 4)
+    img = np.zeros((90, 90, 3), np.uint8)
+    out = d.check([(0.0, img), (1.0, img)], ["capacitor", "electric motor"])  # one label not prepared
+    assert d.model.names == ["capacitor", "hand"]
+    assert out["part_seen"] and out["hand_on_part"] and len(out["frames"]) == 2
+    assert d.check([(0.0, img)], ["ball bearing"])["part_seen"] is None  # no prepared label: not checked
+
+
+def test_detector_falls_back_when_models_are_missing_or_switched_off(monkeypatch, tmp_path):
+    assert isinstance(detect.detector(), detect.NoDetector)  # switched off by the fixture
+    monkeypatch.setenv("HUNAR_CLIP_DETECTOR", "yoloe")
+    monkeypatch.setattr(detect, "DATA", tmp_path)  # no models in this folder
+    detect.detector.cache_clear()
+    assert isinstance(detect.detector(), detect.NoDetector)
+
+
+def test_clip_frames_are_stored_and_returned(client, fake_speech, monkeypatch):
+    class Seen:
+        name = "stand-in"
+
+        def check(self, samples, labels):
+            return {"part_seen": True, "hand_on_part": True, "frames": [{"t": 0.0, "part": 0.7, "hand_on_part": True}]}
+
+    monkeypatch.setattr(detect, "detector", lambda: Seen())
+    aid = _fan_assessment(client)
+    clip = _upload(client, aid).json()
+    assert clip["detector"] == "stand-in" and clip["frames"][0]["hand_on_part"] is True
+    pre = {p["criterion_id"]: p for p in client.get(f"/api/assessments/{aid}/prescores").json()
+           if p["task_id"] == "fan2_parts"}
+    assert pre["c2_cap_explain"]["suggested_level"] == 2  # explained, and the part was handled on camera

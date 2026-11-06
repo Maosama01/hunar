@@ -98,6 +98,10 @@ Test images with a near-duplicate (<= 4 bits) in train, re-split: 0.
 **Diagnostic first run on the published splits (not the detector result).** YOLOv8n, 50 epochs, ultralytics 8.3.228. Full test mAP50 0.530, clean test (1799 images) mAP50 0.397; per class on the clean test: helmet mAP50 0.000 | goggles mAP50 0.795. Helmet scores 0 because the published training split contains no helmet boxes; gloves cannot be scored because the published test split contains none; safety shoes had very few training boxes. Only the goggles figure measures what the model learned. Source: `experiments/m2_detector_run1_published_splits.json`; confusion matrix: `docs/figures/m2_run1_confusion_matrix.png`.
 
 
+### Video pilot: frame check on hand-labelled frames
+
+RESULT PENDING: no labelled frames yet. Record guided clips, run `make clip-frames`, label `data/labels/clip_frames.csv`, then `make eval-clips`.
+
 ### M4 inter-assessor consistency study
 
 RESULT PENDING: no real rater scores yet. Rater mode is built; the study needs 3 to 5 real assessors and 20 to 30 consented evidence photos.

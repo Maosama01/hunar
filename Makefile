@@ -8,7 +8,7 @@ NPM := npm --prefix frontend
 DL ?= $(HOME)/Downloads
 CSV ?= data/study/items.csv
 
-.PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean \
+.PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean clip-models clip-frames eval-clips \
         vision voice eval-voice import-detector ppe-split notebook design-sim study-items bench \
         quiz-sim quiz-calibrate translate staff bhashini-check
 
@@ -95,6 +95,18 @@ vision:
 
 voice:
 	$(UV) sync --extra voice --inexact
+
+# Frame detector for guided clips (video pilot): YOLOE weights + text prompts into data/models/.
+# The clip tokenizer is used only here, in a temporary environment; the project's packages do not change.
+clip-models:
+	$(UV) run $(ENV) --with "clip @ git+https://github.com/ultralytics/CLIP.git@7ffa84b3bfa40c42ecc1c77147a855e69cb2dd40" python scripts/fetch_clip_models.py
+
+# Video pilot: export frames of stored clips for labelling, then measure the frame check on them.
+clip-frames:
+	$(PY) scripts/export_clip_frames.py $(ARGS)
+
+eval-clips:
+	$(PY) scripts/eval_clip_detector.py $(ARGS)
 
 eval-voice:
 	$(PY) -m hunar.speech.evaluate

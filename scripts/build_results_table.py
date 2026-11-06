@@ -307,9 +307,29 @@ def quiz_tables() -> str:
     return "\n".join(out)
 
 
+def video_table() -> str:
+    d = load("video_detector.json")
+    title = "### Video pilot: frame check on hand-labelled frames\n"
+    if d is None:
+        return (title + "\nRESULT PENDING: no labelled frames yet. Record guided clips, run `make clip-frames`, "
+                "label `data/labels/clip_frames.csv`, then `make eval-clips`.\n")
+    out = [title]
+    if d["data_kind"] != "real":
+        out.append("> **Pipeline check on SAMPLE / synthetic frames, not evidence about real workers.**\n")
+    out += [f"{d['n_frames']} frames from {d['n_clips']} clips, {d['detector']} at confidence {d['confidence_threshold']}. "
+            f"{d['note']} Source: `experiments/video_detector.json`.\n",
+            "| Check | n | Positives | Precision | Recall | Accuracy |\n|---|---|---|---|---|---|"]
+    for key, name in (("part_present", "Part present"), ("hand_on_part", "Hand on the part")):
+        e = d[key]
+        fmt = lambda v, c: "n/a" if v is None else f"{v:.2f} {ci(c) if c else ''}".strip()  # noqa: E731
+        out.append(f"| {name} | {e['n']} | {e['positives']} | {fmt(e['precision'], e['precision_ci95'])} | "
+                   f"{fmt(e['recall'], e['recall_ci95'])} | {fmt(e['accuracy'], None)} |")
+    return "\n".join(out) + "\n"
+
+
 def main() -> int:
     m1_figures()
-    body = "\n".join([m1_tables("real"), m1_tables("synthetic"), voice_table(), m2_tables(), m4_table(),
+    body = "\n".join([m1_tables("real"), m1_tables("synthetic"), voice_table(), m2_tables(), video_table(), m4_table(),
                       m4_design_table(), quiz_tables()])
     (ROOT / "docs" / "report").mkdir(parents=True, exist_ok=True)
     (ROOT / "docs" / "report" / "results_tables.md").write_text(

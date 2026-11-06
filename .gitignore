@@ -38,3 +38,5 @@ frontend/dev-dist/
 data/synthetic/sample_photos/
 .playwright-mcp/
 .claude/launch.json
+# Video pilot: frames exported for labelling (blurred, but of real people)
+data/labels/clip_frames/
