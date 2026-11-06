@@ -1,0 +1,554 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Statement Lens</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a jury docket. Sticky tab bar, one working view at a time, statement files in two columns that stack on phones. */
+:root{
+  --bg:#EDEFF2; --surface:#FFFFFF; --sunk:#E2E5EA; --line:#D3D7DE;
+  --ink:#141823; --soft:#4F5666; --mute:#7E8595;
+  --accent:#D9480F; --accent-ink:#FFFFFF;
+  --a:#2B4BD4; --a-t:#E4E9FB; --b:#16805A; --b-t:#DFF1E8;
+  --good:#16805A; --warn:#B7791F; --bad:#C2352B; --bad-t:#FBE6E3; --warn-t:#FCF1DC;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F1218; --surface:#171B23; --sunk:#1F2430; --line:#2B3140;
+  --ink:#E8EBF2; --soft:#A6ADBD; --mute:#7A8294;
+  --accent:#FF7A3D; --accent-ink:#1A0D05;
+  --a:#7C95FF; --a-t:#1E2647; --b:#45C08E; --b-t:#122E24;
+  --good:#45C08E; --warn:#E3A948; --bad:#F07065; --bad-t:#3A1C1A; --warn-t:#352A15;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F1218; --surface:#171B23; --sunk:#1F2430; --line:#2B3140;
+  --ink:#E8EBF2; --soft:#A6ADBD; --mute:#7A8294;
+  --accent:#FF7A3D; --accent-ink:#1A0D05;
+  --a:#7C95FF; --a-t:#1E2647; --b:#45C08E; --b-t:#122E24;
+  --good:#45C08E; --warn:#E3A948; --bad:#F07065; --bad-t:#3A1C1A; --warn-t:#352A15;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:15px; line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:0 48px}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); z-index:10; background:var(--bg)}
+a{color:var(--a)}
+.wrap{max-width:1120px; margin:0 auto}
+h1,h2,h3{font-family:var(--display); text-wrap:balance; margin:0; letter-spacing:-0.01em}
+.mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
+.label{font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute)}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* header + nav */
+.top{position:sticky; top:env(safe-area-inset-top, 0px); z-index:5; background:var(--bg); border-bottom:1px solid var(--line); margin:0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)))}
+.top .wrap{display:flex; align-items:center; gap:18px; padding:12px max(16px, env(safe-area-inset-left, 0px)); flex-wrap:wrap}
+.brand{display:flex; align-items:baseline; gap:8px; margin-right:auto}
+.brand b{font-family:var(--display); font-size:20px; font-weight:800}
+.brand span{font-family:var(--mono); font-size:11px; color:var(--mute)}
+nav{display:flex; gap:4px; flex-wrap:wrap}
+nav button{border:0; background:transparent; color:var(--soft); padding:7px 12px; border-radius:999px; font-size:13.5px; font-weight:500}
+nav button[aria-current="true"]{background:var(--ink); color:var(--bg)}
+nav button .n{font-family:var(--mono); font-size:11px; margin-left:4px; opacity:.75}
+
+main{padding-top:28px}
+.view[hidden]{display:none!important}
+.intro{display:grid; grid-template-columns:1.4fr 1fr; gap:28px; align-items:end; margin-bottom:26px}
+.intro h1{font-size:clamp(30px, 5vw, 50px); line-height:1.02; font-weight:800}
+.intro p{color:var(--soft); margin:10px 0 0; max-width:60ch}
+.alert{background:var(--bad-t); border:1px solid color-mix(in srgb, var(--bad) 35%, transparent); border-radius:var(--r); padding:14px 16px; font-size:14px}
+.alert b{color:var(--bad)}
+@media (max-width:760px){.intro{grid-template-columns:1fr}}
+
+/* statement rows */
+.rows{display:grid; gap:14px}
+.row{display:grid; grid-template-columns:8px 1fr auto; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); overflow:hidden; text-align:left; color:inherit; padding:0; width:100%}
+.row:hover{border-color:var(--soft)}
+.row .stripe{background:var(--c)}
+.row .main{padding:18px 20px; min-width:0}
+.row .meta{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:6px}
+.row h2{font-size:21px; font-weight:700; line-height:1.2}
+.row p{margin:8px 0 0; color:var(--soft); font-size:14px; max-width:78ch}
+.row .side{padding:18px 20px; border-left:1px solid var(--line); display:grid; gap:10px; min-width:230px; align-content:start}
+@media (max-width:760px){.row{grid-template-columns:6px 1fr}.row .side{grid-column:2; border-left:0; border-top:1px solid var(--line); min-width:0}}
+.pill{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; padding:3px 9px; border-radius:999px; font-weight:500; white-space:nowrap}
+.pill.open{background:var(--b-t); color:var(--good)}
+.pill.closed{background:var(--bad-t); color:var(--bad)}
+.pill.pick{background:var(--ink); color:var(--bg)}
+.pill.maybe{background:var(--warn-t); color:var(--warn)}
+.pill.kept{background:var(--accent); color:var(--accent-ink)}
+.kv{display:flex; justify-content:space-between; gap:12px; font-size:13px}
+.kv span:first-child{color:var(--mute)}
+.kv span:last-child{font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:500}
+
+/* pips */
+.pips{display:inline-flex; gap:3px; vertical-align:middle}
+.pips i{width:16px; height:7px; border-radius:2px; background:var(--sunk)}
+.pips i.on{background:var(--c, var(--ink))}
+
+/* crowd meter */
+.crowd{position:relative; height:12px; background:var(--sunk); border-radius:3px}
+.crowd .fill{position:absolute; inset:0 auto 0 0; background:var(--c); border-radius:3px}
+.crowd .tick{position:absolute; top:-3px; bottom:-3px; width:1px; background:var(--mute)}
+.crowd-legend{display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--mute); margin-top:5px}
+
+/* detail */
+.dhead{background:var(--surface); border:1px solid var(--line); border-top:6px solid var(--c); border-radius:var(--r); padding:22px 24px; margin-bottom:18px}
+.dhead h1{font-size:clamp(26px, 4.2vw, 40px); line-height:1.08; font-weight:800; margin:10px 0 8px}
+.dhead .org{color:var(--soft); font-size:14px}
+.back{border:0; background:none; color:var(--soft); padding:0; margin-bottom:14px; font-size:13.5px}
+.grid2{display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); gap:18px; align-items:start}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:20px 22px}
+.stack{display:grid; gap:18px}
+.panel h3{font-size:17px; font-weight:700; margin-bottom:10px}
+.panel p{margin:0 0 10px}
+.verdict{border-left:4px solid var(--c); padding:2px 0 2px 14px; font-size:16px; line-height:1.55}
+.win{background:var(--ink); color:var(--bg); border-radius:var(--r); padding:18px 20px}
+.win .label{color:color-mix(in srgb, var(--bg) 65%, transparent)}
+.win p{margin:6px 0 0; font-size:16px; font-family:var(--display); font-weight:500; line-height:1.4}
+ul.clean, ol.clean{margin:0; padding-left:20px; display:grid; gap:7px}
+ol.clean li::marker{font-family:var(--mono); color:var(--mute); font-size:13px}
+.score{display:grid; gap:4px; padding:12px 0; border-top:1px solid var(--line)}
+.score:first-of-type{border-top:0; padding-top:0}
+.score .t{display:flex; justify-content:space-between; align-items:center; gap:10px; font-weight:600; font-size:14px}
+.score .why{color:var(--soft); font-size:13px}
+.tag{display:inline-block; font-family:var(--mono); font-size:11.5px; background:var(--sunk); padding:3px 8px; border-radius:5px; margin:0 6px 6px 0}
+.flags{display:grid; gap:8px}
+.flag{display:grid; grid-template-columns:16px 1fr; gap:8px; font-size:13.5px}
+.flag::before{content:""; width:8px; height:8px; border-radius:50%; margin-top:7px; background:var(--fc)}
+.flag.g{--fc:var(--good)} .flag.r{--fc:var(--bad)}
+.qa{border-top:1px solid var(--line); padding:12px 0}
+.qa:first-of-type{border-top:0; padding-top:0}
+.qa b{display:block; font-size:14px}
+.qa span{color:var(--soft); font-size:13.5px}
+.actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+.btn{border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:8px 16px; font-size:13.5px; font-weight:500}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn:hover{border-color:var(--ink)}
+
+/* cards */
+.deck{display:grid; place-items:center; gap:18px; padding-top:6px}
+.counter{font-family:var(--mono); font-size:12px; color:var(--mute)}
+.card{width:min(560px, 100%); aspect-ratio:4/5; max-height:620px; perspective:1600px; border:0; background:none; padding:0; color:inherit; text-align:left}
+.card .inner{position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.card.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:26px; display:flex; flex-direction:column; gap:12px; overflow:auto; border-top:8px solid var(--c)}
+.face.back{transform:rotateY(180deg)}
+.face h2{font-size:clamp(22px, 4vw, 30px); line-height:1.12; font-weight:800}
+.face .hint{margin-top:auto; font-family:var(--mono); font-size:11.5px; color:var(--mute)}
+@media (max-width:520px){.card{aspect-ratio:auto; height:560px}}
+@media (prefers-reduced-motion: reduce){.card .inner{transition:none}}
+
+/* compare */
+.tablewrap{overflow-x:auto; background:var(--surface); border:1px solid var(--line); border-radius:var(--r)}
+table{border-collapse:collapse; width:100%; min-width:640px; font-size:14px}
+th, td{padding:12px 16px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+thead th{font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute); font-weight:500}
+thead th.a{color:var(--a)} thead th.b{color:var(--b)}
+tbody th{font-weight:600; width:190px}
+td.win-cell{background:color-mix(in srgb, var(--c) 12%, transparent)}
+tfoot td, tfoot th{font-family:var(--display); font-size:22px; font-weight:800; border-bottom:0}
+
+/* pressure test */
+.seg{display:inline-flex; background:var(--sunk); border-radius:999px; padding:4px; gap:4px; margin-bottom:18px}
+.seg button{border:0; background:transparent; padding:7px 16px; border-radius:999px; font-family:var(--mono); font-size:13px; color:var(--soft)}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.heat{display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin:8px 0 6px}
+.heat div{height:14px; border-radius:3px; background:var(--sunk)}
+.heat div.on:nth-child(1){background:#E3B341} .heat div.on:nth-child(2){background:#E8862E}
+.heat div.on:nth-child(3){background:#DC5A23} .heat div.on:nth-child(4){background:#C2352B}
+.heat-l{display:grid; grid-template-columns:repeat(4, 1fr); font-family:var(--mono); font-size:11px; color:var(--mute)}
+.rf{display:grid; gap:12px}
+.rf article{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px; display:grid; grid-template-columns:auto 1fr; gap:4px 14px}
+.rf .no{font-family:var(--display); font-weight:800; font-size:26px; color:var(--bad); line-height:1; grid-row:span 3}
+.rf h3{font-size:16px}
+.rf .cost{font-size:13.5px; color:var(--soft)} .rf .fix{font-size:13.5px}
+.rf .fix b, .rf .cost b{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; margin-right:6px}
+.rf .cost b{color:var(--bad)} .rf .fix b{color:var(--good)}
+
+/* shortlist */
+.empty{background:var(--surface); border:1px dashed var(--line); border-radius:var(--r); padding:28px; text-align:center; color:var(--soft)}
+textarea{width:100%; min-height:150px; font-family:var(--mono); font-size:12.5px; background:var(--sunk); color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:12px}
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:calc(20px + env(safe-area-inset-bottom, 0px)); background:var(--ink); color:var(--bg); padding:9px 16px; border-radius:999px; font-size:13.5px; z-index:20}
+
+footer{margin-top:44px; padding-top:18px; border-top:1px solid var(--line); display:grid; gap:10px; color:var(--mute); font-size:12.5px}
+footer .src{display:flex; flex-wrap:wrap; gap:6px 16px}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><b>Statement Lens</b><span>SIH 2026</span></div>
+    <nav aria-label="Views">
+      <button data-view="browse">Browse</button>
+      <button data-view="cards">Cards</button>
+      <button data-view="compare">Compare</button>
+      <button data-view="test">Pressure test</button>
+      <button data-view="shortlist">Shortlist<span class="n" id="navCount"></span></button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="view" id="v-browse"></section>
+  <section class="view" id="v-cards" hidden></section>
+  <section class="view" id="v-compare" hidden></section>
+  <section class="view" id="v-test" hidden></section>
+  <section class="view" id="v-shortlist" hidden></section>
+  <section class="view" id="v-detail" hidden></section>
+
+  <footer>
+    <div>Prepared for Tanishq Khandelwal, B.Tech CSE (AIML). Independent analysis, not affiliated with Smart India Hackathon, AICTE or any ministry. Idea counts come from a tracker that mirrors sih.gov.in; scores are judgement calls. Check every date on the official portal before committing.</div>
+    <div class="src">
+      <a href="https://www.sih.gov.in/sih2026PS" target="_blank" rel="noopener">Official SIH 2026 list</a>
+      <a href="https://zaidsayyed.in/tools/sih-problem-statements/sih26263" target="_blank" rel="noopener">SIH26263 live count</a>
+      <a href="https://zaidsayyed.in/tools/sih-problem-statements/sih26242" target="_blank" rel="noopener">SIH26242 live count</a>
+      <a href="https://nqr.gov.in/aboutus" target="_blank" rel="noopener">National Qualifications Register</a>
+      <a href="https://cag.gov.in/uploads/PressRelease/PR-Press-Brief-Report-No-20-of-2025-English-06944f390e59d02-19424340.pdf" target="_blank" rel="noopener">CAG audit of PMKVY</a>
+      <a href="https://techmitra.in/what-is-apaar-id/" target="_blank" rel="noopener">APAAR updates 2026</a>
+    </div>
+  </footer>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const PS = [
+{
+  id:"SIH26263", key:"a", color:"var(--a)", tint:"var(--a-t)",
+  title:"APAAR ID based Student Data Management and Verification Platform for AICTE Approved Institutions",
+  short:"APAAR student data and verification platform",
+  org:"All India Council for Technical Education (AICTE)", dept:"Regulation Bureau, Ministry of Education",
+  theme:"Smart Automation", category:"Software",
+  added:"20 Oct 2026", deadline:"28 Oct 2026", status:"open", statusText:"Open",
+  ideas:21, ideasAsOf:"23 Oct", ideasNote:"264th of 265 statements by volume. Ten of those arrived in two days.",
+  verdict:"Strong pick", verdictClass:"pick",
+  verdictText:"The emptiest room on the board, with a precise spec and a regulator that can actually enforce what you build. It only looks dull. Pitch it as an admissions integrity engine that catches over intake and the same student holding two seats, and it stops being a CRUD app.",
+  what:"AICTE only gets aggregate enrolment numbers from most approved institutions. It wants a platform where colleges submit student level records keyed on APAAR ID after admissions close, with automatic checks for duplicates, invalid IDs, admissions over approved intake and the same student enrolled at two institutions. Add dashboards for AICTE and colleges, consent gated verification for employers and regulators, and audit trails.",
+  build:["Upload portal and REST API with background batch validation and per row error reports","Identity resolution across institutions: exact APAAR match first, then fuzzy matching on name, date of birth, parent name and board roll number","Rules engine that turns approved intake, NRI, OCI, foreign national and supernumerary limits into live alerts","Dashboards for AICTE and for each institution, with a per college integrity score","Consent gated verification with signed QR records for employers and regulators","Hash chained audit trail and policy reports"],
+  smallest:"Upload a batch that pushes CSE 40 over approved intake and watch the alert fire. Then upload a second college's batch with the same student under a different spelling and catch the duplicate live, with a confidence score.",
+  scores:[
+    ["Acceptance potential",4,"Only 21 ideas and a ten point spec. AICTE has enforcement powers, so a working anomaly engine is easy to picture in production."],
+    ["Feasibility",4,"Pure web stack, no hardware, no special dataset. Real APAAR and DigiLocker APIs are closed, so integration sits behind a mocked adapter."],
+    ["Innovation scope",3,"The brief reads like forms and dashboards. The innovation lives in fuzzy identity matching and consent receipts, and you have to put it there yourself."],
+    ["Clarity",5,"Ten numbered requirements and an explicit pipeline. Judges can tick off exactly what you met."]
+  ],
+  effort:"Medium", demo:"High if the duplicate catch is live", data:"None supplied. Generate synthetic students with deliberate mess.",
+  favour:["Second least crowded statement on the board","Penalties are codified: five times the fees for every excess admission, upheld by the Supreme Court","Consent is a live issue after the Supreme Court's July 2026 APAAR direction","Real ML core for an AIML team: entity resolution and anomaly scoring"],
+  against:["Public prototypes already exist with Spring Boot, Kafka and QR credentials","Reads as CRUD unless you lead with the anomaly engine","All verification is mocked","Three days to the idea deadline"],
+  stack:["Next.js","FastAPI or NestJS","Postgres with pg_trgm","Redis queue","Hash chained audit table"],
+  tags:["entity resolution","rules engine","anomaly scoring","consent","dashboards"],
+  prior:["AICTE Approval Process Handbook, excess admission clause","APAAR and Academic Bank of Credits FAQs","Record linkage and the Fellegi Sunter model","DPDP Rules 2025 consent and consent manager framework"],
+  datasets:["AICTE approval letters: public PDFs listing approved intake and NRI or OCI approval per course","A synthetic student generator with name variants, date format noise and Aadhaar mismatches"],
+  brief:["Secure platform or API for institutions to upload and update student level data using APAAR ID as the unique key","Fields for approved intake, actual enrolment, supernumerary seats, NRI category, OCI status and foreign national status","Automated validation for duplicates, invalid or missing APAAR IDs, admissions beyond intake, inconsistent data and duplicate enrolment across institutions","Real time dashboards for AICTE and institutions","Secure verification for AICTE, institutions, employers and other regulators","Verifiable student records linked to the student's academic identity","Integration and API capability with existing institutional and AICTE systems","Security, privacy, authentication, role based access, audit trails and consent","Reports for policy making, accreditation, monitoring and regulation","APAAR ID printed or displayed alongside the student ID on degree certificates"],
+  qa:[
+    ["Who actually faces this problem today?","An AICTE regulation officer who only sees aggregate enrolment and finds excess admissions after the fact, and a student who loses a counselling seat to someone holding two."],
+    ["This already exists. Why yours?","Existing builds store and display records. Ours resolves identity across institutions on messy real data and turns AICTE's own handbook rules into live alerts."],
+    ["You cannot access real APAAR APIs. Is this real?","Integration sits behind an adapter, mocked today with realistic failure cases including Aadhaar mismatches. Swapping in the official API changes one module."],
+    ["What about privacy?","Consent receipts gate every third party check, every access lands in a hash chained ledger, and the design follows the DPDP Rules timeline."]
+  ],
+  heat:2, heatName:"Medium",
+  obvious:"The obvious build is an upload page, a student table and some charts. Most of the teams that pick this will build exactly that, and so will the public prototypes already online.",
+  redflags:[
+    ["It looks like a CRUD app","The jury tunes out by slide two.","Open with the duplicate detector catching a realistic double enrolment."],
+    ["The real APIs are closed","Feasibility questions eat your Q&A time.","Show the adapter layer and realistic failure cases, including Aadhaar mismatches."],
+    ["Strong prototypes are already public","Feature parity reads as copying.","Differentiate on dirty data handling, integrity scores and consent receipts."],
+    ["Three day window","A rushed PPT with no evidence slide.","Lock the team today and submit on the morning of 28 October."]
+  ],
+  defend:["Lowest competition you will find this season","Codified penalties make the value obvious to AICTE","Consent design lands right on the Supreme Court direction","Entity resolution is real ML, not a dashboard"]
+},
+{
+  id:"SIH26242", key:"b", color:"var(--b)", tint:"var(--b-t)",
+  title:"AI Assisted Skill Assessment Tool for Recognition of Prior Learning (RPL)",
+  short:"AI assisted RPL skill assessment",
+  org:"Ministry of Skill Development and Entrepreneurship (MSDE)", dept:"NCVET and NSQF ecosystem",
+  theme:"Smart Education", category:"Software",
+  added:"1 Oct 2026", deadline:"20 Oct 2026", status:"closed", statusText:"Likely closed",
+  ideas:125, ideasAsOf:"7 Oct", ideasNote:"Up 81 in three days and still climbing when last counted. The real number is now higher.",
+  verdict:"Only if reopened", verdictClass:"maybe",
+  verdictText:"The better story and the better AIML showcase, but the idea window has most likely shut, and the hardest deliverable is measured improvement in assessor agreement. If the portal shows it open, it is only worth taking if you can record real workers this week.",
+  what:"Workers who learned a trade informally have nothing on paper. NCVET's Recognition of Prior Learning framework can certify them against NSQF levels, but manual practical assessment is slow, inconsistent between assessors and hard to schedule. MSDE wants an AI assisted tool that maps a worker's self declaration to qualification packs, standardises practical scoring, produces a competency profile for an assessor to sign off, and works offline.",
+  build:["Voice first self declaration in Hindi and regional languages, mapped to NQR qualification packs with an explained match score","Anchored rubric and task checklists per National Occupational Standard, with critical safety flags","Assistive pre scores the assessor can accept or override, with every override logged","Evidence integrity: stamped capture plus perceptual hashing that flags reused photos or clips","Assessor variance dashboard that computes agreement statistics on real scores","Offline first app with a durable sync queue"],
+  smallest:"Put real agreement numbers on screen from your own recordings: five raters, unassisted versus assisted, and the kappa going up.",
+  scores:[
+    ["Acceptance potential",2,"The idea deadline of 20 October has most likely passed, and more than 125 teams were already in by early October."],
+    ["Feasibility",2,"Real consistency evidence needs recordings and human raters. Vision based grading of practical work is hard to do honestly in a week."],
+    ["Innovation scope",4,"Lots of room: vernacular voice mapping, evidence integrity and variance analytics."],
+    ["Clarity",4,"Clear deliverables, including where the tool supports the assessor and where it must not replace them."]
+  ],
+  effort:"Heavy", demo:"High", data:"Qualification packs are public on the NQR. Recordings and rater scores you collect yourself.",
+  favour:["Strong human story: years of skill and no certificate","Public standards: 8,505 NSQF aligned qualifications across 59 sectors","The CAG found reused photos as RPL evidence, so integrity features answer a real audit","Natural fit for an AIML team: speech, embeddings, vision"],
+  against:["Idea window has most likely closed","Simulated agreement studies are easy to attack","The best public prototype already covers the full flow","Offline sync plus ML in one week is a lot of surface"],
+  stack:["React PWA","IndexedDB","FastAPI","Speech to text","Sentence embeddings","Perceptual hashing"],
+  tags:["NLP","computer vision","offline","inter rater reliability"],
+  prior:["NCVET Guidelines for Recognition of Prior Learning, August 2023","Fleiss' kappa and inter rater reliability","Victoria's AI enabled RPL pilot run with VETASSESS","CAG Report No. 20 of 2025 on PMKVY"],
+  datasets:["National Qualifications Register: qualification packs, NOS and assessment criteria","Your own recordings of 10 to 15 local domestic electricians"],
+  brief:["Guide a worker through structured self declaration, mapped automatically to the closest NSQF qualification pack or packs","Support practical evaluation with guided checklists and, where feasible, image or video aids","Standardise scoring rubrics across assessors and locations","Generate an NSQF aligned competency profile and certification recommendation for assessor sign off","Work in low connectivity settings with offline capture and later sync","Deliver a working flow for at least one trade, a QP mapping engine, and evidence of improved inter assessor agreement"],
+  qa:[
+    ["How do you know it improves consistency?","We show real agreement statistics from our own field study, unassisted versus assisted, with the raw data available."],
+    ["Does the AI certify workers?","No. It maps, suggests and pre scores. The assessor decides and signs, and every override is logged."],
+    ["How do you stop fake evidence?","Stamped capture and perceptual hashing flag reused photos and clips, the exact issue the CAG reported."],
+    ["What happens with no network?","The whole flow runs offline. Records queue locally and sync in order when the connection returns."]
+  ],
+  heat:4, heatName:"Severe",
+  obvious:"The obvious build is the full declare, assess, score and sync flow with a simulated agreement chart. A public prototype already does exactly that, and a sharp juror will dismiss simulated kappa in one question.",
+  redflags:[
+    ["The deadline has likely passed","Nothing else matters if submissions are closed.","Check the official portal before spending another hour."],
+    ["Simulated agreement numbers","The jury dismisses your core deliverable.","Run a small real study: real workers, real raters, real kappa."],
+    ["Overreaching with computer vision","The demo breaks on real footage.","Use checklists and pre scores for grading. Keep vision for evidence integrity."],
+    ["Crowded and growing","Lower odds of making the four or five shortlisted.","Lead with evidence integrity, which most teams will skip."]
+  ],
+  defend:["The human story lands with any jury","Standards are public, so the mapping is grounded","Evidence integrity answers a published CAG finding","The tool never replaces the assessor, which protects certification"]
+}];
+
+const FIT = [
+  ["Competition (fewer is better)",5,2,"21 versus 125+ ideas"],
+  ["Deadline still open",5,1,"28 Oct versus 20 Oct"],
+  ["Fit for an AIML team",3,4,"Entity resolution versus NLP and vision"],
+  ["Emotional resonance",3,5,"Fair admissions versus dignity for workers"],
+  ["Technical risk (lower is better)",4,2,"Consistency evidence is the hard part of SIH26242"],
+  ["Demo impact",3,4,"A live duplicate catch narrows the gap"],
+  ["Real world adoption odds",4,3,"AICTE can enforce today"]
+];
+
+/* storage helpers */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d }catch(e){ return d } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)) }catch(e){} }
+};
+let kept = store.get("lens.kept", {});
+let testPick = "SIH26263";
+let deckIndex = 0;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+const pips = (n, c) => `<span class="pips" style="--c:${c}" aria-label="${n} of 5">${[1,2,3,4,5].map(i=>`<i class="${i<=n?"on":""}"></i>`).join("")}</span>`;
+const crowd = p => `<div class="crowd" style="--c:${p.color}" role="img" aria-label="${p.ideas} of 500 ideas"><div class="fill" style="width:${p.ideas/500*100}%"></div><div class="tick" style="left:20%"></div><div class="tick" style="left:50%"></div></div><div class="crowd-legend"><span>0</span><span>100</span><span>250</span><span>500 cap</span></div>`;
+const statusPill = p => `<span class="pill ${p.status}">${p.statusText}</span>`;
+const verdictPill = p => `<span class="pill ${p.verdictClass}">${p.verdict}</span>`;
+const keptPill = p => kept[p.id] === "keep" ? `<span class="pill kept">Kept</span>` : "";
+
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(()=> t.hidden = true, 1800) }
+
+function renderBrowse(){
+  $("#v-browse").innerHTML = `
+  <div class="intro">
+    <div>
+      <div class="label">Your two statements</div>
+      <h1>Which one can you actually win?</h1>
+      <p>Every score shows its reasoning, so you can disagree with it. Open a statement for the full file, flip through them as cards, or put them side by side.</p>
+    </div>
+    <div class="alert"><b>Check this first.</b> SIH26242's idea deadline was 20 October. SIH26263 closes on 28 October. Confirm both on sih.gov.in before you commit.</div>
+  </div>
+  <div class="rows">${PS.map(p => `
+    <button class="row" style="--c:${p.color}" data-open="${p.id}">
+      <div class="stripe"></div>
+      <div class="main">
+        <div class="meta"><span class="mono" style="color:${p.color};font-weight:500">${p.id}</span>${verdictPill(p)}${statusPill(p)}${keptPill(p)}</div>
+        <h2>${esc(p.title)}</h2>
+        <p>${esc(p.verdictText)}</p>
+      </div>
+      <div class="side">
+        <div class="kv"><span>Organisation</span><span>${p.id==="SIH26263"?"AICTE":"MSDE"}</span></div>
+        <div class="kv"><span>Theme</span><span>${p.theme}</span></div>
+        <div class="kv"><span>Deadline</span><span>${p.deadline}</span></div>
+        <div class="kv"><span>Ideas (${p.ideasAsOf})</span><span>${p.ideas} / 500</span></div>
+        <div class="kv"><span>Acceptance</span>${pips(p.scores[0][1], p.color)}</div>
+      </div>
+    </button>`).join("")}
+  </div>`;
+}
+
+function renderDetail(id){
+  const p = PS.find(x => x.id === id);
+  $("#v-detail").innerHTML = `
+  <button class="back" data-go="browse">← All statements</button>
+  <div class="dhead" style="--c:${p.color}">
+    <div class="meta" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><span class="mono" style="color:${p.color};font-weight:500">${p.id}</span>${verdictPill(p)}${statusPill(p)}${keptPill(p)}</div>
+    <h1>${esc(p.title)}</h1>
+    <div class="org">${esc(p.org)} · ${esc(p.dept)} · ${p.theme} · ${p.category} · Added ${p.added}</div>
+    <div class="actions">
+      <button class="btn primary" data-keep="${p.id}">${kept[p.id]==="keep"?"Remove from shortlist":"Keep in shortlist"}</button>
+      <button class="btn" data-test="${p.id}">Pressure test it</button>
+      <button class="btn" data-go="compare">Compare</button>
+    </div>
+  </div>
+  <div class="grid2" style="--c:${p.color}">
+    <div class="stack">
+      <div class="panel"><div class="label">Verdict</div><p class="verdict" style="margin-top:8px">${esc(p.verdictText)}</p></div>
+      <div class="panel"><h3>What it actually is</h3><p>${esc(p.what)}</p></div>
+      <div class="win"><div class="label">Smallest thing that wins the room</div><p>${esc(p.smallest)}</p></div>
+      <div class="panel"><h3>What to build</h3><ol class="clean">${p.build.map(b=>`<li>${esc(b)}</li>`).join("")}</ol></div>
+      <div class="panel"><h3>The official brief, compressed</h3><ol class="clean">${p.brief.map(b=>`<li>${esc(b)}</li>`).join("")}</ol></div>
+      <div class="panel"><h3>Questions the jury will ask</h3>${p.qa.map(q=>`<div class="qa"><b>${esc(q[0])}</b><span>${esc(q[1])}</span></div>`).join("")}</div>
+    </div>
+    <div class="stack">
+      <div class="panel"><h3>How crowded it is</h3>
+        <p style="font-family:var(--display);font-size:30px;font-weight:800;margin:0;color:${p.color}">${p.ideas}<span style="font-size:15px;color:var(--mute);font-weight:500"> ideas on ${p.ideasAsOf}</span></p>
+        <p style="color:var(--soft);font-size:13.5px">${esc(p.ideasNote)}</p>${crowd(p)}
+      </div>
+      <div class="panel"><h3>The scores</h3>
+        ${p.scores.map(s=>`<div class="score"><div class="t"><span>${s[0]}</span>${pips(s[1], p.color)}</div><div class="why">${esc(s[2])}</div></div>`).join("")}
+        <div class="score"><div class="kv"><span>Effort</span><span>${p.effort}</span></div><div class="kv"><span>Demo</span><span>${esc(p.demo)}</span></div></div>
+        <div class="score"><div class="t"><span>Data</span></div><div class="why">${esc(p.data)}</div></div>
+      </div>
+      <div class="panel"><h3>In its favour</h3><div class="flags">${p.favour.map(f=>`<div class="flag g">${esc(f)}</div>`).join("")}</div>
+        <h3 style="margin-top:18px">Against it</h3><div class="flags">${p.against.map(f=>`<div class="flag r">${esc(f)}</div>`).join("")}</div></div>
+      <div class="panel"><h3>What you will be writing</h3><div>${p.stack.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>
+        <div class="label" style="margin:10px 0 6px">Domains</div><div>${p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div></div>
+      <div class="panel"><h3>Prior art to read</h3><ul class="clean">${p.prior.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+        <h3 style="margin-top:16px">Data you can use</h3><ul class="clean">${p.datasets.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    </div>
+  </div>`;
+}
+
+function renderCards(){
+  const p = PS[deckIndex];
+  $("#v-cards").innerHTML = `
+  <div class="deck">
+    <div class="counter">Card ${deckIndex+1} of ${PS.length} · tap the card to flip</div>
+    <button class="card" id="card" style="--c:${p.color}" aria-label="Flip card for ${p.id}">
+      <div class="inner">
+        <div class="face front">
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="mono" style="color:${p.color};font-weight:500">${p.id}</span>${statusPill(p)}${keptPill(p)}</div>
+          <h2>${esc(p.title)}</h2>
+          <div style="color:var(--soft);font-size:13.5px">${esc(p.org)} · ${p.theme}</div>
+          <p style="margin:0">${esc(p.what)}</p>
+          <div class="hint">Front: the brief</div>
+        </div>
+        <div class="face back">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">${verdictPill(p)}<span class="pill" style="background:var(--sunk);color:var(--soft)">${p.ideas} ideas</span></div>
+          <p class="verdict" style="--c:${p.color};margin:0">${esc(p.verdictText)}</p>
+          <div>${p.scores.map(s=>`<div class="kv" style="padding:4px 0"><span>${s[0]}</span>${pips(s[1], p.color)}</div>`).join("")}</div>
+          <div class="flags"><div class="flag g">${esc(p.favour[0])}</div><div class="flag r">${esc(p.against[0])}</div></div>
+          <div class="hint">Back: the verdict</div>
+        </div>
+      </div>
+    </button>
+    <div class="actions" style="justify-content:center">
+      <button class="btn" id="pass">Pass</button>
+      <button class="btn primary" id="keep">Keep</button>
+      <button class="btn" data-open="${p.id}">Open full file</button>
+    </div>
+  </div>`;
+  $("#card").onclick = e => e.currentTarget.classList.toggle("flipped");
+  $("#keep").onclick = () => decide(p.id, "keep");
+  $("#pass").onclick = () => decide(p.id, "pass");
+}
+function decide(id, v){
+  kept[id] = v; store.set("lens.kept", kept); updateCount();
+  toast(v === "keep" ? `${id} kept` : `${id} passed`);
+  deckIndex = (deckIndex + 1) % PS.length; renderCards();
+}
+
+function renderCompare(){
+  const [A, B] = PS;
+  const row = (label, a, b, better) => `<tr><th>${label}</th><td class="${better==="a"?"win-cell":""}" style="--c:${A.color}">${a}</td><td class="${better==="b"?"win-cell":""}" style="--c:${B.color}">${b}</td></tr>`;
+  const sA = FIT.reduce((t,r)=>t+r[1],0), sB = FIT.reduce((t,r)=>t+r[2],0);
+  $("#v-compare").innerHTML = `
+  <div class="intro"><div><div class="label">Side by side</div><h1>Two statements, same questions</h1>
+  <p>Shaded cells mark the stronger side on each row. The team fit table below is weighted for an AIML student with a week to build.</p></div></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th class="a">${A.id}</th><th class="b">${B.id}</th></tr></thead>
+    <tbody>
+      ${row("Organisation","AICTE","MSDE")}
+      ${row("Theme", A.theme, B.theme)}
+      ${row("Status", statusPill(A), statusPill(B), "a")}
+      ${row("Idea deadline", A.deadline, B.deadline, "a")}
+      ${row("Ideas submitted", `<span class="mono">${A.ideas}</span> on ${A.ideasAsOf}`, `<span class="mono">${B.ideas}+</span> on ${B.ideasAsOf}`, "a")}
+      ${A.scores.map((s,i)=>row(s[0], pips(s[1],A.color), pips(B.scores[i][1],B.color), s[1]>B.scores[i][1]?"a":s[1]<B.scores[i][1]?"b":"")).join("")}
+      ${row("Effort", A.effort, B.effort, "a")}
+      ${row("Demo", esc(A.demo), B.demo, "b")}
+      ${row("Smallest winning demo", esc(A.smallest), esc(B.smallest))}
+      ${row("Verdict", verdictPill(A), verdictPill(B), "a")}
+    </tbody>
+  </table></div>
+  <h2 style="font-size:24px;margin:34px 0 12px">Team fit scorecard</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Criterion</th><th class="a">${A.id}</th><th class="b">${B.id}</th><th>Why</th></tr></thead>
+    <tbody>${FIT.map(r=>`<tr><th>${r[0]}</th><td>${pips(r[1],A.color)}</td><td>${pips(r[2],B.color)}</td><td style="color:var(--soft)">${r[3]}</td></tr>`).join("")}</tbody>
+    <tfoot><tr><th>Total out of 35</th><td style="color:${A.color}">${sA}</td><td style="color:${B.color}">${sB}</td><td></td></tr></tfoot>
+  </table></div>`;
+}
+
+function renderTest(){
+  const p = PS.find(x => x.id === testPick);
+  $("#v-test").innerHTML = `
+  <div class="intro"><div><div class="label">Pressure test</div><h1>Everything a jury could throw at it</h1>
+  <p>Red flags, what each one costs you, how to fix it, and what to defend when the questions start.</p></div></div>
+  <div class="seg" role="group" aria-label="Pick a statement">${PS.map(x=>`<button aria-pressed="${x.id===testPick}" data-pick="${x.id}">${x.id}</button>`).join("")}</div>
+  <div class="grid2" style="--c:${p.color}">
+    <div class="stack">
+      <div class="panel"><div class="label">Risk level</div>
+        <div style="font-family:var(--display);font-size:34px;font-weight:800;line-height:1.1;margin-top:4px">${p.heatName}</div>
+        <div class="heat">${[1,2,3,4].map(i=>`<div class="${i<=p.heat?"on":""}"></div>`).join("")}</div>
+        <div class="heat-l"><span>Low</span><span>Medium</span><span>High</span><span>Severe</span></div>
+        <p style="margin-top:14px;color:var(--soft)">${esc(p.obvious)}</p>
+      </div>
+      <div class="rf">${p.redflags.map((r,i)=>`<article><div class="no">${i+1}</div><h3>${esc(r[0])}</h3><div class="cost"><b>Costs you</b>${esc(r[1])}</div><div class="fix"><b>Fix</b>${esc(r[2])}</div></article>`).join("")}</div>
+    </div>
+    <div class="stack">
+      <div class="panel"><h3>What to defend in Q&amp;A</h3><div class="flags">${p.defend.map(d=>`<div class="flag g">${esc(d)}</div>`).join("")}</div></div>
+      <div class="panel"><h3>Scores at a glance</h3>${p.scores.map(s=>`<div class="kv" style="padding:5px 0"><span>${s[0]}</span>${pips(s[1],p.color)}</div>`).join("")}
+        <div class="actions"><button class="btn" data-open="${p.id}">Open full file</button></div></div>
+    </div>
+  </div>`;
+}
+
+function shortlistText(){
+  const list = PS.filter(p => kept[p.id] === "keep");
+  return list.map(p => `${p.id}: ${p.short}\nVerdict: ${p.verdict}. Deadline ${p.deadline}. ${p.ideas} ideas on ${p.ideasAsOf}.\nSmallest winning demo: ${p.smallest}`).join("\n\n");
+}
+function renderShortlist(){
+  const list = PS.filter(p => kept[p.id] === "keep");
+  $("#v-shortlist").innerHTML = `
+  <div class="intro"><div><div class="label">Shortlist</div><h1>What your team is weighing</h1>
+  <p>Statements you keep from the cards or a statement file land here. Copy the summary and send it to your team. The list is saved in this browser only.</p></div></div>
+  ${list.length ? `<div class="rows">${list.map(p=>`<button class="row" style="--c:${p.color}" data-open="${p.id}"><div class="stripe"></div><div class="main"><div class="meta"><span class="mono" style="color:${p.color}">${p.id}</span>${verdictPill(p)}${statusPill(p)}</div><h2>${esc(p.title)}</h2></div></button>`).join("")}</div>
+  <div class="panel" style="margin-top:16px"><label class="label" for="sumText">Summary for your team</label><textarea id="sumText" readonly style="margin-top:8px">${esc(shortlistText())}</textarea>
+  <div class="actions"><button class="btn primary" id="copySum">Copy summary</button><button class="btn" id="clearSum">Clear shortlist</button></div></div>`
+  : `<div class="empty">Nothing kept yet. Go to <button class="btn" data-go="cards">Cards</button> and keep the statements you are serious about.</div>`}`;
+  const c = $("#copySum");
+  if (c) c.onclick = () => {
+    const t = $("#sumText");
+    navigator.clipboard?.writeText(t.value).then(()=>toast("Summary copied"), ()=>{ t.select(); toast("Selected. Press copy on your keyboard.") }) ?? (t.select(), toast("Selected. Press copy on your keyboard."));
+  };
+  const cl = $("#clearSum");
+  if (cl) cl.onclick = () => { kept = {}; store.set("lens.kept", kept); updateCount(); renderShortlist(); toast("Shortlist cleared") };
+}
+
+function updateCount(){ const n = PS.filter(p => kept[p.id]==="keep").length; $("#navCount").textContent = n ? n : "" }
+
+const VIEWS = ["browse","cards","compare","test","shortlist"];
+function show(view, id){
+  document.querySelectorAll(".view").forEach(v => v.hidden = true);
+  document.querySelectorAll("nav button").forEach(b => b.setAttribute("aria-current", b.dataset.view === view ? "true" : "false"));
+  if (view === "detail"){ renderDetail(id); $("#v-detail").hidden = false }
+  else {
+    ({browse:renderBrowse, cards:renderCards, compare:renderCompare, test:renderTest, shortlist:renderShortlist})[view]();
+    $("#v-" + view).hidden = false;
+  }
+  try{ history.replaceState(null, "", "#" + (view === "detail" ? id.toLowerCase() : view)) }catch(e){}
+  window.scrollTo({top:0});
+}
+
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-view],[data-open],[data-go],[data-keep],[data-test],[data-pick]");
+  if (!t) return;
+  if (t.dataset.view) show(t.dataset.view);
+  else if (t.dataset.open) show("detail", t.dataset.open);
+  else if (t.dataset.go) show(t.dataset.go);
+  else if (t.dataset.keep){ const id = t.dataset.keep; kept[id] = kept[id]==="keep" ? "pass" : "keep"; store.set("lens.kept", kept); updateCount(); toast(kept[id]==="keep" ? `${id} kept` : `${id} removed`); show("detail", id) }
+  else if (t.dataset.test){ testPick = t.dataset.test; show("test") }
+  else if (t.dataset.pick){ testPick = t.dataset.pick; renderTest() }
+});
+
+updateCount();
+const h = (location.hash || "").slice(1).toLowerCase();
+if (h === "sih26263" || h === "sih26242") show("detail", h.toUpperCase());
+else show(VIEWS.includes(h) ? h : "browse");
+</script>
+
+</body></html>

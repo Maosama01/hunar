@@ -1,0 +1,846 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Hunar Screen Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@600;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@500;700&display=swap">
+<style>
+/* Layout: a field atlas. Intro, a route map by role, then every screen as a phone frame with its route, role and rules beneath it. */
+:root {
+  --paper: #eef1ee;
+  --surface: #f9faf8;
+  --ink: #142019;
+  --muted: #56645d;
+  --line: #cfd8d2;
+  --accent: #0b5d4b;
+  --accent-soft: #dbebe4;
+  --amber: #9a6100;
+  --amber-soft: #fbefd6;
+  --bezel: #1b2420;
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #101614; --surface: #17201c; --ink: #e5ece8; --muted: #9aaaa2; --line: #2b3832;
+    --accent: #5fc4a6; --accent-soft: #1b3a31; --amber: #f0b34a; --amber-soft: #3a2c12; --bezel: #050807;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #101614; --surface: #17201c; --ink: #e5ece8; --muted: #9aaaa2; --line: #2b3832;
+  --accent: #5fc4a6; --accent-soft: #1b3a31; --amber: #f0b34a; --amber-soft: #3a2c12; --bezel: #050807;
+  color-scheme: dark;
+}
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+.x-wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; display: flex; flex-direction: column; gap: 56px; }
+.x-wrap :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.x-eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+.x-h1 { font-family: var(--display); font-weight: 800; font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.02; letter-spacing: -.02em; margin: 0 0 16px; text-wrap: balance; }
+.x-h2 { font-family: var(--display); font-weight: 800; font-size: clamp(1.5rem, 2.6vw, 2rem); letter-spacing: -.01em; margin: 0 0 6px; text-wrap: balance; }
+.x-lede { max-width: 64ch; color: var(--muted); font-size: 1.08rem; margin: 0; }
+.x-lede strong { color: var(--ink); font-weight: 600; }
+.x-intro { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 40px; align-items: end; }
+.x-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.x-fact { background: var(--surface); padding: 14px 16px; min-width: 0; }
+.x-fact b { display: block; font-family: var(--display); font-size: 1.7rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.x-fact span { font-size: .86rem; color: var(--muted); }
+.x-note { font-size: .86rem; color: var(--amber); background: var(--amber-soft); border-radius: 10px; padding: 10px 14px; margin: 18px 0 0; max-width: 72ch; }
+code.x-r { font-family: var(--mono); font-size: .82rem; color: var(--accent); background: var(--accent-soft); padding: 2px 7px; border-radius: 6px; white-space: nowrap; }
+
+/* route map */
+.x-map { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.x-lane { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 14px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.x-lane-name { font-weight: 600; font-size: .95rem; }
+.x-lane-name small { display: block; color: var(--muted); font-weight: 400; font-size: .8rem; }
+.x-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 4px; min-width: 0; }
+.x-step { display: inline-flex; flex-direction: column; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); text-decoration: none; color: var(--ink); }
+.x-step:hover { border-color: var(--accent); }
+.x-step b { font-size: .88rem; font-weight: 600; }
+.x-step i { font-style: normal; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+.x-step.end { border-style: dashed; }
+.x-arrow { color: var(--muted); font-size: .9rem; padding: 0 2px; }
+
+/* gallery */
+.x-group { display: flex; flex-direction: column; gap: 22px; }
+.x-group-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; border-top: 2px solid var(--ink); padding-top: 14px; }
+.x-group-head p { margin: 0; color: var(--muted); max-width: 70ch; }
+.x-shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 372px), 1fr)); gap: 40px 28px; align-items: start; }
+.x-shot { display: flex; flex-direction: column; gap: 14px; min-width: 0; scroll-margin-top: 20px; }
+.x-cap { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.x-cap-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.x-num { font-family: var(--mono); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.x-cap h3 { font-family: var(--display); font-weight: 600; font-size: 1.2rem; margin: 0; line-height: 1.2; }
+.x-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.x-who { font-size: .78rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.x-cap p { margin: 0; font-size: .95rem; }
+.x-rules { margin: 0; padding-left: 18px; font-size: .9rem; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+.x-rules li::marker { color: var(--accent); }
+
+/* phone bezel */
+.x-phone { width: min(380px, 100%); background: var(--bezel); border-radius: 36px; padding: 10px; box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 18px 40px -22px rgba(0,0,0,.45); }
+.x-screen { position: relative; height: 700px; border-radius: 27px; overflow: hidden; }
+
+/* findings */
+.x-find { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 18px; }
+.x-col { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; min-width: 0; }
+.x-col h3 { font-family: var(--display); font-size: 1.1rem; margin: 0 0 10px; }
+.x-col ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 10px; }
+.x-col li b { font-weight: 600; }
+.x-foot { color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+
+@media (max-width: 860px) { .x-intro { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .x-lane { grid-template-columns: 1fr; gap: 8px; } }
+
+/* ===== Hunar app styles, copied from frontend/src/styles.css and scoped to .ph ===== */
+.ph {
+  --bg: #f4f6f5; --surface: #ffffff; --text: #16201d; --muted: #52605b; --border: #c9d3cf;
+  --brand: #0b5d4b; --brand-ink: #ffffff; --brand-soft: #e3f1ec; --ok: #1d6b33; --ok-soft: #e4f4e7;
+  --warn: #8a5300; --warn-soft: #fff4dc; --bad: #a3221b; --bad-soft: #fde9e7; --info-soft: #e8f0fb; --info: #1f4f8f;
+  --sample: #6a1b9a; --sample-soft: #f3e5f5; --radius: 12px; --tap: 48px;
+  color-scheme: light;
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+  background: var(--bg); color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, "Noto Sans Devanagari", sans-serif;
+  font-size: 15.5px; line-height: 1.5; padding-bottom: 44px;
+}
+.ph *, .ph *::before, .ph *::after { box-sizing: border-box; }
+.ph [lang="hi"] { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
+.ph h1, .ph h2, .ph h3, .ph h4 { line-height: 1.25; margin: 0 0 .4em; color: var(--text); font-family: inherit; }
+.ph h1 { font-size: 1.35rem; } .ph h2 { font-size: 1.2rem; } .ph h3 { font-size: 1.04rem; } .ph h4 { font-size: 1rem; }
+.ph p { margin: 0 0 .5em; }
+.ph code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .84em; overflow-wrap: anywhere; }
+.ph button, .ph input, .ph select, .ph textarea { font: inherit; color: inherit; }
+.ph .main { padding: 14px 14px 20px; }
+.ph .app-header { position: sticky; top: 0; z-index: 5; background: var(--brand); color: var(--brand-ink); padding: 8px 12px; box-shadow: 0 1px 4px rgba(0,0,0,.2); }
+.ph .header-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.ph .header-sub { margin-top: 6px; }
+.ph .brand { display: flex; align-items: center; gap: 8px; color: inherit; font-weight: 700; font-size: 1.1rem; margin-right: auto; min-height: 36px; }
+.ph .brand svg { border-radius: 6px; background: rgba(255,255,255,.14); }
+.ph .conn { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; padding: 3px 9px; border-radius: 999px; background: rgba(255,255,255,.15); font-weight: 600; }
+.ph .conn .dot { width: 9px; height: 9px; border-radius: 50%; }
+.ph .conn-on .dot { background: #6ee7a0; } .ph .conn-off .dot { background: #ff8a80; }
+.ph .conn-off { background: rgba(0,0,0,.25); }
+.ph .queue-chip { color: inherit; font-size: .85rem; padding: 5px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.4); min-height: 34px; display: inline-flex; align-items: center; }
+.ph .queue-chip.has { background: #ffd54f; color: #3a2a00; border-color: #ffd54f; font-weight: 700; }
+.ph .who { font-size: .8rem; margin-left: auto; max-width: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ph .app-header .btn { border-color: rgba(255,255,255,.6); background: transparent; color: #fff; }
+.ph .app-header .btn:disabled { opacity: .55; }
+.ph .lang-toggle { font-weight: 700; }
+.ph .principle { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; background: #102a24; color: #fff; text-align: center; font-size: .78rem; padding: 6px 10px 10px; }
+.ph .principle span { opacity: .85; }
+.ph .blocking { background: var(--bad-soft); color: var(--bad); border-bottom: 2px solid var(--bad); padding: 10px 14px; font-size: .92rem; }
+.ph .stack > * + * { margin-top: 12px; }
+.ph .stack-s > * + * { margin-top: 8px; }
+.ph .row { display: flex; align-items: center; }
+.ph .row.wrap { flex-wrap: wrap; } .ph .row.between { justify-content: space-between; }
+.ph .gap { gap: 10px; } .ph .gap-s { gap: 6px; } .ph .grow { flex: 1; min-width: 0; }
+.ph .block { display: block; } .ph .center { text-align: center; }
+.ph .muted { color: var(--muted); } .ph .small { font-size: .86rem; }
+.ph .hint { display: block; color: var(--muted); font-size: .82rem; margin-top: 4px; }
+.ph .warn-text { color: var(--warn); font-weight: 600; }
+.ph .big { font-size: 2.1rem; font-weight: 800; margin: 0; }
+.ph .label { display: block; font-weight: 600; margin-bottom: 4px; }
+.ph .label-inline { font-weight: 600; margin: 6px 0 2px; }
+.ph ul.plain, .ph ol.plain { list-style: none; padding: 0; margin: 0; }
+.ph .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px; }
+.ph .card-bad { border-color: var(--bad); background: #fffafa; }
+.ph .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: var(--tap); padding: 9px 15px; border-radius: 10px; border: 2px solid var(--brand); background: var(--surface); color: var(--brand); font-weight: 650; cursor: pointer; text-align: center; }
+.ph .btn-primary { background: var(--brand); color: #fff; }
+.ph .btn-ghost { border-color: transparent; background: transparent; }
+.ph .btn-danger-outline { border-color: var(--bad); color: var(--bad); }
+.ph .btn-small { min-height: 36px; padding: 5px 11px; font-size: .86rem; }
+.ph .btn-block { display: flex; width: 100%; }
+.ph .btn:disabled, .ph .btn.disabled { opacity: .45; cursor: not-allowed; }
+.ph .link { background: none; border: 0; padding: 0; color: var(--brand); text-decoration: underline; font-size: inherit; }
+.ph .field { display: block; }
+.ph input[type="text"], .ph input[type="number"], .ph select, .ph textarea { width: 100%; min-height: var(--tap); padding: 9px 11px; border: 2px solid var(--border); border-radius: 10px; background: #fff; color: var(--text); }
+.ph textarea { resize: none; }
+.ph fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.ph legend { padding: 0; }
+.ph .check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 2px solid var(--border); border-radius: 10px; background: #fff; }
+.ph .check input, .ph .radio-card input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--brand); }
+.ph .radio-card { display: flex; gap: 10px; align-items: flex-start; padding: 11px; border: 2px solid var(--border); border-radius: 10px; background: #fff; }
+.ph .radio-card.on { border-color: var(--brand); background: var(--brand-soft); }
+.ph .seg { display: flex; gap: 8px; flex-wrap: wrap; }
+.ph .seg-opt { flex: 1; min-width: 120px; display: flex; gap: 8px; align-items: center; justify-content: center; min-height: var(--tap); border: 2px solid var(--border); border-radius: 10px; background: #fff; padding: 8px; }
+.ph .seg-opt.on { border-color: var(--brand); background: var(--brand-soft); font-weight: 700; }
+.ph .seg-opt input { accent-color: var(--brand); }
+.ph .badge { display: inline-block; font-size: .7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #e9eeec; color: var(--text); border: 1px solid var(--border); letter-spacing: .02em; white-space: nowrap; }
+.ph .badge-sample { background: var(--sample-soft); color: var(--sample); border-color: var(--sample); }
+.ph .badge-pending { background: var(--warn-soft); color: var(--warn); border-color: #e0b25c; }
+.ph .badge-critical { background: var(--bad-soft); color: var(--bad); border-color: var(--bad); }
+.ph .badge-signed { background: var(--ok-soft); color: var(--ok); border-color: var(--ok); }
+.ph .notice { border-radius: 10px; padding: 9px 11px; border-left: 5px solid; font-size: .9rem; }
+.ph .notice-info { background: var(--info-soft); border-color: var(--info); color: #0f2f57; }
+.ph .notice-warn { background: var(--warn-soft); border-color: var(--warn); color: #4d2f00; }
+.ph .notice-error { background: var(--bad-soft); border-color: var(--bad); color: #6d1611; }
+.ph .notice-ok { background: var(--ok-soft); border-color: var(--ok); color: #123f1f; }
+.ph .bar { position: relative; height: 11px; background: #e3e8e6; border-radius: 999px; margin: 6px 0; }
+.ph .bar-fill { height: 100%; border-radius: 999px; }
+.ph .tone-brand { background: var(--brand); } .ph .tone-ok { background: var(--ok); } .ph .tone-warn { background: #c77700; }
+.ph .bar-marker { position: absolute; top: -4px; bottom: -4px; width: 3px; background: var(--text); border-radius: 2px; }
+.ph .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.ph .role { text-align: left; min-height: 84px; padding: 10px; border: 2px solid var(--border); border-radius: var(--radius); background: #fff; display: flex; flex-direction: column; gap: 3px; }
+.ph .role.selected { border-color: var(--brand); background: var(--brand-soft); box-shadow: inset 0 0 0 1px var(--brand); }
+.ph .role-name { font-weight: 700; font-size: .95rem; }
+.ph .role-desc { font-size: .76rem; color: var(--muted); line-height: 1.35; }
+.ph .list { list-style: none; padding: 0; margin: 0; }
+.ph .list-item { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-top: 1px solid var(--border); }
+.ph .list-main { flex: 1; min-width: 0; }
+.ph .tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; border-bottom: 2px solid var(--border); }
+.ph .tab { padding: 6px 2px; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; line-height: 1.2; font-size: .8rem; color: var(--muted); font-weight: 650; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+.ph .tab.active { color: var(--brand); border-color: var(--brand); }
+.ph details > summary { cursor: pointer; list-style: none; }
+.ph details > summary::-webkit-details-marker { display: none; }
+.ph details.card > summary, .ph details.task-group > summary { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.ph details.card > summary::after, .ph details.task-group > summary::after, .ph details.sub > summary::after { content: "▸"; margin-left: auto; color: var(--muted); }
+.ph details[open].card > summary::after, .ph details[open].task-group > summary::after, .ph details[open].sub > summary::after { transform: rotate(90deg); }
+.ph details.sub { margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 6px; }
+.ph details.sub > summary { display: flex; min-height: 40px; align-items: center; font-weight: 600; }
+.ph .pack-head { display: flex; gap: 10px; width: 100%; }
+.ph .rank { font-weight: 800; font-size: 1.15rem; color: var(--brand); }
+.ph .declaration { white-space: pre-wrap; background: #f7faf9; border-radius: 8px; padding: 10px; margin: 0; }
+.ph .quote { margin: 6px 0 0; padding: 6px 10px; border-left: 3px solid var(--brand); background: #f7faf9; border-radius: 0 8px 8px 0; }
+.ph .match { padding: 8px 0; border-top: 1px solid #eef2f0; }
+.ph .checklist .check-item { padding: 9px 0; border-top: 1px solid #eef2f0; }
+.ph .check-label { margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.ph .yesno { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ph .yn { min-height: 46px; border-radius: 10px; border: 2px solid var(--border); background: #fff; font-weight: 700; }
+.ph .yn.yes.on { background: var(--ok); border-color: var(--ok); color: #fff; }
+.ph .yn.no.on { background: var(--bad); border-color: var(--bad); color: #fff; }
+.ph .dot-pending { width: 10px; height: 10px; border-radius: 50%; background: #e0a100; flex: none; }
+.ph .photo-slot { border: 1px solid var(--border); border-radius: 10px; padding: 10px; background: #fbfcfc; }
+.ph .photo-slot > * + * { margin-top: 8px; }
+.ph .preview { display: block; width: 100%; height: 150px; border-radius: 8px; border: 1px solid var(--border); }
+.ph .criterion.is-critical { border-left: 6px solid var(--bad); }
+.ph .suggestion { background: #f7faf9; border-radius: 8px; padding: 10px; margin: 8px 0; }
+.ph .conf { font-size: .76rem; padding: 2px 8px; border-radius: 999px; background: #e9eeec; }
+.ph .conf-low { background: var(--warn-soft); color: var(--warn); }
+.ph .reasons { margin: 4px 0 0; padding-left: 20px; }
+.ph .levels { padding-left: 0; list-style: none; margin: 6px 0 0; }
+.ph .levels li { padding: 6px 8px; border-radius: 8px; margin-bottom: 4px; border: 1px solid transparent; font-size: .86rem; }
+.ph .levels li.is-suggested { border-color: var(--info); background: var(--info-soft); }
+.ph .latest { margin: 8px 0; }
+.ph .decision { padding: 6px 8px; border-radius: 8px; background: #f7faf9; }
+.ph .override { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); }
+.ph .level-pick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.ph .lvl { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60px; padding: 5px; border: 2px solid var(--border); border-radius: 10px; background: #fff; font-weight: 600; color: var(--text); }
+.ph .lvl.on { border-color: var(--brand); background: var(--brand); color: #fff; }
+.ph .lvl-n { font-size: 1.25rem; font-weight: 800; }
+.ph .lvl-name { font-size: .72rem; text-align: center; }
+.ph .lvl-wide { flex-direction: row; justify-content: flex-start; gap: 14px; width: 100%; text-align: left; }
+.ph .lvl-wide .lvl-name { font-size: .95rem; text-align: left; }
+.ph .anchor { color: var(--muted); font-weight: 400; margin-top: 2px; font-size: .8rem; }
+.ph .task-group > summary { padding: 4px 0; }
+.ph .study-img { display: block; width: 100%; height: 190px; border-radius: 8px; }
+.ph .rec { border-color: var(--info); }
+.ph .gap-item { padding: 8px 0; border-top: 1px solid #eef2f0; }
+.ph .queue-op.op-rejected { border-color: var(--bad); }
+.ph .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.ph table.audit { border-collapse: collapse; width: 100%; font-size: .78rem; }
+.ph .audit th, .ph .audit td { text-align: left; padding: 7px; border-bottom: 1px solid #eef2f0; vertical-align: top; white-space: nowrap; }
+.ph .audit th { background: #eef3f1; }
+.ph .bar[role="progressbar"] { height: 8px; }
+</style>
+
+<div class="x-wrap">
+
+<header class="x-intro">
+  <div>
+    <p class="x-eyebrow">SIH26242 · minor project · Tanishq Khandelwal and team</p>
+    <h1 class="x-h1">Hunar, every screen on one page.</h1>
+    <p class="x-lede">Hunar is an offline first PWA that helps assess electricians who learned on the job. A facilitator records what the worker says they can do, the app maps it to official NSQF qualification packs, the assessor scores six practical tasks against an anchored rubric, and <strong>only the assessor's sign off</strong> produces a recommendation. Every screen below is rebuilt from <code class="x-r">frontend/src</code> with the app's own styles and English strings.</p>
+    <p class="x-note">Screens use the repo's SAMPLE worker. Scores, percentages and audit rows inside the frames are placeholders to show layout, not project results. The repo's real results live in <code class="x-r">experiments/*.json</code>.</p>
+  </div>
+  <div class="x-facts" aria-label="Project at a glance">
+    <div class="x-fact"><b>10</b><span>screens across 9 routes</span></div>
+    <div class="x-fact"><b>4</b><span>roles, chosen on the device, no login</span></div>
+    <div class="x-fact"><b>6 · 28</b><span>practical tasks · rubric criteria</span></div>
+    <div class="x-fact"><b>EN · हि</b><span>every string in English and Hindi</span></div>
+  </div>
+</header>
+
+<section aria-labelledby="map-h">
+  <p class="x-eyebrow">How people move through it</p>
+  <h2 class="x-h2" id="map-h">Route map by role</h2>
+  <p class="x-lede">Role and name are picked on Home and saved on the device. Each lane is the path that role actually takes. Tap a step to jump to its screen.</p>
+  <div class="x-map">
+    <div class="x-lane">
+      <div class="x-lane-name">Facilitator<small>records the worker</small></div>
+      <div class="x-steps">
+        <a class="x-step" href="#s-home"><b>Home</b><i>/</i></a><span class="x-arrow">→</span>
+        <a class="x-step" href="#s-declare"><b>New declaration</b><i>/declare</i></a><span class="x-arrow">→</span>
+        <a class="x-step" href="#s-mapping"><b>Pack suggestions</b><i>/a/:id/mapping</i></a><span class="x-arrow">→</span>
+        <a class="x-step" href="#s-tasks"><b>Practical tasks</b><i>/a/:id/tasks</i></a>
+      </div>
+    </div>
+    <div class="x-lane">
+      <div class="x-lane-name">Assessor<small>decides everything</small></div>
+      <div class="x-steps">
+        <a class="x-step" href="#s-home"><b>Home list</b><i>/</i></a><span class="x-arrow">→</span>
+        <a class="x-step" href="#s-score"><b>Scoring</b><i>/a/:id/score</i></a><span class="x-arrow">→</span>
+        <a class="x-step" href="#s-profile"><b>Profile and sign off</b><i>/a/:id/profile</i></a><span class="x-arrow">→</span>
+        <span class="x-step end"><b>Frozen</b><i>read only after sign off</i></span>
+      </div>
+    </div>
+    <div class="x-lane">
+      <div class="x-lane-name">Admin<small>checks integrity</small></div>
+      <div class="x-steps">
+        <a class="x-step" href="#s-home"><b>Home</b><i>/</i></a><span class="x-arrow">→</span>
+        <a class="x-step" href="#s-admin"><b>Audit log</b><i>/admin</i></a>
+      </div>
+    </div>
+    <div class="x-lane">
+      <div class="x-lane-name">Rater<small>M4 consistency study</small></div>
+      <div class="x-steps">
+        <a class="x-step" href="#s-home"><b>Home</b><i>/</i></a><span class="x-arrow">→</span>
+        <a class="x-step" href="#s-rater"><b>Session setup</b><i>/rater</i></a><span class="x-arrow">→</span>
+        <a class="x-step" href="#s-rater-item"><b>Rate items</b><i>/rater</i></a><span class="x-arrow">→</span>
+        <span class="x-step end"><b>Thank you</b><i>/rater</i></span>
+      </div>
+    </div>
+    <div class="x-lane">
+      <div class="x-lane-name">Anyone<small>from the header</small></div>
+      <div class="x-steps">
+        <a class="x-step" href="#s-queue"><b>Sync queue</b><i>/queue</i></a>
+        <span class="x-arrow">·</span>
+        <span class="x-step end"><b>Unknown path</b><i>* redirects to /</i></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ENTRY ================= -->
+<section class="x-group" aria-labelledby="g1">
+  <div class="x-group-head"><h2 class="x-h2" id="g1">Entry and intake</h2><p>Where every session starts, and where the worker's own words go in.</p></div>
+  <div class="x-shots">
+
+    <article class="x-shot" id="s-home">
+      <div class="x-phone"><div class="x-screen"><div class="ph">
+        <header class="app-header">
+          <div class="header-row">
+            <span class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M14.5 4 7 14.5h5L10.5 22 19 11h-5.2z" fill="#ffd54f"/></svg>Hunar</span>
+            <span class="conn conn-on"><span class="dot"></span>Online</span>
+            <button type="button" class="btn btn-small btn-ghost lang-toggle" lang="hi">हिन्दी</button>
+          </div>
+          <div class="header-row header-sub">
+            <span class="queue-chip">⇅ 0 queued</span>
+            <button type="button" class="btn btn-small">Sync now</button>
+            <span class="who">Assessor · R. Sharma</span>
+          </div>
+        </header>
+        <div class="main stack">
+          <section class="card">
+            <h1>Recognition of Prior Learning for domestic electricians</h1>
+            <p class="small">Hunar helps assess electricians who learned on the job. The tool suggests; a qualified assessor makes every decision.</p>
+            <label class="field"><span class="label">Your name or ID</span><input type="text" value="R. Sharma" readonly><span class="hint">Saved on this device and written to the audit log with each change. There is no login.</span></label>
+          </section>
+          <section class="card">
+            <h2>Choose your role</h2>
+            <div class="role-grid">
+              <button type="button" class="role"><span class="role-name">Worker / Facilitator</span><span class="role-desc">Record a worker's declaration and the practical tasks</span></button>
+              <button type="button" class="role selected"><span class="role-name">Assessor</span><span class="role-desc">Confirm the pack, score each criterion, sign off</span></button>
+              <button type="button" class="role"><span class="role-name">Admin</span><span class="role-desc">Audit log and chain check</span></button>
+              <button type="button" class="role"><span class="role-name">Rater</span><span class="role-desc">Consistency study (rater mode)</span></button>
+            </div>
+            <p class="hint">Choose an assessment below to score it.</p>
+          </section>
+          <section class="card">
+            <div class="row between"><h2>Assessments</h2><button type="button" class="btn btn-small btn-ghost">Refresh</button></div>
+            <ul class="list">
+              <li class="list-item"><div class="list-main"><div class="row wrap gap-s"><strong>Worker SAMPLE-W001</strong><span class="badge badge-sample">SAMPLE DATA</span></div><div class="small muted">In progress · Pack confirmed · 27 Oct, 18:40</div></div><span class="btn">Open</span></li>
+              <li class="list-item"><div class="list-main"><div class="row wrap gap-s"><strong>Worker W-0421</strong><span class="badge badge-pending">Not synced yet</span></div><div class="small muted">In progress · Pack not confirmed · 28 Oct, 10:12</div></div><span class="btn">Open</span></li>
+            </ul>
+          </section>
+        </div>
+        <footer class="principle"><strong>AI suggests, the assessor decides</strong><span lang="hi"> · AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का</span></footer>
+      </div></div></div>
+      <div class="x-cap">
+        <div class="x-cap-top"><span class="x-num">01</span><h3>Home</h3></div>
+        <div class="x-meta"><code class="x-r">/</code><span class="x-who">All roles</span></div>
+        <p>Name or ID, role picker, and the assessment list. The role decides the call to action and where Open lands.</p>
+        <ul class="x-rules">
+          <li>Facilitator gets “Start a new worker declaration”, disabled until a name is typed.</li>
+          <li>Assessors open straight into Scoring; everyone else into the Declaration tab.</li>
+          <li>Admin and Rater get a single jump button and no list.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="x-shot" id="s-declare">
+      <div class="x-phone"><div class="x-screen"><div class="ph">
+        <header class="app-header">
+          <div class="header-row">
+            <span class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M14.5 4 7 14.5h5L10.5 22 19 11h-5.2z" fill="#ffd54f"/></svg>Hunar</span>
+            <span class="conn conn-on"><span class="dot"></span>Online</span>
+            <button type="button" class="btn btn-small btn-ghost lang-toggle" lang="hi">हिन्दी</button>
+          </div>
+          <div class="header-row header-sub">
+            <span class="queue-chip">⇅ 0 queued</span>
+            <button type="button" class="btn btn-small">Sync now</button>
+            <span class="who">Worker / Facilitator · Anil</span>
+          </div>
+        </header>
+        <form class="main stack" onsubmit="return false">
+          <h1>New worker declaration</h1>
+          <section class="card stack">
+            <label class="field"><span class="label">Worker code (pseudonymous)</span>
+              <div class="row gap"><input type="text" class="grow" value="W-0421" readonly><button type="button" class="btn">Generate a code</button></div>
+              <span class="hint">⚠ Use a code such as W-0421. Never enter the worker's real name, phone number or Aadhaar number.</span>
+            </label>
+            <fieldset class="field"><legend class="label">Worker's preferred language</legend>
+              <div class="seg"><label class="seg-opt on"><input type="radio" name="d-lang" checked disabled><span lang="hi">हिन्दी (Hindi)</span></label><label class="seg-opt"><input type="radio" name="d-lang" disabled>English</label></div>
+            </fieldset>
+          </section>
+          <section class="card stack">
+            <label class="field"><span class="label">Declaration: the worker's work experience in their own words</span>
+              <textarea rows="6" readonly>Main 7 saal se ghar aur dukaan ki wiring karta hoon. Pehle chacha ke saath kaam seekha. Conduit pipe deewar mein daalta hoon, taar kheenchta hoon, switch board aur MCB lagata hoon.</textarea>
+              <span class="hint">Hindi, English or Hinglish. For example: how many years, what kind of wiring, which tools, which safety steps.</span>
+            </label>
+            <button type="button" class="btn" disabled>🎤 Voice input — planned</button>
+            <span class="hint">Voice input is planned for a later version.</span>
+          </section>
+          <button type="button" class="btn btn-primary btn-block">Save declaration</button>
+        </form>
+        <footer class="principle"><strong>AI suggests, the assessor decides</strong><span lang="hi"> · AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का</span></footer>
+      </div></div></div>
+      <div class="x-cap">
+        <div class="x-cap-top"><span class="x-num">02</span><h3>New worker declaration</h3></div>
+        <div class="x-meta"><code class="x-r">/declare</code><span class="x-who">Facilitator</span></div>
+        <p>Captures who (as a code only), which language, and the worker's own description of their work.</p>
+        <ul class="x-rules">
+          <li>“Generate a code” makes a random W-#### code. Anything that looks like a two word name is blocked.</li>
+          <li>Text needs at least 3 characters. Voice input is visible but disabled.</li>
+          <li>Saving queues an <em>assessment.create</em> change and jumps to the Declaration tab.</li>
+        </ul>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ================= ASSESSMENT ================= -->
+<section class="x-group" aria-labelledby="g2">
+  <div class="x-group-head"><h2 class="x-h2" id="g2">One assessment, four tabs</h2><p>Everything under <code class="x-r">/a/:id</code> shares a header with the worker code, sample and sync badges, and a four tab bar. Signing off freezes all four.</p></div>
+  <div class="x-shots">
+
+    <article class="x-shot" id="s-mapping">
+      <div class="x-phone"><div class="x-screen"><div class="ph">
+        <header class="app-header">
+          <div class="header-row">
+            <span class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M14.5 4 7 14.5h5L10.5 22 19 11h-5.2z" fill="#ffd54f"/></svg>Hunar</span>
+            <span class="conn conn-on"><span class="dot"></span>Online</span>
+            <button type="button" class="btn btn-small btn-ghost lang-toggle" lang="hi">हिन्दी</button>
+          </div>
+          <div class="header-row header-sub"><span class="queue-chip">⇅ 0 queued</span><button type="button" class="btn btn-small">Sync now</button><span class="who">Worker / Facilitator · Anil</span></div>
+        </header>
+        <div class="main stack">
+          <div><div class="row wrap gap-s"><h1 style="margin:0">Worker SAMPLE-W001</h1><span class="badge badge-sample">SAMPLE DATA</span></div></div>
+          <nav class="tabs"><span class="tab active">Declaration</span><span class="tab">Practical tasks</span><span class="tab">Scoring</span><span class="tab">Profile</span></nav>
+          <h2>Declaration and pack suggestions</h2>
+          <section class="card"><h3>Worker's declaration</h3><p class="declaration small">Main 7 saal se ghar aur dukaan ki wiring karta hoon. Pehle chacha ke saath kaam seekha. Conduit pipe deewar mein daalta hoon, taar kheenchta hoon, switch board aur MCB lagata hoon. Kaam se pehle main switch band karta hoon aur tester se check karta hoon.</p></section>
+          <div class="notice notice-warn"><strong>Suggestion only — the assessor confirms the pack</strong><br><span class="small">Method: minilm. 4 sentences analysed. Scores are text similarity (0 to 1) between the declaration and the official performance criteria. They do not measure skill.</span></div>
+          <details class="card" open>
+            <summary><div class="pack-head"><span class="rank">#1</span><div class="grow"><strong>Assistant Electrician</strong><div class="small muted">NSQF level 3 · Match score 0.62</div><div class="bar"><div class="bar-fill tone-brand" style="width:62%"></div></div></div></div></summary>
+            <h3>Matched performance criteria (2)</h3>
+            <ul class="plain stack-s">
+              <li class="match small"><div><code>CON/N0604.PC5</code> lock conduit pipe in its location by means of clamp or other standard means as per instruction</div><blockquote class="quote"><span class="small muted">Worker's words: </span>“Conduit pipe deewar mein daalta hoon, taar kheenchta hoon”</blockquote></li>
+              <li class="match small"><div><code>CON/N0603.PC7</code> work safely as per electrical safety guidelines provided by manufacturer, standard safety practice or organizational safety norms while establishing or disconnecting live electrical connections</div><blockquote class="quote"><span class="small muted">Worker's words: </span>“Kaam se pehle main switch band karta hoon”</blockquote></li>
+            </ul>
+            <h3 style="margin-top:12px">NOS coverage</h3>
+            <div class="small"><code>CON/N0604</code> <span class="badge">core</span> <span class="muted">2 of 11 criteria matched</span></div>
+            <div class="bar"><div class="bar-fill tone-brand" style="width:22%"></div></div>
+            <details class="sub"><summary>Skill gaps: core criteria with no match (9)</summary><p class="hint">Not mentioned in the declaration. The practical tasks can still show these skills.</p></details>
+          </details>
+          <details class="card"><summary><div class="pack-head"><span class="rank">#2</span><div class="grow"><strong>Wireman Control Panel Electronics</strong><div class="small muted">NSQF level 3 · Match score 0.48</div><div class="bar"><div class="bar-fill tone-brand" style="width:48%"></div></div></div></div></summary></details>
+          <details class="card"><summary><div class="pack-head"><span class="rank">#3</span><div class="grow"><strong>Industrial Electrician</strong><div class="small muted">NSQF level 4 · Match score 0.41</div><div class="bar"><div class="bar-fill tone-brand" style="width:41%"></div></div></div></div></summary></details>
+        </div>
+        <footer class="principle"><strong>AI suggests, the assessor decides</strong><span lang="hi"> · AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का</span></footer>
+      </div></div></div>
+      <div class="x-cap">
+        <div class="x-cap-top"><span class="x-num">03</span><h3>Declaration and pack suggestions</h3></div>
+        <div class="x-meta"><code class="x-r">/a/:id/mapping</code><span class="x-who">Facilitator default tab</span><span class="x-who">M1</span></div>
+        <p>The M1 mapper's output: the top three of five qualification packs, each showing which official criteria matched which sentence the worker said.</p>
+        <ul class="x-rules">
+          <li>Per pack: matched criteria with the quoted sentence and similarity, NOS coverage bars, and core criteria never mentioned.</li>
+          <li>Offline, the declaration is saved and a notice says it will be matched once online.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="x-shot" id="s-tasks">
+      <div class="x-phone"><div class="x-screen"><div class="ph">
+        <header class="app-header">
+          <div class="header-row">
+            <span class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M14.5 4 7 14.5h5L10.5 22 19 11h-5.2z" fill="#ffd54f"/></svg>Hunar</span>
+            <span class="conn conn-off"><span class="dot"></span>Offline</span>
+            <button type="button" class="btn btn-small btn-ghost lang-toggle" lang="hi">हिन्दी</button>
+          </div>
+          <div class="header-row header-sub"><span class="queue-chip has">⇅ 2 queued</span><button type="button" class="btn btn-small" disabled>Sync now</button><span class="who">Worker / Facilitator · Anil</span></div>
+        </header>
+        <div class="main stack">
+          <div><div class="row wrap gap-s"><h1 style="margin:0">Worker SAMPLE-W001</h1><span class="badge badge-sample">SAMPLE DATA</span></div><p class="small muted" style="margin:4px 0 0">2 changes waiting to sync</p></div>
+          <nav class="tabs"><span class="tab">Declaration</span><span class="tab active">Practical tasks</span><span class="tab">Scoring</span><span class="tab">Profile</span></nav>
+          <h2>Practical tasks</h2>
+          <p class="muted small">Record what the assessor observed. Each answer and photo is saved on this device first.</p>
+          <div class="notice notice-info">📷 The photo check only looks at whether PPE and tools are visible. It does NOT judge the quality of the work.</div>
+          <details class="card" open>
+            <summary><div class="grow"><strong>Prepare safely: PPE, isolation and test before touch</strong><div class="small muted">7 of 7 answered · 1 photos</div></div></summary>
+            <p class="small">Before working on the practice board, put on PPE, switch off and tag the supply, and prove the circuit is dead.</p>
+            <h3>Observed during the task</h3>
+            <ul class="plain checklist small">
+              <li class="check-item"><div class="check-label">Insulated gloves worn</div><div class="yesno"><button type="button" class="yn yes on">✓ Yes</button><button type="button" class="yn no">✗ No</button></div></li>
+              <li class="check-item"><div class="check-label">Safety shoes worn <span class="dot-pending" title="Waiting to sync"></span></div><div class="yesno"><button type="button" class="yn yes">✓ Yes</button><button type="button" class="yn no on">✗ No</button></div></li>
+              <li class="check-item"><div class="check-label">Lock or 'do not switch on' tag placed <span class="dot-pending" title="Waiting to sync"></span></div><div class="yesno"><button type="button" class="yn yes">✓ Yes</button><button type="button" class="yn no on">✗ No</button></div></li>
+            </ul>
+            <h3 style="margin-top:12px">Photos</h3>
+            <div class="photo-slot">
+              <div class="row between wrap gap-s"><strong class="small">📷 Worker at the board wearing PPE (face is blurred automatically)</strong><span class="small muted">0 photos</span></div>
+              <svg class="preview" viewBox="0 0 320 150" role="img" aria-label="Photo preview placeholder"><rect width="320" height="150" fill="#e3e8e6"/><rect x="110" y="22" width="100" height="106" fill="none" stroke="#3c3c3c" stroke-width="3"/><rect x="125" y="40" width="22" height="34" fill="none" stroke="#2a2a2a" stroke-width="2"/><rect x="158" y="40" width="22" height="34" fill="none" stroke="#2a2a2a" stroke-width="2"/><circle cx="160" cy="100" r="13" fill="none" stroke="#2a2a2a" stroke-width="2"/><text x="10" y="16" font-size="10" fill="#c00" font-family="sans-serif">SAMPLE IMAGE</text></svg>
+              <div class="notice notice-info small">🔒 This photo stays on this device only until it syncs. Faces are blurred on the server before the photo is stored.</div>
+              <label class="check small"><input type="checkbox" disabled><span>Written consent obtained from everyone in the photo</span></label>
+              <div class="row gap wrap"><button type="button" class="btn btn-primary" disabled>Save photo</button><button type="button" class="btn btn-ghost">Cancel</button></div>
+            </div>
+          </details>
+          <details class="card"><summary><div class="grow"><strong>Wire a single-phase switch board (one lamp with switch, one socket)</strong><div class="small muted">9 of 9 answered · 1 photos</div></div></summary></details>
+          <details class="card"><summary><div class="grow"><strong>Lay PVC conduit on a wall surface and pull wires</strong><div class="small muted">0 of 7 answered · 0 photos</div></div></summary></details>
+        </div>
+        <footer class="principle"><strong>AI suggests, the assessor decides</strong><span lang="hi"> · AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का</span></footer>
+      </div></div></div>
+      <div class="x-cap">
+        <div class="x-cap-top"><span class="x-num">04</span><h3>Practical tasks</h3></div>
+        <div class="x-meta"><code class="x-r">/a/:id/tasks</code><span class="x-who">Facilitator or assessor</span><span class="x-who">M2</span></div>
+        <p>Six tasks from the rubric YAML. Each has a Yes / No checklist and two photo slots. Shown here offline, with two ticks waiting to sync.</p>
+        <ul class="x-rules">
+          <li>A photo can't be saved until the consent box is ticked. Faces are blurred on the server before storage.</li>
+          <li>After sync, each photo shows faces blurred, a reuse warning if it matches another worker's evidence, and the PPE detector result (“not available yet” until YOLO is trained).</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="x-shot" id="s-score">
+      <div class="x-phone"><div class="x-screen"><div class="ph">
+        <header class="app-header">
+          <div class="header-row">
+            <span class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M14.5 4 7 14.5h5L10.5 22 19 11h-5.2z" fill="#ffd54f"/></svg>Hunar</span>
+            <span class="conn conn-on"><span class="dot"></span>Online</span>
+            <button type="button" class="btn btn-small btn-ghost lang-toggle" lang="hi">हिन्दी</button>
+          </div>
+          <div class="header-row header-sub"><span class="queue-chip">⇅ 0 queued</span><button type="button" class="btn btn-small">Sync now</button><span class="who">Assessor · R. Sharma</span></div>
+        </header>
+        <div class="main stack">
+          <div><div class="row wrap gap-s"><h1 style="margin:0">Worker SAMPLE-W001</h1><span class="badge badge-sample">SAMPLE DATA</span></div></div>
+          <nav class="tabs"><span class="tab">Declaration</span><span class="tab">Practical tasks</span><span class="tab active">Scoring</span><span class="tab">Profile</span></nav>
+          <h2>Assessor scoring</h2>
+          <section class="card"><h3>Step 1: Confirm the qualification pack</h3><div class="row wrap gap-s between"><p class="small" style="margin:0">✔ <strong>Confirmed pack: Assistant Electrician</strong></p><button type="button" class="btn btn-small">Change pack</button></div></section>
+          <h3>Step 2: Score each criterion</h3>
+          <p style="margin:0"><strong>3 of 28 criteria decided</strong></p>
+          <div class="notice notice-info">📷 The photo check only looks at whether PPE and tools are visible. It does NOT judge the quality of the work.</div>
+          <details class="task-group" open>
+            <summary><strong>Prepare safely: PPE, isolation and test before touch</strong></summary>
+            <article class="card criterion is-critical">
+              <div class="row wrap gap-s"><span class="badge badge-critical">⚠ Critical (safety)</span><code class="small">CON/N9001</code><span class="small muted">weight 2</span></div>
+              <h4 style="margin-top:6px">Uses the PPE the task needs</h4>
+              <p class="small warn-text">Safety criterion: below level 2 blocks a positive recommendation.</p>
+              <div class="suggestion small">
+                <p style="margin:0">Suggested level: <strong>1 – Partial</strong> <span class="conf">Confidence: medium</span></p>
+                <p class="label-inline">Why:</p>
+                <ul class="reasons"><li>checklist: 1 of 2 observed items ticked</li><li>not ticked: Safety shoes worn</li></ul>
+              </div>
+              <details class="sub small"><summary>Level descriptors</summary>
+                <ol class="levels"><li><strong>0 – Not performed</strong> No PPE worn.</li><li class="is-suggested"><strong>1 – Partial</strong> Some PPE worn, but gloves or shoes missing.</li><li><strong>2 – Competent</strong> Insulated gloves and safety shoes worn throughout the live-risk steps.</li><li><strong>3 – Proficient</strong> All PPE worn correctly and checked for damage before use, without prompting.</li></ol>
+              </details>
+              <div class="latest"><p class="small label-inline">Latest decision:</p><p class="muted small">Not decided yet</p></div>
+              <div class="row wrap gap"><button type="button" class="btn btn-primary">Accept suggestion</button><button type="button" class="btn">Override</button></div>
+              <div class="override stack-s">
+                <fieldset><legend class="label small">Your level</legend>
+                  <div class="level-pick"><button type="button" class="lvl"><span class="lvl-n">0</span><span class="lvl-name">Not performed</span></button><button type="button" class="lvl on"><span class="lvl-n">1</span><span class="lvl-name">Partial</span></button><button type="button" class="lvl"><span class="lvl-n">2</span><span class="lvl-name">Competent</span></button><button type="button" class="lvl"><span class="lvl-n">3</span><span class="lvl-name">Proficient</span></button></div>
+                </fieldset>
+                <label class="field"><span class="label small">Reason for the override (at least 5 characters)</span><textarea rows="2" readonly>Wore sandals during the live test</textarea><span class="hint">33 / 5</span></label>
+                <button type="button" class="btn btn-primary">Save override</button>
+              </div>
+            </article>
+          </details>
+        </div>
+        <footer class="principle"><strong>AI suggests, the assessor decides</strong><span lang="hi"> · AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का</span></footer>
+      </div></div></div>
+      <div class="x-cap">
+        <div class="x-cap-top"><span class="x-num">05</span><h3>Assessor scoring</h3></div>
+        <div class="x-meta"><code class="x-r">/a/:id/score</code><span class="x-who">Assessor default tab</span><span class="x-who">M3</span></div>
+        <p>Two steps. Confirm the pack, then decide all 28 criteria across six tasks, each with an explained pre score.</p>
+        <ul class="x-rules">
+          <li>Picking any pack other than the top suggestion needs a written reason.</li>
+          <li>The engine suggests 0 to 2 only. Level 3 is always an assessor call.</li>
+          <li>Accept is switched off while checklist or photo changes are unsynced. Override needs a level and a reason of 5+ characters.</li>
+          <li>Safety criteria carry a red stripe. A checklist and photo conflict is flagged in red.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="x-shot" id="s-profile">
+      <div class="x-phone"><div class="x-screen"><div class="ph">
+        <header class="app-header">
+          <div class="header-row">
+            <span class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M14.5 4 7 14.5h5L10.5 22 19 11h-5.2z" fill="#ffd54f"/></svg>Hunar</span>
+            <span class="conn conn-on"><span class="dot"></span>Online</span>
+            <button type="button" class="btn btn-small btn-ghost lang-toggle" lang="hi">हिन्दी</button>
+          </div>
+          <div class="header-row header-sub"><span class="queue-chip">⇅ 0 queued</span><button type="button" class="btn btn-small">Sync now</button><span class="who">Assessor · R. Sharma</span></div>
+        </header>
+        <div class="main stack">
+          <div><div class="row wrap gap-s"><h1 style="margin:0">Worker SAMPLE-W001</h1><span class="badge badge-sample">SAMPLE DATA</span></div></div>
+          <nav class="tabs"><span class="tab">Declaration</span><span class="tab">Practical tasks</span><span class="tab">Scoring</span><span class="tab active">Profile</span></nav>
+          <h2>Competency profile</h2>
+          <section class="card stack-s">
+            <h3>Overall score</h3>
+            <p class="big">74%</p>
+            <div class="bar"><div class="bar-fill tone-ok" style="width:74%"></div><div class="bar-marker" style="left:70%"></div></div>
+            <p class="small">Pass mark 70% (default, from the official qualification file)</p>
+          </section>
+          <section class="card stack-s">
+            <h3>Score per NOS</h3>
+            <div class="row between small"><code>CON/N0602</code><strong>81%</strong></div><div class="bar"><div class="bar-fill tone-ok" style="width:81%"></div><div class="bar-marker" style="left:70%"></div></div>
+            <div class="row between small"><code>CON/N9001</code><strong>58%</strong></div><div class="bar"><div class="bar-fill tone-warn" style="width:58%"></div><div class="bar-marker" style="left:70%"></div></div>
+            <div class="small muted">5 criteria, 2 below competent</div>
+          </section>
+          <section class="card card-bad stack-s">
+            <h3>Critical safety failures</h3>
+            <p class="small">Any failed safety (critical) criterion blocks a positive recommendation, whatever the overall score.</p>
+            <div class="gap-item small"><div class="row wrap gap-s"><span class="badge badge-critical">⚠ Critical (safety)</span><code>CON/N9001</code></div><div>Uses the PPE the task needs — <strong>1</strong> (Partial)</div></div>
+          </section>
+          <section class="card rec stack-s">
+            <h3>Recommendation for assessor review</h3>
+            <p><strong>The tool suggests: not yet competent.</strong></p>
+            <p class="small">Explanation from the tool: A critical safety criterion is below 'competent': t1_safe_isolation.c1_ppe. A positive recommendation is blocked whatever the overall score.</p>
+          </section>
+          <section class="card stack-s">
+            <h3>Assessor sign-off</h3>
+            <p class="hint">📶 Sign-off needs a connection to the server: it is final and is written straight to the audit log.</p>
+            <label class="radio-card on small"><input type="radio" name="p-ag" checked disabled><span>I agree with the tool's recommendation</span></label>
+            <label class="radio-card small"><input type="radio" name="p-ag" disabled><span>I disagree and record my own outcome</span></label>
+            <label class="field"><span class="label small">Comment (optional)</span><textarea rows="2" readonly></textarea></label>
+            <p class="small muted">Signing as R. Sharma</p>
+            <button type="button" class="btn btn-primary">Sign off</button>
+          </section>
+        </div>
+        <footer class="principle"><strong>AI suggests, the assessor decides</strong><span lang="hi"> · AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का</span></footer>
+      </div></div></div>
+      <div class="x-cap">
+        <div class="x-cap-top"><span class="x-num">06</span><h3>Competency profile and sign off</h3></div>
+        <div class="x-meta"><code class="x-r">/a/:id/profile</code><span class="x-who">Assessor</span></div>
+        <p>Weighted overall score against the 70% pass mark, per NOS bars, safety failures, gaps, the tool's recommendation, then the sign off.</p>
+        <ul class="x-rules">
+          <li>Here the overall clears 70% but one safety criterion sits at 1, so the tool still says not yet competent.</li>
+          <li>Sign off is the one online only action. It stays locked until the pack is confirmed, all 28 are scored and the queue is empty.</li>
+          <li>Disagreeing needs an outcome and a 5+ character comment. After sign off every tab is read only.</li>
+        </ul>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ================= TOOLS ================= -->
+<section class="x-group" aria-labelledby="g3">
+  <div class="x-group-head"><h2 class="x-h2" id="g3">Integrity, research and sync</h2><p>The screens that prove the process is honest: the audit chain, the rater study behind M4, and the offline outbox.</p></div>
+  <div class="x-shots">
+
+    <article class="x-shot" id="s-admin">
+      <div class="x-phone"><div class="x-screen"><div class="ph">
+        <header class="app-header">
+          <div class="header-row">
+            <span class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M14.5 4 7 14.5h5L10.5 22 19 11h-5.2z" fill="#ffd54f"/></svg>Hunar</span>
+            <span class="conn conn-on"><span class="dot"></span>Online</span>
+            <button type="button" class="btn btn-small btn-ghost lang-toggle" lang="hi">हिन्दी</button>
+          </div>
+          <div class="header-row header-sub"><span class="queue-chip">⇅ 0 queued</span><button type="button" class="btn btn-small">Sync now</button><span class="who">Admin · ops-1</span></div>
+        </header>
+        <div class="main stack">
+          <h1>Audit log</h1>
+          <p class="muted small">Each entry stores the hash of the previous one, so changing any past entry breaks the chain.</p>
+          <section class="card stack-s">
+            <button type="button" class="btn btn-primary">Verify chain</button>
+            <div class="notice notice-ok">✔ Chain OK: 14 entries checked. Head hash 9f2c41ab07e3…</div>
+          </section>
+          <form class="card stack-s" onsubmit="return false">
+            <label class="field"><span class="label small">Filter by subject (assessment or worker id)</span><input type="text" readonly></label>
+            <label class="field"><span class="label small">Entries to show</span><select disabled><option>200</option></select></label>
+            <div class="row gap"><button type="button" class="btn">Apply</button><button type="button" class="btn btn-ghost">Clear</button></div>
+          </form>
+          <div class="table-wrap">
+            <table class="audit">
+              <thead><tr><th>#</th><th>Time</th><th>Actor</th><th>Action</th><th>Subject</th></tr></thead>
+              <tbody>
+                <tr><td>14</td><td>10:31</td><td>R. Sharma</td><td><code>decision.add</code></td><td><span class="link">sample-asses…</span> <span class="badge badge-sample">SAMPLE DATA</span></td></tr>
+                <tr><td>13</td><td>10:29</td><td>R. Sharma</td><td><code>pack.confirm</code></td><td><span class="link">sample-asses…</span></td></tr>
+                <tr><td>12</td><td>10:12</td><td>Anil</td><td><code>evidence.add</code></td><td><span class="link">a81e0c2f…</span></td></tr>
+                <tr><td>11</td><td>10:11</td><td>Anil</td><td><code>assessment.create</code></td><td><span class="link">a81e0c2f…</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <footer class="principle"><strong>AI suggests, the assessor decides</strong><span lang="hi"> · AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का</span></footer>
+      </div></div></div>
+      <div class="x-cap">
+        <div class="x-cap-top"><span class="x-num">07</span><h3>Audit log</h3></div>
+        <div class="x-meta"><code class="x-r">/admin</code><span class="x-who">Admin</span></div>
+        <p>A hash chained record of every accept, override, pack confirmation and sign off, with a one tap integrity check.</p>
+        <ul class="x-rules">
+          <li>“Verify chain” reports OK with the head hash, or the first broken entry number.</li>
+          <li>Filter by assessment or worker id, cap at 50, 200 or 1000 rows, expand any row to see its JSON payload.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="x-shot" id="s-rater">
+      <div class="x-phone"><div class="x-screen"><div class="ph">
+        <header class="app-header">
+          <div class="header-row">
+            <span class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M14.5 4 7 14.5h5L10.5 22 19 11h-5.2z" fill="#ffd54f"/></svg>Hunar</span>
+            <span class="conn conn-on"><span class="dot"></span>Online</span>
+            <button type="button" class="btn btn-small btn-ghost lang-toggle" lang="hi">हिन्दी</button>
+          </div>
+          <div class="header-row header-sub"><span class="queue-chip">⇅ 0 queued</span><button type="button" class="btn btn-small">Sync now</button><span class="who">Rater · RT-02</span></div>
+        </header>
+        <form class="main stack" onsubmit="return false">
+          <h1>Rater mode: consistency study</h1>
+          <p class="small">Score each photo against one criterion with a level from 0 to 3. The ratings measure how consistently assessors score, with and without the tool's help.</p>
+          <div class="notice notice-warn">📅 Sessions of the two conditions (unassisted and assisted) should be at least one week apart, so that you do not remember the items.</div>
+          <section class="card stack-s">
+            <label class="field"><span class="label small">Rater ID</span><input type="text" value="RT-02" readonly></label>
+            <fieldset class="stack-s"><legend class="label small">Condition</legend>
+              <label class="radio-card on small"><input type="radio" name="r-c" checked disabled><span>Unassisted: photo and criterion only</span></label>
+              <label class="radio-card small"><input type="radio" name="r-c" disabled><span>Assisted: with level descriptors and the tool's pre score</span></label>
+            </fieldset>
+            <label class="field"><span class="label small">Session number</span><input type="number" value="1" readonly></label>
+            <label class="check small"><input type="checkbox" checked disabled><span>Include sample items (demo only)</span></label>
+          </section>
+          <button type="button" class="btn btn-primary btn-block">Start</button>
+        </form>
+        <footer class="principle"><strong>AI suggests, the assessor decides</strong><span lang="hi"> · AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का</span></footer>
+      </div></div></div>
+      <div class="x-cap">
+        <div class="x-cap-top"><span class="x-num">08</span><h3>Rater mode setup</h3></div>
+        <div class="x-meta"><code class="x-r">/rater</code><span class="x-who">Rater</span><span class="x-who">M4</span></div>
+        <p>Sets up a rating session for the inter assessor study: who is rating, with or without the tool's help, which session.</p>
+        <ul class="x-rules">
+          <li>Items load once online and photos are cached, so the session can finish offline.</li>
+          <li>Progress is kept per rater, condition and session, so a half done session shows “Resume”.</li>
+          <li>Without real study items, only the six SAMPLE items appear.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="x-shot" id="s-rater-item">
+      <div class="x-phone"><div class="x-screen"><div class="ph">
+        <header class="app-header">
+          <div class="header-row">
+            <span class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M14.5 4 7 14.5h5L10.5 22 19 11h-5.2z" fill="#ffd54f"/></svg>Hunar</span>
+            <span class="conn conn-on"><span class="dot"></span>Online</span>
+            <button type="button" class="btn btn-small btn-ghost lang-toggle" lang="hi">हिन्दी</button>
+          </div>
+          <div class="header-row header-sub"><span class="queue-chip has">⇅ 2 queued</span><button type="button" class="btn btn-small">Sync now</button><span class="who">Rater · RT-02</span></div>
+        </header>
+        <div class="main stack">
+          <div>
+            <div class="row between small"><span>Item 3 of 6</span><span class="badge badge-sample">SAMPLE DATA</span></div>
+            <div class="bar" role="progressbar"><div class="bar-fill tone-brand" style="width:33%"></div></div>
+            <p class="hint">Ratings are final: you cannot go back to earlier items.</p>
+          </div>
+          <section class="card stack-s">
+            <svg class="study-img" viewBox="0 0 320 190" role="img" aria-label="Sample study photo placeholder"><rect width="320" height="190" fill="#ebebeb"/><rect x="85" y="30" width="150" height="140" fill="none" stroke="#3c3c3c" stroke-width="3"/><rect x="100" y="55" width="26" height="40" fill="none" stroke="#2a2a2a" stroke-width="2"/><rect x="146" y="55" width="26" height="40" fill="none" stroke="#2a2a2a" stroke-width="2"/><rect x="192" y="55" width="26" height="40" fill="none" stroke="#2a2a2a" stroke-width="2"/><path d="M113 95 L120 170 M159 95 L150 170 M205 95 L212 170" stroke="#c00" stroke-width="2"/><circle cx="160" cy="135" r="14" fill="none" stroke="#2a2a2a" stroke-width="2"/><text x="10" y="18" font-size="11" fill="#c00" font-family="sans-serif">SAMPLE IMAGE - synthetic drawing</text></svg>
+            <p class="small muted">Make a straight-through joint and insulate it</p>
+            <p class="small"><span class="muted">Criterion: </span><strong>Insulates the joint completely</strong></p>
+          </section>
+          <fieldset class="stack-s"><legend class="label small">Choose a level</legend>
+            <button type="button" class="lvl lvl-wide"><span class="lvl-n">0</span><span class="lvl-name">Not performed</span></button>
+            <button type="button" class="lvl lvl-wide"><span class="lvl-n">1</span><span class="lvl-name">Partial</span></button>
+            <button type="button" class="lvl lvl-wide"><span class="lvl-n">2</span><span class="lvl-name">Competent</span></button>
+            <button type="button" class="lvl lvl-wide"><span class="lvl-n">3</span><span class="lvl-name">Proficient</span></button>
+          </fieldset>
+        </div>
+        <footer class="principle"><strong>AI suggests, the assessor decides</strong><span lang="hi"> · AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का</span></footer>
+      </div></div></div>
+      <div class="x-cap">
+        <div class="x-cap-top"><span class="x-num">09</span><h3>Rater item</h3></div>
+        <div class="x-meta"><code class="x-r">/rater</code><span class="x-who">Rater</span><span class="x-who">M4</span></div>
+        <p>One photo, one criterion, four big level buttons. One tap records the level and the seconds spent, then moves on.</p>
+        <ul class="x-rules">
+          <li>Unassisted (shown) hides all help. Assisted adds the tool's pre score with reasons and a descriptor under each level.</li>
+          <li>No back button. The last screen thanks the rater and shows how many ratings are still waiting to upload.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="x-shot" id="s-queue">
+      <div class="x-phone"><div class="x-screen"><div class="ph">
+        <header class="app-header">
+          <div class="header-row">
+            <span class="brand"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M14.5 4 7 14.5h5L10.5 22 19 11h-5.2z" fill="#ffd54f"/></svg>Hunar</span>
+            <span class="conn conn-on"><span class="dot"></span>Online</span>
+            <button type="button" class="btn btn-small btn-ghost lang-toggle" lang="hi">हिन्दी</button>
+          </div>
+          <div class="header-row header-sub"><span class="queue-chip has">⇅ 3 queued</span><button type="button" class="btn btn-small">Sync now</button><span class="who">Worker / Facilitator · Anil</span></div>
+        </header>
+        <div class="blocking" role="alert">
+          <p style="margin:0 0 4px"><strong>The server refused a queued change (photo): image could not be decoded</strong></p>
+          <p class="small" style="margin:0 0 8px">Changes queued after it are waiting. Retry it, or discard this one change.</p>
+          <div class="row gap"><button type="button" class="btn btn-small">Retry</button><button type="button" class="btn btn-small btn-danger-outline">Discard this change</button></div>
+        </div>
+        <div class="main stack">
+          <h1>Sync queue</h1>
+          <p class="muted small">Changes are saved on this device first and sent to the server in order (oldest first) when online.</p>
+          <ol class="plain stack-s">
+            <li class="card queue-op op-rejected"><div class="row between wrap gap-s"><strong>#41 · photo</strong><span class="badge badge-critical">refused</span></div><div class="small muted">28 Oct, 10:14 · <span class="link">assessment a81e0c2f</span></div><div class="small warn-text">image could not be decoded</div></li>
+            <li class="card queue-op"><div class="row between wrap gap-s"><strong>#42 · checklist ticks</strong><span class="badge badge-pending">waiting</span></div><div class="small muted">28 Oct, 10:15 · <span class="link">assessment a81e0c2f</span></div></li>
+            <li class="card queue-op"><div class="row between wrap gap-s"><strong>#43 · checklist ticks</strong><span class="badge badge-pending">waiting</span></div><div class="small muted">28 Oct, 10:15 · <span class="link">assessment a81e0c2f</span></div></li>
+          </ol>
+        </div>
+        <footer class="principle"><strong>AI suggests, the assessor decides</strong><span lang="hi"> · AI सुझाव देता है, निर्णय मूल्यांकनकर्ता का</span></footer>
+      </div></div></div>
+      <div class="x-cap">
+        <div class="x-cap-top"><span class="x-num">10</span><h3>Sync queue</h3></div>
+        <div class="x-meta"><code class="x-r">/queue</code><span class="x-who">Anyone, via the header chip</span><span class="x-who">M5</span></div>
+        <p>The offline outbox, oldest first. Shown in its worst state: one refused change holding up the rest.</p>
+        <ul class="x-rules">
+          <li>Replay is strictly ordered, so one refusal stops everything behind it and raises a red banner on every screen.</li>
+          <li>Retry resends it. Discard asks for a second confirmation. Waiting rater ratings are counted separately.</li>
+        </ul>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section aria-labelledby="f-h">
+  <p class="x-eyebrow">Read of the codebase</p>
+  <h2 class="x-h2" id="f-h">What holds up, and what to fix before a real pilot</h2>
+  <div class="x-find" style="margin-top:18px">
+    <div class="x-col">
+      <h3>Strong</h3>
+      <ul>
+        <li><b>The ethics are in the UI, not only the README.</b> Reasons are mandatory for overrides and non top packs, safety criteria hard block, SAMPLE badges follow sample data everywhere, wording never says “certified”.</li>
+        <li><b>Offline first is real.</b> Every action except sign off goes to an IndexedDB outbox and replays in order, with a visible queue and a clear failure path.</li>
+        <li><b>Built for the field.</b> 48px tap targets, Yes / No buttons instead of tiny checkboxes, full Hindi strings, readable at 360px.</li>
+      </ul>
+    </div>
+    <div class="x-col">
+      <h3>Gaps</h3>
+      <ul>
+        <li><b>No login.</b> Anyone can pick Admin or Assessor and type any name, and that name goes into the “tamper evident” log. The chain proves rows weren't edited, not who wrote them.</li>
+        <li><b>The worker never sees anything.</b> There is no worker facing result or receipt. The person being assessed is absent from the app.</li>
+        <li><b>Voice is the missing front door.</b> The target user talks better than they type, and the mic button is disabled.</li>
+        <li><b>Scoring is one long scroll</b> of 28 cards with no per task progress or jump list, and level descriptors stay English in Hindi mode.</li>
+        <li><b>Two screens run empty today.</b> The PPE detector reports “not available” and rater mode has only sample items until YOLO and M4 have real results.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<p class="x-foot">Source: ~/Hunar on this Mac, read only. Routes from <code class="x-r">App.tsx</code>, screens from <code class="x-r">src/screens</code>, copy from <code class="x-r">i18n/en.ts</code>, styles from <code class="x-r">styles.css</code>, task and criterion text from <code class="x-r">backend/hunar/rubric/tasks/*.yaml</code>. Last commit read: 394b2fe.</p>
+
+</div>
+
+</body></html>
