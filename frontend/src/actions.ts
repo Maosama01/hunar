@@ -12,7 +12,10 @@ export async function createDeclaration(input: {
   preferred_language: "en" | "hi";
   declaration_text: string;
   actor: string;
+  /** Selects the rubric tasks (default electrician). */
+  trade?: string;
 }): Promise<string> {
+  const trade = input.trade ?? "electrician";
   const workerId = uuid();
   const assessmentId = uuid();
   const t = nowIso();
@@ -28,6 +31,7 @@ export async function createDeclaration(input: {
       id: assessmentId,
       worker_id: workerId,
       worker_code: input.code,
+      trade,
       declaration_text: input.declaration_text,
       created_at: t,
       actor: input.actor,
@@ -39,7 +43,7 @@ export async function createDeclaration(input: {
     );
     await addOp(
       "assessment.create",
-      { id: assessmentId, worker_id: workerId, declaration_text: input.declaration_text, actor: input.actor },
+      { id: assessmentId, worker_id: workerId, trade, declaration_text: input.declaration_text, actor: input.actor },
       { assessment_id: assessmentId },
     );
   });

@@ -49,6 +49,7 @@ export interface LocalAssessment {
   id: string;
   worker_id: string;
   worker_code: string;
+  trade?: string;
   declaration_text: string;
   created_at: string;
   actor: string;

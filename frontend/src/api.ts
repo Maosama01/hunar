@@ -145,6 +145,7 @@ export interface AssessmentDetail {
   mapping: MappingResult | null;
   checklist: Record<string, Record<string, boolean>>;
   evidence: EvidenceOut[];
+  clips?: GuidedClipOut[];
   decisions: Decision[];
   signoff: Signoff | null;
 }
@@ -178,7 +179,40 @@ export interface Criterion {
   checklist: string[];
   cv_classes: string[];
   cv_classes_any: string[];
+  /** Video pilot: the guided clip and the aspects (name, function, failure, test) this criterion uses. */
+  clip?: { id: string; aspects: string[]; meter: boolean } | null;
   levels: Record<string, string>;
+}
+
+/** One guided clip the app asks for (video pilot): show one part and explain it. */
+export interface ClipPrompt {
+  id: string;
+  part: Bi;
+  prompt: Bi;
+  detect: string[];
+  terms: Record<string, string[]>;
+  meter: { quantity: string; unit: string } | null;
+}
+
+/** A stored guided clip: faces blurred, sound removed; the transcript is a draft. */
+export interface GuidedClipOut {
+  id: string;
+  assessment_id: string;
+  task_id: string;
+  clip_id: string;
+  duration_s: number;
+  frames_with_faces: number;
+  detector: string;
+  part_seen: boolean | null;
+  hand_on_part: boolean | null;
+  meter_value: number | null;
+  printed_value: number | null;
+  tolerance_pct: number | null;
+  meter_in_range: boolean | null;
+  transcript: { text: string; words?: { word: string; start: number; end?: number }[]; unavailable?: string };
+  found: Record<string, [string, number][]>;
+  video_url: string;
+  created_at: string;
 }
 
 export interface Task {
@@ -191,6 +225,7 @@ export interface Task {
   instructions: Bi;
   photos: LabelledItem[];
   checklist: LabelledItem[];
+  clips?: ClipPrompt[];
   criteria: Criterion[];
 }
 
@@ -487,6 +522,20 @@ export const api = {
   studyItems: (params: { rater_id: string; condition: Condition; include_sample: boolean }) =>
     get<StudyItem[]>(`/api/study/items?${q(params)}`),
   addRating: (body: RatingIn) => post<unknown>("/api/study/ratings", body),
+  /** Video pilot: upload one guided clip. The server blurs faces, drops the sound and transcribes it. */
+  addClip: (assessmentId: string, f: { taskId: string; clipId: string; video: Blob; language: string;
+    reading?: number; printed?: number; tolerancePct?: number }) => {
+    const form = new FormData();
+    form.append("task_id", f.taskId);
+    form.append("clip_id", f.clipId);
+    form.append("consent_confirmed", "true");
+    form.append("language", f.language);
+    if (f.reading !== undefined) form.append("reading", String(f.reading));
+    if (f.printed !== undefined) form.append("printed", String(f.printed));
+    if (f.tolerancePct !== undefined) form.append("tolerance_pct", String(f.tolerancePct));
+    form.append("file", f.video, f.video.type.includes("mp4") ? "clip.mp4" : "clip.webm");
+    return post<GuidedClipOut>(`/api/assessments/${enc(assessmentId)}/clips`, form, { timeoutMs: 300000 });
+  },
   /** Draft transcript of a recording; the server does not keep the audio. The first call loads the model. */
   transcribe: (audio: Blob, language: string) => {
     const form = new FormData();

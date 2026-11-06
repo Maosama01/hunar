@@ -7,6 +7,9 @@ import { VoiceInput } from "../components/VoiceInput";
 import { useI18n } from "../i18n";
 import { actorName, useSettings } from "../settings";
 
+/** The rubric to assess against; appliance_technician is the ceiling-fan video pilot (DRAFT). */
+const TRADE_CHOICES = ["electrician", "plumber", "carpenter", "appliance_technician"] as const;
+
 function randomCode(): string {
   const n = new Uint16Array(1);
   crypto.getRandomValues(n);
@@ -24,6 +27,7 @@ export function Declare() {
   const navigate = useNavigate();
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState<"hi" | "en">("hi");
+  const [trade, setTrade] = useState<(typeof TRADE_CHOICES)[number]>("electrician");
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +52,7 @@ export function Declare() {
         preferred_language: language,
         declaration_text: text.trim(),
         actor: actorName(settings),
+        trade,
       });
       navigate(`/a/${id}/mapping`);
     } catch (err) {
@@ -85,6 +90,19 @@ export function Declare() {
         </label>
         {nameWarning && <Notice kind="warn" role="alert">{t("declare.codeLooksLikeName")}</Notice>}
         {touched && !codeOk && <Notice kind="error">{t("declare.codeRequired")}</Notice>}
+
+        <fieldset className="field">
+          <legend className="label">{t("declare.tradeLabel")}</legend>
+          <div className="seg">
+            {TRADE_CHOICES.map((tr) => (
+              <label key={tr} className={`seg-opt ${trade === tr ? "on" : ""}`}>
+                <input type="radio" name="trade" value={tr} checked={trade === tr} onChange={() => setTrade(tr)} />
+                {t(`trade.${tr}`)}
+              </label>
+            ))}
+          </div>
+          {trade !== "electrician" && <span className="hint">{t("declare.tradeHint")}</span>}
+        </fieldset>
 
         <fieldset className="field">
           <legend className="label">{t("declare.langLabel")}</legend>

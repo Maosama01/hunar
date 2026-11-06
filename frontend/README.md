@@ -90,7 +90,7 @@ icon + short label (tap targets of at least 48 px).
 | `/staff` | What this role can do, and the list of assessments with **SAMPLE DATA** badges. |
 | `/staff/requests` | Assessor/admin: open assessment requests with the worker's declaration and latest quiz summary, labelled "Self-check quiz (context only)". *Start practical assessment* creates the assessment and opens its mapping screen. |
 | `/staff/permits` | Admin: mark "Permit document checked" (with the State, after ticking "I have seen the original permit document") or remove the check. |
-| `/declare`, `/a/:id/mapping`, `/a/:id/tasks`, `/a/:id/score`, `/a/:id/profile` | Declaration, pack suggestions, practical tasks with photos, scoring, competency profile and sign-off (see the previous sections of the project docs; behaviour unchanged). |
+| `/declare`, `/a/:id/mapping`, `/a/:id/tasks`, `/a/:id/score`, `/a/:id/profile` | Declaration (now with the trade being assessed, including the appliance-technician fan pilot), pack suggestions, practical tasks with photos, scoring, competency profile and sign-off. Tasks with guided clips (video pilot) show a recorder per part (`GuidedClips.tsx`: prompt with read-aloud, consent tick, meter fields, upload; online only) and, once processed, the blurred silent video, the words found per aspect as timestamp buttons that seek the video, the meter check and the draft transcript. |
 | `/admin` | Audit log and chain check (assessor or admin). |
 | `/rater` | Consistency study (rater mode); open without a login. |
 | `/queue` | The sync queue. |

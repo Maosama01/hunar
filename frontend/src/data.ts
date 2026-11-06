@@ -9,6 +9,7 @@ import {
   type AssessmentRow,
   type Decision,
   type EvidenceOut,
+  type GuidedClipOut,
   type MappingResult,
   type PackSummary,
   type Rubrics,
@@ -197,8 +198,10 @@ export function tradeTasks(rubrics: Rubrics, trade: string): Task[] {
 
 export interface AssessmentView {
   id: string;
-  /** electrician (also every assessment created on this device), plumber or carpenter. */
+  /** electrician, plumber, carpenter, or appliance_technician (video pilot). */
   trade: string;
+  /** Guided clips on the server (video pilot); they are never queued offline. */
+  clips: GuidedClipOut[];
   onServer: boolean;
   createPending: boolean;
   worker_id: string;
@@ -250,7 +253,8 @@ export async function loadAssessmentView(id: string): Promise<AssessmentView | n
   const d = snap?.detail;
   const view: AssessmentView = {
     id,
-    trade: d?.assessment.trade ?? "electrician",
+    trade: d?.assessment.trade ?? local?.trade ?? "electrician",
+    clips: d?.clips ?? [],
     onServer: !!snap,
     createPending: ops.some((o) => o.kind === "assessment.create"),
     worker_id: d?.assessment.worker_id ?? local?.worker_id ?? "",

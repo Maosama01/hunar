@@ -1,6 +1,7 @@
 import { setTick } from "../actions";
 import type { Task } from "../api";
 import { Loading, PresenceNote } from "../components/common";
+import { GuidedClips } from "../components/GuidedClips";
 import { PhotoSlot } from "../components/PhotoSlot";
 import { tradeTasks, useRubrics, type AssessmentView } from "../data";
 import { useI18n } from "../i18n";
@@ -66,6 +67,8 @@ function TaskCard({ task, view, open }: { task: Task; view: AssessmentView; open
           );
         })}
       </ul>
+
+      <GuidedClips task={task} view={view} />
 
       <h3>{t("tasks.photos")}</h3>
       <div className="stack-s">

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { PendingBadge, SampleBadge } from "../components/common";
 import { Icon } from "../components/Icon";
 import { refreshAssessmentList, useAssessmentList } from "../data";
-import { useI18n, type Key } from "../i18n";
+import { isKey, useI18n, type Key } from "../i18n";
 import { useSession } from "../session";
 import { isConnected, useStatus } from "../status";
 import { useTrades } from "../trades";
@@ -95,7 +95,7 @@ export function Home() {
                   {r.notSynced && <PendingBadge label={t("common.notSynced")} />}
                 </div>
                 <div className="small muted">
-                  {r.trade && r.trade !== "electrician" && trades?.[r.trade] && `${pick(trades[r.trade].name)} · `}
+                  {r.trade && r.trade !== "electrician" && `${trades?.[r.trade] ? pick(trades[r.trade].name) : isKey(`trade.${r.trade}`) ? t(`trade.${r.trade}` as Key) : r.trade} · `}
                   {t(`home.status.${r.status === "signed_off" ? "signed_off" : "in_progress"}` as Key)} ·{" "}
                   {r.confirmed_nqr_id ? t("home.packConfirmed") : t("home.packNotConfirmed")} · {fmtTime(r.created_at, lang)}
                 </div>

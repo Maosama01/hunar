@@ -1,6 +1,6 @@
 import type { PackScore } from "../api";
 import { Bar, Notice } from "../components/common";
-import { useI18n } from "../i18n";
+import { isKey, useI18n, type Key } from "../i18n";
 import { useTrades } from "../trades";
 import { useAssessmentCtx } from "./AssessmentLayout";
 
@@ -97,7 +97,7 @@ export function Mapping() {
         </Notice>
       )}
       {view.trade !== "electrician" ? (
-        <Notice kind="info">{t("mapping.otherTrade", { trade: trades ? pick(trades[view.trade]?.name) : view.trade })}</Notice>
+        <Notice kind="info">{t("mapping.otherTrade", { trade: trades?.[view.trade] ? pick(trades[view.trade].name) : isKey(`trade.${view.trade}`) ? t(`trade.${view.trade}` as Key) : view.trade })}</Notice>
       ) : (
         !m && view.declaration_text && view.onServer && !view.createPending && <Notice kind="info">{t("mapping.waiting")}</Notice>
       )}

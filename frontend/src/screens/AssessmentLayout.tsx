@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Navigate, NavLink, Outlet, useOutletContext, useParams } from "react-router-dom";
 import { Loading, Notice, PendingBadge, SampleBadge } from "../components/common";
 import { tryRefreshAssessment, useAssessmentView, type AssessmentView } from "../data";
-import { useI18n } from "../i18n";
+import { isKey, useI18n, type Key } from "../i18n";
 import { useSettings } from "../settings";
 import { isConnected, useStatus } from "../status";
 import { useTrades } from "../trades";
@@ -52,7 +52,7 @@ export function AssessmentLayout() {
         <div className="row wrap gap-s">
           <h1 className="h-inline">{t("assess.worker", { code: view.worker_code })}</h1>
           <SampleBadge show={view.is_sample} />
-          {trades?.[view.trade] && <span className="badge">{pick(trades[view.trade].name)}</span>}
+          <span className="badge">{trades?.[view.trade] ? pick(trades[view.trade].name) : isKey(`trade.${view.trade}`) ? t(`trade.${view.trade}` as Key) : view.trade}</span>
           {!view.onServer && <PendingBadge label={t("assess.notOnServer")} />}
           {view.signedOff && <span className="badge badge-signed">✔ {t("home.status.signed_off")}</span>}
         </div>

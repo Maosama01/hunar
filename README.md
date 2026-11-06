@@ -111,6 +111,7 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | Booking and badges | Done: search, booking lifecycle, ratings, assessment requests, permit rule (CEA reg. 31), badges only from assessor sign-off | Real; permit check is manual (no State register API) |
 | 23 languages | UI and quiz support 23 languages with fallback, RTL and read-aloud; Bhashini client and `make translate` | Only English and Hindi written so far (Hindi with AI help, native-speaker review pending); Bhashini **not yet run** (needs credentials: [docs/bhashini_setup.md](docs/bhashini_setup.md)); machine translations will need review |
 | Voice input | Done: record on the declaration screen, faster-whisper `small` on CPU, transcript must be read back before saving; audio never stored | Checked on **synthetic** text-to-speech audio only; not yet tried with real workers' voices |
+| Video pilot (guided clips) | Built: 4 DRAFT ceiling-fan tasks (Service Technician – Home Appliances, NQR 14861), one short clip per part, faces blurred in every frame, sound removed, word-timed transcript, term and meter checks, suggestions with timestamps for the assessor | **RESULT PENDING**: no real clips yet; no frame detector or Indian-language speech engine plugged in; no current qualification names fans |
 
 ## Results
 
