@@ -316,14 +316,26 @@ def video_table() -> str:
     out = [title]
     if d["data_kind"] != "real":
         out.append("> **Pipeline check on SAMPLE / synthetic frames, not evidence about real workers.**\n")
-    out += [f"{d['n_frames']} frames from {d['n_clips']} clips, {d['detector']} at confidence {d['confidence_threshold']}. "
-            f"{d['note']} Source: `experiments/video_detector.json`.\n",
+    hand_at = "no cut-off set, so not checked" if d.get("hand_conf") is None else f"cut-off {d['hand_conf']}"
+    out += [f"{d['n_frames']} frames from {d['n_clips']} clips, {d['detector']}: part cut-off {d['confidence_threshold']}, "
+            f"hand {hand_at}. {d['note']} Source: `experiments/video_detector.json`.\n",
             "| Check | n | Positives | Precision | Recall | Accuracy |\n|---|---|---|---|---|---|"]
+    fmt = lambda v, c: "n/a" if v is None else f"{v:.2f} {ci(c) if c else ''}".strip()  # noqa: E731
     for key, name in (("part_present", "Part present"), ("hand_on_part", "Hand on the part")):
-        e = d[key]
-        fmt = lambda v, c: "n/a" if v is None else f"{v:.2f} {ci(c) if c else ''}".strip()  # noqa: E731
+        e = d.get(key)
+        if e is None:
+            out.append(f"| {name} | not checked | | | | |")
+            continue
         out.append(f"| {name} | {e['n']} | {e['positives']} | {fmt(e['precision'], e['precision_ci95'])} | "
                    f"{fmt(e['recall'], e['recall_ci95'])} | {fmt(e['accuracy'], None)} |")
+    if d.get("part_by_cutoff"):
+        best = d["best_f1_cutoff"]
+        out += [f"\nBy cut-off (best F1 on these frames: part {best['part']}, hand {best['hand']}; "
+                f"{d['cutoff_note']})\n",
+                "| Cut-off | Part precision | Part recall | Hand precision | Hand recall |\n|---|---|---|---|---|"]
+        for p, h in zip(d["part_by_cutoff"], d["hand_by_cutoff"], strict=True):
+            out.append(f"| {p['cutoff']} | {fmt(p['precision'], None)} | {fmt(p['recall'], None)} | "
+                       f"{fmt(h['precision'], None)} | {fmt(h['recall'], None)} |")
     return "\n".join(out) + "\n"
 
 

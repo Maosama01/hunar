@@ -703,6 +703,7 @@
   "clips.partSeenAt": "Part seen at:",
   "clips.handOnAt": "Hand on the part at:",
   "clips.handNotOn": "No hand seen on the part.",
+  "clips.handNotChecked": "Hand on the part: not checked yet. Its cut-off will be set from labelled frames; watch the clip.",
   "clips.frameNote": "The frame check shows only whether the part and a hand were in view, not the quality of the work.",
   "clips.meterIn": "Reading {r} is within the printed value {p} {u}.",
   "clips.meterOut": "Reading {r} is outside the printed value {p} {u}.",

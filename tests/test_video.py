@@ -71,6 +71,14 @@ def test_explained_but_frames_not_checked_suggests_partial():
     assert p.suggested_level == 1 and any("frames not checked" in r for r in p.reasons)
 
 
+def test_hand_not_checked_falls_back_to_the_part_being_shown():
+    found = {"name": [("capacitor", 3.0)], "function": [("start", 5.0)]}
+    p = _pre("c2_cap_explain", found=found, part_seen=True, hand_on_part=None)
+    assert p.suggested_level == 2 and p.confidence == "low"
+    assert any("part shown" in r and "hand not checked" in r for r in p.reasons)
+    assert _pre("c2_cap_explain", found=found, part_seen=False, hand_on_part=None).suggested_level == 1
+
+
 def test_handled_but_silent_is_partial_and_neither_is_zero():
     assert _pre("c5_bearings", part_seen=True, hand_on_part=True).suggested_level == 1
     assert _pre("c5_bearings", part_seen=False, hand_on_part=False).suggested_level == 0
@@ -215,14 +223,32 @@ def test_boxes_overlap_only_when_they_share_area():
 
 def test_summary_needs_the_hand_and_the_part_in_the_same_frame():
     part = [("capacitor", 0.6, (100, 100, 200, 200))]
-    frames = [{"t": 0.0, "part": part, "hands": [(400, 400, 450, 450)]},  # part seen, hand elsewhere
-              {"t": 1.0, "part": [], "hands": [(110, 110, 150, 150)]}]  # hand where the part was, part gone
-    s = detect.summarise(frames)
+    frames = [{"t": 0.0, "part": part, "hands": [(0.9, (400, 400, 450, 450))]},  # part seen, hand elsewhere
+              {"t": 1.0, "part": [], "hands": [(0.9, (110, 110, 150, 150))]}]  # hand where the part was, part gone
+    s = detect.summarise(frames, 0.25, 0.25)
     assert s["part_seen"] is True and s["hand_on_part"] is False
-    frames.append({"t": 2.0, "part": part, "hands": [(150, 150, 260, 260)]})
-    s = detect.summarise(frames)
-    assert s["hand_on_part"] is True and s["frames"][2] == {"t": 2.0, "part": 0.6, "hand_on_part": True}
-    assert detect.summarise([])["part_seen"] is False
+    frames.append({"t": 2.0, "part": part, "hands": [(0.8, (150, 150, 260, 260))]})
+    s = detect.summarise(frames, 0.25, 0.25)
+    assert s["hand_on_part"] is True and s["frames"][2] == {"t": 2.0, "part": 0.6, "hand": 0.8, "hand_on_part": True}
+    assert detect.summarise([], 0.25, 0.25)["part_seen"] is False
+
+
+def test_hand_check_is_off_without_a_cutoff_but_its_scores_are_kept():
+    frames = [{"t": 0.0, "part": [("capacitor", 0.6, (100, 100, 200, 200))], "hands": [(0.04, (150, 150, 260, 260))]}]
+    s = detect.summarise(frames, 0.25, None)
+    assert s["part_seen"] is True and s["hand_on_part"] is None
+    assert s["frames"] == [{"t": 0.0, "part": 0.6, "hand": 0.04, "hand_on_part": None}]
+    assert detect.summarise(frames, 0.25, 0.03)["hand_on_part"] is True  # once a cut-off is set it applies
+    assert detect.summarise(frames, 0.25, 0.05)["hand_on_part"] is False
+
+
+def test_cutoffs_drop_weak_parts_and_hands_on_them():
+    frames = [{"t": 0.0, "part": [("capacitor", 0.1, (0, 0, 50, 50)), ("capacitor", 0.3, (200, 200, 260, 260))],
+               "hands": [(0.9, (10, 10, 40, 40))]}]  # a strong hand, but only on the weak part box
+    r = detect.frame_result(frames[0], 0.25, 0.25)
+    assert r == {"t": 0.0, "part": 0.3, "hand": None, "hand_on_part": False}
+    assert detect.frame_result(frames[0], 0.05, 0.25)["hand_on_part"] is True
+    assert detect.frame_result(frames[0], 0.5, None) == {"t": 0.0, "part": None, "hand": None, "hand_on_part": None}
 
 
 class FakeBoxes:
@@ -247,6 +273,7 @@ class FakeYoloe:
         self.names = names
 
     def predict(self, img, conf, verbose):
+        self.asked_conf = conf
         hand = len(self.names) - 1
         return [type("R", (), {"boxes": FakeBoxes([((10, 10, 50, 50), 0, 0.7), ((30, 30, 80, 80), hand, 0.8)])})()]
 
@@ -255,13 +282,16 @@ def test_yoloe_detector_wiring_with_a_stand_in_model():
     import torch
 
     d = object.__new__(detect.YoloeDetector)
-    d.model, d.conf, d.lock = FakeYoloe(), 0.25, __import__("threading").Lock()
+    d.model, d.conf, d.hand_conf, d.lock = FakeYoloe(), 0.25, 0.25, __import__("threading").Lock()
     d.labels, d.embeddings = ["capacitor", "hand", "copper coil"], torch.zeros(1, 3, 4)
     img = np.zeros((90, 90, 3), np.uint8)
     out = d.check([(0.0, img), (1.0, img)], ["capacitor", "electric motor"])  # one label not prepared
-    assert d.model.names == ["capacitor", "hand"]
+    assert d.model.names == ["capacitor", "hand"] and d.model.asked_conf == detect.FLOOR
     assert out["part_seen"] and out["hand_on_part"] and len(out["frames"]) == 2
     assert d.check([(0.0, img)], ["ball bearing"])["part_seen"] is None  # no prepared label: not checked
+    d.hand_conf = None  # the default until labelled frames set it
+    out = d.check([(0.0, img)], ["capacitor"])
+    assert out["part_seen"] is True and out["hand_on_part"] is None and out["frames"][0]["hand"] == 0.8
 
 
 def test_detector_falls_back_when_models_are_missing_or_switched_off(monkeypatch, tmp_path):
@@ -286,3 +316,34 @@ def test_clip_frames_are_stored_and_returned(client, fake_speech, monkeypatch):
     pre = {p["criterion_id"]: p for p in client.get(f"/api/assessments/{aid}/prescores").json()
            if p["task_id"] == "fan2_parts"}
     assert pre["c2_cap_explain"]["suggested_level"] == 2  # explained, and the part was handled on camera
+
+
+def _eval_script():
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location("eval_clips", Path(__file__).parents[1] / "scripts" / "eval_clip_detector.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_eval_scores_handle_empty_and_one_sided_cases():
+    ev = _eval_script()
+    s = ev.scores([(True, True), (True, False), (False, True), (False, False)])
+    assert (s["tp"], s["fp"], s["fn"], s["precision"], s["recall"], s["f1"], s["accuracy"]) == (1, 1, 1, 0.5, 0.5, 0.5, 0.5)
+    none_said = ev.scores([(True, False), (True, False)])  # positives, nothing predicted
+    assert none_said["precision"] is None and none_said["recall"] == 0 and none_said["f1"] == 0
+    assert ev.scores([(False, False)])["f1"] is None and ev.scores([])["accuracy"] is None
+
+
+def test_eval_sweep_finds_the_hand_cutoff_from_labels():
+    ev = _eval_script()
+    box = (0, 0, 50, 50)
+    frame = lambda hand: [{"t": 0.0, "part": [("capacitor", 0.6, box)], "hands": [(hand, box)]}]  # noqa: E731
+    items = [(True, True, frame(0.04)), (True, True, frame(0.06)), (True, False, frame(0.02)), (True, False, frame(0.01))]
+    out = ev.sweep(items, 0.25)
+    by = {r["cutoff"]: r for r in out["hand_by_cutoff"]}
+    assert by[0.03]["f1"] == 1.0 and by[0.01]["fp"] == 2 and by[0.05]["fn"] == 1
+    assert out["best_f1_cutoff"]["hand"] == 0.03
+

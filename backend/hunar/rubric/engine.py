@@ -253,7 +253,8 @@ def clip_suggestion(cr: Criterion, ev: ClipEvidence) -> tuple[int, list[str]]:
         reasons.append(f"clip {ref.id}: frames not checked for the part (no detector); watch the clip")
     else:
         reasons.append(f"clip {ref.id}: part {'shown' if ev.part_seen else 'not seen'} in the frames"
-                       + ("" if ev.hand_on_part is None else f", hand {'on it' if ev.hand_on_part else 'not on it'}"))
+                       + (", hand not checked (no cut-off set yet)" if ev.hand_on_part is None
+                          else f", hand {'on it' if ev.hand_on_part else 'not on it'}"))
     explained_all, explained_some = len(said) == len(ref.aspects), bool(said)
     if explained_all and handled:
         level = COMPETENT

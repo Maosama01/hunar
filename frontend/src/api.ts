@@ -205,8 +205,9 @@ export interface GuidedClipOut {
   detector: string;
   part_seen: boolean | null;
   hand_on_part: boolean | null;
-  /** About one frame a second: when the part was seen (best confidence) and whether a hand was on it. */
-  frames?: { t: number; part: number | null; hand_on_part: boolean }[];
+  /** About one frame a second: the part's best score when seen, the best score of a hand on it, and whether
+   * that hand passed the hand cut-off (null while the hand check has no cut-off). */
+  frames?: { t: number; part: number | null; hand?: number | null; hand_on_part: boolean | null }[];
   meter_value: number | null;
   printed_value: number | null;
   tolerance_pct: number | null;

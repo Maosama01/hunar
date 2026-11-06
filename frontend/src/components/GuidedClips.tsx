@@ -90,11 +90,14 @@ function ClipReview({ clip, prompt }: { clip: GuidedClipOut; prompt: ClipPrompt 
             <li className={clip.part_seen ? "" : "warn-text"}>
               {clip.part_seen ? <FrameTimes label={t("clips.partSeenAt")} times={seenAt} seek={seek} /> : t("clips.partNotSeen")}
             </li>
-            {clip.part_seen && (
-              <li>
-                {clip.hand_on_part ? <FrameTimes label={t("clips.handOnAt")} times={heldAt} seek={seek} /> : t("clips.handNotOn")}
-              </li>
-            )}
+            {clip.part_seen &&
+              (clip.hand_on_part === null ? (
+                <li className="muted">{t("clips.handNotChecked")}</li>
+              ) : (
+                <li>
+                  {clip.hand_on_part ? <FrameTimes label={t("clips.handOnAt")} times={heldAt} seek={seek} /> : t("clips.handNotOn")}
+                </li>
+              ))}
             <li className="muted">{t("clips.frameNote")}</li>
           </>
         )}
