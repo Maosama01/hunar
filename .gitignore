@@ -42,3 +42,6 @@ data/synthetic/sample_photos/
 data/labels/clip_frames/
 # Video pilot: what people said in their recordings (the sound itself is under data/raw/)
 data/labels/clip_speech.csv
+
+# Review packs for experts, rebuilt by make review-packs (returned sheets go in docs/review/)
+data/review/

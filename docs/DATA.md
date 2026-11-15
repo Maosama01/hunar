@@ -88,9 +88,14 @@ with AI help from the official sources each item cites (qualification files and 
 criteria; CEA Safety Regulations 2023; IS 5329, IS 2065, IS 694 and IS 5216 by clause, paraphrased; the
 DGT curricula as topic sources). No item is copied from NIMI books or published question banks, which
 are not openly licensed. Status **DRAFT** until reviewed by a certified assessor or ITI instructor.
-Difficulties are AI estimates until `make quiz-calibrate` has about 100 real attempts per trade.
-Machine translations into other languages (`banks/i18n/`) are written by `make translate` (Bhashini)
-and marked unreviewed. Real quiz answers live only in the local database (gitignored).
+Difficulties are AI estimates until `make quiz-calibrate DB=quiz_pilot` has 100 real people per trade
+(each person's first finished quiz only). Machine translations into other languages (`banks/i18n/`) are
+written by `make translate` (Bhashini) and marked unreviewed. Real quiz answers live only in the pilot's
+local database, `data/quiz_pilot.db` (gitignored), deleted by the date on the consent form.
+
+Expert reviews: `make review-packs` writes printable packs and verdict sheets to `data/review/`
+(gitignored, rebuilt from the YAML). The experts' filled-in sheets are committed as
+`docs/review/<sheet>_<reviewer code>.csv`, with codes, never names; `make review-summary` counts them.
 
 ### Synthetic speech (voice input check)
 

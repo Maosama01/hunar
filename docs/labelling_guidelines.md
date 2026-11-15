@@ -44,10 +44,15 @@ do not include the declaration (we only evaluate unambiguous items for now; note
 ## Tool
 
 ```bash
-uv run python scripts/label_declarations.py --author "Your Name"
-uv run python scripts/label_declarations.py --check
+make declarations AUTHOR=AB    # add declarations; AB = your initials or team code
+make declarations              # check the file: counts per pack, language and author
 make eval-m1
 ```
+
+(`make` finds `uv` even when it is not on your PATH. The same tool runs as
+`uv run python scripts/label_declarations.py --author AB` or `--check`.) Talking with a worker first?
+They sign the work-story part of [the consent form](consent_form.md); see also part C of
+[the remaining tasks guide](remaining_tasks_guide.md).
 
 ## Quality check
 

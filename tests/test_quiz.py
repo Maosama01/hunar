@@ -343,3 +343,31 @@ def test_calibration_leaves_out_rushed_quizzes(client):
     finish_quiz(client, register(client, phone="9876500003").json()["token"], seconds=0.5)
     with Session(db.engine()) as s:
         assert calibrate("electrician", s)["n_attempts"] == 1
+
+
+
+def test_calibration_uses_only_each_persons_first_quiz(client):
+    """After a quiz the app shows the answers, so a second quiz in the same trade is not a fresh answer."""
+    from hunar.quiz.calibrate import calibrate, first_attempts
+
+    token = register(client).json()["token"]
+    finish_quiz(client, token)
+    finish_quiz(client, token, trade="electrician")
+    finish_quiz(client, register(client, phone="9876500004").json()["token"])
+    with Session(db.engine()) as s:
+        version = banks.load("electrician").version
+        assert len(first_attempts(s, "electrician", version)) == 2
+        assert calibrate("electrician", s)["n_attempts"] == 2
+
+
+def test_calibration_leaves_out_a_rushed_first_quiz_and_older_bank_versions(client):
+    from hunar.quiz.calibrate import first_attempts
+
+    rushed = register(client).json()["token"]
+    finish_quiz(client, rushed, seconds=0.5)  # does not count; the retake comes after the answers were shown
+    finish_quiz(client, rushed, trade="electrician")
+    finish_quiz(client, register(client, phone="9876500005").json()["token"])
+    with Session(db.engine()) as s:
+        version = banks.load("electrician").version
+        assert len(first_attempts(s, "electrician", version)) == 1
+        assert first_attempts(s, "electrician", "an-older-version") == []

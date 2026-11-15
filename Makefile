@@ -2,7 +2,10 @@
 UV := $(shell command -v uv 2>/dev/null || echo $(HOME)/Library/Python/3.13/bin/uv)
 # Local settings and secrets (Bhashini keys, PIN pepper) go in .env, which git ignores; see .env.example.
 ENV := $(if $(wildcard .env),--env-file .env,)
-PY := $(UV) run $(ENV) python
+# DB=name uses data/<name>.db instead of data/hunar.db, e.g. `make api DB=quiz_pilot` keeps the quiz pilot's
+# real accounts apart from test accounts (docs/remaining_tasks_guide.md). Pass the same DB= to every command.
+DBENV := $(if $(DB),HUNAR_DB=sqlite:///$(CURDIR)/data/$(DB).db ,)
+PY := $(DBENV)$(UV) run $(ENV) python
 NPM := npm --prefix frontend
 
 DL ?= $(HOME)/Downloads
@@ -10,7 +13,7 @@ CSV ?= data/study/items.csv
 
 .PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean clip-models clip-frames eval-clips clip-audio eval-clip-speech \
         vision voice eval-voice import-detector ppe-split notebook design-sim study-items bench \
-        quiz-sim quiz-calibrate translate staff bhashini-check
+        quiz-sim quiz-calibrate translate staff bhashini-check review-packs review-summary declarations guide-pdf
 
 help:
 	@echo "setup    install Python 3.11 env (uv) and frontend packages"
@@ -21,6 +24,12 @@ help:
 	@echo "results  rebuild the README results table from experiments/*.json"
 	@echo "seed     load the clearly labelled sample worker into the local database"
 	@echo "demo     seed, then start the API (:8000) and the web app (:5173)"
+	@echo "web LAN=1  web app reachable from phones on the same Wi-Fi (http://<laptop address>:5173)"
+	@echo "review-packs  printable review packs + verdict sheets for the experts -> data/review/"
+	@echo "review-summary  count the experts' returned verdicts (docs/review/*.csv) -> experiments/"
+	@echo "declarations  check data/labels/declarations.csv; AUTHOR=code adds declarations"
+	@echo "guide-pdf  rebuild docs/Hunar_Remaining_Tasks_Guide.pdf from docs/remaining_tasks_guide.md"
+	@echo "(DB=name on api, seed, quiz-calibrate etc. uses data/<name>.db, e.g. DB=quiz_pilot)"
 	@echo "report   build docs/report/Hunar_Report.docx from the Markdown draft"
 	@echo "vision   install YOLO (ultralytics) for detector inference on the laptop"
 	@echo "voice    install faster-whisper for spoken declarations"
@@ -77,10 +86,11 @@ seed:
 	$(PY) -m hunar.api.seed
 
 api:
-	$(UV) run $(ENV) uvicorn hunar.api.main:app --reload --port 8000
+	$(DBENV)$(UV) run $(ENV) uvicorn hunar.api.main:app --reload --port 8000
 
+# LAN=1: also listen on the laptop's network address, so phones on the same Wi-Fi can open the app.
 web:
-	$(NPM) run dev
+	$(NPM) run dev $(if $(LAN),-- --host,)
 
 demo: seed
 	@echo "Starting API on :8000 and web app on :5173 (Ctrl+C stops both)"
@@ -164,3 +174,17 @@ translate:
 
 staff:
 	$(PY) -m hunar.accounts.cli create --role "$(ROLE)" --phone "$(PHONE)" --name "$(NAME)"
+
+# Expert review of the AI-drafted quiz banks, practical tasks and Hindi (docs/remaining_tasks_guide.md).
+review-packs:
+	$(PY) scripts/make_review_packs.py $(ARGS)
+
+review-summary:
+	$(PY) scripts/make_review_packs.py --summary
+
+# Team-written worker declarations for M1 (docs/labelling_guidelines.md): AUTHOR=code adds, alone it checks.
+declarations:
+	$(PY) scripts/label_declarations.py $(if $(AUTHOR),--author "$(AUTHOR)",--check)
+
+guide-pdf:
+	$(PY) scripts/md_to_pdf.py docs/remaining_tasks_guide.md docs/Hunar_Remaining_Tasks_Guide.pdf

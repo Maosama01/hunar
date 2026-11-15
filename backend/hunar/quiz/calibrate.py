@@ -1,9 +1,10 @@
 """Re-estimate quiz item difficulties from real answers (`make quiz-calibrate`).
 
-Only finished attempts by real (non-sample) accounts that count (at least half the answers at reading
-pace; a low-effort attempt is left out, as in motivation filtering), and only answers that were scored
-(not flagged as rapid). Until a trade has MIN_ATTEMPTS finished attempts nothing changes and the result is
-written as RESULT PENDING. After that, difficulties are re-estimated by alternating
+Only each real (non-sample) person's first finished attempt for the trade is used, and only if it counts
+(at least half the answers at reading pace; a low-effort attempt is left out, as in motivation filtering)
+and was taken on the current bank version: the app shows the answers after every quiz, so a retake is not
+a fresh answer. Within it, only answers that were scored (not flagged as rapid) are used. Until a trade has
+MIN_ATTEMPTS such attempts (one per person) nothing changes and the result is written as RESULT PENDING. After that, difficulties are re-estimated by alternating
   1. each attempt's ability by EAP (hunar.quiz.engine.eap) with the current difficulties, and
   2. each item's difficulty by MAP with a N(prior, PRIOR_SD^2) prior around the AI-drafted estimate
      (a few Newton steps on the Rasch log-likelihood),
@@ -25,13 +26,12 @@ import numpy as np
 from sqlmodel import Session, select
 
 from hunar.accounts.models import Account
+from hunar.api.db import db_url, init_db
 from hunar.api.db import engine as db_engine
-from hunar.api.db import init_db
 from hunar.paths import EXPERIMENTS
 from hunar.quiz import bank as banks
 from hunar.quiz import engine
 from hunar.quiz.models import QuizAttempt, QuizResponse
-from hunar.quiz.service import counted
 
 MIN_ATTEMPTS = 100
 MIN_PER_ITEM = 30
@@ -69,22 +69,46 @@ def fit_difficulties(responses: list[tuple[str, str, bool]], priors: dict[str, f
     return b, counts
 
 
-def collect(s: Session, trade: str) -> list[tuple[str, str, bool]]:
-    rows = s.exec(select(QuizResponse, QuizAttempt, Account)
-                  .where(QuizResponse.attempt_id == QuizAttempt.id, QuizAttempt.account_id == Account.id,
-                         QuizAttempt.trade == trade, counted(),
-                         Account.is_sample == False, QuizResponse.scored == True))  # noqa: E712
-    return [(a.id, r.item_id, r.correct) for r, a, _ in rows]
+ATTEMPTS_USED = ("each real person's first finished quiz for the trade, if it counts and used the current bank "
+                 "version (after a quiz the app shows the answers, so a retake is not a fresh answer, and answers "
+                 "to an older version of the bank may be to questions that have since changed)")
+
+
+def first_attempts(s: Session, trade: str, bank_version: str) -> list[str]:
+    """Ids of the attempts calibration may use (see ATTEMPTS_USED)."""
+    rows = s.exec(select(QuizAttempt).join(Account, QuizAttempt.account_id == Account.id)
+                  .where(QuizAttempt.trade == trade, QuizAttempt.status == "finished",
+                         Account.is_sample == False)  # noqa: E712
+                  .order_by(QuizAttempt.started_at))
+    seen: set[str] = set()
+    keep = []
+    for a in rows:
+        if a.account_id in seen:
+            continue
+        seen.add(a.account_id)
+        if a.bank_version == bank_version and engine.counts(a.n_scored, a.n_answered):
+            keep.append(a.id)
+    return keep
+
+
+def collect(s: Session, trade: str, bank_version: str) -> list[tuple[str, str, bool]]:
+    ids = first_attempts(s, trade, bank_version)
+    if not ids:
+        return []
+    rows = s.exec(select(QuizResponse).where(QuizResponse.attempt_id.in_(ids),  # type: ignore[union-attr]
+                                             QuizResponse.scored == True))  # noqa: E712
+    return [(r.attempt_id, r.item_id, r.correct) for r in rows]
 
 
 def calibrate(trade: str, s: Session) -> dict:
     bank = banks.load(trade)
     priors = {it.id: it.difficulty_prior for it in bank.items}
-    responses = collect(s, trade)
+    responses = collect(s, trade, bank.version)
     n_attempts = len({p for p, _, _ in responses})
     base = {"experiment": f"quiz_calibration_{trade}", "data_kind": "real", "trade": trade,
             "bank_version": bank.version, "n_attempts": n_attempts, "n_responses": len(responses),
-            "min_attempts": MIN_ATTEMPTS, "min_per_item": MIN_PER_ITEM, "command": "python -m hunar.quiz.calibrate",
+            "database": db_url().rsplit("/", 1)[-1], "attempts_used": ATTEMPTS_USED, "min_attempts": MIN_ATTEMPTS, "min_per_item": MIN_PER_ITEM,
+            "command": "python -m hunar.quiz.calibrate",
             "created": dt.datetime.now().isoformat(timespec="seconds")}
     if n_attempts < MIN_ATTEMPTS:
         return {**base, "status": "RESULT PENDING",

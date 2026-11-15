@@ -93,6 +93,13 @@ stays off until `HUNAR_CLIP_HAND_CONF` is set from labelled frames (`make clip-f
 `make eval-clips`, which reports both checks at a range of cut-offs). `data/models/mobileclip_blt.ts`
 (about 600 MB) is only needed to prepare the prompts and can be deleted afterwards.
 
+What is left and how to do it: [docs/remaining_tasks_guide.md](docs/remaining_tasks_guide.md) (printable:
+[PDF](docs/Hunar_Remaining_Tasks_Guide.pdf)) lists every remaining job with its owner and order, and
+covers the expert reviews (`make review-packs` prints the quiz banks and practical tasks for an
+assessor or ITI instructor, and the app's Hindi for a native speaker), the quiz sessions with real workers
+(`make api DB=quiz_pilot` and `make web LAN=1`, so phones on the same Wi-Fi can take it, with the
+pilot's accounts kept apart from test data) and the work stories for M1 (`make declarations`).
+
 Recording the video pilot: follow [docs/video_pilot_guide.md](docs/video_pilot_guide.md) (consent,
 what to record, uploading phone videos in the app, writing down what was said, labelling frames).
 `make clip-audio SRC=folder` copies the sound out of the team's raw recordings and `make
@@ -117,7 +124,7 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | M4 rater mode + analysis | Built; photo import for the study (`make study-items`); step-by-step guide for the team | **RESULT PENDING**: no real raters yet |
 | M4 study sizing | Simulation of the method under stated assumptions | **Simulation, not a result**; used only to choose the number of raters and items |
 | Accounts, consent, roles | Done: phone + PIN (salted, peppered scrypt; lockout), OTP-ready, itemised DPDP consent, erasure; staff endpoints need a staff login | Real; SMS gateway not configured |
-| Worker quiz (3 trades) | Done: adaptive Rasch quiz, 40 / 24 / 24 questions from official sources, review with sources | Questions are **DRAFT** (expert review pending); difficulties **uncalibrated** until about 100 real attempts per trade |
+| Worker quiz (3 trades) | Done: adaptive Rasch quiz, 40 / 24 / 24 questions from official sources, review with sources | Questions are **DRAFT** (expert review pending; review packs ready); difficulties **uncalibrated** until 100 real people per trade have taken it |
 | Booking and badges | Done: search, booking lifecycle, ratings, assessment requests, permit rule (CEA reg. 31), badges only from assessor sign-off | Real; permit check is manual (no State register API) |
 | 23 languages | UI and quiz support 23 languages with fallback, RTL and read-aloud; Bhashini client and `make translate` | Only English and Hindi written so far (Hindi with AI help, native-speaker review pending); Bhashini **not yet run** (needs credentials: [docs/bhashini_setup.md](docs/bhashini_setup.md)); machine translations will need review |
 | Voice input | Done: record on the declaration screen, faster-whisper `small` on CPU, transcript must be read back before saving; audio never stored | Checked on **synthetic** text-to-speech audio only; not yet tried with real workers' voices |
@@ -310,7 +317,8 @@ data/
 notebooks/   m2_train_yolo_colab.ipynb, m1_error_analysis.ipynb
 experiments/ results as JSON (+ per-item predictions)
 docs/        DATA.md, architecture.md, consent_form.md, labelling_guidelines.md, report/,
-             m2_colab_walkthrough.md, m4_study_walkthrough.md, research/
+             remaining_tasks_guide.md, video_pilot_guide.md, m2_colab_walkthrough.md,
+             m4_study_walkthrough.md, review/ (experts' returned sheets), research/
 scripts/     data download, labelling tool, results table, report build
 tests/       pytest suite
 ```

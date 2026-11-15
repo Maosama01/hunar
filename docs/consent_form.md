@@ -1,4 +1,7 @@
-# Consent form: photos and videos for the Hunar project
+# Consent form: taking part in the Hunar project
+
+Photos and videos of tasks, and (in their own parts below) the fan video pilot, the quiz pilot and
+work-story interviews.
 
 **Project:** Hunar, an AI assisted Recognition of Prior Learning (RPL) tool (B.Tech minor project,
 based on Smart India Hackathon problem statement SIH26242).
@@ -56,9 +59,38 @@ Each purpose is separate: tick only the ones the person agrees to.
 Your voice is personal data, like your face. Points 2 to 6 above apply to the clips and the sound too:
 you can stop at any time, and we delete your clips, text and sound within 7 days if you ask.
 
+## Extra part for the quiz pilot
+
+Fill this part only if the person takes the trade quiz in a pilot session run by the team
+(docs/remaining_tasks_guide.md, part B). The app also asks for its own consent on screen.
+
+- [ ] **Take the quiz once in the Hunar app**, on your own phone or on one we lend you, connected to the
+      project laptop. You log in with your mobile number and a PIN you choose. The quiz is a self-check:
+      it is **not an exam, not a certificate**, and customers never see it. You may press "Don't know" or
+      stop at any time.
+- [ ] **Use your answers to improve the quiz.** Your answers and how long each one took, **without your
+      name or mobile number**, are used to work out how hard each question is, and only totals (for
+      example "120 electricians took part") appear in our project report.
+
+Your mobile number and name stay only in the app's database on the project laptop. They are never put in
+the code repository, shared, or used to contact you about anything else. You can erase your account at any
+time in the app (Privacy, then "Erase my account now"), or ask us to. We delete the pilot's accounts by
+the date in point 6 above.
+
+## Extra part for work-story interviews
+
+Fill this part only if a team member talks with the person about their work, to write a short "work
+story" (a description of the work they do) for testing the software.
+
+- [ ] **Talk with a team member about your work.** Nothing is recorded: the team member takes notes and
+      later writes a few sentences in their own words. Your name, phone number, employer and exact place
+      are never written down.
+- [ ] **Use the written work story** to test whether our software suggests the right qualification, and
+      quote it in our report.
+
 ## Your choice
 
-- [ ] I agree to be photographed / filmed for the purposes ticked above.
+- [ ] I agree to take part for the purposes ticked above.
 - [ ] I would like a copy of this form.
 
 | | Participant | Witness / facilitator | Project team member |
