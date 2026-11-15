@@ -339,9 +339,39 @@ def video_table() -> str:
     return "\n".join(out) + "\n"
 
 
+def video_speech_table() -> str:
+    d = load("video_speech.json")
+    title = "### Video pilot: speech and explanation check on recorded clips\n"
+    if d is None:
+        return (title + "\nRESULT PENDING: no recorded clips yet. Record with consent, run `make clip-audio SRC=folder`, "
+                "write what was said and the 1/0 labels in `data/labels/clip_speech.csv`, then `make eval-clip-speech` "
+                "(see `docs/video_pilot_guide.md`).\n")
+    out = [title]
+    if d["data_kind"] != "real":
+        out.append("> **Pipeline check on made-up recordings, not evidence about real workers.**\n")
+    langs = ", ".join(f"{n} {k}" for k, n in d["languages"].items() if n)
+    out.append(f"{d['n_clips']} clips ({langs}) from {d['n_speakers']} speakers. {d['note']} "
+               "Source: `experiments/video_speech.json`.\n")
+    fmt = lambda v, c=None: "n/a" if v is None else f"{v:.2f} {ci(c) if c else ''}".strip()  # noqa: E731
+    out += ["| Engine | Language | n | WER | CER |\n|---|---|---|---|---|"]
+    for name, e in d["engines"].items():
+        for lang, r in e["by_language"].items():
+            out.append(f"| {name} | {lang} | {r['n']} | {r['wer']:.2f} | {r['cer']:.2f} |")
+        for setting, r in e["by_setting"].items():
+            out.append(f"| {name} | Hindi + English, {setting} | {r['n']} | {r['wer']:.2f} | |")
+    out += ["\nExplanation check (aspect explained, by a person's label):\n",
+            "| Measured on | Aspects | Explained | Precision | Recall |\n|---|---|---|---|---|"]
+    rows = [("Written reference (term lists only)", d["on_reference"])]
+    rows += [(f"{name} transcript (whole pipeline)", e["on_transcript"]) for name, e in d["engines"].items()]
+    for label, e in rows:
+        out.append(f"| {label} | {e['n']} | {e['positives']} | {fmt(e['precision'], e['precision_ci95'])} | "
+                   f"{fmt(e['recall'], e['recall_ci95'])} |")
+    return "\n".join(out) + "\n"
+
+
 def main() -> int:
     m1_figures()
-    body = "\n".join([m1_tables("real"), m1_tables("synthetic"), voice_table(), m2_tables(), video_table(), m4_table(),
+    body = "\n".join([m1_tables("real"), m1_tables("synthetic"), voice_table(), m2_tables(), video_table(), video_speech_table(), m4_table(),
                       m4_design_table(), quiz_tables()])
     (ROOT / "docs" / "report").mkdir(parents=True, exist_ok=True)
     (ROOT / "docs" / "report" / "results_tables.md").write_text(

@@ -31,6 +31,31 @@ We would like to take photos or short videos of you while you carry out electric
    withdraw, we will delete your photos within 7 days of your request.
 6. We will delete all photos when the project ends, on or before: ____ / ____ / ______.
 
+## Extra part for the video pilot (ceiling fan clips): voice and video
+
+Fill this part only if the person records guided clips for the ceiling-fan pilot. A guided clip is a
+short video (under one minute) of the person's hands and a fan part while they explain the part aloud.
+Each purpose is separate: tick only the ones the person agrees to.
+
+- [ ] **Record clips in the Hunar app.** We point the camera at your hands and the fan and try to keep
+      your face out of the picture. Before the clip is stored, the app blurs any face it finds and
+      **removes the sound**. The stored clip has no name, only a code such as `W07`.
+- [ ] **Turn your speech into text on the project laptop.** The app writes down what you said and keeps
+      that text with the clip, to show the assessor where you explained each part. It keeps everything
+      you say, so please **do not say your name** or anyone else's in a clip.
+- [ ] **Keep the sound of your recordings (no picture) for testing**, on the project laptop only, until
+      the date in point 6 below. A team member listens to it and writes down exactly what you said, so
+      we can measure how well the speech-to-text works. The original video files are deleted within 7
+      days, once the sound has been copied out.
+- [ ] **Send that sound to Bhashini**, the Government of India's language service, to compare its
+      speech-to-text with ours. Only if you tick this box. Bhashini's own terms then apply to that copy.
+- [ ] **Label still pictures from the stored clip** (faces blurred): team members mark whether the fan
+      part and a hand are visible, to measure the picture check.
+- [ ] **Show blurred, silent clips** in our report and presentation.
+
+Your voice is personal data, like your face. Points 2 to 6 above apply to the clips and the sound too:
+you can stop at any time, and we delete your clips, text and sound within 7 days if you ask.
+
 ## Your choice
 
 - [ ] I agree to be photographed / filmed for the purposes ticked above.

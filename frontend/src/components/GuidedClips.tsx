@@ -123,6 +123,8 @@ function ClipReview({ clip, prompt }: { clip: GuidedClipOut; prompt: ClipPrompt 
   );
 }
 
+const MAX_CLIP_MB = 80; // the server's limit (hunar.video.clips.MAX_BYTES)
+
 type Rec = { state: "idle" } | { state: "live"; stream: MediaStream; rec: MediaRecorder; started: number } | { state: "done"; blob: Blob; url: string; seconds: number };
 
 function ClipRecorder({ view, task, prompt }: { view: AssessmentView; task: Task; prompt: ClipPrompt }) {
@@ -165,6 +167,25 @@ function ClipRecorder({ view, task, prompt }: { view: AssessmentView; task: Task
     } catch (e) {
       setError(new Error(t("clips.camera", { error: e instanceof Error ? e.message : String(e) })));
     }
+  };
+
+  /** A clip recorded earlier, e.g. with the phone's camera app (also keeps working where the in-app camera does not). */
+  const pickFile = async (file?: File) => {
+    if (!file) return;
+    setError(null);
+    if (file.size > MAX_CLIP_MB * 1024 * 1024) {
+      setError(new Error(t("clips.fileTooBig", { mb: MAX_CLIP_MB })));
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    const seconds = await new Promise<number>((resolve) => {
+      const v = document.createElement("video");
+      v.preload = "metadata";
+      v.onloadedmetadata = () => resolve(Number.isFinite(v.duration) ? Math.round(v.duration) : 0);
+      v.onerror = () => resolve(0); // some phone formats do not preview in every browser; the server still reads them
+      v.src = url;
+    });
+    setRec({ state: "done", blob: file, url, seconds });
   };
 
   const num = (v: string) => (v.trim() === "" ? undefined : Number(v.replace(",", ".")));
@@ -213,7 +234,7 @@ function ClipRecorder({ view, task, prompt }: { view: AssessmentView; task: Task
         ) : rec.state === "done" ? (
           <div className="stack-s">
             <video src={rec.url} controls playsInline className="clip-video" />
-            <p className="small muted">{t("clips.recorded", { n: rec.seconds })}</p>
+            {rec.seconds > 0 && <p className="small muted">{t("clips.recorded", { n: rec.seconds })}</p>}
             {prompt.meter && (
               <div className="two-col">
                 <label className="field">
@@ -244,9 +265,24 @@ function ClipRecorder({ view, task, prompt }: { view: AssessmentView; task: Task
             </div>
           </div>
         ) : (
-          <button type="button" className="btn btn-block" onClick={() => void start()}>
-            {latest ? t("clips.recordAgain") : t("clips.record")}
-          </button>
+          <div className="stack-s">
+            <button type="button" className="btn btn-block" onClick={() => void start()}>
+              {latest ? t("clips.recordAgain") : t("clips.record")}
+            </button>
+            <label className="btn btn-ghost btn-block">
+              {t("clips.chooseFile")}
+              <input
+                type="file"
+                accept="video/*"
+                hidden
+                onChange={(e) => {
+                  void pickFile(e.target.files?.[0]);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+            <p className="small muted">{t("clips.chooseFileHint")}</p>
+          </div>
         ))}
       <ErrorBox error={error} />
     </section>

@@ -46,6 +46,13 @@ Technician – Other Home Appliances (NQR 2270) lapsed on 27/06/2025 and covers 
 microwave ovens, not fans, so it is not used. The fan tasks therefore link to ELE/N3112's general
 diagnose-and-repair criteria (PC34–PC43, PC47) and ELE/N3101's customer criteria, and say so.
 
+**Video pilot recordings (none yet).** Only with the video part of `docs/consent_form.md` signed, and
+as set out in `docs/video_pilot_guide.md`. Stored clips (blurred, silent) live under `data/uploads/`;
+the sound copied out for the speech test under `data/raw/clip_audio/`; what people said, with the
+1/0 labels, in `data/labels/clip_speech.csv`; exported frames in `data/labels/clip_frames/`. All four
+are gitignored and are deleted by the date on the consent form. Only the frame labels
+(`data/labels/clip_frames.csv`) and the metrics in `experiments/` may be committed.
+
 No worker-level domestic carpentry qualification on NQR was current on 3 Nov 2026, so the lapsed
 FFSC file is used as the closest official standard and the app labels it as lapsed. The first parse
 had gaps: PSC/N0142 (plumber) came out with one performance criterion, the carpenter NOS titles were

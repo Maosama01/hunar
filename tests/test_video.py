@@ -347,3 +347,160 @@ def test_eval_sweep_finds_the_hand_cutoff_from_labels():
     assert by[0.03]["f1"] == 1.0 and by[0.01]["fp"] == 2 and by[0.05]["fn"] == 1
     assert out["best_f1_cutoff"]["hand"] == 0.03
 
+
+
+# ---- phone videos, sound for the speech test, speech and explanation check -----------------------
+
+
+def _script(name):
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location(name, Path(__file__).parents[1] / "scripts" / f"{name}.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_upright_follows_the_rotation_tag():
+    from hunar.video.clips import upright
+
+    img = np.arange(6).reshape(2, 3)
+    assert upright(img, 0) is img and upright(img, None) is img
+    assert (upright(img, 90) == np.rot90(img, 1)).all() and upright(img, 90).shape == (3, 2)
+    assert (upright(img, -90) == np.rot90(img, 3)).all() and (upright(img, 180) == np.rot90(img, 2)).all()
+
+
+def test_portrait_phone_video_is_stored_upright(tmp_path):
+    import shutil
+    import subprocess
+
+    from hunar.video.clips import blur_and_encode
+
+    if not shutil.which("ffmpeg"):
+        pytest.skip("ffmpeg is needed to tag a test video as rotated")
+    plain, tagged = tmp_path / "plain.mp4", tmp_path / "portrait.mp4"
+    made = subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-f", "lavfi", "-i", "testsrc=size=64x32:rate=5",
+                           "-t", "1", "-c:v", "libx264", "-pix_fmt", "yuv420p", str(plain)], capture_output=True)
+    tag = subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-display_rotation", "90", "-i", str(plain),
+                          "-c", "copy", str(tagged)], capture_output=True)
+    if made.returncode or tag.returncode:
+        pytest.skip("this ffmpeg cannot tag a rotation")
+    blur_and_encode(tagged, tmp_path / "stored.mp4")
+    with av.open(str(tmp_path / "stored.mp4")) as c:
+        s = c.streams.video[0]
+        assert (s.width, s.height) == (32, 64)  # turned upright, as the phone showed it
+
+
+def _video_with_sound(path, seconds=1.0, rate=16000):
+    out = av.open(str(path), "w", format="matroska")
+    v = out.add_stream("libx264", rate=5)
+    v.width, v.height, v.pix_fmt = 32, 32, "yuv420p"
+    a = out.add_stream("aac", rate=rate)
+    for i in range(int(5 * seconds)):
+        vf = av.VideoFrame.from_ndarray(np.full((32, 32, 3), 40 * i % 255, np.uint8), format="rgb24")
+        for p in v.encode(vf):
+            out.mux(p)
+    tone = (0.2 * np.sin(2 * np.pi * 440 * np.arange(int(rate * seconds)) / rate)).astype(np.float32)
+    for k in range(0, len(tone), 1024):
+        af = av.AudioFrame.from_ndarray(tone[None, k:k + 1024], format="fltp", layout="mono")
+        af.sample_rate = rate
+        for p in a.encode(af):
+            out.mux(p)
+    for s in (v, a):
+        for p in s.encode():
+            out.mux(p)
+    out.close()
+
+
+def test_sound_is_copied_out_as_16k_mono_wav(tmp_path, monkeypatch):
+    import csv
+    import wave
+
+    ex = _script("extract_clip_audio")
+    src = tmp_path / "phone"
+    src.mkdir()
+    _video_with_sound(src / "IMG_0001.mkv")
+    with av.open(str(src / "silent.mkv"), "w", format="matroska") as out:  # no sound track: skipped
+        v = out.add_stream("libx264", rate=5)
+        v.width, v.height, v.pix_fmt = 32, 32, "yuv420p"
+        for p in v.encode(av.VideoFrame.from_ndarray(np.zeros((32, 32, 3), np.uint8), format="rgb24")):
+            out.mux(p)
+        for p in v.encode():
+            out.mux(p)
+    monkeypatch.setattr(ex, "OUT", tmp_path / "audio")
+    monkeypatch.setattr(ex, "CSV", tmp_path / "labels" / "clip_speech.csv")
+    assert ex.main([str(src)]) == 0
+    with wave.open(str(tmp_path / "audio" / "IMG_0001.wav")) as w:
+        assert (w.getnchannels(), w.getframerate()) == (1, 16000) and 0.9 < w.getnframes() / 16000 < 1.2
+    rows = list(csv.DictReader((tmp_path / "labels" / "clip_speech.csv").open()))
+    assert [r["audio"] for r in rows] == ["IMG_0001.wav"] and rows[0]["reference"] == ""
+    assert not (tmp_path / "audio" / "silent.wav").exists()
+
+
+CAP_EN = "this is the capacitor it gives the starting torque when it gets weak the fan runs slow i test it with a multimeter"
+
+
+def _speech_rows():
+    base = {"speaker": "W01", "synthetic": "", "name": "", "function": "", "failure": "", "test": ""}
+    return [
+        {**base, "audio": "a.wav", "clip_id": "capacitor", "language": "en", "setting": "quiet", "reference": CAP_EN,
+         "name": "1", "function": "1", "failure": "1", "test": "1"},
+        {**base, "audio": "b.wav", "clip_id": "bearings", "language": "hi", "setting": "workshop",
+         "reference": "ये बेयरिंग है इससे शाफ़्ट आसानी से घूमता है", "name": "1", "function": "1", "failure": "0", "test": "0"},
+        {**base, "audio": "c.wav", "clip_id": "capacitor", "language": "hinglish", "setting": "quiet",
+         "reference": "ye capacitor hai fan ko start karta hai", "name": "1", "function": "1", "failure": "0", "test": "0"},
+        {**base, "audio": "d.wav", "clip_id": "capacitor", "language": "en", "synthetic": "1", "reference": CAP_EN},
+        {**base, "audio": "e.wav", "clip_id": "not_a_clip", "language": "en", "reference": "anything"},
+        {**base, "audio": "f.wav", "clip_id": "winding", "language": "en", "reference": ""},  # not written yet
+    ]
+
+
+def _fake_engine(ev):
+    heard = {"a.wav": CAP_EN.replace(" weak", "").replace(" slow", ""),  # the failure words were misheard
+             "b.wav": "ये बेयरिंग है इससे शाफ़्ट आसानी से घूमता है", "c.wav": "ये capacitor है fan को start करता है"}
+    return lambda path, lang: {"text": heard[path.name], "words": ev.as_words(heard[path.name])}
+
+
+def test_speech_eval_uses_only_filled_in_real_rows():
+    ev = _script("eval_clip_speech")
+    assert [r["audio"] for r in ev.usable(_speech_rows(), False)] == ["a.wav", "b.wav", "c.wav"]
+    assert len(ev.usable(_speech_rows(), True)) == 4
+
+
+def test_speech_eval_separates_term_lists_from_speech_errors(tmp_path):
+    ev = _script("eval_clip_speech")
+    res = ev.evaluate(ev.usable(_speech_rows(), False), {"fake": _fake_engine(ev)}, tmp_path)
+    ref = res["on_reference"]
+    assert (ref["n"], ref["positives"], ref["precision"], ref["recall"]) == (12, 8, 1.0, 1.0)
+    e = res["engines"]["fake"]
+    assert e["on_transcript"]["recall"] == 0.875 and e["on_transcript"]["by_aspect"]["failure"]["fn"] == 1
+    assert set(e["by_language"]) == {"en", "hi"} and e["by_language"]["hi"]["wer"] == 0 and e["by_language"]["en"]["wer"] > 0
+    assert set(e["by_setting"]) == {"quiet", "workshop"}
+    hinglish = next(c for c in e["clips"] if c["language"] == "hinglish")
+    assert hinglish["wer"] is None and hinglish["found"] == ["function", "name"]
+
+
+def test_speech_eval_writes_real_or_synthetic(tmp_path, monkeypatch):
+    import csv
+    import json
+
+    ev = _script("eval_clip_speech")
+    path = tmp_path / "clip_speech.csv"
+    with path.open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(_speech_rows()[0]))
+        w.writeheader()
+        w.writerows(_speech_rows())
+    fake = _fake_engine(ev)
+    monkeypatch.setattr(ev, "CSV", path)
+    monkeypatch.setattr(ev, "EXPERIMENTS", tmp_path)
+    monkeypatch.setattr(ev, "engines", lambda: {"fake": lambda p, lang: fake(p, lang) if p.name != "d.wav" else
+                                                {"text": CAP_EN, "words": ev.as_words(CAP_EN)}})
+    assert ev.main([]) == 0
+    out = json.loads((tmp_path / "video_speech.json").read_text())
+    assert out["data_kind"] == "real" and out["n_clips"] == 3 and out["languages"] == {"hi": 1, "en": 1, "hinglish": 1}
+    assert ev.main(["--include-synthetic"]) == 0
+    assert json.loads((tmp_path / "video_speech.json").read_text())["data_kind"] == "synthetic"
+    monkeypatch.setattr(ev, "engines", lambda: {})
+    (tmp_path / "video_speech.json").unlink()
+    assert ev.main([]) == 0 and not (tmp_path / "video_speech.json").exists()  # no engine: RESULT PENDING

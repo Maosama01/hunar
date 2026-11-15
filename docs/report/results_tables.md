@@ -102,6 +102,10 @@ Test images with a near-duplicate (<= 4 bits) in train, re-split: 0.
 
 RESULT PENDING: no labelled frames yet. Record guided clips, run `make clip-frames`, label `data/labels/clip_frames.csv`, then `make eval-clips`.
 
+### Video pilot: speech and explanation check on recorded clips
+
+RESULT PENDING: no recorded clips yet. Record with consent, run `make clip-audio SRC=folder`, write what was said and the 1/0 labels in `data/labels/clip_speech.csv`, then `make eval-clip-speech` (see `docs/video_pilot_guide.md`).
+
 ### M4 inter-assessor consistency study
 
 RESULT PENDING: no real rater scores yet. Rater mode is built; the study needs 3 to 5 real assessors and 20 to 30 consented evidence photos.

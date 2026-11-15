@@ -536,7 +536,8 @@ export const api = {
     if (f.reading !== undefined) form.append("reading", String(f.reading));
     if (f.printed !== undefined) form.append("printed", String(f.printed));
     if (f.tolerancePct !== undefined) form.append("tolerance_pct", String(f.tolerancePct));
-    form.append("file", f.video, f.video.type.includes("mp4") ? "clip.mp4" : "clip.webm");
+    const name = f.video instanceof File ? f.video.name : f.video.type.includes("mp4") ? "clip.mp4" : "clip.webm";
+    form.append("file", f.video, name);
     return post<GuidedClipOut>(`/api/assessments/${enc(assessmentId)}/clips`, form, { timeoutMs: 300000 });
   },
   /** Draft transcript of a recording; the server does not keep the audio. The first call loads the model. */

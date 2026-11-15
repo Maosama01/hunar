@@ -93,6 +93,11 @@ stays off until `HUNAR_CLIP_HAND_CONF` is set from labelled frames (`make clip-f
 `make eval-clips`, which reports both checks at a range of cut-offs). `data/models/mobileclip_blt.ts`
 (about 600 MB) is only needed to prepare the prompts and can be deleted afterwards.
 
+Recording the video pilot: follow [docs/video_pilot_guide.md](docs/video_pilot_guide.md) (consent,
+what to record, uploading phone videos in the app, writing down what was said, labelling frames).
+`make clip-audio SRC=folder` copies the sound out of the team's raw recordings and `make
+eval-clip-speech` measures speech-to-text and the explanation check against what a person heard.
+
 API docs: http://localhost:8000/docs. The sample worker and every screen built from it carry a
 **SAMPLE DATA** label.
 
@@ -116,7 +121,7 @@ API docs: http://localhost:8000/docs. The sample worker and every screen built f
 | Booking and badges | Done: search, booking lifecycle, ratings, assessment requests, permit rule (CEA reg. 31), badges only from assessor sign-off | Real; permit check is manual (no State register API) |
 | 23 languages | UI and quiz support 23 languages with fallback, RTL and read-aloud; Bhashini client and `make translate` | Only English and Hindi written so far (Hindi with AI help, native-speaker review pending); Bhashini **not yet run** (needs credentials: [docs/bhashini_setup.md](docs/bhashini_setup.md)); machine translations will need review |
 | Voice input | Done: record on the declaration screen, faster-whisper `small` on CPU, transcript must be read back before saving; audio never stored | Checked on **synthetic** text-to-speech audio only; not yet tried with real workers' voices |
-| Video pilot (guided clips) | Built: 4 DRAFT ceiling-fan tasks (Service Technician – Home Appliances, NQR 14861), one short clip per part, faces blurred in every frame, sound removed, word-timed transcript, term and meter checks, suggestions with timestamps for the assessor | **RESULT PENDING**: no real clips yet; frame check (YOLOE prompted with the part and "hand") set up with `make clip-models` but not measured, and its hand check stays off until labelled frames set a cut-off; no Indian-language speech engine plugged in; no current qualification names fans |
+| Video pilot (guided clips) | Built: 4 DRAFT ceiling-fan tasks (Service Technician – Home Appliances, NQR 14861), one short clip per part, faces blurred in every frame, sound removed, word-timed transcript, term and meter checks, suggestions with timestamps for the assessor; phone videos can be uploaded and are turned upright; recording guide and video consent form ready | **RESULT PENDING**: no real clips yet; frame check (YOLOE prompted with the part and "hand") set up with `make clip-models` but not measured, and its hand check stays off until labelled frames set a cut-off; no Indian-language speech engine plugged in; no current qualification names fans |
 
 ## Results
 
@@ -224,6 +229,10 @@ Test images with a near-duplicate (<= 4 bits) in train, re-split: 0.
 ### Video pilot: frame check on hand-labelled frames
 
 RESULT PENDING: no labelled frames yet. Record guided clips, run `make clip-frames`, label `data/labels/clip_frames.csv`, then `make eval-clips`.
+
+### Video pilot: speech and explanation check on recorded clips
+
+RESULT PENDING: no recorded clips yet. Record with consent, run `make clip-audio SRC=folder`, write what was said and the 1/0 labels in `data/labels/clip_speech.csv`, then `make eval-clip-speech` (see `docs/video_pilot_guide.md`).
 
 ### M4 inter-assessor consistency study
 

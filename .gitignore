@@ -40,3 +40,5 @@ data/synthetic/sample_photos/
 .claude/launch.json
 # Video pilot: frames exported for labelling (blurred, but of real people)
 data/labels/clip_frames/
+# Video pilot: what people said in their recordings (the sound itself is under data/raw/)
+data/labels/clip_speech.csv

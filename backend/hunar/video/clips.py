@@ -4,8 +4,9 @@ For each upload:
 1. the upload goes to a private temporary folder: it holds the worker's voice and unblurred faces;
 2. speech is transcribed with word timings (hunar.speech.transcribe; an Indian-language engine such
    as Bhashini ASR or IndicConformer can replace it once measured on real clips);
-3. every frame is decoded, faces are blurred, and the clip is re-encoded as H.264 WITHOUT audio, at
-   most MAX_WIDTH wide and MAX_FPS frames a second: only this blurred, silent copy is stored;
+3. every frame is decoded (and turned upright when a phone tagged it as rotated), faces are blurred,
+   and the clip is re-encoded as H.264 WITHOUT audio, at most MAX_WIDTH wide and MAX_FPS frames a
+   second: only this blurred, silent copy is stored;
 4. about one frame a second is kept for the frame check (hunar.video.detect: is the part in frame,
    is a hand on it), which runs only when the detector is set up; without it the result says "not
    checked";
@@ -85,6 +86,14 @@ def meter_in_range(reading: float | None, printed: float | None, tolerance_pct: 
     return abs(reading - printed) / printed * 100 <= tol + 1e-9
 
 
+def upright(img: np.ndarray, rotation: float | None) -> np.ndarray:
+    """Turn a decoded frame the way the phone meant it to be shown. Phones store portrait video sideways
+    with a rotation tag; `rotation` is that tag in degrees counterclockwise (PyAV's VideoFrame.rotation),
+    which matches what ffmpeg's own auto-rotation does."""
+    k = round((rotation or 0) / 90) % 4
+    return np.ascontiguousarray(np.rot90(img, k)) if k else img
+
+
 def blur_and_encode(src: Path, dst: Path) -> dict:
     """Decode `src`, blur faces in every kept frame and write a silent H.264 mp4 to `dst`. Returns frame
     counts and about one frame a second (already blurred) for the frame check."""
@@ -107,7 +116,7 @@ def blur_and_encode(src: Path, dst: Path) -> dict:
             for i, frame in enumerate(inp.decode(vin)):
                 if i % keep_every:
                     continue
-                img = frame.to_ndarray(format="bgr24")
+                img = upright(frame.to_ndarray(format="bgr24"), getattr(frame, "rotation", 0))
                 h, w = img.shape[:2]
                 if w > MAX_WIDTH:
                     import cv2

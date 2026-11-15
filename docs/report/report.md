@@ -478,10 +478,15 @@ confidence; without the frame check (its weights are downloaded separately with 
 the clip alone gives at most 1. The assessor watches the marked moments and decides. The four fan tasks are drafts linked to Service Technician - Home Appliances (NQR 14861). No
 current qualification we checked names ceiling fans, so they use that file's general
 diagnose-and-repair criteria. A test runs the whole pipeline on a synthetic clip (generated frames, a
-stand-in transcript); another runs the frame check with a stand-in model. RESULT PENDING: speech
-accuracy per engine, and frame-check precision and recall on hand-labelled frames from about 20
-consented team recordings (`make clip-frames`, then `make eval-clips`, which also reports both
-checks at a range of cut-offs).
+stand-in transcript); another runs the frame check with a stand-in model. Clips can be recorded in
+the app or with the phone's camera and uploaded; portrait phone videos are turned upright. A
+recording guide (`docs/video_pilot_guide.md`) and a video part of the consent form set out what the
+team records and what each person agrees to, purpose by purpose. RESULT PENDING: speech error rates
+and the explanation check measured against what a person heard, on the written text and on the
+transcript, so that term-list gaps and speech errors can be told apart (`make clip-audio`, then
+`make eval-clip-speech`), and frame-check precision and recall on hand-labelled frames (`make
+clip-frames`, then `make eval-clips`, which also reports both checks at a range of cut-offs), all
+from about 20 consented team recordings.
 
 # 5. System design
 

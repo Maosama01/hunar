@@ -8,7 +8,7 @@ NPM := npm --prefix frontend
 DL ?= $(HOME)/Downloads
 CSV ?= data/study/items.csv
 
-.PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean clip-models clip-frames eval-clips \
+.PHONY: help setup data parse test lint eval eval-m1 eval-m2 study results seed api web demo report clean clip-models clip-frames eval-clips clip-audio eval-clip-speech \
         vision voice eval-voice import-detector ppe-split notebook design-sim study-items bench \
         quiz-sim quiz-calibrate translate staff bhashini-check
 
@@ -107,6 +107,14 @@ clip-frames:
 
 eval-clips:
 	$(PY) scripts/eval_clip_detector.py $(ARGS)
+
+# Video pilot speech test: copy the sound out of the team's raw recordings (SRC=folder), then measure
+# speech-to-text and the explanation check against what a person heard (docs/video_pilot_guide.md).
+clip-audio:
+	$(PY) scripts/extract_clip_audio.py $(SRC)
+
+eval-clip-speech:
+	$(PY) scripts/eval_clip_speech.py $(ARGS)
 
 eval-voice:
 	$(PY) -m hunar.speech.evaluate

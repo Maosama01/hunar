@@ -17,7 +17,6 @@ import argparse
 import csv
 import datetime as dt
 import json
-import random
 import subprocess
 import sys
 from pathlib import Path
@@ -27,24 +26,9 @@ sys.path.insert(0, str(ROOT / "backend"))
 
 from hunar.paths import DATA, EXPERIMENTS  # noqa: E402
 from hunar.video import detect  # noqa: E402
+from hunar.video.metrics import bootstrap, scores  # noqa: E402
 
 CSV = DATA / "labels" / "clip_frames.csv"
-
-
-def scores(pairs: list[tuple[bool, bool]]) -> dict:
-    """pairs of (truth, predicted)."""
-    tp = sum(t and p for t, p in pairs)
-    fp = sum(p and not t for t, p in pairs)
-    fn = sum(t and not p for t, p in pairs)
-    n = len(pairs)
-    precision = tp / (tp + fp) if tp + fp else None
-    recall = tp / (tp + fn) if tp + fn else None
-    f1 = 2 * tp / (2 * tp + fp + fn) if 2 * tp + fp + fn else None  # None: no positives and none predicted
-    return {"n": n, "positives": tp + fn, "tp": tp, "fp": fp, "fn": fn,
-            "precision": None if precision is None else round(precision, 4),
-            "recall": None if recall is None else round(recall, 4),
-            "f1": None if f1 is None else round(f1, 4),
-            "accuracy": round(sum(t == p for t, p in pairs) / n, 4) if n else None}
 
 
 CUTOFFS = [0.01, 0.02, 0.03, 0.05, 0.075, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5]
@@ -62,19 +46,6 @@ def sweep(items: list[tuple[bool, bool, list[dict]]], part_conf: float) -> dict:
             for k, rows in (("part", part), ("hand", hand))}
     return {"part_by_cutoff": part, "hand_by_cutoff": hand,
             "best_f1_cutoff": {k: (None if r is None else r["cutoff"]) for k, r in best.items()}}
-
-
-def bootstrap(pairs: list[tuple[bool, bool]], key: str, reps: int = 2000, seed: int = 0) -> list[float] | None:
-    rng = random.Random(seed)
-    vals = []
-    for _ in range(reps):
-        v = scores([rng.choice(pairs) for _ in pairs])[key]
-        if v is not None:
-            vals.append(v)
-    if len(vals) < reps // 2:
-        return None
-    vals.sort()
-    return [round(vals[int(0.025 * len(vals))], 4), round(vals[int(0.975 * len(vals)) - 1], 4)]
 
 
 def main(argv: list[str] | None = None) -> int:
